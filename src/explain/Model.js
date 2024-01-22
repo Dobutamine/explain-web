@@ -9,6 +9,18 @@ export default class Model {
   modelData = {};
   modelDataSlow = {};
 
+  // declare the events
+  rtf_event = new CustomEvent("rtf");
+  rts_event = new CustomEvent("rts");
+  data_event = new CustomEvent("data");
+  data_slow_event = new CustomEvent("data_slow");
+
+  info_event = new CustomEvent("info");
+  state_event = new CustomEvent("state");
+  status_event = new CustomEvent("status");
+  error_event = new CustomEvent("error");
+  script_event = new CustomEvent("script");
+
   constructor() {
     // spin up a new model engine worker thread
     this.modelEngine = new Worker(
@@ -43,21 +55,39 @@ export default class Model {
       switch (e.data.type) {
         case "info":
           console.info(e.data.message);
+          document.dispatchEvent(this.info_event);
+          break;
+        case "state":
+          console.info(e.data.message);
+          document.dispatchEvent(this.state_event);
+          break;
+        case "status":
+          console.info(e.data.message);
+          document.dispatchEvent(this.status_event);
           break;
         case "error":
           console.info(e.data.message);
+          document.dispatchEvent(this.error_event);
+          break;
+        case "script":
+          console.info(e.data.message);
+          document.dispatchEvent(this.script_event);
           break;
         case "data":
           this.modelData = e.data.payload[0];
+          document.dispatchEvent(this.data_event);
           break;
         case "data_slow":
           this.modelDataSlow = e.data.payload[0];
+          document.dispatchEvent(this.data_slow_event);
           break;
         case "rtf":
           this.modelData = e.data.payload[0];
+          document.dispatchEvent(this.rtf_event);
           break;
         case "rts":
           this.modelDataSlow = e.data.payload[0];
+          document.dispatchEvent(this.rts_event);
           break;
 
         default:
