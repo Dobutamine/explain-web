@@ -92,20 +92,20 @@ export class BloodTimeVaryingElastance {
 
   calc_model() {
     // calculate the minimal elastance depending on the scaling factor
-    _e_min_base = this.el_min * this.el_min_scaling_factor;
+    let _e_min_base = this.el_min * this.el_min_scaling_factor;
 
     // adjust the elastance depending on the activity of the external factor, autonomic nervous system and the drug model
-    _e_min =
+    let _e_min =
       _e_min_base +
       (this.el_min_factor * _e_min_base - _e_min_base) +
       (this.el_min_ans_factor * _e_min_base - _e_min_base) *
         this.ans_activity_factor +
-      (this.el_base_drug_factor * _e_min_base - _e_min_base);
+      (this.el_min_drug_factor * _e_min_base - _e_min_base);
 
     // calculate the maximal elastance depending on the scaling factor
-    _e_max_base = this.el_max * this.el_max_scaling_factor;
+    let _e_max_base = this.el_max * this.el_max_scaling_factor;
     // adjust the elastance depending on the activity of the external factor, autonomic nervous system, the drug model and mob model
-    _e_max =
+    let _e_max =
       _e_max_base +
       (this.el_max_factor * _e_max_base - _e_max_base) +
       (this.el_max_ans_factor * _e_max_base - _e_max_base) *
@@ -114,10 +114,10 @@ export class BloodTimeVaryingElastance {
       (this.el_max_mob_factor * _e_max_base - _e_max_base);
 
     // calculate the non-linear elastance factor depending on the scaling factor
-    _el_k_base = this.el_k * this.el_k_scaling_factor;
+    let _el_k_base = this.el_k * this.el_k_scaling_factor;
 
     // adjust the non-linear elastance depending on the activity of the external factor, autonomic nervous system and the drug model
-    _el_k =
+    let _el_k =
       _el_k_base +
       (this.el_k_factor * _el_k_base - _el_k_base) +
       (this.el_k_ans_factor * _el_k_base - _el_k_base) *
@@ -125,10 +125,10 @@ export class BloodTimeVaryingElastance {
       (this.el_k_drug_factor * _el_k_base - _el_k_base);
 
     // calculate the unstressed volume depending on the scaling factor
-    _u_vol_base = this.u_vol * this.u_vol_scaling_factor;
+    let _u_vol_base = this.u_vol * this.u_vol_scaling_factor;
 
     // adjust the unstressed volume depending on the activity of the external factor, autonomic nervous system and the drug model
-    _u_vol =
+    let _u_vol =
       _u_vol_base +
       (_u_vol_base * this.u_vol_factor - _u_vol_base) +
       (_u_vol_base * this.u_vol_ans_factor - _u_vol_base) *
@@ -136,7 +136,7 @@ export class BloodTimeVaryingElastance {
       (_u_vol_base * this.u_vol_drug_factor - _u_vol_base);
 
     // calculate the volume difference
-    vol_diff = this.vol - _u_vol;
+    let vol_diff = this.vol - _u_vol;
 
     // calculate the end diastolic pressure
     this.pres_ed =
@@ -187,7 +187,7 @@ export class BloodTimeVaryingElastance {
     }
 
     // assume all dvol can be removed
-    vol_not_removed: float = 0.0;
+    let vol_not_removed = 0.0;
 
     // decrease the volume
     this.vol -= dvol;

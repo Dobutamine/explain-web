@@ -30,6 +30,9 @@ let model = {
   dependency_list: [],
 };
 
+// declare a flag indicating whether the execution list needs to be refreshed.
+let refreshExecutionList = true;
+
 // declare a model definition object holding the properties of the current model
 let model_definition = {};
 
@@ -38,6 +41,15 @@ let model_initialized = false;
 
 // declare a model data object holding the high resolution model data
 let model_data = {};
+
+// declare a model data object holding the low resolution model data
+let model_data_slow = {};
+
+// set the realtime updateinterval
+let rtInterval = 0.015;
+let rtSlowInterval = 1.0;
+let rtSlowCounter = 0.0;
+let rtClock = null;
 
 // set up a listener for messages from the main thread
 onmessage = (e) => {
@@ -49,6 +61,15 @@ onmessage = (e) => {
         payload: [],
       });
       model_initialized = processModelDefinition(JSON.parse(e.data.payload[0]));
+      break;
+    case "start":
+      start();
+      break;
+    case "stop":
+      stop();
+      break;
+    case "calc":
+      calculate(e.data.message);
       break;
     case "log":
       console.log(e.data.message);
@@ -184,4 +205,183 @@ const processModelDefinition = function (model_definition) {
 const sendMessage = function (message) {
   message.message = "ModelEngine: " + message.message;
   postMessage(message);
+};
+
+// prepare for a model run
+const prepareForExecution = function () {
+  // iterate over the models and add the models which should be executed to the list
+  Object.values(model.models).forEach((model_comp) => {
+    if (model_comp.is_enabled) {
+      let key = model_comp.name;
+      model.execution_list[key] = model_comp;
+    }
+  });
+
+  // reset the execution list flag
+  refreshExecutionList = false;
+
+  // check the dependencies
+  checkDependencies();
+};
+
+const checkDependencies = function () {};
+
+const calculate = function (time_to_calculate) {
+  // rebuilf the execution list if necessary
+  if (refreshExecutionList) {
+    prepareForExecution();
+  }
+
+  // calculate a number of seconds of the model
+  if (model_initialized) {
+    let noOfSteps = time_to_calculate / model.modeling_stepsize;
+    sendMessage({
+      type: "info",
+      message: `calculating ${time_to_calculate} sec. in ${noOfSteps} steps.`,
+      payload: [],
+    });
+    const start = performance.now();
+    for (let i = 0; i < noOfSteps; i++) {
+      modelStep();
+    }
+    const end = performance.now();
+    const step_time = (end - start) / noOfSteps;
+
+    sendMessage({
+      type: "info",
+      message: `calculation ready in ${(end - start).toFixed(
+        1
+      )} ms with a model step time of ${step_time.toFixed(4)} ms)`,
+      payload: [],
+    });
+
+    // get the data from the datacollector
+    model_data = model["DataCollector"].get_model_data();
+    model_data_slow = model["DataCollector"].get_model_data_slow();
+  } else {
+    sendMessage({
+      type: "info",
+      message: `model not initialized.`,
+      payload: [],
+    });
+  }
+};
+
+// do a single model step
+const modelStep = function () {
+  // iterate over all models
+  Object.values(model.execution_list).forEach((model_component) => {
+    model_component.step_model();
+  });
+
+  // call the datacollector
+  model["DataCollector"].collect_data(model.model_time_total);
+
+  // increase the model clock
+  model.model_time_total += model.modeling_stepsize;
+};
+
+const modelStepRt = function () {
+  // so the rt_interval determines how often the model is calculated
+  const noOfSteps = rtInterval / model.modeling_stepsize;
+  for (let i = 0; i < noOfSteps; i++) {
+    modelStep();
+  }
+
+  // get model data
+  getModelDataRt();
+
+  // get slow model data
+  if (rtSlowCounter > rtSlowInterval) {
+    rtSlowCounter = 0;
+    getModelDataSlow();
+  }
+  rtSlowCounter += rtInterval;
+};
+
+const start = function () {
+  // start the model in realtime
+  if (model_initialized) {
+    // rebuilf the execution list if necessary
+    if (refreshExecutionList) {
+      prepareForExecution();
+    }
+
+    // call the modelStep every rt_interval seconds
+    rtClock = setInterval(modelStepRt, rtInterval * 1000.0);
+    // send status update
+    sendMessage({
+      type: "info",
+      message: `realtime model started.`,
+      payload: [],
+    });
+  } else {
+    sendMessage({
+      type: "info",
+      message: `model not initialized.`,
+      payload: [],
+    });
+  }
+};
+
+const stop = function () {
+  // stop the realtime model
+  if (model_initialized) {
+    clearInterval(rtClock);
+    rtClock = null;
+    sendMessage({
+      type: "info",
+      message: `realtime model stopped.`,
+      payload: [],
+    });
+  }
+};
+
+// get the current whole model state
+const getModelState = function () {
+  // refresh the model state on the model instance
+  postMessage({
+    type: "state",
+    message: "",
+    payload: [model],
+  });
+};
+
+// get the model data from the datacollector
+const getModelData = function () {
+  // refresh the model data on the model instance
+  model_data = model.DataCollector.get_model_data();
+
+  // send data to the ui
+  postMessage({
+    type: "data",
+    message: "",
+    payload: [model_data],
+  });
+};
+
+// get the realtime model data from the datacollector
+const getModelDataRt = function () {
+  // refresh the model data on the model instance
+  model_data = model.DataCollector.get_model_data();
+
+  // send data to the ui
+  postMessage({
+    type: "rtf",
+    message: "",
+    payload: [model_data],
+  });
+};
+
+// get the slow update model data from the datacollector
+const getModelDataSlow = function () {
+  // refresh the model data on the model instance
+  model_data_slow = model.DataCollector.get_model_data_slow();
+
+  // send data to the ui
+  postMessage({
+    type: "rts",
+    message: "",
+    payload: [model_data_slow],
+  });
 };

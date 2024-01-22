@@ -22,9 +22,13 @@ export class BloodValve {
   r_drug_factor = 1.0;
   r_scaling_factor = 1.0;
 
+  act_factor = 0.0;
+  ans_activity_factor = 0.0;
+
   // dependent parameters
   flow = 0.0;
-
+  p1 = 0.0;
+  p2 = 0.0;
   // local parameters
   _model_engine = {};
   _is_initialized = false;
@@ -69,12 +73,12 @@ export class BloodValve {
 
   calc_model() {
     // get the pressures of the connected model components
-    _p1 = self._model_comp_from.pres;
-    _p2 = self._model_comp_to.pres;
+    let _p1 = this._model_comp_from.pres;
+    let _p2 = this._model_comp_to.pres;
 
     // calculate the resistances
-    _r_for_base = this.r_for * this.r_scaling_factor;
-    r_for =
+    let _r_for_base = this.r_for * this.r_scaling_factor;
+    let r_for =
       _r_for_base +
       (this.r_for_factor * _r_for_base - _r_for_base) +
       (this.r_ans_factor * _r_for_base - _r_for_base) *
@@ -87,8 +91,8 @@ export class BloodValve {
         this.flow *
         this.flow;
 
-    _r_back_base = this.r_back * this.r_scaling_factor;
-    r_back =
+    let _r_back_base = this.r_back * this.r_scaling_factor;
+    let r_back =
       _r_back_base +
       (this.r_back_factor * _r_back_base - _r_back_base) +
       (this.r_ans_factor * _r_back_base - _r_back_base) *
@@ -110,6 +114,8 @@ export class BloodValve {
       r_back = 20.0;
     }
 
+    this.p1 = this.ans_activity_factor;
+
     // calculate the flow
     if (this.no_flow || (_p1 <= _p2 && this.no_back_flow)) {
       this.flow = 0.0;
@@ -121,10 +127,12 @@ export class BloodValve {
       this.flow = (_p1 - _p2) / r_back;
     }
 
+    let vol_not_removed = 0.0;
     // now update the volumes of the model components which are connected by this resistor
     if (this.flow > 0) {
       // flow is from comp_from to comp_to
       vol_not_removed = this._model_comp_from.volume_out(this.flow * this._t);
+      vol_not_removed = 0.0;
       // if not all volume can be removed from the model component then transfer the remaining volume to the other model component
       // this is undesirable but it is better than having a negative volume
       this._model_comp_to.volume_in(
@@ -137,7 +145,7 @@ export class BloodValve {
     if (this.flow < 0) {
       // flow is from comp_to to comp_from
       vol_not_removed = this._model_comp_to.volume_out(-this.flow * this._t);
-
+      vol_not_removed = 0.0;
       // if not all volume can be removed from the model component then transfer the remaining volume to the other model component
       // this is undesirable but it is better than having a negative volume
       this._model_comp_from.volume_in(

@@ -82,10 +82,10 @@ export class BloodCapacitance {
 
   calc_model() {
     // calculate the baseline elastance depending on the scaling factor
-    _el_base = this.el_base * this.el_base_scaling_factor;
+    let _el_base = this.el_base * this.el_base_scaling_factor;
 
     // adjust the elastance depending on the activity of the external factor, autonomic nervous system and the drug model
-    _el =
+    let _el =
       _el_base +
       this.act_factor +
       (this.el_base_factor * _el_base - _el_base) +
@@ -94,10 +94,10 @@ export class BloodCapacitance {
       (this.el_base_drug_factor * _el_base - _el_base);
 
     // calculate the non-linear elastance factor depending on the scaling factor
-    _el_k_base = this.el_k * this.el_k_scaling_factor;
+    let _el_k_base = this.el_k * this.el_k_scaling_factor;
 
     // adjust the non-linear elastance depending on the activity of the external factor, autonomic nervous system and the drug model
-    _el_k =
+    let _el_k =
       _el_k_base +
       (this.el_k_factor * _el_k_base - _el_k_base) +
       (this.el_k_ans_factor * _el_k_base - _el_k_base) *
@@ -105,10 +105,10 @@ export class BloodCapacitance {
       (this.el_k_drug_factor * _el_k_base - _el_k_base);
 
     // calculate the unstressed volume depending on the scaling factor
-    _u_vol_base = this.u_vol * this.u_vol_scaling_factor;
+    let _u_vol_base = this.u_vol * this.u_vol_scaling_factor;
 
     // adjust the unstressed volume depending on the activity of the external factor, autonomic nervous system and the drug model
-    _u_vol =
+    let _u_vol =
       _u_vol_base +
       (_u_vol_base * this.u_vol_factor - _u_vol_base) +
       (_u_vol_base * this.u_vol_ans_factor - _u_vol_base) *
@@ -148,7 +148,7 @@ export class BloodCapacitance {
     }
 
     // assume all dvol can be removed
-    vol_not_removed: float = 0.0;
+    let vol_not_removed = 0.0;
 
     // decrease the volume
     this.vol -= dvol;

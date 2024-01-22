@@ -30,6 +30,8 @@ export class Heart {
   hr_temp_factor = 1.0;
   hr_drug_factor = 1.0;
   ans_activity_factor = 1.0;
+  ncc_ventricular = 0.0;
+  ncc_atrial = 0.0;
 
   // dependent parameters
   heart_rate = 110.0;
@@ -205,14 +207,14 @@ export class Heart {
     // calculate the atrial activation factor
     if (this.ncc_atrial >= 0 && this.ncc_atrial < this.pq_time / this._t) {
       this.aaf = Math.sin(
-        Math.pi * (this.ncc_atrial / (this.pq_time / this._t))
+        Math.PI * (this.ncc_atrial / (this.pq_time / this._t))
       );
     } else {
       this.aaf = 0.0;
     }
 
     // calculate the ventricular activation factor
-    _ventricular_duration = this.qrs_time + this.cqt_time;
+    let _ventricular_duration = this.qrs_time + this.cqt_time;
     if (
       this.ncc_ventricular >= 0 &&
       this.ncc_ventricular < _ventricular_duration / this._t
@@ -221,7 +223,7 @@ export class Heart {
         (this.ncc_ventricular /
           (this._kn * (_ventricular_duration / this._t))) *
         Math.sin(
-          Math.pi * (this.ncc_ventricular / (_ventricular_duration / this._t))
+          Math.PI * (this.ncc_ventricular / (_ventricular_duration / this._t))
         );
     } else {
       this.vaf = 0.0;
