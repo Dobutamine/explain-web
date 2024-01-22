@@ -5,6 +5,10 @@ export default class Model {
   // declare an object holding the model definition as loaded from the server
   modelDefinition = {};
 
+  // declare an object holding the model data
+  modelData = {};
+  modelDataSlow = {};
+
   constructor() {
     // spin up a new model engine worker thread
     this.modelEngine = new Worker(
@@ -43,6 +47,19 @@ export default class Model {
         case "error":
           console.info(e.data.message);
           break;
+        case "data":
+          this.modelData = e.data.payload[0];
+          break;
+        case "data_slow":
+          this.modelDataSlow = e.data.payload[0];
+          break;
+        case "rtf":
+          this.modelData = e.data.payload[0];
+          break;
+        case "rts":
+          this.modelDataSlow = e.data.payload[0];
+          break;
+
         default:
           console.log("Unknown message type received from model engine");
           console.log(e.data);

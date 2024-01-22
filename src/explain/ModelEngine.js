@@ -318,6 +318,7 @@ const calculate = function (time_to_calculate) {
 
     // get the data from the datacollector
     getModelData();
+    getModelDataSlow();
   } else {
     sendMessage({
       type: "info",
@@ -354,7 +355,7 @@ const modelStepRt = function () {
   // get slow model data
   if (rtSlowCounter > rtSlowInterval) {
     rtSlowCounter = 0;
-    getModelDataSlow();
+    getModelDataRtSlow();
   }
   rtSlowCounter += rtInterval;
 };
@@ -368,6 +369,7 @@ const start = function () {
     }
 
     // call the modelStep every rt_interval seconds
+    clearInterval(rtClock);
     rtClock = setInterval(modelStepRt, rtInterval * 1000.0);
     // send status update
     sendMessage({
@@ -407,7 +409,7 @@ const getModelState = function () {
   });
 };
 
-// get the model data from the datacollector
+// get the realtime model data from the datacollector
 const getModelData = function () {
   // refresh the model data on the model instance
   model_data = model.DataCollector.get_model_data();
@@ -433,6 +435,19 @@ const getModelDataRt = function () {
   });
 };
 
+// get the realtime model data from the datacollector
+const getModelDataRtSlow = function () {
+  // refresh the model data on the model instance
+  model_data = model.DataCollector.get_model_data_slow();
+
+  // send data to the ui
+  postMessage({
+    type: "rts",
+    message: "",
+    payload: [model_data],
+  });
+};
+
 // get the slow update model data from the datacollector
 const getModelDataSlow = function () {
   // refresh the model data on the model instance
@@ -440,7 +455,7 @@ const getModelDataSlow = function () {
 
   // send data to the ui
   postMessage({
-    type: "rts",
+    type: "data_slow",
     message: "",
     payload: [model_data_slow],
   });
