@@ -8,6 +8,7 @@
     <q-btn @click="calculate"> calculate</q-btn>
     <q-btn @click="start"> start</q-btn>
     <q-btn @click="stop"> stop</q-btn>
+    <q-btn @click="getState"> state</q-btn>
   </q-page>
 </template>
 
@@ -26,6 +27,9 @@ export default defineComponent({
     },
     stop() {
       explain.stop();
+    },
+    getState() {
+      explain.getState();
     }
   }
 })

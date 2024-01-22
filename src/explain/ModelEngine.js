@@ -51,6 +51,9 @@ let rtSlowInterval = 1.0;
 let rtSlowCounter = 0.0;
 let rtClock = null;
 
+// set the debug mode flag
+let debug = true;
+
 // set up a listener for messages from the main thread
 onmessage = (e) => {
   switch (e.data.type) {
@@ -68,17 +71,16 @@ onmessage = (e) => {
     case "stop":
       stop();
       break;
+    case "get_state":
+      getState();
+      break;
     case "calc":
       calculate(e.data.message);
       break;
-    case "log":
-      console.log(e.data.message);
-      break;
-    case "error":
-      console.error(e.data.message);
-      break;
-    case "info":
-      console.info(e.data.message);
+    case "wake_up":
+      if (debug) {
+        console.info(e.data.message);
+      }
       sendMessage({
         type: "info",
         message: "Huh? What? Yeah, ok i'm awake. Don't rush me!",
@@ -86,7 +88,9 @@ onmessage = (e) => {
       });
       break;
     default:
-      console.log(e.data.message);
+      if (debug) {
+        console.log(e.data.message);
+      }
       sendMessage({
         type: "info",
         message: "Huh? I don't get this message?",
@@ -226,7 +230,7 @@ const prepareForExecution = function () {
   // handle the check result
   if (check_result.length > 0) {
     postMessage({
-      type: "status",
+      type: "error",
       message: `dependency error`,
       payload: check_result,
     });
@@ -297,7 +301,7 @@ const calculate = function (time_to_calculate) {
   if (model_initialized) {
     let noOfSteps = time_to_calculate / model.modeling_stepsize;
     sendMessage({
-      type: "info",
+      type: "status",
       message: `calculating ${time_to_calculate} sec. in ${noOfSteps} steps.`,
       payload: [],
     });
@@ -309,7 +313,7 @@ const calculate = function (time_to_calculate) {
     const step_time = (end - start) / noOfSteps;
 
     sendMessage({
-      type: "info",
+      type: "status",
       message: `calculation ready in ${(end - start).toFixed(
         1
       )} ms with a model step time of ${step_time.toFixed(4)} ms)`,
@@ -321,7 +325,7 @@ const calculate = function (time_to_calculate) {
     getModelDataSlow();
   } else {
     sendMessage({
-      type: "info",
+      type: "error",
       message: `model not initialized.`,
       payload: [],
     });
@@ -373,13 +377,13 @@ const start = function () {
     rtClock = setInterval(modelStepRt, rtInterval * 1000.0);
     // send status update
     sendMessage({
-      type: "info",
+      type: "status",
       message: `realtime model started.`,
       payload: [],
     });
   } else {
     sendMessage({
-      type: "info",
+      type: "error",
       message: `model not initialized.`,
       payload: [],
     });
@@ -392,7 +396,7 @@ const stop = function () {
     clearInterval(rtClock);
     rtClock = null;
     sendMessage({
-      type: "info",
+      type: "status",
       message: `realtime model stopped.`,
       payload: [],
     });
@@ -400,7 +404,7 @@ const stop = function () {
 };
 
 // get the current whole model state
-const getModelState = function () {
+const getState = function () {
   // refresh the model state on the model instance
   postMessage({
     type: "state",

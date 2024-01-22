@@ -11,9 +11,12 @@
     "build": "quasar build"
   },
   "dependencies": {
-    "pinia": "^2.0.11",
+    "@arction/lcjs": "^5.0.7",
     "@quasar/extras": "^1.16.4",
+    "pinia": "^2.0.11",
+    "pixi.js": "^7.3.3",
     "quasar": "^2.8.0",
+    "simple-statistics": "^7.8.3",
     "vue": "^3.2.29",
     "vue-router": "^4.0.12"
   },
