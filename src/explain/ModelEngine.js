@@ -74,8 +74,34 @@ onmessage = (e) => {
     case "get_state":
       getState();
       break;
+    case "get_data":
+      getModelData();
+      break;
+    case "get_data_slow":
+      getModelDataSlow();
+      break;
     case "calc":
       calculate(e.data.message);
+      break;
+    case "enable":
+      break;
+    case "disable":
+      break;
+    case "call":
+      break;
+    case "rewire":
+      break;
+    case "watch_props":
+      break;
+    case "watch_props_slow":
+      break;
+    case "set_props":
+      break;
+    case "get_props":
+      break;
+    case "add_task":
+      break;
+    case "remove_task":
       break;
     case "wake_up":
       if (debug) {

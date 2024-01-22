@@ -12,17 +12,6 @@ export default class Model {
   // declare an object holding the model state
   modelState = {};
 
-  // declare the events
-  rtf_event = new CustomEvent("rtf");
-  rts_event = new CustomEvent("rts");
-  data_event = new CustomEvent("data");
-  data_slow_event = new CustomEvent("data_slow");
-  info_event = new CustomEvent("info");
-  state_event = new CustomEvent("state");
-  status_event = new CustomEvent("status");
-  error_event = new CustomEvent("error");
-  script_event = new CustomEvent("script");
-
   // declare object holding the generated messages
   info_message = "";
   error_message = "";
@@ -31,9 +20,21 @@ export default class Model {
 
   // declare a message log
   message_log = [];
+  no_logs = 25;
 
   // message debug fag
   debug = true;
+
+  // declare the events
+  _rtf_event = new CustomEvent("rtf");
+  _rts_event = new CustomEvent("rts");
+  _data_event = new CustomEvent("data");
+  _data_slow_event = new CustomEvent("data_slow");
+  _info_event = new CustomEvent("info");
+  _state_event = new CustomEvent("state");
+  _status_event = new CustomEvent("status");
+  _error_event = new CustomEvent("error");
+  _script_event = new CustomEvent("script");
 
   constructor() {
     // spin up a new model engine worker thread
@@ -66,10 +67,11 @@ export default class Model {
   logMessage(msg_type, msg) {
     let m = { type: msg_type, msg: msg };
     this.message_log.push(m);
-    if (this.message_log.length > 25) {
+    if (this.message_log.length > this.no_logs) {
       this.message_log.shift();
     }
   }
+
   receiveMessageFromModelEngine() {
     // set up a listener for messages from the model engine
     this.modelEngine.onmessage = (e) => {
@@ -82,7 +84,7 @@ export default class Model {
           this.info_message = e.data.message;
           this.logMessage("info", e.data.message);
           // dispatch an info event
-          document.dispatchEvent(this.info_event);
+          document.dispatchEvent(this._info_event);
           break;
         case "status":
           if (this.debug) {
@@ -93,7 +95,7 @@ export default class Model {
           this.status_message = e.data.message;
           this.logMessage("status", e.data.message);
           // dispatch a status event
-          document.dispatchEvent(this.status_event);
+          document.dispatchEvent(this._status_event);
           break;
         case "error":
           if (this.debug) {
@@ -103,7 +105,7 @@ export default class Model {
           this.error_message = e.data.message;
           this.logMessage("error", e.data.message);
           // dispatch an error event
-          document.dispatchEvent("error", this.error_event);
+          document.dispatchEvent("error", this._error_event);
           break;
         case "script":
           if (this.debug) {
@@ -113,42 +115,42 @@ export default class Model {
           this.script_message = e.data.message;
           this.logMessage("script", e.data.message);
           // dispatch an script event
-          document.dispatchEvent(this.script_event);
+          document.dispatchEvent(this._script_event);
           break;
         case "state":
           if (this.debug) {
             console.log(`Model: received model engine state.`);
           }
           this.modelState = e.data.payload[0];
-          document.dispatchEvent(this.state_event);
+          document.dispatchEvent(this._state_event);
           break;
         case "data":
           if (this.debug) {
             console.log(`Model: received model data.`);
           }
           this.modelData = e.data.payload[0];
-          document.dispatchEvent(this.data_event);
+          document.dispatchEvent(this._data_event);
           break;
         case "data_slow":
           if (this.debug) {
             console.log(`Model: received model data slow.`);
           }
           this.modelDataSlow = e.data.payload[0];
-          document.dispatchEvent(this.data_slow_event);
+          document.dispatchEvent(this._data_slow_event);
           break;
         case "rtf":
           if (this.debug) {
             console.log(`Model: received model engine rt data.`);
           }
           this.modelData = e.data.payload[0];
-          document.dispatchEvent(this.rtf_event);
+          document.dispatchEvent(this._rtf_event);
           break;
         case "rts":
           if (this.debug) {
             console.log(`Model: received model engine rt data slow.`);
           }
           this.modelDataSlow = e.data.payload[0];
-          document.dispatchEvent(this.rts_event);
+          document.dispatchEvent(this._rts_event);
           break;
 
         default:
@@ -193,13 +195,6 @@ export default class Model {
     });
   }
 
-  getState() {
-    this.sendMessageToModelEngine({
-      type: "get_state",
-      message: "",
-      payload: [],
-    });
-  }
   start() {
     this.sendMessageToModelEngine({
       type: "start",
@@ -213,6 +208,136 @@ export default class Model {
       type: "stop",
       message: "",
       payload: [],
+    });
+  }
+
+  getState() {
+    this.sendMessageToModelEngine({
+      type: "get_state",
+      message: "",
+      payload: [],
+    });
+  }
+
+  getData() {
+    this.sendMessageToModelEngine({
+      type: "get_data",
+      message: "",
+      payload: [],
+    });
+  }
+
+  getDataSlow() {
+    this.sendMessageToModelEngine({
+      type: "get_data_slow",
+      message: "",
+      payload: [],
+    });
+  }
+
+  enable(args) {
+    if (typeof args === "string") {
+      args = [args];
+    }
+    this.sendMessage({
+      type: "enable",
+      message: "",
+      payload: args,
+    });
+  }
+
+  disable(args) {
+    if (typeof args === "string") {
+      args = [args];
+    }
+    this.sendMessage({
+      type: "disable",
+      message: "",
+      payload: args,
+    });
+  }
+
+  call(modelmethod, args = []) {
+    this.sendMessage({
+      type: "call",
+      message: "",
+      payload: [modelmethod, [...args]],
+    });
+  }
+
+  rewire(model, args) {
+    this.sendMessage({
+      type: "rewire",
+      message: model,
+      payload: args,
+    });
+  }
+
+  watchProps(args) {
+    if (typeof args === "string") {
+      args = [args];
+    }
+    this.sendMessage({
+      type: "watch_props",
+      message: "",
+      payload: args,
+    });
+  }
+
+  watchPropsSlow(args) {
+    if (typeof args === "string") {
+      args = [args];
+    }
+    this.sendMessage({
+      type: "watch_props_slow",
+      message: "",
+      payload: args,
+    });
+  }
+
+  setProps(args) {
+    // args is an array of objects containing the new settings with form {m: model, p: prop, v: value, at: time, it: time}
+    if (typeof args === "string") {
+      args = [args];
+    }
+
+    this.sendMessage({
+      type: "set_prop",
+      message: "",
+      payload: args,
+    });
+  }
+
+  getProps(args) {
+    if (typeof args === "string") {
+      args = [args];
+    }
+    this.sendMessage({
+      type: "get_props",
+      message: "",
+      payload: args,
+    });
+  }
+
+  addTask(new_task) {
+    this.sendMessage({
+      type: "add_task",
+      message: "",
+      payload: [JSON.stringify(new_task)],
+    });
+  }
+
+  removeTask(new_task) {
+    this.sendMessage({
+      type: "remove_task",
+      message: "",
+      payload: [],
+    });
+  }
+
+  addScript(new_script) {
+    new_script.forEach((task) => {
+      this.addTask(task);
     });
   }
 }
