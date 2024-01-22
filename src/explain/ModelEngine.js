@@ -279,10 +279,19 @@ const buildDependencyList = function () {
 };
 
 const calculate = function (time_to_calculate) {
-  // rebuilf the execution list if necessary
-  if (rebuildExecutionList) {
-    prepareForExecution();
+  // check whether the execution list needs to be rebuild
+  let exec_check = false;
+
+  // build the execution list
+  exec_check = prepareForExecution();
+
+  // if the dependency or execution list composition check fails return and don't execute the model run
+  if (!exec_check) {
+    return;
   }
+
+  // clean up the datacollector
+  model.DataCollector.clean_up();
 
   // calculate a number of seconds of the model
   if (model_initialized) {
