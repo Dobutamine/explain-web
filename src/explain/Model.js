@@ -72,6 +72,14 @@ export default class Model {
     }
   }
 
+  clearLog() {
+    this.message_log = [];
+  }
+
+  getLog() {
+    return this.message_log;
+  }
+
   receiveMessageFromModelEngine() {
     // set up a listener for messages from the model engine
     this.modelEngine.onmessage = (e) => {
@@ -172,20 +180,34 @@ export default class Model {
         return response.json();
       })
       .then((jsonData) => {
-        this.injectModelDefinition(jsonData);
+        this.loadModelDefinition(jsonData);
       })
       .catch((error) => {
         console.error("Error: ", error);
       });
   }
 
-  injectModelDefinition(explain_definition) {
+  restartModelDefinition() {
+    this.sendMessageToModelEngine({
+      type: "restart_definition",
+      message: "",
+      payload: [JSON.stringify(explain_definition)],
+    });
+  }
+
+  loadModelDefinition(explain_definition) {
     this.sendMessageToModelEngine({
       type: "eat_definition",
       message: "",
       payload: [JSON.stringify(explain_definition)],
     });
   }
+
+  saveModelDefinition(file_name) {}
+
+  saveModelState(file_name) {}
+
+  loadModelState(file_name) {}
 
   calculate(time_to_calculate) {
     this.sendMessageToModelEngine({
@@ -211,15 +233,31 @@ export default class Model {
     });
   }
 
-  getState() {
+  watchModelProps(args) {
+    // args is an array of strings with format model.prop1.prop2
+    if (typeof args === "string") {
+      args = [args];
+    }
     this.sendMessageToModelEngine({
-      type: "get_state",
+      type: "watch_props",
       message: "",
-      payload: [],
+      payload: args,
     });
   }
 
-  getData() {
+  watchModelPropsSlow(args) {
+    // args is an array of strings with format model.prop1.prop2
+    if (typeof args === "string") {
+      args = [args];
+    }
+    this.sendMessageToModelEngine({
+      type: "watch_props_slow",
+      message: "",
+      payload: args,
+    });
+  }
+
+  getModelData() {
     this.sendMessageToModelEngine({
       type: "get_data",
       message: "",
@@ -227,7 +265,7 @@ export default class Model {
     });
   }
 
-  getDataSlow() {
+  getModelDataSlow() {
     this.sendMessageToModelEngine({
       type: "get_data_slow",
       message: "",
@@ -235,109 +273,53 @@ export default class Model {
     });
   }
 
-  enable(args) {
-    if (typeof args === "string") {
-      args = [args];
-    }
-    this.sendMessage({
-      type: "enable",
-      message: "",
-      payload: args,
-    });
-  }
-
-  disable(args) {
-    if (typeof args === "string") {
-      args = [args];
-    }
-    this.sendMessage({
-      type: "disable",
-      message: "",
-      payload: args,
-    });
-  }
-
-  call(modelmethod, args = []) {
-    this.sendMessage({
-      type: "call",
-      message: "",
-      payload: [modelmethod, [...args]],
-    });
-  }
-
-  rewire(model, args) {
-    this.sendMessage({
-      type: "rewire",
-      message: model,
-      payload: args,
-    });
-  }
-
-  watchProps(args) {
-    if (typeof args === "string") {
-      args = [args];
-    }
-    this.sendMessage({
-      type: "watch_props",
-      message: "",
-      payload: args,
-    });
-  }
-
-  watchPropsSlow(args) {
-    if (typeof args === "string") {
-      args = [args];
-    }
-    this.sendMessage({
-      type: "watch_props_slow",
-      message: "",
-      payload: args,
-    });
-  }
-
-  setProps(args) {
-    // args is an array of objects containing the new settings with form {m: model, p: prop, v: value, at: time, it: time}
-    if (typeof args === "string") {
-      args = [args];
-    }
-
-    this.sendMessage({
-      type: "set_prop",
-      message: "",
-      payload: args,
-    });
-  }
-
-  getProps(args) {
-    if (typeof args === "string") {
-      args = [args];
-    }
-    this.sendMessage({
-      type: "get_props",
-      message: "",
-      payload: args,
-    });
-  }
-
-  addTask(new_task) {
-    this.sendMessage({
-      type: "add_task",
-      message: "",
-      payload: [JSON.stringify(new_task)],
-    });
-  }
-
-  removeTask(new_task) {
-    this.sendMessage({
-      type: "remove_task",
+  getModelState() {
+    this.sendMessageToModelEngine({
+      type: "get_state",
       message: "",
       payload: [],
     });
   }
 
-  addScript(new_script) {
-    new_script.forEach((task) => {
-      this.addTask(task);
+  enableSubModel(model_name) {}
+
+  disableSubModel(model_name) {}
+
+  getSubModelProps(model_name) {
+    // get the properties of a specific model
+    this.sendMessageToModelEngine({
+      type: "get_model_props",
+      message: "",
+      payload: [model_name],
     });
   }
+
+  getSubModelPropValue(property) {
+    // get the value of a specific property with string format model.prop1.prop2
+    this.sendMessageToModelEngine({
+      type: "get_prop_value",
+      message: "",
+      payload: [property],
+    });
+  }
+
+  setSubModelPropValue(new_prop_value) {
+    // set the property of a model with format {prop: model.prop1.prop2, v: value, at: time, it: time}
+    this.sendMessageToModelEngine({
+      type: "set_prop_value",
+      message: "",
+      payload: [JSON.stringify(new_prop_setting)],
+    });
+  }
+
+  callSubModelFunction(sub_model_function, args = []) {
+    // model method is string with format model.method, args is an array of arguments like
+    this.sendMessageToModelEngine({
+      type: "call",
+      message: "",
+      payload: [sub_model_function, [...args]],
+    });
+  }
+
+  rewireSubModel(args) {}
 }

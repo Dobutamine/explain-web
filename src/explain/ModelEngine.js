@@ -84,24 +84,27 @@ onmessage = (e) => {
       calculate(e.data.message);
       break;
     case "enable":
+      enable(e.data.payload);
       break;
     case "disable":
+      disable(e.data.payload);
       break;
     case "call":
+      call(e.data.payload);
       break;
     case "rewire":
       break;
     case "watch_props":
+      watch_props(e.data.payload);
       break;
     case "watch_props_slow":
+      watch_props_slow(e.data.payload);
       break;
-    case "set_props":
+    case "set_prop":
+      set_prop(e.data.payload);
       break;
     case "get_props":
-      break;
-    case "add_task":
-      break;
-    case "remove_task":
+      get_props(e.data.payload);
       break;
     case "wake_up":
       if (debug) {
@@ -125,6 +128,58 @@ onmessage = (e) => {
       break;
   }
 };
+
+const enable = function (args) {
+  // enabled the models in the list
+  args.forEach((m) => {
+    model.models[m].is_enabled = true;
+    console.log("Enabled model ", m);
+  });
+  // signal to rebuild the executiuon list
+  rebuildExecutionList = true;
+  // calculate some model seconds
+  calculate(3);
+};
+
+const disable = function (args) {
+  // enabled the models in the list
+  args.forEach((m) => {
+    model.models[m].is_enabled = false;
+    console.log("Disabled model ", m);
+  });
+  // signal to rebuild the executiuon list
+  rebuildExecutionList = true;
+  // calculate some model seconds
+  calculate(3);
+};
+
+const set_prop = function () {};
+
+const call = function (args) {
+  let [model_call, method_call] = args[0].split(".");
+  let args_method = args[1];
+  model.models[model_call][method_call](...args_method);
+  sendMessage({
+    type: "info",
+    message: `called method ${method_call} on model ${model_call} with args ${args_method}`,
+    payload: [],
+  });
+  calculate(3);
+};
+
+const watch_props = function (args) {
+  args.forEach((prop) => {
+    model.DataCollector.add_to_watchlist(prop);
+  });
+};
+
+const watch_props_slow = function (args) {
+  args.forEach((prop) => {
+    model.DataCollector.add_to_watchlist_slow(prop);
+  });
+};
+
+const get_props = function (args) {};
 
 const processModelDefinition = function (model_definition) {
   // set the error counter
