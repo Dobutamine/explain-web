@@ -23,7 +23,7 @@ export default class Model {
   no_logs = 25;
 
   // message debug fag
-  debug = true;
+  debug = false;
 
   // declare the events
   _rtf_event = new CustomEvent("rtf");
@@ -81,6 +81,22 @@ export default class Model {
     return this.message_log;
   }
 
+  start_debugger() {
+    this.debug = true;
+    this.sendMessageToModelEngine({
+      type: "start_debug",
+      message: "",
+      payload: [],
+    });
+  }
+  stop_debugger() {
+    this.debug = false;
+    this.sendMessageToModelEngine({
+      type: "stop_debug",
+      message: "",
+      payload: [],
+    });
+  }
   receiveMessageFromModelEngine() {
     // set up a listener for messages from the model engine
     this.modelEngine.onmessage = (e) => {

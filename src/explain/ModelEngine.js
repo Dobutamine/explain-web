@@ -52,7 +52,7 @@ let rtSlowCounter = 0.0;
 let rtClock = null;
 
 // set the debug mode flag
-let debug = true;
+let debug = false;
 
 // set up a listener for messages from the main thread
 onmessage = (e) => {
@@ -105,6 +105,12 @@ onmessage = (e) => {
       break;
     case "get_prop_value":
       get_prop_value(e.data.payload);
+      break;
+    case "start_debug":
+      debug = true;
+      break;
+    case "stop_debug":
+      debug = false;
       break;
     case "wake_up":
       if (debug) {

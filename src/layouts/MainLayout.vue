@@ -68,6 +68,18 @@
           style="width: 90px; font-size: 12px"
           ><q-tooltip> fast forward step size</q-tooltip></q-select
         >
+        <q-btn
+          flat
+          round
+          dense
+          :icon="butDebugIcon"
+          size="sm"
+          @click="toggleDebug"
+          :color="butDebugColor"
+          class="q-mr-sm"
+        >
+          <q-tooltip> {{ butDebugCaption }}</q-tooltip></q-btn
+        >
 
     </q-toolbar>
 
@@ -87,28 +99,37 @@ export default defineComponent({
   },
   data() {
     return {
-      selectedModelStateOnServer: "",
-      availableModelStatesOnServer: [],
-      showPopUpServer: false,
-      showPopUpSave: false,
-      showPopUpDiagram: false,
-      confirm: false,
-      stateName: "",
       playArmed: false,
       calcRunning: false,
       rtState: false,
+      debugState: false,
       butCaption: "PLAY",
       butColor: "white",
       butCalcColor: "white",
+      butDebugColor: "negative",
+      butDebugIcon: "fa-solid fa-bug",
+      butDebugCaption: "No debug",
       butIcon: "fa-solid fa-play",
       butCalcIcon: "fa-solid fa-forward-step",
       butCalcCaption: "CALCULATE",
-      statusMessage: "STATUS: not ready",
+      statusMessage: "STATUS:",
       selectedDuration: 10,
       durations: [1, 2, 3, 5, 10, 20, 30, 60, 120, 240, 360, 600, 1200, 1800],
     }
   },
   methods: {
+    toggleDebug() {
+      this.debugState = !this.debugState
+      if (this.debugState) {
+        this.butDebugColor = "positive"
+        this.butDebugCaption = "Debug"
+        explain.start_debugger();
+      } else {
+        this.butDebugColor = "negative"
+        this.butDebugCaption = "No debug"
+        explain.stop_debugger();
+      }
+    },
     togglePlay() {
       this.rtState = !this.rtState;
       if (this.rtState) {
