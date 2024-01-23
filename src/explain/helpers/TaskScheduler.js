@@ -11,9 +11,6 @@ export default class TaskScheduler {
   _update_interval = 0.015;
   _update_counter = 0.0;
 
-  _cleanup_interval = 1.0;
-  _cleanup_counter = 0.0;
-
   // local parameters
   _model_engine = {};
   _t = 0.0005;
@@ -111,7 +108,7 @@ export default class TaskScheduler {
               }
               break;
 
-            case "command":
+            case "function":
               if (task.it <= 0) {
                 task.status = "completed";
                 completed = true;
@@ -170,7 +167,6 @@ export default class TaskScheduler {
 
     if (new_prop_value.type === "number") {
       if (new_prop_value.ct === "rel") {
-        // the target is a relative change in percentage
         new_task.t = new_task.o * new_prop_value.t;
       }
       if (new_task.it > 0.0) {

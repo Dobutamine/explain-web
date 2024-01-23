@@ -83,28 +83,22 @@ onmessage = (e) => {
     case "calc":
       calculate(e.data.message);
       break;
-    case "enable":
-      enable(e.data.payload);
-      break;
-    case "disable":
-      disable(e.data.payload);
-      break;
-    case "call":
-      call(e.data.payload);
-      break;
     case "rewire":
       break;
     case "watch_props":
-      watch_props(e.data.payload);
+      watchProps(e.data.payload);
       break;
     case "watch_props_slow":
-      watch_props_slow(e.data.payload);
+      watchPropsSlow(e.data.payload);
+      break;
+    case "get_model_props":
+      getProps(e.data.payload);
       break;
     case "set_prop_value":
-      set_prop_value(JSON.parse(e.data.payload));
+      setPropValue(JSON.parse(e.data.payload));
       break;
-    case "get_props":
-      get_props(e.data.payload);
+    case "get_prop_value":
+      getPropValue(e.data.payload);
       break;
     case "wake_up":
       if (debug) {
@@ -129,59 +123,54 @@ onmessage = (e) => {
   }
 };
 
-const enable = function (args) {
-  // enabled the models in the list
-  args.forEach((m) => {
-    model.models[m].is_enabled = true;
-    console.log("Enabled model ", m);
-  });
-  // signal to rebuild the executiuon list
-  rebuildExecutionList = true;
-  // calculate some model seconds
-  calculate(3);
-};
-
-const disable = function (args) {
-  // enabled the models in the list
-  args.forEach((m) => {
-    model.models[m].is_enabled = false;
-    console.log("Disabled model ", m);
-  });
-  // signal to rebuild the executiuon list
-  rebuildExecutionList = true;
-  // calculate some model seconds
-  calculate(3);
-};
-
-const set_prop_value = function (new_prop_value) {
+const setPropValue = function (new_prop_value) {
   model["TaskScheduler"].addTask(new_prop_value);
 };
 
-const call = function (args) {
-  let [model_call, method_call] = args[0].split(".");
-  let args_method = args[1];
-  model.models[model_call][method_call](...args_method);
+const getPropValue = function (prop) {
+  let p = prop.split(".");
+  let v = {};
+  switch (p.length) {
+    case 2:
+      v = model.models[p[0]][p[1]];
+      break;
+    case 3:
+      v = model.models[p[0]][p[1]][p[2]];
+      break;
+  }
   sendMessage({
-    type: "info",
-    message: `called method ${method_call} on model ${model_call} with args ${args_method}`,
-    payload: [],
+    type: "prop_value",
+    message: "",
+    payload: v,
   });
-  calculate(3);
 };
 
-const watch_props = function (args) {
+const watchProps = function (args) {
   args.forEach((prop) => {
     model.DataCollector.add_to_watchlist(prop);
   });
 };
 
-const watch_props_slow = function (args) {
+const watchPropsSlow = function (args) {
   args.forEach((prop) => {
     model.DataCollector.add_to_watchlist_slow(prop);
   });
 };
 
-const get_props = function (args) {};
+const getProps = function (model_name) {
+  // return an array with all the props of the submodel
+  let model_props = {};
+  for (let prop in model.models[model_name]) {
+    if (prop[[0]] !== "_") {
+      model_props[prop] = model.models[model_name][prop];
+    }
+  }
+  sendMessage({
+    type: "model_props",
+    message: model_name,
+    payload: JSON.stringify(model_props),
+  });
+};
 
 const processModelDefinition = function (model_definition) {
   // set the error counter

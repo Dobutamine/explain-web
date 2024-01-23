@@ -36,27 +36,14 @@ export default defineComponent({
       explain.getState();
     },
     enable() {
-      explain.setSubModelPropValue({
-      prop: "LV.u_vol",
-      t: 0.001,
-      at: 0.0,
-      it: 4.0,
-      type: "number",
-      ct: "abs",
-    })
+      explain.enable("LV")
     },
     disable() {
-      explain.setSubModelPropValue({
-      prop: "LV.u_vol",
-      t: 0.002,
-      at: 0.0,
-      it: 4.0,
-      type: "number",
-      ct: "abs",
-    })
+      explain.disable("LV")
     },
     call() {
-      explain.call("AA.volume_out", [10.0])
+      //explain.callModelFunction("AA.test_function", [])
+      explain.getModelProps("LV")
     },
     add_to_watchlist() {
       explain.watchProps(["LV.pres", "RV.vol"])

@@ -29,6 +29,7 @@ export default class Model {
   _rtf_event = new CustomEvent("rtf");
   _rts_event = new CustomEvent("rts");
   _data_event = new CustomEvent("data");
+
   _data_slow_event = new CustomEvent("data_slow");
   _info_event = new CustomEvent("info");
   _state_event = new CustomEvent("state");
@@ -84,6 +85,12 @@ export default class Model {
     // set up a listener for messages from the model engine
     this.modelEngine.onmessage = (e) => {
       switch (e.data.type) {
+        case "model_props":
+          console.log(JSON.parse(e.data.payload));
+          break;
+        case "prop_value":
+          console.log(e.data.payload);
+          break;
         case "info":
           if (this.debug) {
             console.info(e.data.message);
@@ -281,44 +288,58 @@ export default class Model {
     });
   }
 
-  enableSubModel(model_name) {}
+  enable(model_name, at = 0) {
+    this.setPropValue(model_name + ".is_enabled", true, 0, at);
+  }
 
-  disableSubModel(model_name) {}
+  disable(model_name, at = 0) {
+    this.setPropValue(model_name + ".is_enabled", false, 0, at);
+  }
 
-  getSubModelProps(model_name) {
+  getModelProps(model_name) {
     // get the properties of a specific model
     this.sendMessageToModelEngine({
       type: "get_model_props",
       message: "",
-      payload: [model_name],
+      payload: model_name,
     });
   }
 
-  getSubModelPropValue(property) {
+  getPropValue(property) {
     // get the value of a specific property with string format model.prop1.prop2
     this.sendMessageToModelEngine({
       type: "get_prop_value",
       message: "",
-      payload: [property],
+      payload: property,
     });
   }
 
-  setSubModelPropValue(new_prop) {
+  setPropValue(prop, new_value, it = 0, at = 0) {
     // set the property of a model with format {prop: model.prop1.prop2, v: value, at: time, it: time, type: task_type}
-
     this.sendMessageToModelEngine({
       type: "set_prop_value",
       message: "",
-      payload: JSON.stringify(new_prop),
+      payload: JSON.stringify({
+        prop: prop,
+        t: new_value,
+        it: it,
+        at: at,
+        type: typeof new_value,
+      }),
     });
   }
 
-  callSubModelFunction(sub_model_function, args = []) {
-    // model method is string with format model.method, args is an array of arguments like
+  callModelFunction(model_function, args, at = 0) {
     this.sendMessageToModelEngine({
-      type: "call",
+      type: "set_prop_value",
       message: "",
-      payload: [sub_model_function, [...args]],
+      payload: JSON.stringify({
+        prop: model_function,
+        t: args,
+        it: 0,
+        at: at,
+        type: "function",
+      }),
     });
   }
 

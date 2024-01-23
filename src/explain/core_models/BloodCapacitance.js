@@ -141,6 +141,9 @@ export class BloodCapacitance {
     this.vol += dvol;
   }
 
+  test_function() {
+    console.log("test_function");
+  }
   volume_out(dvol) {
     // do not change the volume if the composition is fixed
     if (this.fixed_composition) {
