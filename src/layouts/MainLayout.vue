@@ -16,8 +16,8 @@
           <div>{{ statusMessage }}</div>
         </q-toolbar-title>
         <div class="q-mr-lg text-overline">
-          <b>baseline neonate</b>
-          <q-tooltip> baseline neonate </q-tooltip>
+          <b>{{ modelName }}</b>
+          <q-tooltip> {{ modelDescription }} </q-tooltip>
         </div>
 
         <q-btn
@@ -99,6 +99,8 @@ export default defineComponent({
   },
   data() {
     return {
+      modelName: "",
+      modelDescription: "",
       playArmed: false,
       calcRunning: false,
       rtState: false,
@@ -112,6 +114,7 @@ export default defineComponent({
       butIcon: "fa-solid fa-play",
       butCalcIcon: "fa-solid fa-forward-step",
       butCalcCaption: "CALCULATE",
+      infoMessage: "",
       statusMessage: "STATUS:",
       selectedDuration: 10,
       durations: [1, 2, 3, 5, 10, 20, 30, 60, 120, 240, 360, 600, 1200, 1800],
@@ -169,6 +172,15 @@ export default defineComponent({
         }
       }
     },
+    infoUpdate() {
+      this.infoMessage = explain.info_message;
+      if (this.infoMessage.includes("model definition")) {
+        this.modelName = explain.modelDefinition.name
+        this.modelDescription = explain.modelDefinition.description
+      }
+
+    }
+,
     statusUpdate() {
       this.statusMessage = explain.status_message;
 
@@ -182,17 +194,25 @@ export default defineComponent({
         this.butCaption = "PLAY";
       }
 
+
+
+
       this.calculationReady();
     }
   },
   beforeUnmount() {
     document.removeEventListener("status", this.statusUpdate);
+    document.removeEventListener("info", this.statusUpdate);
   },
   mounted() {
     try {
       document.removeEventListener("status", this.statusUpdate);
     } catch {}
     document.addEventListener("status", this.statusUpdate);
+    try {
+      document.removeEventListener("info", this.infoUpdate);
+    } catch {}
+    document.addEventListener("info", this.infoUpdate);
 
 
   }

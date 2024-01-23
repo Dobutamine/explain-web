@@ -310,8 +310,13 @@ const process_model_definition = function (model_definition) {
     return false;
   } else {
     sendMessage({
-      type: "status",
+      type: "info",
       message: `started model definition "${model.name}"`,
+      payload: [],
+    });
+    sendMessage({
+      type: "status",
+      message: `ready to rumble.`,
       payload: [],
     });
     return true;
