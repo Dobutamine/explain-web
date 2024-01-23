@@ -58,11 +58,18 @@ let debug = false;
 onmessage = (e) => {
   switch (e.data.type) {
     case "eat_definition":
-      sendMessage({
-        type: "info",
-        message: "Ah! Food! Consuming a fresh ModelDefinition. ",
-        payload: [],
-      });
+      if (debug) {
+        sendMessage({
+          type: "info",
+          message: "Ah! Food! Consuming a fresh ModelDefinition. ",
+          payload: [],
+        });
+      }
+      model_initialized = process_model_definition(
+        JSON.parse(e.data.payload[0])
+      );
+      break;
+    case "restart_definition":
       model_initialized = process_model_definition(
         JSON.parse(e.data.payload[0])
       );
@@ -196,8 +203,21 @@ const process_model_definition = function (model_definition) {
   // set the error counter
   let errors = 0;
 
+  // set model initializer to false
+  model_initialized = false;
+
+  // rebuild the execution list
+  rebuildExecutionList = true;
+
   // store the model definition
   model_definition = model_definition;
+
+  // erase all data
+  model_data = {};
+  model_data_slow = {};
+
+  // stop all timers
+  clearInterval(rtClock);
 
   // clear the current model object
   model = {
@@ -283,15 +303,15 @@ const process_model_definition = function (model_definition) {
 
   if (errors > 0) {
     sendMessage({
-      type: "info",
-      message: "Vomit! Not ready, that was a faul ModelDefinition.",
+      type: "status",
+      message: `error loading model definition "${model.name}"`,
       payload: [],
     });
     return false;
   } else {
     sendMessage({
-      type: "info",
-      message: "Burrp! Ready, that was a delicious ModelDefinition.",
+      type: "status",
+      message: `started model definition "${model.name}"`,
       payload: [],
     });
     return true;

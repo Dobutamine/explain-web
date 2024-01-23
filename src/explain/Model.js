@@ -218,11 +218,12 @@ export default class Model {
     this.sendMessageToModelEngine({
       type: "restart_definition",
       message: "",
-      payload: [JSON.stringify(explain_definition)],
+      payload: [JSON.stringify(this.modelDefinition)],
     });
   }
 
   loadModelDefinition(explain_definition) {
+    this.modelDefinition = { ...explain_definition };
     this.sendMessageToModelEngine({
       type: "eat_definition",
       message: "",

@@ -108,7 +108,7 @@ export default defineComponent({
       butCalcColor: "white",
       butDebugColor: "negative",
       butDebugIcon: "fa-solid fa-bug",
-      butDebugCaption: "No debug",
+      butDebugCaption: "no debug",
       butIcon: "fa-solid fa-play",
       butCalcIcon: "fa-solid fa-forward-step",
       butCalcCaption: "CALCULATE",
@@ -122,11 +122,11 @@ export default defineComponent({
       this.debugState = !this.debugState
       if (this.debugState) {
         this.butDebugColor = "positive"
-        this.butDebugCaption = "Debug"
+        this.butDebugCaption = "debug"
         explain.start_debugger();
       } else {
         this.butDebugColor = "negative"
-        this.butDebugCaption = "No debug"
+        this.butDebugCaption = "no debug"
         explain.stop_debugger();
       }
     },
@@ -148,7 +148,7 @@ export default defineComponent({
       }
     },
     reload() {
-      console.log("MainLayout: Reload model")
+      explain.restartModelDefinition();
     },
     calculate() {
       this.calcRunning = !this.calcRunning;
