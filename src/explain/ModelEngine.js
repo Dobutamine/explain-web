@@ -83,13 +83,17 @@ onmessage = (e) => {
     case "calc":
       calculate(e.data.message);
       break;
-    case "rewire":
-      break;
     case "watch_props":
       watchProps(e.data.payload);
       break;
     case "watch_props_slow":
       watchPropsSlow(e.data.payload);
+      break;
+    case "clear_watchlist":
+      clearWatchList();
+      break;
+    case "clear_watchlist_slow":
+      clearWatchListSlow();
       break;
     case "get_model_props":
       getProps(e.data.payload);
@@ -141,8 +145,16 @@ const getPropValue = function (prop) {
   sendMessage({
     type: "prop_value",
     message: "",
-    payload: v,
+    payload: JSON.stringify({ prop: prop, value: v }),
   });
+};
+
+const clearWatchList = function () {
+  model.DataCollector.clear_watchlist();
+};
+
+const clearWatchListSlow = function () {
+  model.DataCollector.clear_watchlist_slow();
 };
 
 const watchProps = function (args) {
@@ -276,11 +288,6 @@ const processModelDefinition = function (model_definition) {
     });
     return true;
   }
-};
-
-const sendMessage = function (message) {
-  message.message = "ModelEngine: " + message.message;
-  postMessage(message);
 };
 
 // prepare for a model run
@@ -501,6 +508,19 @@ const getModelData = function () {
   });
 };
 
+// get the slow update model data from the datacollector
+const getModelDataSlow = function () {
+  // refresh the model data on the model instance
+  model_data_slow = model.DataCollector.get_model_data_slow();
+
+  // send data to the ui
+  postMessage({
+    type: "data_slow",
+    message: "",
+    payload: [model_data_slow],
+  });
+};
+
 // get the realtime model data from the datacollector
 const getModelDataRt = function () {
   // refresh the model data on the model instance
@@ -527,15 +547,7 @@ const getModelDataRtSlow = function () {
   });
 };
 
-// get the slow update model data from the datacollector
-const getModelDataSlow = function () {
-  // refresh the model data on the model instance
-  model_data_slow = model.DataCollector.get_model_data_slow();
-
-  // send data to the ui
-  postMessage({
-    type: "data_slow",
-    message: "",
-    payload: [model_data_slow],
-  });
+const sendMessage = function (message) {
+  message.message = "ModelEngine: " + message.message;
+  postMessage(message);
 };

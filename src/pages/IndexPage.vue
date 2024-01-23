@@ -24,7 +24,7 @@ export default defineComponent({
   name: 'IndexPage',
   methods: {
     calculate() {
-      explain.calculate(5);
+      explain.calculate(60);
     },
     start() {
       explain.start();
@@ -44,6 +44,7 @@ export default defineComponent({
     call() {
       //explain.callModelFunction("AA.test_function", [])
       explain.getModelProps("LV")
+      explain.getPropValue("LV.u_vol")
     },
     add_to_watchlist() {
       explain.watchProps(["LV.pres", "RV.vol"])

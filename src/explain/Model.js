@@ -86,10 +86,14 @@ export default class Model {
     this.modelEngine.onmessage = (e) => {
       switch (e.data.type) {
         case "model_props":
-          console.log(JSON.parse(e.data.payload));
+          if (this.debug) {
+            console.log(JSON.parse(e.data.payload));
+          }
           break;
         case "prop_value":
-          console.log(e.data.payload);
+          if (this.debug) {
+            console.log(JSON.parse(e.data.payload));
+          }
           break;
         case "info":
           if (this.debug) {
@@ -210,12 +214,6 @@ export default class Model {
     });
   }
 
-  saveModelDefinition(file_name) {}
-
-  saveModelState(file_name) {}
-
-  loadModelState(file_name) {}
-
   calculate(time_to_calculate) {
     this.sendMessageToModelEngine({
       type: "calc",
@@ -235,6 +233,22 @@ export default class Model {
   stop() {
     this.sendMessageToModelEngine({
       type: "stop",
+      message: "",
+      payload: [],
+    });
+  }
+
+  clearWatchList() {
+    this.sendMessageToModelEngine({
+      type: "clear_watchlist",
+      message: "",
+      payload: [],
+    });
+  }
+
+  clearWatchListSlow() {
+    this.sendMessageToModelEngine({
+      type: "clear_watchlist_slow",
       message: "",
       payload: [],
     });
