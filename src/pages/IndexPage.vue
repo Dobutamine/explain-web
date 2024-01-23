@@ -24,7 +24,7 @@ export default defineComponent({
   name: 'IndexPage',
   methods: {
     calculate() {
-      explain.calculate(20);
+      explain.calculate(5);
     },
     start() {
       explain.start();
@@ -36,10 +36,24 @@ export default defineComponent({
       explain.getState();
     },
     enable() {
-      explain.enable(["LV", "RV"])
+      explain.setSubModelPropValue({
+      prop: "LV.u_vol",
+      t: 0.001,
+      at: 0.0,
+      it: 4.0,
+      type: "number",
+      ct: "abs",
+    })
     },
     disable() {
-      explain.disable(["LV", "RV"])
+      explain.setSubModelPropValue({
+      prop: "LV.u_vol",
+      t: 0.002,
+      at: 0.0,
+      it: 4.0,
+      type: "number",
+      ct: "abs",
+    })
     },
     call() {
       explain.call("AA.volume_out", [10.0])

@@ -100,8 +100,8 @@ onmessage = (e) => {
     case "watch_props_slow":
       watch_props_slow(e.data.payload);
       break;
-    case "set_prop":
-      set_prop(e.data.payload);
+    case "set_prop_value":
+      set_prop_value(JSON.parse(e.data.payload));
       break;
     case "get_props":
       get_props(e.data.payload);
@@ -153,7 +153,9 @@ const disable = function (args) {
   calculate(3);
 };
 
-const set_prop = function () {};
+const set_prop_value = function (new_prop_value) {
+  model["TaskScheduler"].addTask(new_prop_value);
+};
 
 const call = function (args) {
   let [model_call, method_call] = args[0].split(".");
@@ -419,6 +421,9 @@ const modelStep = function () {
   Object.values(model.execution_list).forEach((model_component) => {
     model_component.step_model();
   });
+
+  // do the tasks
+  model["TaskScheduler"].update_tasks();
 
   // call the datacollector
   model["DataCollector"].collect_data(model.model_time_total);

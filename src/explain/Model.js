@@ -303,12 +303,13 @@ export default class Model {
     });
   }
 
-  setSubModelPropValue(new_prop_value) {
-    // set the property of a model with format {prop: model.prop1.prop2, v: value, at: time, it: time}
+  setSubModelPropValue(new_prop) {
+    // set the property of a model with format {prop: model.prop1.prop2, v: value, at: time, it: time, type: task_type}
+
     this.sendMessageToModelEngine({
       type: "set_prop_value",
       message: "",
-      payload: [JSON.stringify(new_prop_setting)],
+      payload: JSON.stringify(new_prop),
     });
   }
 
