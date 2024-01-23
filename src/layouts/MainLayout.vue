@@ -1,116 +1,191 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
+  <q-layout view="hHh lpR fFf">
+    <q-header
+      class="bg-indigo-10 text-white headerCustomStyle"
+      height-hint="68"
     >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+  </q-header>
 
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
-    <q-page-container>
+  <q-page-container>
       <router-view />
     </q-page-container>
+
+  <q-footer class="bg-grey-8 text-white footerCustomStyle">
+    <q-toolbar>
+      <q-toolbar-title class="text-overline">
+          <div>{{ statusMessage }}</div>
+        </q-toolbar-title>
+        <div class="q-mr-lg text-overline">
+          <b>baseline neonate</b>
+          <q-tooltip> baseline neonate </q-tooltip>
+        </div>
+
+        <q-btn
+          flat
+          round
+          dense
+          size="sm"
+          :icon="butIcon"
+          :color="butColor"
+          class="q-mr-sm"
+          @click="togglePlay"
+        >
+          <q-tooltip> start/stop model </q-tooltip></q-btn
+        >
+        <q-btn
+          flat
+          round
+          dense
+          size="sm"
+          icon="fa-solid fa-rotate-right"
+          color="white"
+          class="q-mr-sm"
+          @click="reload"
+        >
+          <q-tooltip> restart model </q-tooltip></q-btn
+        >
+
+        <q-btn
+          flat
+          round
+          dense
+          :icon="butCalcIcon"
+          size="sm"
+          @click="calculate"
+          :color="butCalcColor"
+          class="q-mr-sm"
+        >
+          <q-tooltip> fast forward model</q-tooltip></q-btn
+        >
+        <q-select
+          class="q-ml-md q-mr-md"
+          label-color="white"
+          v-model="selectedDuration"
+          :options="durations"
+          hide-bottom-space
+          dense
+          label="step (sec.)"
+          style="width: 90px; font-size: 12px"
+          ><q-tooltip> fast forward step size</q-tooltip></q-select
+        >
+
+    </q-toolbar>
+
+  </q-footer>
+
   </q-layout>
 </template>
 
 <script>
 import { defineComponent, ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
-
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
+import { explain } from 'src/boot/explain';
 
 export default defineComponent({
   name: 'MainLayout',
 
-  components: {
-    EssentialLink
-  },
-
   setup () {
-    const leftDrawerOpen = ref(false)
-
+  },
+  data() {
     return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
+      selectedModelStateOnServer: "",
+      availableModelStatesOnServer: [],
+      showPopUpServer: false,
+      showPopUpSave: false,
+      showPopUpDiagram: false,
+      confirm: false,
+      stateName: "",
+      playArmed: false,
+      calcRunning: false,
+      rtState: false,
+      butCaption: "PLAY",
+      butColor: "white",
+      butCalcColor: "white",
+      butIcon: "fa-solid fa-play",
+      butCalcIcon: "fa-solid fa-forward-step",
+      butCalcCaption: "CALCULATE",
+      statusMessage: "STATUS: not ready",
+      selectedDuration: 10,
+      durations: [1, 2, 3, 5, 10, 20, 30, 60, 120, 240, 360, 600, 1200, 1800],
     }
+  },
+  methods: {
+    togglePlay() {
+      this.rtState = !this.rtState;
+      if (this.rtState) {
+        this.playArmed = true;
+        this.selectedDuration = 3;
+        explain.start();
+        this.butColor = "negative";
+        this.butIcon = "fa-solid fa-stop";
+        this.butCaption = "STOP";
+      } else {
+        explain.stop();
+        this.playArmed = false;
+        this.butColor = "white";
+        this.butIcon = "fa-solid fa-play";
+        this.butCaption = "PLAY";
+      }
+    },
+    reload() {
+      console.log("MainLayout: Reload model")
+    },
+    calculate() {
+      this.calcRunning = !this.calcRunning;
+      if (this.calcRunning) {
+        this.butCalcColor = "negative";
+        explain.calculate(parseInt(this.selectedDuration));
+      }
+    },
+    calculationReady(e) {
+      if (this.statusMessage.includes("calculation ready")) {
+        this.calcRunning = false;
+        this.butCalcCaption = "CALCULATE";
+        this.butCalcColor = "white";
+
+        if (this.playArmed) {
+          this.playArmed = false;
+          explain.start();
+        }
+      }
+    },
+    statusUpdate() {
+      this.statusMessage = explain.status_message;
+
+      if (this.statusMessage.includes("dependency error")) {
+        this.calcRunning = false;
+        this.butCalcCaption = "CALCULATE";
+        this.butCalcColor = "white";
+        this.rtState = false;
+        this.butColor = "white";
+        this.butIcon = "fa-solid fa-play";
+        this.butCaption = "PLAY";
+      }
+
+      this.calculationReady();
+    }
+  },
+  beforeUnmount() {
+    document.removeEventListener("status", this.statusUpdate);
+  },
+  mounted() {
+    try {
+      document.removeEventListener("status", this.statusUpdate);
+    } catch {}
+    document.addEventListener("status", this.statusUpdate);
+
+
   }
 })
 </script>
+<style scoped>
+.headerCustomStyle {
+  height: 30px !important;
+  display: flex;
+  align-items: center !important;
+}
+.footerCustomStyle {
+  height: 30px !important;
+  display: flex;
+  align-items: center !important;
+}
+</style>

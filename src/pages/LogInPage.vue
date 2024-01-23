@@ -1,10 +1,6 @@
 <template>
-  <q-page class="flex flex-center">
-    <img
-      alt="Quasar logo"
-      src="~assets/quasar-logo-vertical.svg"
-      style="width: 200px; height: 200px"
-    >
+  <q-page padding class="bg-black">
+    LOGIN PAGE
     <q-btn @click="calculate"> calculate</q-btn>
     <q-btn @click="start"> start</q-btn>
     <q-btn @click="stop"> stop</q-btn>
@@ -21,7 +17,7 @@ import { explain } from 'src/boot/explain';
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'IndexPage',
+  name: 'LogInPage',
   methods: {
     calculate() {
       explain.calculate(60);
@@ -50,6 +46,10 @@ export default defineComponent({
       explain.watchProps(["LV.pres", "RV.vol"])
       explain.watchPropsSlow(["AA.aboxy.to2"])
     }
+  },
+  beforeUnmount() {},
+  mounted() {
+    this.$q.dark.set(true);
   }
 })
 </script>

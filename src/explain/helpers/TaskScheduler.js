@@ -26,12 +26,12 @@ export default class TaskScheduler {
   update_tasks() {
     if (this._update_counter >= this._update_interval) {
       this._update_counter = 0;
-      this.doTasks();
+      this.do_tasks();
     }
     this._update_counter += this._t;
   }
 
-  cleanUp() {
+  clean_up() {
     this._completed_tasks.forEach((id) => {
       let index = -1;
       this.tasks.forEach((task, i) => {
@@ -46,7 +46,7 @@ export default class TaskScheduler {
     });
   }
 
-  doTasks() {
+  do_tasks() {
     // is there a completed task
     let completed = false;
     this.tasks.forEach((task, index) => {
@@ -125,13 +125,13 @@ export default class TaskScheduler {
       }
     });
     if (completed) {
-      this.cleanUp();
+      this.clean_up();
     }
   }
 
-  addTask(new_prop_value) {
+  add_task(new_prop_value) {
     // first cleanup
-    this.cleanUp();
+    this.clean_up();
 
     // build task
     let new_task = {

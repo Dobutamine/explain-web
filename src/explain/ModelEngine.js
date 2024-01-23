@@ -63,7 +63,9 @@ onmessage = (e) => {
         message: "Ah! Food! Consuming a fresh ModelDefinition. ",
         payload: [],
       });
-      model_initialized = processModelDefinition(JSON.parse(e.data.payload[0]));
+      model_initialized = process_model_definition(
+        JSON.parse(e.data.payload[0])
+      );
       break;
     case "start":
       start();
@@ -72,37 +74,37 @@ onmessage = (e) => {
       stop();
       break;
     case "get_state":
-      getState();
+      get_state();
       break;
     case "get_data":
-      getModelData();
+      get_model_data();
       break;
     case "get_data_slow":
-      getModelDataSlow();
+      get_model_data_slow();
       break;
     case "calc":
       calculate(e.data.message);
       break;
     case "watch_props":
-      watchProps(e.data.payload);
+      watch_props(e.data.payload);
       break;
     case "watch_props_slow":
-      watchPropsSlow(e.data.payload);
+      watch_props_slow(e.data.payload);
       break;
     case "clear_watchlist":
-      clearWatchList();
+      clear_watchtlist();
       break;
     case "clear_watchlist_slow":
-      clearWatchListSlow();
+      clear_watchlist_slow();
       break;
     case "get_model_props":
-      getProps(e.data.payload);
+      get_props(e.data.payload);
       break;
     case "set_prop_value":
-      setPropValue(JSON.parse(e.data.payload));
+      set_prop_value(JSON.parse(e.data.payload));
       break;
     case "get_prop_value":
-      getPropValue(e.data.payload);
+      get_prop_value(e.data.payload);
       break;
     case "wake_up":
       if (debug) {
@@ -127,11 +129,11 @@ onmessage = (e) => {
   }
 };
 
-const setPropValue = function (new_prop_value) {
-  model["TaskScheduler"].addTask(new_prop_value);
+const set_prop_value = function (new_prop_value) {
+  model["TaskScheduler"].add_task(new_prop_value);
 };
 
-const getPropValue = function (prop) {
+const get_prop_value = function (prop) {
   let p = prop.split(".");
   let v = {};
   switch (p.length) {
@@ -149,27 +151,27 @@ const getPropValue = function (prop) {
   });
 };
 
-const clearWatchList = function () {
+const clear_watchtlist = function () {
   model.DataCollector.clear_watchlist();
 };
 
-const clearWatchListSlow = function () {
+const clear_watchlist_slow = function () {
   model.DataCollector.clear_watchlist_slow();
 };
 
-const watchProps = function (args) {
+const watch_props = function (args) {
   args.forEach((prop) => {
     model.DataCollector.add_to_watchlist(prop);
   });
 };
 
-const watchPropsSlow = function (args) {
+const watch_props_slow = function (args) {
   args.forEach((prop) => {
     model.DataCollector.add_to_watchlist_slow(prop);
   });
 };
 
-const getProps = function (model_name) {
+const get_props = function (model_name) {
   // return an array with all the props of the submodel
   let model_props = {};
   for (let prop in model.models[model_name]) {
@@ -184,7 +186,7 @@ const getProps = function (model_name) {
   });
 };
 
-const processModelDefinition = function (model_definition) {
+const process_model_definition = function (model_definition) {
   // set the error counter
   let errors = 0;
 
@@ -291,7 +293,7 @@ const processModelDefinition = function (model_definition) {
 };
 
 // prepare for a model run
-const prepareForExecution = function () {
+const prepare_for_execution = function () {
   // iterate over the models and add the models which should be executed to the list
   Object.values(model.models).forEach((model_comp) => {
     if (model_comp.is_enabled) {
@@ -301,10 +303,10 @@ const prepareForExecution = function () {
   });
 
   // build the dependency list
-  buildDependencyList();
+  build_dependency_list();
 
   // check the dependencies against the execution list
-  let check_result = checkDependencies();
+  let check_result = check_dependencies();
 
   // handle the check result
   if (check_result.length > 0) {
@@ -326,7 +328,7 @@ const prepareForExecution = function () {
 };
 
 // check whether or not all dependencies of met
-const checkDependencies = function () {
+const check_dependencies = function () {
   let dep_not_found = [];
   // check whether the models in the executionlist match the dependency list
   model.dependency_list.forEach((dep) => {
@@ -346,7 +348,7 @@ const checkDependencies = function () {
 };
 
 // build the dependency list
-const buildDependencyList = function () {
+const build_dependency_list = function () {
   model.dependency_list = [];
   let depList = [];
   Object.values(model.execution_list).forEach((model_comp) => {
@@ -366,7 +368,7 @@ const calculate = function (time_to_calculate) {
   let exec_check = false;
 
   // build the execution list
-  exec_check = prepareForExecution();
+  exec_check = prepare_for_execution();
 
   // if the dependency or execution list composition check fails return and don't execute the model run
   if (!exec_check) {
@@ -386,7 +388,7 @@ const calculate = function (time_to_calculate) {
     });
     const start = performance.now();
     for (let i = 0; i < noOfSteps; i++) {
-      modelStep();
+      model_step();
     }
     const end = performance.now();
     const step_time = (end - start) / noOfSteps;
@@ -400,8 +402,7 @@ const calculate = function (time_to_calculate) {
     });
 
     // get the data from the datacollector
-    getModelData();
-    getModelDataSlow();
+    get_state();
   } else {
     sendMessage({
       type: "error",
@@ -412,7 +413,7 @@ const calculate = function (time_to_calculate) {
 };
 
 // do a single model step
-const modelStep = function () {
+const model_step = function () {
   // iterate over all models
   Object.values(model.execution_list).forEach((model_component) => {
     model_component.step_model();
@@ -428,20 +429,20 @@ const modelStep = function () {
   model.model_time_total += model.modeling_stepsize;
 };
 
-const modelStepRt = function () {
+const model_step_rt = function () {
   // so the rt_interval determines how often the model is calculated
   const noOfSteps = rtInterval / model.modeling_stepsize;
   for (let i = 0; i < noOfSteps; i++) {
-    modelStep();
+    model_step();
   }
 
   // get model data
-  getModelDataRt();
+  get_model_data_rt();
 
   // get slow model data
   if (rtSlowCounter > rtSlowInterval) {
     rtSlowCounter = 0;
-    getModelDataRtSlow();
+    get_model_data_rt_slow();
   }
   rtSlowCounter += rtInterval;
 };
@@ -451,12 +452,12 @@ const start = function () {
   if (model_initialized) {
     // rebuilf the execution list if necessary
     if (rebuildExecutionList) {
-      prepareForExecution();
+      prepare_for_execution();
     }
 
     // call the modelStep every rt_interval seconds
     clearInterval(rtClock);
-    rtClock = setInterval(modelStepRt, rtInterval * 1000.0);
+    rtClock = setInterval(model_step_rt, rtInterval * 1000.0);
     // send status update
     sendMessage({
       type: "status",
@@ -477,6 +478,8 @@ const stop = function () {
   if (model_initialized) {
     clearInterval(rtClock);
     rtClock = null;
+    // get the data from the datacollector
+    get_state();
     sendMessage({
       type: "status",
       message: `realtime model stopped.`,
@@ -486,7 +489,7 @@ const stop = function () {
 };
 
 // get the current whole model state
-const getState = function () {
+const get_state = function () {
   // refresh the model state on the model instance
   postMessage({
     type: "state",
@@ -496,7 +499,7 @@ const getState = function () {
 };
 
 // get the realtime model data from the datacollector
-const getModelData = function () {
+const get_model_data = function () {
   // refresh the model data on the model instance
   model_data = model.DataCollector.get_model_data();
 
@@ -509,7 +512,7 @@ const getModelData = function () {
 };
 
 // get the slow update model data from the datacollector
-const getModelDataSlow = function () {
+const get_model_data_slow = function () {
   // refresh the model data on the model instance
   model_data_slow = model.DataCollector.get_model_data_slow();
 
@@ -522,7 +525,7 @@ const getModelDataSlow = function () {
 };
 
 // get the realtime model data from the datacollector
-const getModelDataRt = function () {
+const get_model_data_rt = function () {
   // refresh the model data on the model instance
   model_data = model.DataCollector.get_model_data();
 
@@ -535,7 +538,7 @@ const getModelDataRt = function () {
 };
 
 // get the realtime model data from the datacollector
-const getModelDataRtSlow = function () {
+const get_model_data_rt_slow = function () {
   // refresh the model data on the model instance
   model_data = model.DataCollector.get_model_data_slow();
 

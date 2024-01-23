@@ -356,6 +356,4 @@ export default class Model {
       }),
     });
   }
-
-  rewireSubModel(args) {}
 }
