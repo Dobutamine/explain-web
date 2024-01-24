@@ -39,15 +39,24 @@ export class BloodCapacitance {
 
   // dependent parameters
   vol = 0.0;
+  vol_max = 0.0;
+  vol_min = 0.0;
   pres = 0.0;
   pres_in = 0.0;
   pres_out = 0.0;
   pres_tm = 0.0;
+  pres_max = 0.0;
+  pres_min = 0.0;
 
   // local parameters
   _model_engine = {};
+  _heart = {};
   _is_initialized = false;
   _t = 0.0005;
+  _temp_pres_max = -1000.0;
+  _temp_pres_min = 1000.0;
+  _temp_vol_max = -1000.0;
+  _temp_vol_min = 1000.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -66,6 +75,9 @@ export class BloodCapacitance {
     args.forEach((arg) => {
       this[arg["key"]] = arg["value"];
     });
+
+    // reference to the heart
+    this._heart = this._model_engine.models["Heart"];
 
     // set the modeling step size
     this._t = this._model_engine.modeling_stepsize;
@@ -130,10 +142,41 @@ export class BloodCapacitance {
     // calculate the total pressure
     this.pres = this.pres_in + this.pres_out;
 
+    // analyze the pressures and volume
+    this.analyze();
+
     // reset the pressure which are recalculated every model iterattion
     this.pres_ext = 0.0;
     this.pres_cc = 0.0;
     this.pres_mus = 0.0;
+  }
+
+  analyze() {
+    // analyze the pressures
+    if (this.pres > this._temp_pres_max) {
+      this._temp_pres_max = this.pres;
+    }
+    if (this.pres < this._temp_vol_min) {
+      this._temp_pres_min = this.pres;
+    }
+    if (this.vol > this._temp_vol_max) {
+      this._temp_vol_max = this.vol;
+    }
+    if (this.vol < this._temp_vol_min) {
+      this._temp_vol_min = this.vol;
+    }
+
+    // set the max and min pressures
+    if (this._heart.ncc_ventricular === 1) {
+      this.pres_max = this._temp_pres_max;
+      this.pres_min = this._temp_pres_min;
+      this.vol_max = this._temp_vol_max;
+      this.vol_min = this._temp_vol_min;
+      this._temp_pres_max = -1000.0;
+      this._temp_pres_min = 1000.0;
+      this._temp_vol_max = -1000.0;
+      this._temp_vol_min = 1000.0;
+    }
   }
 
   volume_in(dvol, comp_from) {

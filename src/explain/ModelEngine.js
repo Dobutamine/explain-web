@@ -431,9 +431,10 @@ const calculate = function (time_to_calculate) {
       )} ms with a model step time of ${step_time.toFixed(4)} ms)`,
       payload: [],
     });
+    // get model data
+    get_model_data();
 
-    // get the data from the datacollector
-    get_state();
+    get_model_data_slow();
   } else {
     sendMessage({
       type: "error",
@@ -509,8 +510,7 @@ const stop = function () {
   if (model_initialized) {
     clearInterval(rtClock);
     rtClock = null;
-    // get the data from the datacollector
-    get_state();
+    // signal that realtime model stopped
     sendMessage({
       type: "status",
       message: `realtime model stopped.`,

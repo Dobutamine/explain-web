@@ -89,6 +89,7 @@ export default class Model {
       payload: [],
     });
   }
+
   stop_debugger() {
     this.debug = false;
     this.sendMessageToModelEngine({
@@ -97,6 +98,7 @@ export default class Model {
       payload: [],
     });
   }
+
   receiveMessageFromModelEngine() {
     // set up a listener for messages from the model engine
     this.modelEngine.onmessage = (e) => {
@@ -157,6 +159,7 @@ export default class Model {
             console.log(`Model: received model engine state.`);
           }
           this.modelState = e.data.payload[0];
+
           document.dispatchEvent(this._state_event);
           break;
         case "data":

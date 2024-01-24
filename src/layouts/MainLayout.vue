@@ -179,11 +179,8 @@ export default defineComponent({
         this.modelDescription = explain.modelDefinition.description
       }
 
-    }
-,
-    statusUpdate() {
-      this.statusMessage = explain.status_message;
-
+    },
+    errorUpdate() {
       if (this.statusMessage.includes("dependency error")) {
         this.calcRunning = false;
         this.butCalcCaption = "CALCULATE";
@@ -194,15 +191,32 @@ export default defineComponent({
         this.butCaption = "PLAY";
       }
 
-
-
-
+    },
+    statusUpdate() {
+      this.statusMessage = explain.status_message;
       this.calculationReady();
+    },
+    stateUpdate() {
+
+    },
+    dataSlowUpdate() {
+      this.$bus.emit('ds')
+    },
+    dataFastUpdate() {
+      this.$bus.emit('df')
+    },
+    dataUpdate() {
+      this.$bus.emit('data')
     }
   },
   beforeUnmount() {
+    document.removeEventListener("state", this.stateUpdate);
     document.removeEventListener("status", this.statusUpdate);
     document.removeEventListener("info", this.statusUpdate);
+    document.removeEventListener("error", this.errorUpdate);
+    document.removeEventListener("rts", this.dataSlowUpdate);
+    document.removeEventListener("rtf", this.dataFastUpdate);
+    document.removeEventListener("data", this.dataUpdate);
   },
   mounted() {
     try {
@@ -213,6 +227,26 @@ export default defineComponent({
       document.removeEventListener("info", this.infoUpdate);
     } catch {}
     document.addEventListener("info", this.infoUpdate);
+    try {
+      document.removeEventListener("info", this.errorUpdate);
+    } catch {}
+    document.addEventListener("info", this.errorUpdate);
+    try {
+      document.removeEventListener("info", this.stateUpdate);
+    } catch {}
+    document.addEventListener("info", this.stateUpdate);
+    try {
+      document.removeEventListener("rts", this.dataSlowUpdate);
+    } catch {}
+    document.addEventListener("rts", this.dataSlowUpdate);
+    try {
+      document.removeEventListener("rtf", this.dataFastUpdate);
+    } catch {}
+    document.addEventListener("rtf", this.dataFastUpdate);
+    try {
+      document.removeEventListener("data", this.dataUpdate);
+    } catch {}
+    document.addEventListener("data", this.dataUpdate);
 
 
   }

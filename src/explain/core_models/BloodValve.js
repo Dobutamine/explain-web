@@ -27,11 +27,15 @@ export class BloodValve {
 
   // dependent parameters
   flow = 0.0;
+  flow_lmin = 0.0;
+  flow_forward_lmin = 0.0;
+  flow_backward_lmin = 0.0;
   p1 = 0.0;
   p2 = 0.0;
   // local parameters
   _model_engine = {};
   _is_initialized = false;
+  _heart = {};
   _t = 0.0005;
   _model_comp_from = {};
   _model_comp_to = {};
@@ -57,6 +61,9 @@ export class BloodValve {
     // get a reference to the connected components
     this._model_comp_from = this._model_engine.models[this.comp_from];
     this._model_comp_to = this._model_engine.models[this.comp_to];
+
+    // reference to the heart
+    this._heart = this._model_engine.models["Heart"];
 
     // set the modeling step size
     this._t = this._model_engine.modeling_stepsize;
@@ -122,10 +129,14 @@ export class BloodValve {
     } else if (_p1 > _p2) {
       // forward flow
       this.flow = (_p1 - _p2) / r_for;
+      this._cum_forward_flow += this.flow * this._t;
     } else {
       // back flow
       this.flow = (_p1 - _p2) / r_back;
+      this._cum_backward_flow += this.flow * this._t;
     }
+
+    this.analyze();
 
     let vol_not_removed = 0.0;
     // now update the volumes of the model components which are connected by this resistor
@@ -153,6 +164,20 @@ export class BloodValve {
         this._model_comp_to
       );
       return;
+    }
+  }
+
+  analyze() {
+    this._flow_counter += this._t;
+    if (this._heart.ncc_ventricular === 1) {
+      this.flow_forward_lmin =
+        (this._cum_forward_flow / this._flow_counter) * 60.0;
+      this.flow_backward_lmin =
+        (this._cum_backward_flow / this._flow_counter) * 60.0;
+      this.flow_lmin = this.flow_forward_lmin + this.flow_backward_lmin;
+      this._cum_forward_flow = 0.0;
+      this._cum_backward_flow = 0.0;
+      this._flow_counter = 0.0;
     }
   }
 }
