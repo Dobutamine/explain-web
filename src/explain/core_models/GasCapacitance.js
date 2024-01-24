@@ -1,5 +1,6 @@
 export class GasCapacitance {
   static class_type = "GasCapacitance";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

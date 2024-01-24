@@ -50,6 +50,7 @@ export default {
     };
   },
   methods: {
+
     dataUpdate() {
       if (!this.isEnabled) return;
 
@@ -95,7 +96,7 @@ export default {
     this.mutableParameters = [...this.parameters];
 
     // get the realtime slow data
-    this.$bus.on("ds", () => {
+    this.$bus.on("rts", () => {
       this.dataUpdate()
     });
 
@@ -103,11 +104,6 @@ export default {
     this.$bus.on("data", () => {
       this.dataUpdate()
     });
-
-    // add the parameters to the watch model slow
-    this.parameters.forEach((p) => {
-      explain.watchModelPropsSlow([...p.props])
-    })
   },
 };
 </script>

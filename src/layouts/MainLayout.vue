@@ -178,6 +178,7 @@ export default defineComponent({
         this.modelName = explain.modelDefinition.name
         this.modelDescription = explain.modelDefinition.description
       }
+      this.$bus.emit('info')
 
     },
     errorUpdate() {
@@ -190,22 +191,25 @@ export default defineComponent({
         this.butIcon = "fa-solid fa-play";
         this.butCaption = "PLAY";
       }
+      this.$bus.emit('error')
 
     },
     statusUpdate() {
+      this.$bus.emit('status')
       this.statusMessage = explain.status_message;
       this.calculationReady();
     },
     stateUpdate() {
-
+      this.$bus.emit('state')
     },
     dataSlowUpdate() {
-      this.$bus.emit('ds')
+      this.$bus.emit('rts')
     },
     dataFastUpdate() {
-      this.$bus.emit('df')
+      this.$bus.emit('rtf')
     },
     dataUpdate() {
+
       this.$bus.emit('data')
     }
   },
@@ -223,6 +227,10 @@ export default defineComponent({
       document.removeEventListener("status", this.statusUpdate);
     } catch {}
     document.addEventListener("status", this.statusUpdate);
+    try {
+      document.removeEventListener("state", this.stateUpdate);
+    } catch {}
+    document.addEventListener("state", this.stateUpdate);
     try {
       document.removeEventListener("info", this.infoUpdate);
     } catch {}

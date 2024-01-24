@@ -1,5 +1,6 @@
 export class Brain {
   static class_type = "Brain";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

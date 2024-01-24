@@ -1,5 +1,6 @@
 export class Ans {
   static class_type = "Ans";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

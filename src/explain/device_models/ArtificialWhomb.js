@@ -1,5 +1,6 @@
 export class ArtificialWhomb {
   static class_type = "ArtificialWhomb";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

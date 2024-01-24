@@ -1,5 +1,6 @@
 export class GasResistor {
   static class_type = "GasResistor";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

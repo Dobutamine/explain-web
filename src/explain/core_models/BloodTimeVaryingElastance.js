@@ -1,5 +1,19 @@
 export class BloodTimeVaryingElastance {
   static class_type = "BloodTimeVaryingElastance";
+  static indepent_parameters = [
+    { name: "is_enabled", type: "boolean", factor: 1.0, rounding: 1 },
+    { name: "is_enabled", type: "boolean", factor: 1.0, rounding: 1 },
+    { name: "description", type: "string", factor: 1.0, rounding: 1 },
+    { name: "u_vol", type: "number", factor: 1.0, rounding: 1 },
+    { name: "u_vol_factor", type: "number", factor: 1.0, rounding: 1 },
+    { name: "el_min", type: "number", factor: 1.0, rounding: 1 },
+    { name: "el_min_factor", type: "number", factor: 1.0, rounding: 1 },
+    { name: "el_max", type: "number", factor: 1.0, rounding: 1 },
+    { name: "el_max_factor", type: "number", factor: 1.0, rounding: 1 },
+    { name: "el_k", type: "number", factor: 1.0, rounding: 1 },
+    { name: "el_k_factor", type: "number", factor: 1.0, rounding: 1 },
+  ];
+
   // independent parameters
   name = "";
   model_type = "";
@@ -48,6 +62,7 @@ export class BloodTimeVaryingElastance {
   vol = 0.0;
   vol_max = 0.0;
   vol_min = 0.0;
+  vol_sv = 0.0;
   pres = 0.0;
   pres_in = 0.0;
   pres_out = 0.0;
@@ -56,6 +71,7 @@ export class BloodTimeVaryingElastance {
   pres_ms = 0.0;
   pres_max = 0.0;
   pres_min = 0.0;
+  pres_mean = 0.0;
   el = 0.0;
 
   // local parameters
@@ -209,8 +225,10 @@ export class BloodTimeVaryingElastance {
     if (this._heart.ncc_ventricular === 1) {
       this.pres_max = this._temp_pres_max;
       this.pres_min = this._temp_pres_min;
+      this.pres_mean = (2.0 * this.pres_min + this.pres_max) / 3.0;
       this.vol_max = this._temp_vol_max;
       this.vol_min = this._temp_vol_min;
+      this.vol_sv = this.vol_max - this.vol_min;
       this._temp_pres_max = -1000.0;
       this._temp_pres_min = 1000.0;
       this._temp_vol_max = -1000.0;

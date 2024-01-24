@@ -1,3 +1,5 @@
+import * as models from "./ModelIndex";
+
 export default class Model {
   // declare an object holding the worker thread which does the heavy llifting
   modelEngine = {};
@@ -29,13 +31,13 @@ export default class Model {
   _rtf_event = new CustomEvent("rtf");
   _rts_event = new CustomEvent("rts");
   _data_event = new CustomEvent("data");
-
   _data_slow_event = new CustomEvent("data_slow");
   _info_event = new CustomEvent("info");
   _state_event = new CustomEvent("state");
   _status_event = new CustomEvent("status");
   _error_event = new CustomEvent("error");
   _script_event = new CustomEvent("script");
+  _props_event = new CustomEvent("props");
 
   constructor() {
     // spin up a new model engine worker thread
@@ -107,6 +109,7 @@ export default class Model {
           if (this.debug) {
             console.log(JSON.parse(e.data.payload));
           }
+          document.dispatchEvent(this._props_event);
           break;
         case "prop_value":
           if (this.debug) {
@@ -158,9 +161,10 @@ export default class Model {
           if (this.debug) {
             console.log(`Model: received model engine state.`);
           }
-          this.modelState = e.data.payload[0];
 
+          this.modelState = e.data.payload[0];
           document.dispatchEvent(this._state_event);
+
           break;
         case "data":
           if (this.debug) {

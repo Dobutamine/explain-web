@@ -1,5 +1,6 @@
 export class Ecls {
   static class_type = "Ecls";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

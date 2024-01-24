@@ -1,5 +1,6 @@
 export class Lymph {
   static class_type = "Lymph";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

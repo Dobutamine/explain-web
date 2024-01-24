@@ -1,5 +1,6 @@
 export class DuctusArteriosus {
   static class_type = "DuctusArteriosus";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

@@ -1,5 +1,6 @@
 export class BloodDiffusor {
   static class_type = "BloodDiffusor";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

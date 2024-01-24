@@ -1,5 +1,6 @@
 export class Ventilator {
   static class_type = "Ventilator";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

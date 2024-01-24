@@ -1,5 +1,6 @@
 export class Mob {
   static class_type = "Mob";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

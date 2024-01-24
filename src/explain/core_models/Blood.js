@@ -1,5 +1,6 @@
 export class Blood {
   static class_type = "Blood";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

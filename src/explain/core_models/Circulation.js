@@ -1,5 +1,6 @@
 export class Circulation {
   static class_type = "Circulation";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

@@ -1,5 +1,6 @@
 export class Container {
   static class_type = "Container";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

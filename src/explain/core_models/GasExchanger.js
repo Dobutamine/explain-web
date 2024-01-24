@@ -1,5 +1,6 @@
 export class GasExchanger {
   static class_type = "GasExchanger";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

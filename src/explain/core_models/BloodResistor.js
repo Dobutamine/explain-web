@@ -1,5 +1,18 @@
 export class BloodResistor {
   static class_type = "BloodResistor";
+  static indepent_parameters = [
+    { name: "is_enabled", type: "boolean", factor: 1.0, rounding: 1 },
+    { name: "no_flow", type: "boolean", factor: 1.0, rounding: 1 },
+    { name: "no_back_flow", type: "boolean", factor: 1.0, rounding: 1 },
+    { name: "is_enabled", type: "boolean", factor: 1.0, rounding: 1 },
+    { name: "description", type: "string", factor: 1.0, rounding: 1 },
+    { name: "r_for", type: "number", factor: 1.0, rounding: 2 },
+    { name: "r_for_factor", type: "number", factor: 1.0, rounding: 2 },
+    { name: "r_back", type: "number", factor: 1.0, rounding: 2 },
+    { name: "r_back_factor", type: "number", factor: 1.0, rounding: 2 },
+    { name: "r_k", type: "number", factor: 1.0, rounding: 2 },
+    { name: "r_k_factor", type: "number", factor: 1.0, rounding: 2 },
+  ];
   // independent parameters
   name = "";
   model_type = "";

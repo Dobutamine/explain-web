@@ -1,5 +1,6 @@
 export class Fluids {
   static class_type = "Fluids";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

@@ -1,5 +1,6 @@
 export class Metabolism {
   static class_type = "Metabolism";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

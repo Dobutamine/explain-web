@@ -252,6 +252,10 @@ const process_model_definition = function (model_definition) {
       );
       // add the new component to the model object
       model.models[sub_model_def.name] = new_sub_model;
+      // copy the independent parameters
+      model.models[sub_model_def.name].independent_parameters = [
+        ...available_models[index].indepent_parameters,
+      ];
     } else {
       errors += 1;
       sendMessage({

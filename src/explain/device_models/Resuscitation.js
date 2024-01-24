@@ -1,5 +1,6 @@
 export class Resuscitation {
   static class_type = "Resuscitation";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

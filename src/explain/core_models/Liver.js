@@ -1,5 +1,6 @@
 export class Liver {
   static class_type = "Liver";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";

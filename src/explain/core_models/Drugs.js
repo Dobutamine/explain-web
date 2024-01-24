@@ -1,5 +1,6 @@
 export class Drugs {
   static class_type = "Drugs";
+  static indepent_parameters = [];
   // independent parameters
   name = "";
   model_type = "";
