@@ -1,6 +1,34 @@
 export class GasCapacitance {
   static class_type = "GasCapacitance";
-  static indepent_parameters = [];
+  static indepent_parameters = [
+    { name: "is_enabled", unit: "", type: "boolean", factor: 1.0, rounding: 1 },
+    {
+      name: "fixed_composition",
+      unit: "",
+      type: "boolean",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "description", unit: "", type: "string", factor: 1.0, rounding: 1 },
+    { name: "u_vol", unit: "", type: "number", factor: 1000.0, rounding: 2 },
+    {
+      name: "u_vol_factor",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "el_base", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    {
+      name: "el_base_factor",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "el_k", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    { name: "el_k_factor", unit: "", type: "number", factor: 1.0, rounding: 1 },
+  ];
   // independent parameters
   name = "";
   model_type = "";

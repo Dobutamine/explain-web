@@ -11,7 +11,7 @@
         <div v-for="(field, index) in mutableParameters" :key="index">
           <div
             class="col q-mr-xs text-left text-secondary"
-            :style="{ 'font-size': '10px' }"
+            :style="{ 'font-size': '12px' }"
           >
             {{ field.label }} {{ field.unit }}
           </div>

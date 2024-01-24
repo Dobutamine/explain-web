@@ -1,17 +1,46 @@
 export class BloodTimeVaryingElastance {
   static class_type = "BloodTimeVaryingElastance";
   static indepent_parameters = [
-    { name: "is_enabled", type: "boolean", factor: 1.0, rounding: 1 },
-    { name: "is_enabled", type: "boolean", factor: 1.0, rounding: 1 },
-    { name: "description", type: "string", factor: 1.0, rounding: 1 },
-    { name: "u_vol", type: "number", factor: 1.0, rounding: 1 },
-    { name: "u_vol_factor", type: "number", factor: 1.0, rounding: 1 },
-    { name: "el_min", type: "number", factor: 1.0, rounding: 1 },
-    { name: "el_min_factor", type: "number", factor: 1.0, rounding: 1 },
-    { name: "el_max", type: "number", factor: 1.0, rounding: 1 },
-    { name: "el_max_factor", type: "number", factor: 1.0, rounding: 1 },
-    { name: "el_k", type: "number", factor: 1.0, rounding: 1 },
-    { name: "el_k_factor", type: "number", factor: 1.0, rounding: 1 },
+    { name: "is_enabled", unit: "", type: "boolean", factor: 1.0, rounding: 1 },
+    { name: "description", unit: "", type: "string", factor: 1.0, rounding: 1 },
+    { name: "u_vol", unit: "ml", type: "number", factor: 1000, rounding: 1 },
+    {
+      name: "u_vol_factor",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "el_min",
+      unit: "mmhg/ml",
+      type: "number",
+      factor: 0.001,
+      rounding: 1,
+    },
+    {
+      name: "el_min_factor",
+      unit: "",
+      type: "number",
+      factor: 1,
+      rounding: 1,
+    },
+    {
+      name: "el_max",
+      unit: "mmhg/ml",
+      type: "number",
+      factor: 0.001,
+      rounding: 1,
+    },
+    {
+      name: "el_max_factor",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "el_k", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    { name: "el_k_factor", unit: "", type: "number", factor: 1.0, rounding: 1 },
   ];
 
   // independent parameters

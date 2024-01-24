@@ -1,17 +1,34 @@
 export class BloodValve {
   static class_type = "BloodValve";
   static indepent_parameters = [
-    { name: "is_enabled", type: "boolean", factor: 1.0, rounding: 1 },
-    { name: "no_flow", type: "boolean", factor: 1.0, rounding: 1 },
-    { name: "no_back_flow", type: "boolean", factor: 1.0, rounding: 1 },
-    { name: "is_enabled", type: "boolean", factor: 1.0, rounding: 1 },
-    { name: "description", type: "string", factor: 1.0, rounding: 1 },
-    { name: "r_for", type: "number", factor: 1.0, rounding: 2 },
-    { name: "r_for_factor", type: "number", factor: 1.0, rounding: 2 },
-    { name: "r_back", type: "number", factor: 1.0, rounding: 2 },
-    { name: "r_back_factor", type: "number", factor: 1.0, rounding: 2 },
-    { name: "r_k", type: "number", factor: 1.0, rounding: 2 },
-    { name: "r_k_factor", type: "number", factor: 1.0, rounding: 2 },
+    { name: "is_enabled", unit: "", type: "boolean", factor: 1.0, rounding: 1 },
+    { name: "no_flow", unit: "", type: "boolean", factor: 1.0, rounding: 1 },
+    {
+      name: "no_back_flow",
+      unit: "",
+      type: "boolean",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "description", unit: "", type: "string", factor: 1.0, rounding: 1 },
+    { name: "r_for", unit: "", type: "number", factor: 1.0, rounding: 2 },
+    {
+      name: "r_for_factor",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 2,
+    },
+    { name: "r_back", unit: "", type: "number", factor: 1.0, rounding: 2 },
+    {
+      name: "r_back_factor",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 2,
+    },
+    { name: "r_k", unit: "", type: "number", factor: 1.0, rounding: 2 },
+    { name: "r_k_factor", unit: "", type: "number", factor: 1.0, rounding: 2 },
   ];
   // independent parameters
   name = "";

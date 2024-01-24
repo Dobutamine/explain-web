@@ -57,7 +57,7 @@ export default class TaskScheduler {
         } else {
           task.at = 0;
           task.status = "running";
-          task.it -= this._update_counter;
+          task.it -= this._update_interval;
           switch (task.type) {
             case "number":
               if (Math.abs(task.v - task.t) < Math.abs(task.step)) {

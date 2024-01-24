@@ -27,7 +27,7 @@
         <div v-for="(field, index) in selectedModelProps" :key="index">
           <div v-if="field.type == 'number'">
             <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.name }}
+              {{ field.name }} {{ field.unit }}
             </div>
             <q-input
               v-model="field.value"
@@ -39,9 +39,25 @@
               stack-label
               type="number"
               style="font-size: 14px"
-              class="q-ml-md q-mr-md"
+              class="q-ml-md q-mr-md q-mb-sm"
               squared>
             </q-input>
+          </div>
+          <div v-if="field.type == 'boolean'">
+            <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+              {{ field.name }}
+            </div>
+            <q-toggle
+              v-model="field.value"
+              color="primary"
+              size="sm"
+              hide-hint
+              filled
+              dense
+              @update:model-value="field.changed = true"
+              style="font-size: 14px"
+              class="q-ml-md q-mr-md q-mb-sm">
+            </q-toggle>
           </div>
         </div>
       </div>
@@ -113,6 +129,15 @@ export default {
             explain.setPropValue(prop, v)
           }
         }
+
+        if (p.type === 'boolean') {
+          let v = p.value;
+          let prop = this.selectedModelName + "." + p.name;
+          if (p.changed) {
+            update = true;
+            explain.setPropValue(prop, v)
+          }
+        }
       })
 
       if (update) {
@@ -130,7 +155,16 @@ export default {
       this.selectedModelProps = Object.values(explain.modelState.models[this.selectedModelName].independent_parameters)
       // fill the values
       this.selectedModelProps.forEach(param => {
-        param['value'] =  explain.modelState.models[this.selectedModelName][param.name] * param.factor;
+        if (param["type"] === 'number') {
+          param['value'] =  explain.modelState.models[this.selectedModelName][param.name] * param.factor;
+        }
+        if (param["type"] === 'boolean') {
+          param['value'] =  explain.modelState.models[this.selectedModelName][param.name];
+        }
+        if (param["unit"] !== "") {
+          param["unit"] = "(" + param["unit"] + ")"
+        }
+
         param['changed'] = false
       })
     },

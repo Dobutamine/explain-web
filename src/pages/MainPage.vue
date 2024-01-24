@@ -122,13 +122,14 @@ export default defineComponent({
           parameters: [
             {label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"]},
             {label: "LVO", unit: "ml/min", factor: 1000.0, rounding: 0, props: ["LV_AA.flow_lmin"]},
-            {label: "LVP", unit: "ml", factor: 1.0, rounding: 1, props: ["LV.pres_max", "LV.pres_min"]},
-            {label: "LVV", unit: "mmHg", factor: 1000.0, rounding: 0, props: ["LV.vol_max", "LV.vol_min"]},
-            {label: "LV_SV", unit: "ml", factor: 1000.0, rounding: 1, props: ["LV.vol_sv"]},
             {label: "RVO", unit: "ml/min", factor: 1000.0, rounding: 0, props: ["RV_PA.flow_lmin"]},
-            {label: "RVP", unit: "ml", factor: 1.0, rounding: 1, props: ["RV.pres_max", "RV.pres_min"]},
-            {label: "RVV", unit: "mmHg", factor: 1000.0, rounding: 0, props: ["RV.vol_max", "RV.vol_min"]},
-            {label: "RV_SV", unit: "ml", factor: 1000.0, rounding: 1, props: ["RV.vol_sv"]},
+            {label: "COR", unit: "ml/min", factor: 1000.0, rounding: 1, props: ["COR_RA.flow_lmin"]},
+            {label: "LVP", unit: "mmHg", factor: 1.0, rounding: 1, props: ["LV.pres_max", "LV.pres_min"]},
+            {label: "LVV", unit: "ml", factor: 1000.0, rounding: 1, props: ["LV.vol_max", "LV.vol_min"]},
+            {label: "LV_SV", unit: "ml", factor: 1000.0, rounding: 1, props: ["LV.vol_sv"]},
+            {label: "RVP", unit: "mmHg", factor: 1.0, rounding: 1, props: ["RV.pres_max", "RV.pres_min"]},
+            {label: "RVV", unit: "mL", factor: 1000.0, rounding: 1, props: ["RV.vol_max", "RV.vol_min"]},
+            {label: "RV_SV", unit: "mL", factor: 1000.0, rounding: 1, props: ["RV.vol_sv"]},
           ]
         },
         circulation_numerics: {
