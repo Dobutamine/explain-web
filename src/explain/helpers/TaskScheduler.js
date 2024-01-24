@@ -40,7 +40,7 @@ export default class TaskScheduler {
         }
       });
       if (index > -1) {
-        console.log("Removed completed task with id: ", this.tasks[index].id);
+        //console.log("Removed completed task with id: ", this.tasks[index].id);
         this.tasks.splice(index, 1);
       }
     });
@@ -172,10 +172,12 @@ export default class TaskScheduler {
       if (new_task.it > 0.0) {
         new_task.step =
           (new_task.t - new_task.o) / (new_task.it / this._update_interval);
+      } else {
+        new_task.step = 0.0;
       }
     }
     // push the task onto the list
-    console.log("Added new task: ", new_task);
+    //console.log("Added new task: ", new_task);
     this.tasks.push(new_task);
   }
 }

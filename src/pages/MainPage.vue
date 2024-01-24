@@ -33,7 +33,7 @@
                   background: 'grey-10',
                   width: '5px',
                   opacity: 0.5 }">
-                  <ModelEditor :parameters=[]></ModelEditor>
+                  <ModelEditor></ModelEditor>
               </q-scroll-area>
             </q-tab-panel>
           </q-tab-panels>
@@ -118,7 +118,7 @@ export default defineComponent({
         },
         heart_numerics: {
           title: "HEART",
-          collapsed: true,
+          collapsed: false,
           parameters: [
             {label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"]},
             {label: "LVO", unit: "ml/min", factor: 1000.0, rounding: 0, props: ["LV_AA.flow_lmin"]},

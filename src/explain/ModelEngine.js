@@ -437,8 +437,8 @@ const calculate = function (time_to_calculate) {
     });
     // get model data
     get_model_data();
-
     get_model_data_slow();
+    get_state();
   } else {
     sendMessage({
       type: "error",

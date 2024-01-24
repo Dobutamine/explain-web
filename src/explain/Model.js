@@ -352,7 +352,11 @@ export default class Model {
     });
   }
 
-  setPropValue(prop, new_value, it = 0, at = 0) {
+  setPropValue(prop, new_value, it = 1, at = 0) {
+    // make sure the it is not zero
+    if (it < 1) {
+      it = 1;
+    }
     // set the property of a model with format {prop: model.prop1.prop2, v: value, at: time, it: time, type: task_type}
     this.sendMessageToModelEngine({
       type: "set_prop_value",

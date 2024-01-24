@@ -35,6 +35,7 @@
               hide-hint
               filled
               dense
+              @update:model-value="field.changed = true"
               stack-label
               type="number"
               style="font-size: 14px"
@@ -44,7 +45,23 @@
           </div>
         </div>
       </div>
-      <div class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
+      <div v-if="selectedModelProps.length > 0" class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
+        <q-input
+          label-color="primary"
+          class="q-ml-md q-mr-md row"
+          v-model="changeInTime"
+          square
+          type="number"
+          label="apply changes in sec."
+          style="width: 50%; font-size: 12px"
+          hide-hint
+          dense
+          dark
+          stack-label
+        />
+      </div>
+      <div v-if="selectedModelProps.length > 0" class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
+
         <q-btn
           color="negative"
           size="xs"
@@ -62,6 +79,7 @@
           ></q-btn
         >
 
+
       </div>
 
     </div>
@@ -73,27 +91,33 @@ import { explain } from "../boot/explain";
 
 
 export default {
-  props: {
-    parameters: Array
-  },
   data() {
     return {
       title: "SUBMODEL EDITOR",
       isEnabled: true,
       selectedModelName: "",
       selectedModelProps: [],
-      modelNames: []
+      modelNames: [],
+      changeInTime: 5
     };
   },
   methods: {
     updateValue() {
+      let update = false
       this.selectedModelProps.forEach((p) => {
         if (p.type === 'number') {
           let v = parseFloat(p.value / p.factor);
           let prop = this.selectedModelName + "." + p.name;
-          explain.setPropValue(prop, v)
+          if (p.changed) {
+            update = true;
+            explain.setPropValue(prop, v)
+          }
         }
       })
+
+      if (update) {
+        explain.calculate(parseInt(this.changeInTime))
+      }
 
     },
     cancel() {
@@ -107,8 +131,8 @@ export default {
       // fill the values
       this.selectedModelProps.forEach(param => {
         param['value'] =  explain.modelState.models[this.selectedModelName][param.name] * param.factor;
+        param['changed'] = false
       })
-      console.log(this.selectedModelProps)
     },
     getAvailableModels() {
       explain.getModelState()
@@ -118,7 +142,7 @@ export default {
       try {
         if (Object.keys(explain.modelState.models)) {
           this.modelNames = [...Object.keys(explain.modelState.models)].sort();
-          this.selectedModelName = this.modelNames[0]
+          //this.selectedModelName = this.modelNames[0]
           this.selectModel()
       }
       } catch {}
