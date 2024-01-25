@@ -39,7 +39,42 @@
           </q-tab-panels>
         </div>
 
-        <div class="col-6"></div>
+        <div class="col-6">
+          <q-tabs
+            v-model="tab_center"
+            dense
+            class="text-white"
+            active-color="primary"
+            indicator-color="primary"
+            align="center"
+            narrow-indicator
+            outside-arrows
+            @update:model-value="tabCenterChanged"
+          >
+            <q-tab name="time_chart">
+                <q-icon name="fa-solid fa-chart-line" size="xs"></q-icon>
+                <q-tooltip>time chart</q-tooltip>
+            </q-tab>
+          </q-tabs>
+          <q-tab-panels v-model="tab_center" keep-alive>
+            <q-tab-panel name="time_chart">
+              <q-scroll-area
+                class="q-pa-xs"
+                dark
+                :style="screen_height"
+                :vertical-bar-style="{
+                  right: '5px',
+                  borderRadius: '5px',
+                  background: 'grey-10',
+                  width: '5px',
+                  opacity: 0.5 }">
+                <TimeBasedChartComponent></TimeBasedChartComponent>
+              </q-scroll-area>
+            </q-tab-panel>
+          </q-tab-panels>
+
+
+        </div>
 
         <div class="col-3">
           <q-tabs
@@ -91,6 +126,7 @@
 import { defineComponent } from 'vue'
 import NumericsComponent from "src/components/NumericsComponent.vue";
 import ModelEditor from "src/components/ModelEditorComponent.vue"
+import TimeBasedChartComponent from 'src/components/TimeBasedChartComponent.vue';
 
 import { explain } from 'src/boot/explain';
 
@@ -99,12 +135,14 @@ export default defineComponent({
   setup(){},
   components: {
     NumericsComponent,
-    ModelEditor
+    ModelEditor,
+    TimeBasedChartComponent
   },
   data() {
     return {
       tab_left: "model_editor",
       tab_right: "numerics",
+      tab_center: "time_chart",
       screen_offset: 10.0,
       screen_height: 100.0,
       numerics: {
@@ -154,6 +192,7 @@ export default defineComponent({
   methods: {
     tabLeftChanged() {},
     tabRightChanged() {},
+    tabCenterChanged() {},
     updateWatchlist() {
       Object.keys(this.numerics).forEach(numeric => {
         this.numerics[numeric].parameters.forEach((p) => {
