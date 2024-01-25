@@ -10,6 +10,7 @@
         class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center q-gutter-xs row"
       >
       <q-select
+          label-color="red"
           class="q-pa-xs col"
           v-model="selectedModel1"
           square
@@ -22,6 +23,8 @@
           @update:model-value="selectModel1"
         />
         <q-select
+          v-if="selectedModel1 !== ''"
+          label-color="red"
           class="q-pa-xs col"
           v-model="selectedProp1"
           square
@@ -34,6 +37,7 @@
           @update:model-value="selectProp1"
         />
         <q-select
+          label-color="green"
           class="q-pa-xs col"
           v-model="selectedModel2"
           square
@@ -46,6 +50,8 @@
           @update:model-value="selectModel2"
         />
         <q-select
+          v-if="selectedModel2 !== ''"
+          label-color="green"
           class="q-pa-xs col"
           v-model="selectedProp2"
           square
@@ -58,6 +64,7 @@
           @update:model-value="selectProp2"
         />
         <q-select
+          label-color="light-blue"
           class="q-pa-xs col"
           v-model="selectedModel3"
           square
@@ -70,6 +77,8 @@
           @update:model-value="selectModel3"
         />
         <q-select
+          v-if="selectedModel3 !== ''"
+          label-color="light-blue"
           class="q-pa-xs col"
           v-model="selectedProp3"
           square
@@ -97,6 +106,7 @@ import { explain } from "../boot/explain";
 import { Bar, Line, Scatter } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'
 import { ref } from 'vue'
+import { TouchSwipe } from "quasar";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement)
 
@@ -129,18 +139,32 @@ export default {
       isEnabled: true,
       selectedModel1: "",
       selectedProp1: "",
+      p1: "",
       selectedModel2: "",
       selectedProp2: "",
+      p2: "",
       selectedModel3: "",
       selectedProp3: "",
+      p3: "",
       modelNames: [],
       prop1Names: [],
       prop2Names: [],
       prop3Names: [],
       chartOptions: {
         responsive: true,
-        backgroundColor: '#888888',
         animation: false,
+        spanGaps: true,
+        showLine: true,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        datasets: {
+            line: {
+                pointRadius: 0 // disable for all `'line'` datasets
+            }
+        },
         scales: {
             x: {
               display: false
@@ -163,53 +187,94 @@ export default {
   },
   methods: {
     selectModel1() {
-      this.prop1Names = []
-      Object.keys(explain.modelState.models[this.selectedModel1]).forEach(prop => {
+      this.prop1Names = [""]
+      if (this.selectedModel1 !== "") {
+        Object.keys(explain.modelState.models[this.selectedModel1]).forEach(prop => {
         if (typeof(explain.modelState.models[this.selectedModel1][prop]) === 'number') {
-          if (prop[0] !== "_") {
-            this.prop1Names.push(prop)
+            if (prop[0] !== "_") {
+              this.prop1Names.push(prop)
+            }
           }
-        }
-      })
+        })
+        this.prop1Names.sort()
+      } else {
+        this.selectedProp1 =""
+        this.p1 = ""
+      }
+
     },
     selectProp1() {
+      if (this.selectedProp1 !== "") {
+        this.p1 = this.selectedModel1 + "." + this.selectedProp1
+        explain.watchModelProps([this.p1])
+      } else {
+        this.selectedModel1 = ""
+        this.p1 = ""
+      }
 
-},
+    },
     selectModel2() {
-      this.prop2Names = []
-      Object.keys(explain.modelState.models[this.selectedModel2]).forEach(prop => {
-        if (typeof(explain.modelState.models[this.selectedModel2][prop]) === 'number') {
-          if (prop[0] !== "_") {
-            this.prop2Names.push(prop)
+      this.prop2Names = [""]
+      if (this.selectedModel2 !== "") {
+        Object.keys(explain.modelState.models[this.selectedModel2]).forEach(prop => {
+          if (typeof(explain.modelState.models[this.selectedModel2][prop]) === 'number') {
+            if (prop[0] !== "_") {
+              this.prop2Names.push(prop)
+            }
           }
-        }
-      })
+        })
+        this.prop2Names.sort()
+      } else {
+        this.selectedProp2 =""
+        this.p2 = ""
+      }
 
     },
     selectProp2() {
-
+      if (this.selectedProp2 !== "") {
+        this.p2 = this.selectedModel2 + "." + this.selectedProp2
+        explain.watchModelProps([this.p2])
+      } else {
+        this.selectedModel2 = ""
+        this.p2 = ""
+      }
     },
     selectModel3() {
-      this.prop3Names = []
-      Object.keys(explain.modelState.models[this.selectedModel3]).forEach(prop => {
-        if (typeof(explain.modelState.models[this.selectedModel3][prop]) === 'number') {
-          if (prop[0] !== "_") {
-            this.prop3Names.push(prop)
+      this.prop3Names = [""]
+      if (this.selectedModel3 !== "") {
+        Object.keys(explain.modelState.models[this.selectedModel3]).forEach(prop => {
+          if (typeof(explain.modelState.models[this.selectedModel3][prop]) === 'number') {
+            if (prop[0] !== "_") {
+              this.prop3Names.push(prop)
+            }
           }
-        }
-      })
+        })
+        this.prop3Names.sort()
+      } else {
+        this.selectedProp3 =""
+        this.p3 = ""
+      }
 
     },
     selectProp3() {
+      if (this.selectedProp3 !== "") {
+        this.p3 = this.selectedModel3 + "." + this.selectedProp3
+        explain.watchModelProps([this.p3])
+      } else {
+        this.selectedModel3 = ""
+        this.p3 = ""
+      }
+
 
     },
     dataUpdate() {
       this.currentData =
         explain.modelData[explain.modelDataSlow.length - 1];
 
-      this.x1_axis.push(this.currentData['AA.pres'])
-      this.x2_axis.push(this.currentData['PA.pres'])
-      this.x3_axis.push(this.currentData['LV.pres'])
+
+      this.x1_axis.push(this.currentData[this.p1])
+      this.x2_axis.push(this.currentData[this.p2])
+      this.x3_axis.push(this.currentData[this.p3])
       this.y_axis.push(this.seconds)
       if (this.y_axis.length > 200) {
         this.y_axis.shift()
@@ -235,7 +300,7 @@ export default {
             pointStyle: false
           }, {
             data: [...this.x3_axis],
-            borderColor: 'rgb(0, 0, 192)',
+            borderColor: 'rgb(0, 192, 192)',
             borderWidth: 1,
             pointStyle: false
           } ]
@@ -246,11 +311,12 @@ export default {
       //console.log(this.x_axis)
     },
     processAvailableModels() {
-      this.modelNames = []
+      this.modelNames = [""]
       try {
         if (Object.keys(explain.modelState.models)) {
-          this.modelNames = [...Object.keys(explain.modelState.models)].sort();
-          //this.selectedModelName = this.modelNames[0]
+          this.modelNames = [...Object.keys(explain.modelState.models)]
+          this.modelNames.push("")
+          this.modelNames.sort()
           this.selectModel()
       }
       } catch {}
