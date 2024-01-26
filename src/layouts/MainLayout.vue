@@ -209,7 +209,6 @@ export default defineComponent({
       this.$bus.emit('rtf')
     },
     dataUpdate() {
-
       this.$bus.emit('data')
     }
   },

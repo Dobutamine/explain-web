@@ -3,7 +3,7 @@ import { GasExchanger } from "../ModelIndex";
 export default class DataCollector {
   collected_data = [];
   collected_data_slow = [];
-  sample_interval = 0.015;
+  sample_interval = 0.005;
   sample_interval_slow = 1.0;
   watch_list = {};
   watch_list_slow = {};
