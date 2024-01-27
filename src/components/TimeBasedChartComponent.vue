@@ -956,30 +956,34 @@ export default {
 
     },
     exportData() {
-      let header = "";
-      let t = new Date().toLocaleString();
+      let header = ""
+      let data = {
+        time: explain.modelData.map((item) => {return item['time']}),
+      }
+
+
       if (this.p1 !== "") {
-        header = this.selectedModel1 + this.selectedProp1;
-        this.exportFileName = `time_vs_${header}_${t}.csv`;
-        console.log(header)
-        console.log(this.y1_axis)
-        this.writeDataToDisk(this.y1_axis, "time," + header);
+        let h1 = this.selectedModel1.toUpperCase() + this.selectedProp1.toUpperCase() + "_";
+        header += h1
+        data[h1] = explain.modelData.map((item) => {return (parseFloat(item[this.p1])).toFixed(5)});
       }
       if (this.p2 !== "") {
-        header = this.selectedModel2 + this.selectedProp2;
-        this.exportFileName = `time_vs_${header}_${t}.csv`;
-        this.writeDataToDisk(this.y2_axis, "time," + header);
+        let h2 = this.selectedModel2.toUpperCase() + this.selectedProp2.toUpperCase() + "_";
+        header += h2
+        data[h2] = explain.modelData.map((item) => {return (parseFloat(item[this.p2])).toFixed(5)});
       }
       if (this.p3 !== "") {
-        header = this.selectedModel3 + this.selectedProp3;
-        this.exportFileName = `time_vs_${header}_${t}.csv`;
-        this.writeDataToDisk(this.y3_axis, "time," + header);
+        let h3 = this.selectedModel3.toUpperCase() + this.selectedProp3.toUpperCase();
+        header += h3
+        data[h3] = explain.modelData.map((item) => {return (parseFloat(item[this.p3])).toFixed(5)});
       }
-      console.log(this.p1, this.p2, this.p3)
+      this.exportFileName = `time_vs_${header}.csv`;
+      this.writeDataToDisk(data)
+
     },
-    writeDataToDisk(data_object, header) {
+    writeDataToDisk(data) {
       // download to local disk
-      const data_csv = this.jsonToCsv(data_object, header);
+      const data_csv = this.convertToCSV(data)
       const blob = new Blob([data_csv], { type: "text/json" });
       // create an element called a
       const a = document.createElement("a");
@@ -997,20 +1001,24 @@ export default {
       // remove the element from the document
       a.remove();
     },
-    jsonToCsv(items, _headerString) {
-      const headerString = _headerString;
-      const rowItems = [];
-      items.forEach((data_row) => {
-        let x = data_row.x;
-        let y = data_row.y;
-        let item = x.toString() + ";" + y.toString();
-        rowItems.push(item);
-      });
-      //const csv = "";
-      // join header and body, and break into separate lines
-      const csv = [headerString, ...rowItems].join("\r\n");
-      return csv;
-    },
+    convertToCSV(obj) {
+      const headers = Object.keys(obj);
+      const rows = [];
+
+      // Push the headers as the first row
+      rows.push(headers.join(','));
+
+      // Determine the number of rows needed by checking the length of one of the arrays
+      const numRows = obj[headers[0]].length;
+
+      // Loop through the rows of data
+      for (let i = 0; i < numRows; i++) {
+        const rowData = headers.map((header) => obj[header][i]);
+        rows.push(rowData.join(','));
+      }
+
+      return rows.join('\n');
+    }
   },
   beforeUnmount() {
   },
