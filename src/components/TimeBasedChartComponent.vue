@@ -134,6 +134,7 @@
               <q-checkbox
                 v-if="multipliersEnabled"
                 v-model="scaling"
+                @update:model-value="toggleFactors"
                 dense
                 size="xs"
                 label="factors"
@@ -199,12 +200,13 @@
                 ></q-btn
               >
       </div>
-      <div v-if="show_summary" class="q-mt-sm">
+      <div v-if="show_summary && isEnabled" class="q-mt-sm">
           <div
             v-if="p1 !== '' && show_summary"
             class="q-gutter-xs row justify-center q-mt-xs"
           >
             <q-input
+              label-color="red"
               color="black"
               v-model="p1_max"
               outlined
@@ -214,6 +216,7 @@
               style="width: 100px; font-size: 12px"
             />
             <q-input
+              label-color="red"
               color="black"
               v-model="p1_min"
               outlined
@@ -224,15 +227,7 @@
             />
 
             <q-input
-              color="black"
-              v-model="p1_perbeat"
-              outlined
-              dense
-              square
-              label="y1 max-min"
-              style="width: 100px; font-size: 12px"
-            />
-            <q-input
+              label-color="red"
               color="black"
               v-model="p1_mean"
               outlined
@@ -242,6 +237,7 @@
               style="width: 100px; font-size: 12px"
             />
             <q-input
+              label-color="red"
               color="black"
               v-model="p1_sd"
               outlined
@@ -251,6 +247,7 @@
               style="width: 100px; font-size: 12px"
             />
             <q-input
+              label-color="red"
               color="black"
               v-model="p1_permin"
               outlined
@@ -265,6 +262,7 @@
             class="q-gutter-xs row justify-center q-mt-xs"
           >
             <q-input
+              label-color="green"
               color="black"
               v-model="p2_max"
               outlined
@@ -274,6 +272,7 @@
               style="width: 100px; font-size: 12px"
             />
             <q-input
+            label-color="green"
               color="black"
               v-model="p2_min"
               outlined
@@ -284,16 +283,7 @@
             />
 
             <q-input
-              color="black"
-              v-model="p2_perbeat"
-              outlined
-              dense
-              square
-              label="y2 max-min"
-              style="width: 100px; font-size: 12px"
-            />
-
-            <q-input
+            label-color="green"
               color="black"
               v-model="p2_mean"
               outlined
@@ -303,6 +293,7 @@
               style="width: 100px; font-size: 12px"
             />
             <q-input
+            label-color="green"
               color="black"
               v-model="p2_sd"
               outlined
@@ -313,6 +304,7 @@
             />
 
             <q-input
+            label-color="green"
               color="black"
               v-model="p2_permin"
               outlined
@@ -327,6 +319,7 @@
             class="q-gutter-xs row justify-center q-mt-xs"
           >
             <q-input
+            label-color="light-blue"
               color="black"
               v-model="p3_max"
               outlined
@@ -336,6 +329,7 @@
               style="width: 100px; font-size: 12px"
             />
             <q-input
+            label-color="light-blue"
               color="black"
               v-model="p3_min"
               outlined
@@ -346,16 +340,7 @@
             />
 
             <q-input
-              color="black"
-              v-model="p3_perbeat"
-              outlined
-              dense
-              square
-              label="y3 max-min"
-              style="width: 100px; font-size: 12px"
-            />
-
-            <q-input
+            label-color="light-blue"
               color="black"
               v-model="p3_mean"
               outlined
@@ -365,6 +350,7 @@
               style="width: 100px; font-size: 12px"
             />
             <q-input
+            label-color="light-blue"
               color="black"
               v-model="p3_sd"
               outlined
@@ -375,6 +361,7 @@
             />
 
             <q-input
+            label-color="light-blue"
               color="black"
               v-model="p3_permin"
               outlined
@@ -524,6 +511,13 @@ export default {
     };
   },
   methods: {
+    toggleFactors() {
+      if (!this.scaling) {
+        this.chart1_factor = 1.0
+        this.chart2_factor = 1.0
+        this.chart3_factor = 1.0
+      }
+    },
     updateRtWindow() {
       if (this.rtWindow < 1.0) {
         this.rtWindow = 1.0
@@ -557,6 +551,35 @@ export default {
       this.p3_permin = 0.0
       this.p3_perbeat = 0.0
     },
+    analyzeDataRt() {
+      if (this.p1 !== '') {
+        this.p1_max = Stat.max(this.y1_axis).toFixed(4)
+        this.p1_min = Stat.min(this.y1_axis).toFixed(4)
+        this.p1_sd = Stat.standardDeviation(this.y1_axis).toFixed(4)
+        this.p1_mean = Stat.mean(this.y1_axis).toFixed(4)
+        this.p1_permin = Stat.sum(this.y1_axis).toFixed(4)
+        this.p1_perbeat = 0.0
+      }
+
+      if (this.p2 !== '') {
+        this.p2_max = Stat.max(this.y2_axis).toFixed(4)
+        this.p2_min = Stat.min(this.y2_axis).toFixed(4)
+        this.p2_sd = Stat.standardDeviation(this.y2_axis).toFixed(4)
+        this.p2_mean = Stat.mean(this.y2_axis).toFixed(4)
+        this.p2_permin = Stat.sum(this.y2_axis).toFixed(4)
+        this.p2_perbeat = 0.0
+      }
+
+      if (this.p3 !== '') {
+        this.p3_max = Stat.max(this.y3_axis).toFixed(4)
+        this.p3_min = Stat.min(this.y3_axis).toFixed(4)
+        this.p3_sd = Stat.standardDeviation(this.y3_axis).toFixed(4)
+        this.p3_mean = Stat.mean(this.y3_axis).toFixed(4)
+        this.p3_permin = Stat.sum(this.y3_axis).toFixed(4)
+        this.p3_perbeat = 0.0
+      }
+
+    },
     analyzeData() {
 
       this.resetAnalysis()
@@ -571,7 +594,7 @@ export default {
         this.p1_min = Stat.min(param1).toFixed(4)
         this.p1_sd = Stat.standardDeviation(param1).toFixed(4)
         this.p1_mean = Stat.mean(param1).toFixed(4)
-        this.p1_permin = 0.0
+        this.p1_permin = Stat.sum(param1).toFixed(4)
         this.p1_perbeat = 0.0
       }
 
@@ -581,7 +604,7 @@ export default {
         this.p2_min = Stat.min(param2).toFixed(4)
         this.p2_sd = Stat.standardDeviation(param2).toFixed(4)
         this.p2_mean = Stat.mean(param2).toFixed(4)
-        this.p2_permin = 0.0
+        this.p2_permin = Stat.sum(param2).toFixed(4)
         this.p2_perbeat = 0.0
       }
 
@@ -590,7 +613,7 @@ export default {
         this.p3_max = Stat.max(param3).toFixed(4)
         this.p3_min = Stat.min(param3).toFixed(4)
         this.p3_sd = Stat.standardDeviation(param3).toFixed(4)
-        this.p3_mean = Stat.mean(param3).toFixed(4)
+        this.p3_mean = Stat.sum(param3).toFixed(4)
         this.p3_permin = 0.0
         this.p3_perbeat = 0.0
       }
@@ -721,6 +744,8 @@ export default {
     },
     selectModel3() {
       this.prop3Names = [""]
+      this.selectedProp3 = ""
+      this.p3 = ""
       if (this.selectedModel3 !== "") {
         Object.keys(explain.modelState.models[this.selectedModel3]).forEach(prop => {
           if (typeof(explain.modelState.models[this.selectedModel3][prop]) === 'number') {
@@ -737,8 +762,6 @@ export default {
 
     },
     selectProp3() {
-      this.selectedProp3 = ""
-      this.p3 = ""
       if (this.selectedProp3 !== "") {
         this.p3 = this.selectedModel3 + "." + this.selectedProp3
         explain.watchModelProps([this.p3])
@@ -750,7 +773,7 @@ export default {
 
     },
     dataUpdateRt() {
-      this.show_summary = false
+
       // update is every 0.015 ms and the data is sampled with 0.005 ms resolution (so 3 data points per 0.015 sec = 200 datapoints per second)
       for (let i=0; i < explain.modelData.length; i++) {
         this.y1_axis.push(explain.modelData[i][this.p1] * this.chart1_factor)
@@ -790,6 +813,11 @@ export default {
             pointStyle: false
           } ]
         }
+
+        if (this.show_summary) {
+          this.analyzeDataRt()
+        }
+
       }
       this.redrawTimer += 0.015
     },
@@ -810,6 +838,7 @@ export default {
       if (this.show_summary) {
         this.analyzeData()
       }
+
     },
     dataUpdate() {
 
@@ -854,6 +883,10 @@ export default {
             datasets: [...data_sets]
       }
 
+      if (this.show_summary)
+      {
+        this.analyzeDataRt()
+      }
       // prepare for realtime analysis
       this.seconds = 0
       this.x_axis = []
@@ -861,7 +894,6 @@ export default {
       this.y2_axis = []
       this.y3_axis = []
 
-      this.analyzeData()
     }
   },
   beforeUnmount() {
