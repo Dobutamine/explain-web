@@ -91,13 +91,17 @@
           @update:model-value="selectProp3"
         />
     </div>
-      <Line v-if="isEnabled"
+
+    <!-- chart -->
+    <Line v-if="isEnabled"
         id="my-chart-id"
         :options="chartOptions"
         :data="chartData"
-      />
-      <div v-if="isEnabled"
-        class="text-overline justify-center q-gutter-xs row"
+        style="max-height: 300px;"
+    />
+    <!-- bottom buttons -->
+    <div v-if="isEnabled"
+        class="q-ma-sm text-overline justify-center q-gutter-sm row"
       >
               <q-checkbox
                 v-if="autoscaleEnabled"
@@ -106,7 +110,6 @@
                 size="xs"
                 label="autoscale"
                 @update:model-value="autoscaling"
-                style="font-size: 10px"
               />
               <q-input
                 v-if="!autoscale"
@@ -117,7 +120,7 @@
                 filled
                 dense
                 hide-bottom-space
-                style="width: 75px; font-size: 10px"
+                style="max-width: 75px;"
               />
               <q-input
                 v-if="!autoscale"
@@ -128,7 +131,7 @@
                 filled
                 dense
                 hide-bottom-space
-                style="width: 75px; font-size: 10px"
+                style="max-width: 75px;"
               />
 
               <q-checkbox
@@ -138,7 +141,6 @@
                 dense
                 size="xs"
                 label="factors"
-                style="font-size: 10px"
               />
               <q-input
                 v-if="scaling && selectedProp1 !== ''"
@@ -147,7 +149,7 @@
                 label="y1 factor"
                 filled
                 dense
-                style="width: 75px; font-size: 10px"
+                style="max-width: 75px;"
               />
               <q-input
                 v-if="scaling && selectedProp2 !== ''"
@@ -156,7 +158,7 @@
                 label="y2 factor"
                 filled
                 dense
-                style="width: 75px; font-size: 10px"
+                style="max-width: 75px;"
               />
               <q-input
                 v-if="scaling && selectedProp3 !== ''"
@@ -165,10 +167,24 @@
                 label="y3 factor"
                 filled
                 dense
-                style="width: 75px; font-size: 10px"
+                style="max-width: 75px;"
               />
 
-
+              <q-checkbox
+                v-if="analysisEnabled"
+                v-model="show_summary"
+                dense
+                label="statistics"
+                size="sm"
+                @update:model-value="toggleSummary"
+              />
+              <q-checkbox
+                v-if="presetsEnabled"
+                v-model="showPresets"
+                dense
+                label="presets"
+                size="sm"
+              />
               <q-input
                 v-model.number="rtWindow"
                 type="number"
@@ -179,28 +195,41 @@
                 max="30"
                 hide-bottom-space
                 @update:model-value="updateRtWindow"
-                style="width: 75px; font-size: 10px"
               />
               <q-btn
-                v-if="analysisEnabled"
+                v-if="exportEnabled"
                 color="black"
-                size="xs"
-                @click="toggleSummary"
-
-                icon="fa-solid fa-magnifying-glass-chart"
-                ></q-btn
-              >
-              <q-btn
-                v-if="analysisEnabled"
-                color="black"
-                size="xs"
-                @click="analyzeData"
-
+                size="sm"
+                @click="exportData"
                 icon="fa-solid fa-file-export"
-                ></q-btn
-              >
-      </div>
-      <div v-if="show_summary && isEnabled" class="q-mt-sm">
+                ></q-btn>
+              <q-btn
+                color="negative"
+                size="xs"
+                @click="clearProps"
+                icon="fa-solid fa-trash-can"
+                ></q-btn>
+    </div>
+    <!-- presets -->
+    <div v-if="isEnabled && showPresets"
+        class="text-overline justify-center q-gutter-xs row"
+      >
+        <div v-for="(field, index) in presets" :key="index">
+          <div
+            class="col q-mb-sm text-left text-secondary"
+            :style="{ 'font-size': '12px' }"
+          >
+          </div>
+            <q-btn
+              @click="processDefault(field)"
+              color="primary"
+              size="sm"
+              squared
+            >{{ index }}</q-btn>
+        </div>
+    </div>
+    <!-- statistics -->
+    <div v-if="show_summary && isEnabled" class="q-mt-sm">
           <div
             v-if="p1 !== '' && show_summary"
             class="q-gutter-xs row justify-center q-mt-xs"
@@ -372,7 +401,9 @@
             />
           </div>
 
-        </div>
+    </div>
+
+
 
 
   </q-card>
@@ -449,6 +480,8 @@ export default {
   },
   data() {
     return {
+      presetsEnabled: true,
+      showPresets: false,
       show_summary: false,
       rtWindow: 3,
       rtWindowValidated: 3,
@@ -465,7 +498,7 @@ export default {
       chart1_factor: 1.0,
       chart2_factor: 1.0,
       chart3_factor: 1.0,
-      exportEnabled: false,
+      exportEnabled: true,
       title: "TIME CHART",
       isEnabled: true,
       selectedModel1: "",
@@ -506,11 +539,50 @@ export default {
       y3_axis: [],
       redrawInterval: -1,
       redrawTimer: 0.0,
-      debug_mode: true
-
+      debug_mode: true,
+      presets: {
+        "left heart": ["LV.pres", "LA.pres", "AA.pres"],
+        "right heart": ["RV.pres", "RA.pres", "PA.pres"],
+      }
     };
   },
   methods: {
+    clearProps() {
+      this.p1 = ""
+      this.selectedModel1 = ""
+      this.selectedProp1 = ""
+      this.p2 = ""
+      this.selectedModel2 = ""
+      this.selectedProp2 = ""
+      this.p3 = ""
+      this.selectedModel3 = ""
+      this.selectedProp3 = ""
+    },
+    processDefault(props) {
+      let _default = [...props]
+      explain.watchModelProps(_default)
+
+      if (_default.length > 0) {
+        let p1 = _default[0].split(".")
+        this.p1 = _default[0]
+        this.selectedModel1 = p1[0]
+        this.selectedProp1 = p1[1]
+      }
+
+      if (_default.length > 1) {
+        let p2 = _default[1].split(".")
+        this.p2 = _default[1]
+        this.selectedModel2 = p2[0]
+        this.selectedProp2 = p2[1]
+      }
+
+      if (_default.length > 2) {
+        let p3 = _default[2].split(".")
+        this.p3 = _default[2]
+        this.selectedModel3 = p3[0]
+        this.selectedProp3 = p3[1]
+      }
+    },
     toggleFactors() {
       if (!this.scaling) {
         this.chart1_factor = 1.0
@@ -682,9 +754,6 @@ export default {
 
 
     },
-    exportData() {
-
-    },
     selectModel1() {
       this.prop1Names = [""]
       this.selectedProp1 = ""
@@ -702,7 +771,6 @@ export default {
         this.selectedProp1 =""
         this.p1 = ""
       }
-
     },
     selectProp1() {
       if (this.selectedProp1 !== "") {
@@ -712,7 +780,6 @@ export default {
         this.selectedModel1 = ""
         this.p1 = ""
       }
-
     },
     selectModel2() {
       this.prop2Names = [""]
@@ -731,7 +798,6 @@ export default {
         this.selectedProp2 =""
         this.p2 = ""
       }
-
     },
     selectProp2() {
       if (this.selectedProp2 !== "") {
@@ -759,7 +825,6 @@ export default {
         this.selectedProp3 =""
         this.p3 = ""
       }
-
     },
     selectProp3() {
       if (this.selectedProp3 !== "") {
@@ -769,11 +834,8 @@ export default {
         this.selectedModel3 = ""
         this.p3 = ""
       }
-
-
     },
     dataUpdateRt() {
-
       // update is every 0.015 ms and the data is sampled with 0.005 ms resolution (so 3 data points per 0.015 sec = 200 datapoints per second)
       for (let i=0; i < explain.modelData.length; i++) {
         this.y1_axis.push(explain.modelData[i][this.p1] * this.chart1_factor)
@@ -833,8 +895,6 @@ export default {
       } catch {}
     },
     toggleSummary() {
-      this.show_summary = !this.show_summary
-
       if (this.show_summary) {
         this.analyzeData()
       }
@@ -894,7 +954,63 @@ export default {
       this.y2_axis = []
       this.y3_axis = []
 
-    }
+    },
+    exportData() {
+      let header = "";
+      let t = new Date().toLocaleString();
+      if (this.p1 !== "") {
+        header = this.selectedModel1 + this.selectedProp1;
+        this.exportFileName = `time_vs_${header}_${t}.csv`;
+        console.log(header)
+        console.log(this.y1_axis)
+        this.writeDataToDisk(this.y1_axis, "time," + header);
+      }
+      if (this.p2 !== "") {
+        header = this.selectedModel2 + this.selectedProp2;
+        this.exportFileName = `time_vs_${header}_${t}.csv`;
+        this.writeDataToDisk(this.y2_axis, "time," + header);
+      }
+      if (this.p3 !== "") {
+        header = this.selectedModel3 + this.selectedProp3;
+        this.exportFileName = `time_vs_${header}_${t}.csv`;
+        this.writeDataToDisk(this.y3_axis, "time," + header);
+      }
+      console.log(this.p1, this.p2, this.p3)
+    },
+    writeDataToDisk(data_object, header) {
+      // download to local disk
+      const data_csv = this.jsonToCsv(data_object, header);
+      const blob = new Blob([data_csv], { type: "text/json" });
+      // create an element called a
+      const a = document.createElement("a");
+      a.download = this.exportFileName;
+      a.href = window.URL.createObjectURL(blob);
+      a.dataset.downloadurl = ["text/json", a.download, a.href].join(":");
+      // create a synthetic click MouseEvent
+      let evt = new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+      });
+      // dispatch the mouse click event
+      a.dispatchEvent(evt);
+      // remove the element from the document
+      a.remove();
+    },
+    jsonToCsv(items, _headerString) {
+      const headerString = _headerString;
+      const rowItems = [];
+      items.forEach((data_row) => {
+        let x = data_row.x;
+        let y = data_row.y;
+        let item = x.toString() + ";" + y.toString();
+        rowItems.push(item);
+      });
+      //const csv = "";
+      // join header and body, and break into separate lines
+      const csv = [headerString, ...rowItems].join("\r\n");
+      return csv;
+    },
   },
   beforeUnmount() {
   },
@@ -906,8 +1022,6 @@ export default {
 
     this.$bus.on("state", this.processAvailableModels)
     this.$bus.on("data", () => this.dataUpdate())
-
-    explain.watchModelProps(["AA.pres", "PA.pres", "LV.pres"])
 
   },
 };
