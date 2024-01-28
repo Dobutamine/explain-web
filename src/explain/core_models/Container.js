@@ -1,24 +1,98 @@
 export class Container {
   static class_type = "Container";
-  static indepent_parameters = [];
+  static indepent_parameters = [
+    { name: "is_enabled", unit: "", type: "boolean", factor: 1.0, rounding: 1 },
+    {
+      name: "fixed_composition",
+      unit: "",
+      type: "boolean",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "description", unit: "", type: "string", factor: 1.0, rounding: 1 },
+    { name: "u_vol", unit: "ml", type: "number", factor: 1000.0, rounding: 2 },
+    {
+      name: "u_vol_factor",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "el_base",
+      unit: "mmhg/ml",
+      type: "number",
+      factor: 0.001,
+      rounding: 1,
+    },
+    {
+      name: "el_base_factor",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "el_k", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    { name: "el_k_factor", unit: "", type: "number", factor: 1.0, rounding: 1 },
+  ];
+
   // independent parameters
   name = "";
   model_type = "";
   description = "";
   is_enabled = false;
   dependencies = [];
-  contained_components = [];
+  fixed_composition = false;
   u_vol = 0.0;
   el_base = 0.0;
-  el_k = 1.0;
+  el_k = 0.0;
+
+  pres_ext = 0.0;
+  pres_cc = 0.0;
+  pres_atm = 0.0;
+  pres_mus = 0.0;
+
+  act_factor = 0.0;
+  ans_activity_factor = 1.0;
+
+  u_vol_factor = 1.0;
+  u_vol_ans_factor = 1.0;
+  u_vol_drug_factor = 1.0;
+  u_vol_scaling_factor = 1.0;
+
+  el_base_factor = 1.0;
+  el_base_ans_factor = 1.0;
+  el_base_drug_factor = 1.0;
+  el_base_scaling_factor = 1.0;
+
+  el_k_factor = 1.0;
+  el_k_ans_factor = 1.0;
+  el_k_drug_factor = 1.0;
+  el_k_scaling_factor = 1.0;
 
   // dependent parameters
   vol = 0.0;
+  vol_max = 0.0;
+  vol_min = 0.0;
+  vol_sv = 0.0;
+  vol_extra = 0.0;
+  pres = 0.0;
+  pres_in = 0.0;
+  pres_out = 0.0;
+  pres_tm = 0.0;
+  pres_max = 0.0;
+  pres_min = 0.0;
+  pres_mean = 0.0;
 
   // local parameters
   _model_engine = {};
+  _heart = {};
   _is_initialized = false;
   _t = 0.0005;
+  _temp_pres_max = -1000.0;
+  _temp_pres_min = 1000.0;
+  _temp_vol_max = -1000.0;
+  _temp_vol_min = 1000.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -26,10 +100,9 @@ export class Container {
     this.name = name;
 
     // model type
-
     this.model_type = type;
-    // reference to the model engine
 
+    // reference to the model engine
     this._model_engine = model_ref;
   }
 
@@ -38,6 +111,9 @@ export class Container {
     args.forEach((arg) => {
       this[arg["key"]] = arg["value"];
     });
+
+    // reference to the heart
+    this._heart = this._model_engine.models["Heart"];
 
     // set the modeling step size
     this._t = this._model_engine.modeling_stepsize;
@@ -52,5 +128,105 @@ export class Container {
     }
   }
 
-  calc_model() {}
+  calc_model() {
+    // set the volume
+    this.vol = this.vol_extra;
+
+    // get the current volume from all contained models
+    for (const c of this.contained_components) {
+      this.vol += this._model_engine.models[c].vol;
+    }
+
+    // calculate the baseline elastance depending on the scaling factor
+    let _el_base = this.el_base * this.el_base_scaling_factor;
+
+    // adjust the elastance depending on the activity of the external factor, autonomic nervous system and the drug model
+    let _el =
+      _el_base +
+      this.act_factor +
+      (this.el_base_factor * _el_base - _el_base) +
+      (this.el_base_ans_factor * _el_base - _el_base) *
+        this.ans_activity_factor +
+      (this.el_base_drug_factor * _el_base - _el_base);
+
+    // calculate the non-linear elastance factor depending on the scaling factor
+    let _el_k_base = this.el_k * this.el_k_scaling_factor;
+
+    // adjust the non-linear elastance depending on the activity of the external factor, autonomic nervous system and the drug model
+    let _el_k =
+      _el_k_base +
+      (this.el_k_factor * _el_k_base - _el_k_base) +
+      (this.el_k_ans_factor * _el_k_base - _el_k_base) *
+        this.ans_activity_factor +
+      (this.el_k_drug_factor * _el_k_base - _el_k_base);
+
+    // calculate the unstressed volume depending on the scaling factor
+    let _u_vol_base = this.u_vol * this.u_vol_scaling_factor;
+
+    // adjust the unstressed volume depending on the activity of the external factor, autonomic nervous system and the drug model
+    let _u_vol =
+      _u_vol_base +
+      (_u_vol_base * this.u_vol_factor - _u_vol_base) +
+      (_u_vol_base * this.u_vol_ans_factor - _u_vol_base) *
+        this.ans_activity_factor +
+      (_u_vol_base * this.u_vol_drug_factor - _u_vol_base);
+
+    // calculate the recoil pressure depending on the volume, unstressed volume and elastance
+    this.pres_in =
+      _el * (this.vol - _u_vol) +
+      _el_k * Math.pow(this.vol - _u_vol, 2) +
+      this.pres_atm;
+
+    // calculate the pressures exerted by the surrounding tissues or other forces
+    this.pres_out = this.pres_ext + this.pres_cc + this.pres_mus;
+
+    // calculate the transmural pressure
+    this.pres_tm = this.pres_in - this.pres_out;
+
+    // calculate the total pressure
+    this.pres = this.pres_in + this.pres_out;
+
+    // analyze the pressures and volume
+    this.analyze();
+
+    // reset the pressure which are recalculated every model iterattion
+    this.pres_ext = 0.0;
+    this.pres_cc = 0.0;
+    this.pres_mus = 0.0;
+
+    // transfer the pressures to the models the container contains
+    for (const c of this.contained_components) {
+      this._model_engine.models[c].pres_ext += this.pres;
+    }
+  }
+
+  analyze() {
+    // analyze the pressures
+    if (this.pres > this._temp_pres_max) {
+      this._temp_pres_max = this.pres;
+    }
+    if (this.pres < this._temp_vol_min) {
+      this._temp_pres_min = this.pres;
+    }
+    if (this.vol > this._temp_vol_max) {
+      this._temp_vol_max = this.vol;
+    }
+    if (this.vol < this._temp_vol_min) {
+      this._temp_vol_min = this.vol;
+    }
+
+    // set the max and min pressures
+    if (this._heart.ncc_ventricular === 1) {
+      this.pres_max = this._temp_pres_max;
+      this.pres_min = this._temp_pres_min;
+      this.pres_mean = (2.0 * this.pres_min + this.pres_max) / 3.0;
+      this.vol_max = this._temp_vol_max;
+      this.vol_min = this._temp_vol_min;
+      this.vol_sv = this.vol_max - this.vol_min;
+      this._temp_pres_max = -1000.0;
+      this._temp_pres_min = 1000.0;
+      this._temp_vol_max = -1000.0;
+      this._temp_vol_min = 1000.0;
+    }
+  }
 }
