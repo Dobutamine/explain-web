@@ -18,6 +18,7 @@ import * as models from "./ModelIndex";
 import DataCollector from "./helpers/DataCollector";
 import TaskScheduler from "./helpers/TaskScheduler";
 import Scaler from "./helpers/Scaler";
+import { set_blood_composition } from "./helpers/BloodComposition";
 
 // store all imported models in a list to be able to instantiate them dynamically
 let available_models = [];

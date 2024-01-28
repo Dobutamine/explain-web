@@ -59,7 +59,13 @@ export default class Model {
     // get the baseline neonate
     this.modelDefinition = this.loadBaselineNeonate();
   }
-
+  testAcidBase() {
+    this.sendMessageToModelEngine({
+      type: "test_acidbase",
+      message: "",
+      payload: [],
+    });
+  }
   sendMessageToModelEngine(message) {
     if (this.modelEngine) {
       message.message = message.message;
