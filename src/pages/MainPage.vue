@@ -148,15 +148,19 @@ export default defineComponent({
       numerics: {
         vitals_numerics: {
           title: "VITALS",
-          collapsed: true,
+          collapsed: false,
           parameters: [
             {label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"]},
-            {label: "ABP", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AA.pres_max", "AA.pres_min"]}
+            {label: "Abp", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AA.pres_max", "AA.pres_min"]},
+            {label: "Resp rate", unit: "/min", factor: 1.0, rounding: 0, props: ["Breathing.resp_rate"]},
+            {label: "SpO2(pre)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_pre"]},
+            {label: "SpO2(post)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_post"]}
+
           ]
         },
         heart_numerics: {
           title: "HEART",
-          collapsed: false,
+          collapsed: true,
           parameters: [
             {label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"]},
             {label: "LVO", unit: "ml/min", factor: 1000.0, rounding: 0, props: ["LV_AA.flow_lmin"]},
@@ -182,8 +186,15 @@ export default defineComponent({
         },
         lab_numerics: {
           title: "LABS",
-          collapsed: true,
-          parameters: []
+          collapsed: false,
+          parameters: [
+          {label: "pH", unit: "", factor: 1.0, rounding: 2, props: ["Blood.ph"]},
+          {label: "pO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.po2"]},
+          {label: "pCO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.pco2"]},
+          {label: "HCO3", unit: "mmol/l", factor: 1.0, rounding: 0, props: ["Blood.hco3"]},
+          {label: "BE", unit: "mmol/l", factor: 1.0, rounding: 1, props: ["Blood.be"]},
+          {label: "SO2", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2"]},
+          ]
         }
       }
 

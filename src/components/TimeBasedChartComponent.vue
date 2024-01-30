@@ -541,6 +541,7 @@ export default {
       redrawTimer: 0.0,
       debug_mode: true,
       presets: {
+        "breathing": ["Blood.pco2", "Breathing.resp_rate", "Breathing.target_tidal_volume"],
         "left heart": ["LV.pres", "LA.pres", "AA.pres"],
         "right heart": ["RV.pres", "RA.pres", "PA.pres"],
         "lungs vol": ["ALL.vol", "THORAX.vol"],

@@ -1,12 +1,42 @@
 export class Metabolism {
   static class_type = "Metabolism";
-  static indepent_parameters = [];
+  static indepent_parameters = [
+    {
+      name: "vo2",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "vo2_factor",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "resp_q",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "body_temp",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";
   description = "";
   is_enabled = false;
   dependencies = [];
+  vo2 = 0.0;
   vo2_factor = 1.0;
   vo2_scaling_factor = 1.0;
   resp_q = 0.6;
@@ -89,8 +119,8 @@ export class Metabolism {
       }
 
       // store the new to2 and tco2
-      this._model_engine.models[model].aboxy["to2"] = new_to2;
-      this._model_engine.models[model].aboxy["tco2"] = new_tco2;
+      this._model_engine.models[model].aboxy.to2 = new_to2;
+      this._model_engine.models[model].aboxy.tco2 = new_tco2;
     }
   }
 }

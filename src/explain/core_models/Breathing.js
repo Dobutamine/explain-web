@@ -1,6 +1,8 @@
 export class Breathing {
   static class_type = "Breathing";
-  static indepent_parameters = [];
+  static indepent_parameters = [
+    { name: "is_enabled", unit: "", type: "boolean", factor: 1.0, rounding: 1 },
+  ];
   // independent parameters
   name = "";
   model_type = "";
@@ -95,6 +97,8 @@ export class Breathing {
       (this.mv_ans_factor * _minute_volume_ref - _minute_volume_ref) *
         this.ans_activity_factor;
 
+    //this.target_minute_volume = _minute_volume_ref;
+
     if (this.target_minute_volume < 0.01) {
       this.target_minute_volume = 0.01;
     }
@@ -143,10 +147,10 @@ export class Breathing {
       // calculate the rmp gain
       if (this.breathing_enabled) {
         if (Math.abs(this.exp_tidal_volume) < this.target_tidal_volume) {
-          this._rmp_gain += 0.05;
+          this._rmp_gain += 0.1;
         }
         if (Math.abs(this.exp_tidal_volume) > this.target_tidal_volume) {
-          this._rmp_gain -= 0.05;
+          this._rmp_gain -= 0.1;
         }
         if (this._rmp_gain < 0) {
           this._rmp_gain = 0;
