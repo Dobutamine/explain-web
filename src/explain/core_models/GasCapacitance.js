@@ -239,6 +239,9 @@ export class GasCapacitance {
       return;
     }
 
+    // increase the volume
+    this.vol += dvol;
+
     // change the gas concentrations
     if (this.vol > 0.0) {
       let dco2 = (comp_from.co2 - this.co2) * dvol;
@@ -255,11 +258,11 @@ export class GasCapacitance {
 
       let dcother = (comp_from.cother - this.cother) * dvol;
       this.cother = (this.cother * this.vol + dcother) / this.vol;
-    }
 
-    // change temperature due to influx of gas
-    let dtemp = (comp_from.temp - this.temp) * dvol;
-    this.temp = (this.temp * this.vol + dtemp) / this.vol;
+      // change temperature due to influx of gas
+      let dtemp = (comp_from.temp - this.temp) * dvol;
+      this.temp = (this.temp * this.vol + dtemp) / this.vol;
+    }
   }
 
   volume_out(dvol) {

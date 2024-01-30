@@ -543,6 +543,9 @@ export default {
       presets: {
         "left heart": ["LV.pres", "LA.pres", "AA.pres"],
         "right heart": ["RV.pres", "RA.pres", "PA.pres"],
+        "lungs vol": ["ALL.vol", "THORAX.vol"],
+        "lungs pres": ["ALL.pres", "THORAX.pres"],
+        "lungs flow": ["OUT_DS.flow", "DS_ALL.flow"],
       }
     };
   },

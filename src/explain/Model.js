@@ -151,7 +151,7 @@ export default class Model {
           this.error_message = e.data.message;
           this.logMessage("error", e.data.message);
           // dispatch an error event
-          document.dispatchEvent("error", this._error_event);
+          document.dispatchEvent(this._error_event);
           break;
         case "script":
           if (this.debug) {

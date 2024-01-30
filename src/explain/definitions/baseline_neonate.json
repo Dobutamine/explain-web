@@ -2720,12 +2720,14 @@
             "pres_atm": 760,
             "fio2": 0.21,
             "humidity_settings": {
+                "OUT": 0.5,
                 "MOUTH": 0.5,
                 "DS": 1.0,
                 "ALL": 1.0,
                 "ALR": 1.0
             },
             "temp_settings": {
+                "OUT": 20.0,
                 "MOUTH": 20.0,
                 "DS": 32.0,
                 "ALL": 37.0,

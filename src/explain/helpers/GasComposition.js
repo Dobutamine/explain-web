@@ -27,13 +27,15 @@ export function set_gas_composition(
   gas_capacitance.cother = result["cother"];
 }
 
-function calc_gas_composition(
+export function calc_gas_composition(
   gas_capacitance,
   fio2 = 0.205,
-  temp = NaN,
-  humidity = NaN,
+  temp = 37,
+  humidity = 1.0,
   fico2 = 0.000392
 ) {
+  let result = {};
+
   // define the dry air
   let fo2_dry = 0.205;
   let fco2_dry = 0.000392;
@@ -42,6 +44,7 @@ function calc_gas_composition(
 
   // make sure the latest pressure is available
   gas_capacitance.calc_model();
+
   // calculate the dry gas composition depending on the supplied fio2
   let new_fo2_dry = fio2;
   let new_fco2_dry = fico2;
@@ -59,7 +62,7 @@ function calc_gas_composition(
     gas_capacitance.humidity = humidity;
   }
   // calculate the gas composition
-  let result = gas_composition(
+  result = gas_composition(
     gas_capacitance.pres,
     new_fo2_dry,
     new_fco2_dry,
@@ -88,7 +91,7 @@ function gas_composition(
   let ctotal = (pressure / (_gas_constant * (273.15 + temp))) * 1000.0;
 
   // calculate the water vapour pressure, concentration and fraction for this temperature and humidity (0 - 1)
-  let ph2o = Math.pow(math.e, 20.386 - 5132 / (temp + 273)) * humidity;
+  let ph2o = Math.pow(Math.E, 20.386 - 5132 / (temp + 273)) * humidity;
   let fh2o = ph2o / pressure;
   let ch2o = fh2o * ctotal;
 

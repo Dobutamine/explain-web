@@ -53,10 +53,9 @@ export class Breathing {
     this.name = name;
 
     // model type
-
     this.model_type = type;
-    // reference to the model engine
 
+    // reference to the model engine
     this._model_engine = model_ref;
   }
 
@@ -144,10 +143,10 @@ export class Breathing {
       // calculate the rmp gain
       if (this.breathing_enabled) {
         if (Math.abs(this.exp_tidal_volume) < this.target_tidal_volume) {
-          this._rmp_gain += 0.1;
+          this._rmp_gain += 0.05;
         }
         if (Math.abs(this.exp_tidal_volume) > this.target_tidal_volume) {
-          this._rmp_gain -= 0.1;
+          this._rmp_gain -= 0.05;
         }
         if (this._rmp_gain < 0) {
           this._rmp_gain = 0;
