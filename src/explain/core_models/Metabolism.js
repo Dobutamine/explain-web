@@ -7,8 +7,11 @@ export class Metabolism {
   description = "";
   is_enabled = false;
   dependencies = [];
-
-  // dependent parameters
+  vo2_factor = 1.0;
+  vo2_scaling_factor = 1.0;
+  resp_q = 0.6;
+  body_temp = 37;
+  metabolic_active_models = {};
 
   // local parameters
   _model_engine = {};
@@ -47,5 +50,47 @@ export class Metabolism {
     }
   }
 
-  calc_model() {}
+  calc_model() {
+    // translate the VO2 in ml/kg/min to VO2 in mmol for this stepsize (assumption is 37 degrees and atmospheric pressure)
+    let vo2_step =
+      ((0.039 *
+        this.vo2 *
+        this.vo2_factor *
+        this.vo2_scaling_factor *
+        this._model_engine.weight) /
+        60.0) *
+      this._t;
+
+    for (let [model, fvo2] of Object.entries(this.metabolic_active_models)) {
+      // get the vol, tco2 and to2 from the blood compartment
+      let vol = this._model_engine.models[model].vol;
+      let to2 = this._model_engine.models[model].aboxy["to2"];
+      let tco2 = this._model_engine.models[model].aboxy["tco2"];
+
+      // calculate the change in oxygen concentration in this step
+      let dto2 = vo2_step * fvo2;
+
+      // calculate the new oxygen concentration in blood
+      let new_to2 = (to2 * vol - dto2) / vol;
+
+      // guard against negative values
+      if (new_to2 < 0) {
+        new_to2 = 0;
+      }
+
+      // calculate the change in co2 concentration in this step
+      let dtco2 = vo2_step * fvo2 * this.resp_q;
+
+      // calculate the new co2 concentration in blood
+      let new_tco2 = (tco2 * vol + dtco2) / vol;
+      // guard against negative values
+      if (new_tco2 < 0) {
+        new_tco2 = 0;
+      }
+
+      // store the new to2 and tco2
+      this._model_engine.models[model].aboxy["to2"] = new_to2;
+      this._model_engine.models[model].aboxy["tco2"] = new_tco2;
+    }
+  }
 }
