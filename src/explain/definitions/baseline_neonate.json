@@ -2551,7 +2551,7 @@
             "set_map": 51.26,
             "max_map": 102.52,
             "min_pco2": 15.0,
-            "set_pco2": 35,
+            "set_pco2": 45,
             "max_pco2": 75.0,
             "min_ph": 6.9,
             "set_ph": 7.4,
