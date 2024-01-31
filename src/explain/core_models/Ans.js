@@ -7,6 +7,492 @@ export class Ans {
     { name: "min_map", unit: "mmhg", type: "number", factor: 1.0, rounding: 1 },
     { name: "set_map", unit: "mmhg", type: "number", factor: 1.0, rounding: 1 },
     { name: "max_map", unit: "mmhg", type: "number", factor: 1.0, rounding: 1 },
+
+    {
+      name: "hr_factor_max",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+      grouped: "",
+    },
+    {
+      name: "hr_factor_min",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "hr_mxe_map_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "hr_mxe_map_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "hr_tc_map", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    {
+      name: "hr_mxe_ph_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "hr_mxe_ph_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "hr_tc_ph", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    {
+      name: "hr_mxe_pco2_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "hr_mxe_pco2_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "hr_tc_pco2", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    {
+      name: "hr_mxe_po2_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "hr_mxe_po2_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "hr_tc_po2", unit: "", type: "number", factor: 1.0, rounding: 1 },
+
+    {
+      name: "mv_factor_max",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+      grouped: "",
+    },
+    {
+      name: "mv_factor_min",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "mv_mxe_map_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "mv_mxe_map_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "mv_tc_map", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    {
+      name: "mv_mxe_ph_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "mv_mxe_ph_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "mv_tc_ph", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    {
+      name: "mv_mxe_pco2_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "mv_mxe_pco2_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "mv_tc_pco2", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    {
+      name: "mv_mxe_po2_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "mv_mxe_po2_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "mv_tc_po2", unit: "", type: "number", factor: 1.0, rounding: 1 },
+
+    {
+      name: "venpool_factor_max",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+      grouped: "",
+    },
+    {
+      name: "venpool_factor_min",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "venpool_mxe_map_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "venpool_mxe_map_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "venpool_tc_map",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "venpool_mxe_ph_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "venpool_mxe_ph_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "venpool_tc_ph",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "venpool_mxe_pco2_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "venpool_mxe_pco2_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "venpool_tc_pco2",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "venpool_mxe_po2_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "venpool_mxe_po2_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "venpool_tc_po2",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+
+    {
+      name: "svr_factor_max",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+      grouped: "",
+    },
+    {
+      name: "svr_factor_min",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "svr_mxe_map_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "svr_mxe_map_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "svr_tc_map", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    {
+      name: "svr_mxe_ph_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "svr_mxe_ph_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "svr_tc_ph", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    {
+      name: "svr_mxe_pco2_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "svr_mxe_pco2_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "svr_tc_pco2", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    {
+      name: "svr_mxe_po2_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "svr_mxe_po2_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "svr_tc_po2", unit: "", type: "number", factor: 1.0, rounding: 1 },
+
+    {
+      name: "pvr_factor_max",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+      grouped: "",
+    },
+    {
+      name: "pvr_factor_min",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "pvr_mxe_map_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "pvr_mxe_map_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "pvr_tc_map", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    {
+      name: "pvr_mxe_ph_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "pvr_mxe_ph_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "pvr_tc_ph", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    {
+      name: "pvr_mxe_pco2_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "pvr_mxe_pco2_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "pvr_tc_pco2", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    {
+      name: "pvr_mxe_po2_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "pvr_mxe_po2_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "pvr_tc_po2", unit: "", type: "number", factor: 1.0, rounding: 1 },
+
+    {
+      name: "cont_factor_max",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+      grouped: "",
+    },
+    {
+      name: "cont_factor_min",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "cont_mxe_map_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "cont_mxe_map_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "cont_tc_map", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    {
+      name: "cont_mxe_ph_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "cont_mxe_ph_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "cont_tc_ph", unit: "", type: "number", factor: 1.0, rounding: 1 },
+    {
+      name: "cont_mxe_pco2_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "cont_mxe_pco2_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "cont_tc_pco2",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "cont_mxe_po2_low",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    {
+      name: "cont_mxe_po2_high",
+      unit: "",
+      type: "number",
+      factor: 1.0,
+      rounding: 1,
+    },
+    { name: "cont_tc_po2", unit: "", type: "number", factor: 1.0, rounding: 1 },
   ];
   // independent parameters
   name = "";
@@ -161,6 +647,114 @@ export class Ans {
           0
         ) / this._data_window;
 
+      // update the independent parameters
+      AnsEffector.min_map = this.min_map;
+      AnsEffector.set_map = this.set_map;
+      AnsEffector.max_map = this.max_map;
+
+      AnsEffector.min_pco2 = this.min_pco2;
+      AnsEffector.set_pco2 = this.set_pco2;
+      AnsEffector.max_pco2 = this.max_pco2;
+
+      AnsEffector.min_ph = this.min_ph;
+      AnsEffector.set_ph = this.set_ph;
+      AnsEffector.max_ph = this.max_ph;
+
+      AnsEffector.min_po2 = this.min_po2;
+      AnsEffector.set_po2 = this.set_po2;
+      AnsEffector.max_po2 = this.max_po2;
+
+      // set the properties
+      this._hr_effector.factor_max = this.hr_factor_max;
+      this._hr_effector.factor_min = this.hr_factor_min;
+      this._hr_effector.mxe_map_low = this.hr_mxe_map_low;
+      this._hr_effector.mxe_map_high = this.hr_mxe_map_high;
+      this._hr_effector.tc_map = this.hr_tc_map;
+      this._hr_effector.mxe_pco2_low = this.hr_mxe_pco2_low;
+      this._hr_effector.mxe_pco2_high = this.hr_mxe_pco2_high;
+      this._hr_effector.tc_pco2 = this.hr_tc_pco2;
+      this._hr_effector.mxe_ph_low = this.hr_mxe_ph_low;
+      this._hr_effector.mxe_ph_high = this.hr_mxe_ph_high;
+      this._hr_effector.tc_ph = this.hr_tc_ph;
+      this._hr_effector.mxe_po2_low = this.hr_mxe_po2_low;
+      this._hr_effector.mxe_po2_high = this.hr_mxe_po2_high;
+      this._hr_effector.tc_po2 = this.hr_tc_po2;
+
+      this._mv_effector.factor_max = this.mv_factor_max;
+      this._mv_effector.factor_min = this.mv_factor_min;
+      this._mv_effector.mxe_map_low = this.mv_mxe_map_low;
+      this._mv_effector.mxe_map_high = this.mv_mxe_map_high;
+      this._mv_effector.tc_map = this.mv_tc_map;
+      this._mv_effector.mxe_pco2_low = this.mv_mxe_pco2_low;
+      this._mv_effector.mxe_pco2_high = this.mv_mxe_pco2_high;
+      this._mv_effector.tc_pco2 = this.mv_tc_pco2;
+      this._mv_effector.mxe_ph_low = this.mv_mxe_ph_low;
+      this._mv_effector.mxe_ph_high = this.mv_mxe_ph_high;
+      this._mv_effector.tc_ph = this.mv_tc_ph;
+      this._mv_effector.mxe_po2_low = this.mv_mxe_po2_low;
+      this._mv_effector.mxe_po2_high = this.mv_mxe_po2_high;
+      this._mv_effector.tc_po2 = this.mv_tc_po2;
+
+      this._venpool_effector.factor_max = this.venpool_factor_max;
+      this._venpool_effector.factor_min = this.venpool_factor_min;
+      this._venpool_effector.mxe_map_low = this.venpool_mxe_map_low;
+      this._venpool_effector.mxe_map_high = this.venpool_mxe_map_high;
+      this._venpool_effector.tc_map = this.venpool_tc_map;
+      this._venpool_effector.mxe_pco2_low = this.venpool_mxe_pco2_low;
+      this._venpool_effector.mxe_pco2_high = this.venpool_mxe_pco2_high;
+      this._venpool_effector.tc_pco2 = this.venpool_tc_pco2;
+      this._venpool_effector.mxe_ph_low = this.venpool_mxe_ph_low;
+      this._venpool_effector.mxe_ph_high = this.venpool_mxe_ph_high;
+      this._venpool_effector.tc_ph = this.venpool_tc_ph;
+      this._venpool_effector.mxe_po2_low = this.venpool_mxe_po2_low;
+      this._venpool_effector.mxe_po2_high = this.venpool_mxe_po2_high;
+      this._venpool_effector.tc_po2 = this.venpool_tc_po2;
+
+      this._cont_effector.factor_max = this.cont_factor_max;
+      this._cont_effector.factor_min = this.cont_factor_min;
+      this._cont_effector.mxe_map_low = this.cont_mxe_map_low;
+      this._cont_effector.mxe_map_high = this.cont_mxe_map_high;
+      this._cont_effector.tc_map = this.cont_tc_map;
+      this._cont_effector.mxe_pco2_low = this.cont_mxe_pco2_low;
+      this._cont_effector.mxe_pco2_high = this.cont_mxe_pco2_high;
+      this._cont_effector.tc_pco2 = this.cont_tc_pco2;
+      this._cont_effector.mxe_ph_low = this.cont_mxe_ph_low;
+      this._cont_effector.mxe_ph_high = this.cont_mxe_ph_high;
+      this._cont_effector.tc_ph = this.cont_tc_ph;
+      this._cont_effector.mxe_po2_low = this.cont_mxe_po2_low;
+      this._cont_effector.mxe_po2_high = this.cont_mxe_po2_high;
+      this._cont_effector.tc_po2 = this.cont_tc_po2;
+
+      this._svr_effector.factor_max = this.svr_factor_max;
+      this._svr_effector.factor_min = this.svr_factor_min;
+      this._svr_effector.mxe_map_low = this.svr_mxe_map_low;
+      this._svr_effector.mxe_map_high = this.svr_mxe_map_high;
+      this._svr_effector.tc_map = this.svr_tc_map;
+      this._svr_effector.mxe_pco2_low = this.svr_mxe_pco2_low;
+      this._svr_effector.mxe_pco2_high = this.svr_mxe_pco2_high;
+      this._svr_effector.tc_pco2 = this.svr_tc_pco2;
+      this._svr_effector.mxe_ph_low = this.svr_mxe_ph_low;
+      this._svr_effector.mxe_ph_high = this.svr_mxe_ph_high;
+      this._svr_effector.tc_ph = this.svr_tc_ph;
+      this._svr_effector.mxe_po2_low = this.svr_mxe_po2_low;
+      this._svr_effector.mxe_po2_high = this.svr_mxe_po2_high;
+      this._svr_effector.tc_po2 = this.svr_tc_po2;
+
+      this._pvr_effector.factor_max = this.pvr_factor_max;
+      this._pvr_effector.factor_min = this.pvr_factor_min;
+      this._pvr_effector.mxe_map_low = this.pvr_mxe_map_low;
+      this._pvr_effector.mxe_map_high = this.pvr_mxe_map_high;
+      this._pvr_effector.tc_map = this.pvr_tc_map;
+      this._pvr_effector.mxe_pco2_low = this.pvr_mxe_pco2_low;
+      this._pvr_effector.mxe_pco2_high = this.pvr_mxe_pco2_high;
+      this._pvr_effector.tc_pco2 = this.pvr_tc_pco2;
+      this._pvr_effector.mxe_ph_low = this.pvr_mxe_ph_low;
+      this._pvr_effector.mxe_ph_high = this.pvr_mxe_ph_high;
+      this._pvr_effector.tc_ph = this.pvr_tc_ph;
+      this._pvr_effector.mxe_po2_low = this.pvr_mxe_po2_low;
+      this._pvr_effector.mxe_po2_high = this.pvr_mxe_po2_high;
+      this._pvr_effector.tc_po2 = this.pvr_tc_po2;
+
       // for the chemoreflex we need the acidbase and oxygenation of the location of the chemoreceptor
       set_blood_composition(this._chemoreceptor);
 
@@ -280,9 +874,6 @@ export class Ans {
     this._hr_effector.calc_gains();
 
     this._mv_effector = new AnsEffector();
-    this._mv_effector.min_pco2 = this.min_pco2;
-    this._mv_effector.set_pco2 = this.set_pco2;
-    this._mv_effector.max_pco2 = this.max_pco2;
     this._mv_effector.factor = this.mv_factor;
     this._mv_effector.factor_max = this.mv_factor_max;
     this._mv_effector.factor_min = this.mv_factor_min;
@@ -489,6 +1080,9 @@ export class AnsEffector {
   }
 
   calc_ans_effect_factor(_map, _pco2, _ph, _po2) {
+    // calculate the gains
+    this.calc_gains();
+
     // calculate the activation functions
     this._a_map = this.activation_function(
       _map,

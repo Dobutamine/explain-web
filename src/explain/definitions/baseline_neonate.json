@@ -2684,6 +2684,11 @@
             "category": "general_models",
             "is_enabled": true,
             "dependencies": [],
+            "ascending_aorta": "AA",
+            "descending_aorta": "AD",
+            "inferior_vena_cava": "IVCI",
+            "superior_vena_cava": "SVC",
+            "right_atrium": "RA",
             "solutes": {
                 "na": 138.0,
                 "k": 3.5,

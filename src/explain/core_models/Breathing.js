@@ -97,8 +97,6 @@ export class Breathing {
       (this.mv_ans_factor * _minute_volume_ref - _minute_volume_ref) *
         this.ans_activity_factor;
 
-    //this.target_minute_volume = _minute_volume_ref;
-
     if (this.target_minute_volume < 0.01) {
       this.target_minute_volume = 0.01;
     }

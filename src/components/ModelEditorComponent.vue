@@ -59,6 +59,24 @@
               class="q-ml-md q-mr-md q-mb-sm">
             </q-toggle>
           </div>
+          <div v-if="field.type == 'function'">
+            <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+              {{ field.name }}
+            </div>
+            <q-input
+              v-model="field.value"
+              color="blue"
+              hide-hint
+              filled
+              dense
+              @update:model-value="field.changed = true"
+              stack-label
+              type="number"
+              style="font-size: 14px"
+              class="q-ml-md q-mr-md q-mb-sm"
+              squared>
+            </q-input>
+          </div>
         </div>
       </div>
       <div v-if="selectedModelProps.length > 0" class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
@@ -138,6 +156,15 @@ export default {
             explain.setPropValue(prop, v)
           }
         }
+
+        if (p.type === 'function') {
+          let v = [p.value];
+          let f = this.selectedModelName + "." + p.name;
+          if (p.changed) {
+            update = true;
+            explain.callModelFunction(f, v)
+          }
+        }
       })
 
       if (update) {
@@ -153,6 +180,7 @@ export default {
       this.selectedModelProps = {}
 
       this.selectedModelProps = Object.values(explain.modelState.models[this.selectedModelName].independent_parameters)
+
       // fill the values
       this.selectedModelProps.forEach(param => {
         if (param["type"] === 'number') {
@@ -160,6 +188,9 @@ export default {
         }
         if (param["type"] === 'boolean') {
           param['value'] =  explain.modelState.models[this.selectedModelName][param.name];
+        }
+        if (param["type"] === 'function') {
+          param['value'] =  explain.modelState.models[this.selectedModelName][param.local_value];
         }
         if (param["unit"] !== "") {
           param["unit"] = "(" + param["unit"] + ")"
