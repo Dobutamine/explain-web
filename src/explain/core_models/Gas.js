@@ -78,6 +78,18 @@ export class Gas {
 
   calc_model() {}
 
+  get_total_gas_volume() {
+    let total_volume = 0.0;
+    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+      if (model.model_type === "GasCapacitance") {
+        if (model.is_enabled) {
+          total_volume += model.vol;
+        }
+      }
+    }
+    return total_volume;
+  }
+
   set_atmospheric_pressure() {
     for (let [model_name, model] of Object.entries(this._model_engine.models)) {
       if (model.model_type === "GasCapacitance") {

@@ -109,6 +109,94 @@ export class Blood {
     }
   }
 
+  set_total_blood_volume(new_blood_volume) {
+    let current_blood_volume = this.get_total_blood_volume();
+    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+      if (
+        model.model_type === "BloodCapacitance" ||
+        model.model_type === "BloodTimeVaryingElastance"
+      ) {
+        if (model.is_enabled) {
+          // calculate the current fraction of the blood volume in this blood containing capacitance
+          let current_fraction = model.vol / current_blood_volume;
+          let v = model.vol;
+          let vu = model.u_vol;
+          // calculate the current uvol/vol fraction
+          let f = 0.0;
+          if (model.vol > 0.0) {
+            f = model.u_vol / model.vol;
+          }
+          // add the same fraction of the desired volume change to the blood containing capacitance
+          model.vol +=
+            current_fraction * (new_blood_volume - current_blood_volume);
+
+          // change the unstressed volume
+          model.u_vol = model.vol * f;
+
+          // guard for negative volumes
+          if (model.vol < 0.0) {
+            model.vol = 0.0;
+          }
+        }
+      }
+    }
+  }
+
+  get_total_blood_volume() {
+    let total_volume = 0.0;
+    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+      if (
+        model.model_type === "BloodCapacitance" ||
+        model.model_type === "BloodTimeVaryingElastance"
+      ) {
+        if (model.is_enabled) {
+          total_volume += model.vol;
+        }
+      }
+    }
+    return total_volume;
+  }
+
+  set_solute_concentration(solute_name, solute_conc, targets = []) {
+    if (targets.length > 0) {
+      targets.forEach((target) => {
+        this._model_engine.models[target].solutes[solute_name] =
+          parseFloat(solute_conc);
+      });
+      return;
+    }
+    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+      if (
+        model.model_type === "BloodCapacitance" ||
+        model.model_type === "BloodTimeVaryingElastance"
+      ) {
+        if (model.is_enabled) {
+          model.solutes[solute_name] = parseFloat(solute_conc);
+        }
+      }
+    }
+  }
+
+  set_aboxy_concentration(aboxy_name, aboxy_conc, targets = []) {
+    if (targets.length > 0) {
+      targets.forEach((target) => {
+        this._model_engine.models[target].aboxy[aboxy_name] =
+          parseFloat(aboxy_conc);
+      });
+      return;
+    }
+    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+      if (
+        model.model_type === "BloodCapacitance" ||
+        model.model_type === "BloodTimeVaryingElastance"
+      ) {
+        if (model.is_enabled) {
+          model.aboxy[aboxy_name] = parseFloat(aboxy_conc);
+        }
+      }
+    }
+  }
+
   calc_model() {
     if (this._update_counter > this._update_interval) {
       this._update_counter = 0;

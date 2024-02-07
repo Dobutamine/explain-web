@@ -144,7 +144,7 @@ export default {
           let prop = this.selectedModelName + "." + p.name;
           if (p.changed) {
             update = true;
-            explain.setPropValue(prop, v)
+            explain.setPropValue(prop, v, this.changeInTime)
           }
         }
 
@@ -168,7 +168,7 @@ export default {
       })
 
       if (update) {
-        explain.calculate(parseInt(this.changeInTime))
+        //explain.calculate(parseInt(this.changeInTime))
       }
 
     },

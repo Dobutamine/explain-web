@@ -1,19 +1,45 @@
 export class DuctusArteriosus {
   static class_type = "DuctusArteriosus";
-  static indepent_parameters = [];
+  static indepent_parameters = [
+    {
+      name: "open_ductus",
+      unit: "",
+      type: "function",
+      factor: 1.0,
+      rounding: 2,
+      local_value: "diameter",
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";
   description = "";
   is_enabled = false;
   dependencies = [];
+  da_model = "DA";
+  da_connectors = ["AAR_DA", "DA_PA"];
+  no_flow = true;
+  diameter = 0.1;
+  length = 0.1;
+  viscosity = 6.0;
+  non_lin_factor = 1.0;
 
   // dependent parameters
+  flow = 0.0;
+  velocity = 0.0;
 
   // local parameters
   _model_engine = {};
   _is_initialized = false;
   _t = 0.0005;
+  _pda = {};
+  _pda_in = {};
+  _pda_out = {};
+  _current_diameter = 0.0;
+  _target_diameter = 0.0;
+  _diameter_stepsize = 0.0;
+  _in_time = 5.0;
+  _at_time = 0.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -21,10 +47,9 @@ export class DuctusArteriosus {
     this.name = name;
 
     // model type
-
     this.model_type = type;
-    // reference to the model engine
 
+    // reference to the model engine
     this._model_engine = model_ref;
   }
 
@@ -37,6 +62,11 @@ export class DuctusArteriosus {
     // set the modeling step size
     this._t = this._model_engine.modeling_stepsize;
 
+    // get a reference to the models
+    this._pda = this._model_engine.models[this.da_model];
+    this._pda_in = this._model_engine.models[this.da_connectors[0]];
+    this._pda_out = this._model_engine.models[this.da_connectors[1]];
+
     // set the flag to model is initialized
     this._is_initialized = true;
   }
@@ -47,5 +77,122 @@ export class DuctusArteriosus {
     }
   }
 
-  calc_model() {}
+  calc_model() {
+    // open the connectors when the model is enabled
+    this._pda_in.no_flow = this.no_flow;
+    this._pda_out.no_flow = this.no_flow;
+
+    // enable the pda components
+    this._pda.is_enabled = this.is_enabled;
+    this._pda_in.is_enabled = this.is_enabled;
+    this._pda_out.is_enabled = this.is_enabled;
+
+    // calculate the resistance
+    let res = this.calc_resistance(this.diameter, this.length, this.viscosity);
+
+    // set the resistances
+    this._pda_out.r_for = res;
+    this._pda_out.r_back = res;
+
+    // set the non linear factors
+    this._pda_out.r_k = this.non_lin_factor;
+
+    // get the flow
+    this.flow = this._pda_out.flow;
+
+    // calculate the velocity = flow_rate (in m^3/s) / (pi * radius^2) in m/s
+    let area = Math.pow((this.diameter * 0.001) / 2.0, 2.0) * Math.PI; // in m^2
+    // flow is in l/s
+    if (area > 0) {
+      this.velocity = (this.flow * 0.001) / area;
+      this.velocity = this.velocity * 4.0;
+    }
+
+    if (this._diameter_stepsize != 0) {
+      this._current_diameter += this._diameter_stepsize;
+      this._in_time -= this._t;
+      if (
+        Math.abs(this._current_diameter - this._target_diameter) <
+        Math.abs(self._diameter_stepsize)
+      ) {
+        this._diameter_stepsize = 0.0;
+        this._current_diameter = this._target_diameter;
+        if (this._target_diameter < 0.11) {
+          this.no_flow = true;
+        }
+      }
+    }
+    this.diameter = this._current_diameter;
+  }
+
+  open_ductus(new_diameter = 2.5, in_time = 5.0, at_time = 0.0) {
+    if (new_diameter > 15.0) {
+      console.log(
+        "Error! De ductus arteriosus diameter can't be higher then 5.0 mm"
+      );
+      return;
+    }
+    if (new_diameter < 0.1) {
+      this.close_ductus(in_time, at_time);
+    }
+
+    this.diameter = new_diameter;
+    this.no_flow = false;
+    this._target_diameter = new_diameter;
+    this._current_diameter = this.diameter;
+    this._in_time = in_time;
+    this._at_time = at_time;
+    this._diameter_stepsize =
+      ((this._target_diameter - this._current_diameter) / this._in_time) *
+      this._t;
+  }
+
+  close_ductus(in_time = 5.0, at_time = 0.0) {
+    this._target_diameter = 0.1;
+    this._current_diameter = this.diameter;
+    this._in_time = in_time;
+    this._at_time = at_time;
+    this._diameter_stepsize =
+      ((this._target_diameter - this._current_diameter) / this._in_time) *
+      this._t;
+  }
+
+  set_diameter(new_diameter) {
+    this.diameter = new_diameter;
+  }
+
+  set_length(new_length) {
+    this.length = new_length;
+  }
+
+  set_non_linear_factor(new_nonlink) {
+    this.non_lin_factor = new_nonlink;
+  }
+
+  calc_resistance(diameter, length, viscosity = 6.0) {
+    // resistance is calculated using Poiseuille's Law : R = (8 * n * L) / (PI * r^4)
+
+    // we have to watch the units carefully where we have to make sure that the units in the formula are
+    // resistance is in mmHg * s / l
+    // L = length in meters from millimeters
+    // r = radius in meters from millimeters
+    // n = viscosity in centiPoise
+
+    // convert viscosity from centiPoise to Pa * s
+    let n_pas = viscosity / 1000.0;
+
+    // convert the length to meters
+    let length_meters = length / 1000.0;
+
+    // calculate radius in meters
+    let radius_meters = diameter / 2 / 1000.0;
+
+    // calculate the resistance    Pa *  / m3
+    let res =
+      (8.0 * n_pas * length_meters) / (Math.PI * Math.pow(radius_meters, 4));
+
+    // convert resistance of Pa/m3 to mmHg/l
+    res = res * 0.00000750062;
+    return res;
+  }
 }

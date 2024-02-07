@@ -2812,7 +2812,7 @@
             "description": "myocardial oxygen balance model",
             "model_type": "Mob",
             "category": "general_models",
-            "is_enabled": false,
+            "is_enabled": true,
             "dependencies": [
                 "Heart",
                 "AA",
@@ -2844,7 +2844,8 @@
             "ans_factor": 1.0,
             "ans_factor_max": 1.0,
             "ans_factor_min": 0.01,
-            "ans_tc": 5.0
+            "ans_tc": 5.0,
+            "ans_activity_factor": 1.0
         },
         "DuctusArteriosus": {
             "name": "DuctusArteriosus",
