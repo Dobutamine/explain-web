@@ -188,7 +188,7 @@ export class Mob {
     // get the ecc from the heart chambers
     this.ecc_lv = this._heart._lv.el_max * this._heart._lv.el_max_factor;
     this.ecc_rv = this._heart._rv.el_max * this._heart._rv.el_max_factor;
-    this.ecc = this.ecc_lv + this.ecc_rv;
+    this.ecc = (this.ecc_lv + this.ecc_rv) / 1000.0;
 
     // calculate the pressure volume loop area which is the total stroke work of the heart
     this.pva = this.calc_pva();
@@ -212,9 +212,9 @@ export class Mob {
     let vol_cor = this._cor.vol;
 
     // // calculate the myocardial oxygen balance in mmol / cardiac cycle
-    // let o2_inflow = this._aa_cor.flow * this._aa.aboxy.to2; // in mmol/s
-    // let o2_use = this.mvo2 / hc_duration; // in mmol/s
-    // this.mob = o2_inflow - o2_use + to2_cor;
+    let o2_inflow = this._aa_cor.flow * this._aa.aboxy.to2; // in mmol/s
+    let o2_use = this.mvo2 / hc_duration; // in mmol/s
+    this.mob = o2_inflow - o2_use + to2_cor;
 
     if (vol_cor > 0) {
       let new_to2_cor = (to2_cor * vol_cor - this.mvo2_step) / vol_cor;
@@ -291,7 +291,7 @@ export class Mob {
     this._heart._ra.el_max_ans_factor = this.cont_factor;
 
     // calculate the ecc vo2 -> not implemented yet but included in baseline metabolism
-    this.ecc_vo2 = this.ecc * this.ecc_c * this.hw; // is about 15% in steady state
+    this.ecc_vo2 = (this.ecc * this.ecc_c * this.hw) / this._ml_to_mmol; // is about 15% in steady state
 
     // calculate the pva vo2 in mmol O2 / cardiac cycle
     this.pva_vo2 = (this.pva * this.pva_c * this.hw) / this._ml_to_mmol;
