@@ -541,12 +541,8 @@ export default {
       redrawTimer: 0.0,
       debug_mode: true,
       presets: {
-        "breathing": ["Blood.pco2", "Breathing.resp_rate", "Breathing.target_tidal_volume"],
-        "left heart": ["LV.pres", "LA.pres", "AA.pres"],
-        "right heart": ["RV.pres", "RA.pres", "PA.pres"],
-        "lungs vol": ["ALL.vol", "THORAX.vol"],
-        "lungs pres": ["ALL.pres", "THORAX.pres"],
-        "lungs flow": ["OUT_DS.flow", "DS_ALL.flow"],
+        "mob": ["Mob.cor_po2", "Mob.cor_pco2", "Mob.cor_so2"],
+        "mob2": ["Mob.test"]
       }
     };
   },
