@@ -81,6 +81,10 @@ export class Mob {
 
   _pv_area_lv = 0.0;
   _pv_area_rv = 0.0;
+  _pv_area_lv_inc = 0.0;
+  _pv_area_rv_inc = 0.0;
+  _pv_area_lv_dec = 0.0;
+  _pv_area_rv_dec = 0.0;
   _sv_lv_cum = 0.0;
   _sv_rv_cum = 0.0;
 
@@ -261,8 +265,8 @@ export class Mob {
     // detect the start of the cardiac cycle and calculate the area of the pv loop of the last cardiac cycle
     if (this._heart.ncc_ventricular == 1) {
       // calculate the stroke work of the ventricles
-      this.stroke_work_lv = -this._pv_area_lv; // in l * mmHg/cardiac cycle
-      this.stroke_work_rv = -this._pv_area_rv; // in l * mmHg/cardiac cycle
+      this.stroke_work_lv = this._pv_area_lv_dec - this._pv_area_lv_inc; // in l * mmHg/cardiac cycle
+      this.stroke_work_rv = this._pv_area_rv_dec - this._pv_area_rv_inc; // in l * mmHg/cardiac cycle
 
       // calculate the stroke volume of the ventricles
       this.stroke_volume_lv = this._sv_lv_cum; // in l/cardiac cycle
@@ -273,27 +277,40 @@ export class Mob {
         (this.stroke_volume_rv * 1000.0) / this._model_engine.weight;
 
       // reset the counters
-      this._pv_area_lv = 0.0;
-      this._pv_area_rv = 0.0;
+      this._pv_area_lv_inc = 0.0;
+      this._pv_area_rv_inc = 0.0;
+
+      this._pv_area_lv_dec = 0.0;
+      this._pv_area_rv_dec = 0.0;
       this._sv_lv_cum = 0.0;
       this._sv_rv_cum = 0.0;
     }
 
     // calculate the pv area of this model step
     let _dV_lv = this._heart._lv.vol - this._prev_lv_vol;
-    this._pv_area_lv +=
-      _dV_lv * this._prev_lv_pres +
-      (_dV_lv * (this._heart._lv.pres - this._prev_lv_pres)) / 2.0;
+    // if the volume is increasing count the stroke volume
     if (_dV_lv > 0) {
       this._sv_lv_cum += _dV_lv;
+      this._pv_area_lv_inc +=
+        _dV_lv * this._prev_lv_pres +
+        (_dV_lv * (this._heart._lv.pres - this._prev_lv_pres)) / 2.0;
+    } else {
+      this._pv_area_lv_dec +=
+        -_dV_lv * this._prev_lv_pres +
+        (-_dV_lv * (this._heart._lv.pres - this._prev_lv_pres)) / 2.0;
     }
 
     let _dV_rv = this._heart._rv.vol - this._prev_rv_vol;
-    this._pv_area_rv +=
-      _dV_rv * this._prev_rv_pres +
-      (_dV_rv * (this._heart._rv.pres - this._prev_rv_pres)) / 2.0;
+    // if the volume is increasing count the stroke volume
     if (_dV_rv > 0) {
       this._sv_rv_cum += _dV_rv;
+      this._pv_area_rv_inc +=
+        _dV_rv * this._prev_rv_pres +
+        (_dV_rv * (this._heart._rv.pres - this._prev_rv_pres)) / 2.0;
+    } else {
+      this._pv_area_rv_dec +=
+        -_dV_rv * this._prev_rv_pres +
+        (-_dV_rv * (this._heart._rv.pres - this._prev_rv_pres)) / 2.0;
     }
 
     // store current volumes and pressures
