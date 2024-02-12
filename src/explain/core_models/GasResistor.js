@@ -93,8 +93,17 @@ export class GasResistor {
     });
 
     // get a reference to the connected components
-    this._model_comp_from = this._model_engine.models[this.comp_from];
-    this._model_comp_to = this._model_engine.models[this.comp_to];
+    if (typeof this.comp_from == "string") {
+      this._model_comp_from = this._model_engine.models[this.comp_from];
+    } else {
+      this._model_comp_from = this.comp_from;
+    }
+
+    if (typeof this.comp_from == "string") {
+      this._model_comp_to = this._model_engine.models[this.comp_to];
+    } else {
+      this._model_comp_to = this.comp_to;
+    }
 
     // reference to the heart
     this._heart = this._model_engine.models["Heart"];

@@ -3003,10 +3003,10 @@
         },
         "Ventilator": {
             "name": "Ventilator",
-            "description": "",
+            "description": "ventilator model",
             "model_type": "Ventilator",
             "category": "general_models",
-            "is_enabled": false,
+            "is_enabled": true,
             "dependencies": [
                 "DS",
                 "MOUTH_DS"

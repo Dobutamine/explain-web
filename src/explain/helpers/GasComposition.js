@@ -5,7 +5,13 @@ export function set_gas_composition(
   humidity,
   fico2 = 0.000392
 ) {
-  result = calc_gas_composition(gas_capacitance, fio2, temp, humidity, fico2);
+  let result = calc_gas_composition(
+    gas_capacitance,
+    fio2,
+    temp,
+    humidity,
+    fico2
+  );
 
   // process the result
   gas_capacitance.po2 = result["po2"];
