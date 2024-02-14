@@ -19,7 +19,7 @@ export class Ventilator {
   fio2 = 0.205;
   temp = 37.0;
   humidity = 1.0;
-  vent_running = false;
+  vent_running = true;
   ettube_diameter = 0.0035;
   ettube_length = 0.11;
   vent_mode = "PRVC";
@@ -32,7 +32,7 @@ export class Ventilator {
   peep_cmh2o = 3.65;
   tidal_volume = 0.0165;
   trigger_volume_perc = 6;
-  synchronized = False;
+  synchronized = false;
 
   // ventilator parts
   vent_in = {};
@@ -200,7 +200,7 @@ export class Ventilator {
       { key: "description", value: "inspiratory valve" },
       { key: "is_enabled", value: true },
       { key: "no_flow", value: true },
-      { key: "no_back_flow", value: true },
+      { key: "no_back_flow", value: false },
       { key: "comp_from", value: this.vent_in },
       { key: "comp_to", value: this.vent_circuit },
       { key: "r_for", value: 2000.0 },
@@ -221,11 +221,11 @@ export class Ventilator {
       { key: "description", value: "inspiratory tube" },
       { key: "is_enabled", value: true },
       { key: "no_flow", value: true },
-      { key: "no_back_flow", value: true },
+      { key: "no_back_flow", value: false },
       { key: "comp_from", value: this.vent_circuit },
       { key: "comp_to", value: this._model_engine.models["DS"] },
-      { key: "r_for", value: 2000.0 },
-      { key: "r_back", value: 2000.0 },
+      { key: "r_for", value: 100.0 },
+      { key: "r_back", value: 100.0 },
       { key: "r_k", value: 0.0 },
     ]);
     // add to the vent parts array
@@ -242,7 +242,7 @@ export class Ventilator {
       { key: "description", value: "expiratory tube" },
       { key: "is_enabled", value: true },
       { key: "no_flow", value: true },
-      { key: "no_back_flow", value: true },
+      { key: "no_back_flow", value: false },
       { key: "comp_from", value: this.vent_circuit },
       { key: "comp_to", value: this.vent_out },
       { key: "r_for", value: 2000.0 },
@@ -304,12 +304,13 @@ export class Ventilator {
   switch_ventilator(state) {
     this._model_engine.models["MOUTH_DS"].no_flow = state;
     this._model_engine.models["Breathing"].is_intubated = state;
+    this._model_engine.models["Breathing"].breathing_enabled = !state;
     this.et_tube.no_flow = !state;
     this.vent_running = state;
     this.is_enabled = state;
   }
   step_model() {
-    if (this.is_enabled && this._is_initialized) {
+    if (this.is_enabled && this.vent_running) {
       this.calc_model();
     }
   }
@@ -326,7 +327,7 @@ export class Ventilator {
       this._trigger_volume_counter > this.trigger_volume &&
       !this._triggered_breath
     ) {
-      this._triggered_breath = True;
+      this._triggered_breath = true;
       // reset the trigger volume counter
       this._trigger_volume_counter = 0.0;
     }
@@ -349,8 +350,116 @@ export class Ventilator {
       this._inspiration = false;
       this._expiration = true;
       this.vol = 0.0;
-      this._triggered_breath = False;
-      this.etco2 = this._model.models["DS"].pco2;
+      this._triggered_breath = false;
+      this.etco2 = this._model_engine.models["DS"].pco2;
+    }
+
+    // has the expiration time elapsed?
+    if (this._exp_time_counter > this.exp_time || this._triggered_breath) {
+      this._triggered_breath = false;
+      this._exp_time_counter = 0.0;
+      this._inspiration = true;
+      this._expiration = false;
+      // reset the volume counters
+      this.exp_tidal_volume = -this._exp_tidal_volume_counter;
+      this.tv_kg = (this.exp_tidal_volume * 1000.0) / this._model_engine.weight;
+
+      if (this.exp_tidal_volume > 0) {
+        this.elastance = (this._pip - this._peep) / this.exp_tidal_volume; // in mmHg/l
+        this.compliance =
+          1 /
+          (((this._pip - this._peep) * 1.35951) /
+            (this.exp_tidal_volume * 1000.0)); // in ml/cmH2O
+      }
+      this._exp_tidal_volume_counter = 0.0;
+      // check whether the ventilator is in PRVC mode
+      if (this.vent_mode == "PRVC") {
+        this.pressure_regulated_volume_control();
+      }
+    }
+
+    // inspiration
+    if (this._inspiration) {
+      this._insp_time_counter += this._t;
+    }
+
+    if (this._expiration) {
+      this._exp_time_counter += this._t;
+    }
+
+    // call the correct ventilation mode
+    this.pressure_control();
+
+    // store the values
+    this.pres = (this.vent_circuit.pres - this.p_atm) * 1.35951; // in cmH2O
+    this.flow = this.et_tube.flow * 60.0; // in l/min
+    this.vol += -this.et_tube.flow * 1000 * this._t; // in ml
+    this.co2 = this._model_engine.models["DS"].pco2; // in mmHg
+    this.vc_po2 = this.vent_circuit.po2;
+    this.vc_pco2 = this.vent_circuit.pco2;
+
+    this._vent_parts.forEach((vent_part) => vent_part.step_model());
+  }
+
+  pressure_control() {
+    if (this._inspiration) {
+      // close the expiration valve and open the inspiration valve
+      this.exp_valve.no_flow = true;
+      this.insp_valve.no_flow = false;
+
+      // prevent back flow to the ventilator
+      this.insp_valve.no_back_flow = true;
+
+      // set the resistance of the inspiration valve
+      this.insp_valve.r_for =
+        (this.vent_in.pres + this._pip - this.p_atm - this._peep) /
+        (this.insp_flow / 60.0);
+
+      // guard the inspiratory pressure
+      if (this.vent_circuit.pres > this._pip + this.p_atm) {
+        this.insp_valve.no_flow = true;
+        this.insp_valve.r_for_factor = 1.0;
+        if (this.insp_valve.flow > 0 && !this._pres_reached) {
+          this.resistance =
+            (this.vent_circuit.pres - this.p_atm) / this.insp_valve.flow;
+          this._pres_reached = true;
+        }
+      }
+    }
+
+    if (this._expiration) {
+      this._pres_reached = false;
+      // close the inspiration valve and open the expiration valve
+      this.insp_valve.no_flow = true;
+
+      this.exp_valve.no_flow = false;
+      this.exp_valve.no_back_flow = true;
+
+      // set the resistance of the expiration valve to and calculate the pressure in the expiration block
+      this.exp_valve.r_for = 10;
+      this.vent_out.vol =
+        this._peep / this.vent_out.el_base + this.vent_out.u_vol;
+
+      // calculate the expiratory tidal volume
+      if (this.et_tube.flow < 0) {
+        this._exp_tidal_volume_counter += this.et_tube.flow * this._t;
+      }
+    }
+  }
+
+  pressure_regulated_volume_control() {
+    if (this.exp_tidal_volume < this.tidal_volume - this._tv_tolerance) {
+      this.pip_cmh2o += 0.5;
+      if (this.pip_cmh2o > this.pip_cmh2o_max) {
+        this.pip_cmh2o = this.pip_cmh2o_max;
+      }
+
+      if (this.exp_tidal_volume > this.tidal_volume + this._tv_tolerance) {
+        this.pip_cmh2o -= 0.5;
+        if (this.pip_cmh2o < this.peep_cmh2o + 2.0) {
+          this.pip_cmh2o = this.peep_cmh2o + 2.0;
+        }
+      }
     }
   }
 }

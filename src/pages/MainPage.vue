@@ -4,6 +4,7 @@
       <div class="row">
 
         <div class="col-3">
+          <q-btn @click="switch_vent">VENT</q-btn>
           <q-tabs
             v-model="tab_left"
             dense
@@ -202,6 +203,9 @@ export default defineComponent({
     }
   },
   methods: {
+    switch_vent() {
+      explain.callModelFunction("Ventilator.switch_ventilator", [true])
+    },
     tabLeftChanged() {},
     tabRightChanged() {},
     tabCenterChanged() {},
