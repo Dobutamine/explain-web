@@ -72,7 +72,7 @@
                   background: 'grey-10',
                   width: '5px',
                   opacity: 0.5 }">
-                <TimeBasedChartComponent></TimeBasedChartComponent>
+                <TimeBasedChartComponent :alive="chart_alive"></TimeBasedChartComponent>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="ventilator">
@@ -86,7 +86,7 @@
                   background: 'grey-10',
                   width: '5px',
                   opacity: 0.5 }">
-                <VentilatorComponent></VentilatorComponent>
+                <VentilatorComponent :alive="ventilator_alive"></VentilatorComponent>
               </q-scroll-area>
             </q-tab-panel>
           </q-tab-panels>
@@ -163,6 +163,8 @@ export default defineComponent({
       tab_left: "model_editor",
       tab_right: "numerics",
       tab_center: "time_chart",
+      chart_alive: true,
+      ventilator_alive: false,
       screen_offset: 10.0,
       screen_height: 100.0,
       numerics: {
@@ -225,7 +227,23 @@ export default defineComponent({
 
     tabLeftChanged() {},
     tabRightChanged() {},
-    tabCenterChanged() {},
+    tabCenterChanged(tabName) {
+      switch (tabName) {
+        case "ventilator":
+          console.log("ventilator component on!")
+          console.log("chart component off!")
+          this.ventilator_alive = true
+          this.chart_alive = false
+          break;
+        case "time_chart":
+          console.log("ventilator component off!")
+          console.log("chart component on!")
+          this.ventilator_alive = false
+          this.chart_alive = true
+          break;
+
+      }
+    },
     updateWatchlist() {
       Object.keys(this.numerics).forEach(numeric => {
         this.numerics[numeric].parameters.forEach((p) => {

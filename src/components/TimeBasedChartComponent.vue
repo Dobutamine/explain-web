@@ -471,6 +471,7 @@ export default {
 
   },
   props: {
+    alive: Boolean
 
   },
   components: {
@@ -835,52 +836,54 @@ export default {
       }
     },
     dataUpdateRt() {
-      // update is every 0.015 ms and the data is sampled with 0.005 ms resolution (so 3 data points per 0.015 sec = 200 datapoints per second)
-      for (let i=0; i < explain.modelData.length; i++) {
-        this.y1_axis.push(explain.modelData[i][this.p1] * this.chart1_factor)
-        this.y2_axis.push(explain.modelData[i][this.p2] * this.chart2_factor)
-        this.y3_axis.push(explain.modelData[i][this.p3] * this.chart3_factor)
-        this.x_axis.push(this.seconds)
-        this.seconds += 0.005;
-      }
-
-      if (this.x_axis.length > this.rtWindowValidated * 200.0) {
-        let too_many = this.x_axis.length - (this.rtWindowValidated * 200.0)
-        this.x_axis.splice(0, too_many)
-        this.y1_axis.splice(0, too_many)
-        this.y2_axis.splice(0, too_many)
-        this.y3_axis.splice(0, too_many)
-      }
-
-
-      if (this.redrawTimer > this.redrawInterval) {
-        this.redrawTimer = 0;
-        this.chartData = {
-          labels: this.x_axis,
-          datasets: [ {
-            data: [...this.y1_axis],
-            borderColor: 'rgb(192, 0, 0)',
-            borderWidth: 1,
-            pointStyle: false
-          }, {
-            data: [...this.y2_axis],
-            borderColor: 'rgb(0, 192, 0)',
-            borderWidth: 1,
-            pointStyle: false
-          }, {
-            data: [...this.y3_axis],
-            borderColor: 'rgb(0, 192, 192)',
-            borderWidth: 1,
-            pointStyle: false
-          } ]
+      if (this.alive) {
+        // update is every 0.015 ms and the data is sampled with 0.005 ms resolution (so 3 data points per 0.015 sec = 200 datapoints per second)
+        for (let i=0; i < explain.modelData.length; i++) {
+          this.y1_axis.push(explain.modelData[i][this.p1] * this.chart1_factor)
+          this.y2_axis.push(explain.modelData[i][this.p2] * this.chart2_factor)
+          this.y3_axis.push(explain.modelData[i][this.p3] * this.chart3_factor)
+          this.x_axis.push(this.seconds)
+          this.seconds += 0.005;
         }
 
-        if (this.show_summary) {
-          this.analyzeDataRt()
+        if (this.x_axis.length > this.rtWindowValidated * 200.0) {
+          let too_many = this.x_axis.length - (this.rtWindowValidated * 200.0)
+          this.x_axis.splice(0, too_many)
+          this.y1_axis.splice(0, too_many)
+          this.y2_axis.splice(0, too_many)
+          this.y3_axis.splice(0, too_many)
         }
 
-      }
-      this.redrawTimer += 0.015
+
+        if (this.redrawTimer > this.redrawInterval) {
+          this.redrawTimer = 0;
+          this.chartData = {
+            labels: this.x_axis,
+            datasets: [ {
+              data: [...this.y1_axis],
+              borderColor: 'rgb(192, 0, 0)',
+              borderWidth: 1,
+              pointStyle: false
+            }, {
+              data: [...this.y2_axis],
+              borderColor: 'rgb(0, 192, 0)',
+              borderWidth: 1,
+              pointStyle: false
+            }, {
+              data: [...this.y3_axis],
+              borderColor: 'rgb(0, 192, 192)',
+              borderWidth: 1,
+              pointStyle: false
+            } ]
+          }
+
+          if (this.show_summary) {
+            this.analyzeDataRt()
+          }
+
+        }
+        this.redrawTimer += 0.015
+    }
     },
     processAvailableModels() {
       this.modelNames = [""]

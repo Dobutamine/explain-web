@@ -201,7 +201,7 @@ export default {
 
   },
   props: {
-
+    alive: Boolean
   },
   components: {
     Bar,
@@ -219,6 +219,7 @@ export default {
       autoscaleEnabled: true,
       autoscale: true,
       loopMode: false,
+      isEnabled: true,
       x_min: 0,
       x_max: 5.0,
       y_min: 0,
@@ -230,7 +231,6 @@ export default {
       chart3_factor: 1.0,
       exportEnabled: true,
       title: "MECHANICAL VENTILATOR",
-      isEnabled: true,
       selectedModel1: "Ventilator",
       selectedProp1: "pres",
       p1: "Ventilator.pres",
@@ -458,60 +458,61 @@ export default {
 
     },
     dataUpdateRt() {
-      // update is every 0.015 ms and the data is sampled with 0.005 ms resolution (so 3 data points per 0.015 sec = 200 datapoints per second)
-      for (let i=0; i < explain.modelData.length; i++) {
-        this.y1_axis.push(explain.modelData[i][this.p1] * this.chart1_factor)
-        this.y2_axis.push(explain.modelData[i][this.p2] * this.chart2_factor)
-        this.y3_axis.push(explain.modelData[i][this.p3] * this.chart3_factor)
-        this.x_axis.push(this.seconds)
-        this.seconds += 0.005;
+      if (this.alive) {
+        // update is every 0.015 ms and the data is sampled with 0.005 ms resolution (so 3 data points per 0.015 sec = 200 datapoints per second)
+        for (let i=0; i < explain.modelData.length; i++) {
+          this.y1_axis.push(explain.modelData[i][this.p1] * this.chart1_factor)
+          this.y2_axis.push(explain.modelData[i][this.p2] * this.chart2_factor)
+          this.y3_axis.push(explain.modelData[i][this.p3] * this.chart3_factor)
+          this.x_axis.push(this.seconds)
+          this.seconds += 0.005;
+        }
+
+        if (this.x_axis.length > this.rtWindowValidated * 200.0) {
+          let too_many = this.x_axis.length - (this.rtWindowValidated * 200.0)
+          this.x_axis.splice(0, too_many)
+          this.y1_axis.splice(0, too_many)
+          this.y2_axis.splice(0, too_many)
+          this.y3_axis.splice(0, too_many)
+        }
+
+        if (this.redrawTimer > this.redrawInterval) {
+          this.redrawTimer = 0;
+          this.chartDataPres = {
+            labels: this.x_axis,
+            datasets: [ {
+              data: [...this.y1_axis],
+              borderColor: 'rgb(192, 0, 0)',
+              borderWidth: 1,
+              pointStyle: false
+            }]
+          }
+          this.chartDataFlow = {
+            labels: this.x_axis,
+            datasets: [ {
+              data: [...this.y2_axis],
+              borderColor: 'rgb(0, 192, 0)',
+              borderWidth: 1,
+              pointStyle: false
+            }]
+          }
+          this.chartDataVol = {
+            labels: this.x_axis,
+            datasets: [ {
+              data: [...this.y3_axis],
+              borderColor: 'rgb(0, 192, 192)',
+              borderWidth: 1,
+              pointStyle: false
+            } ]
+          }
+
+          if (this.show_summary) {
+            this.analyzeDataRt()
+          }
+
+        }
+        this.redrawTimer += 0.015
       }
-
-      if (this.x_axis.length > this.rtWindowValidated * 200.0) {
-        let too_many = this.x_axis.length - (this.rtWindowValidated * 200.0)
-        this.x_axis.splice(0, too_many)
-        this.y1_axis.splice(0, too_many)
-        this.y2_axis.splice(0, too_many)
-        this.y3_axis.splice(0, too_many)
-      }
-
-
-      if (this.redrawTimer > this.redrawInterval) {
-        this.redrawTimer = 0;
-        this.chartDataPres = {
-          labels: this.x_axis,
-          datasets: [ {
-            data: [...this.y1_axis],
-            borderColor: 'rgb(192, 0, 0)',
-            borderWidth: 1,
-            pointStyle: false
-          }]
-        }
-        this.chartDataFlow = {
-          labels: this.x_axis,
-          datasets: [ {
-            data: [...this.y2_axis],
-            borderColor: 'rgb(0, 192, 0)',
-            borderWidth: 1,
-            pointStyle: false
-          }]
-        }
-        this.chartDataVol = {
-          labels: this.x_axis,
-          datasets: [ {
-            data: [...this.y3_axis],
-            borderColor: 'rgb(0, 192, 192)',
-            borderWidth: 1,
-            pointStyle: false
-          } ]
-        }
-
-        if (this.show_summary) {
-          this.analyzeDataRt()
-        }
-
-      }
-      this.redrawTimer += 0.015
     },
     toggleSummary() {
       if (this.show_summary) {
@@ -646,7 +647,11 @@ export default {
       return rows.join('\n');
     }
   },
+  beforeRouteLeave() {
+    console.log('unrouted')
+  },
   beforeUnmount() {
+    console.log('unmonuted')
   },
   mounted() {
     // get the realtime slow data
