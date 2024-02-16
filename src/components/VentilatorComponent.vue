@@ -31,7 +31,148 @@
     <div v-if="isEnabled"
         class="q-ma-sm text-overline justify-center q-gutter-sm row"
       >
-      <q-input
+        <div class="q-mr-sm text-center">
+          <div>PIP</div>
+            <q-knob
+              show-value
+              font-size="12px"
+              v-model="pip_cmh2o"
+              size="50px"
+              :min="0"
+              :max="50"
+              :step="1"
+              :thickness="0.22"
+              color="teal"
+              track-color="grey-3"
+              class="col"
+              @update:model-value="update_ventilator_setttings"
+            >
+              {{ pip_cmh2o }}
+            </q-knob>
+            <div :style="{ fontSize: '10px' }">cmh2o</div>
+        </div>
+        <div class="q-mr-sm text-center">
+          <div>PEEP</div>
+            <q-knob
+              show-value
+              font-size="12px"
+              v-model="peep_cmh2o"
+              size="50px"
+              :min="0"
+              :max="20"
+              :step="1"
+              :thickness="0.22"
+              color="teal"
+              track-color="grey-3"
+              class="col"
+              @update:model-value="update_ventilator_setttings"
+            >
+              {{ peep_cmh2o }}
+            </q-knob>
+            <div :style="{ fontSize: '10px' }">cmH2O</div>
+        </div>
+        <div class="q-mr-sm text-center">
+          <div class="knob-label">T INSP</div>
+            <q-knob
+              show-value
+              font-size="12px"
+              v-model="insp_time"
+              size="50px"
+              :min="0.1"
+              :max="2.0"
+              :step="0.05"
+              :thickness="0.22"
+              color="teal"
+              track-color="grey-3"
+              class="col"
+              @update:model-value="update_ventilator_setttings"
+            >
+              {{ insp_time }}
+            </q-knob>
+            <div :style="{ fontSize: '10px' }">sec</div>
+        </div>
+        <div class="q-mr-sm text-center">
+          <div class="knob-label">FREQ</div>
+            <q-knob
+              show-value
+              font-size="12px"
+              v-model="freq"
+              :min="0"
+              :max="70"
+              :step="1"
+              size="50px"
+              :thickness="0.22"
+              color="teal"
+              track-color="grey-3"
+              class="col"
+              @update:model-value="update_ventilator_setttings"
+            >
+              {{ freq }}
+            </q-knob>
+            <div :style="{ fontSize: '10px' }">/min</div>
+        </div>
+        <div class="q-mr-sm text-center">
+          <div class="knob-label">FLOW</div>
+            <q-knob
+              show-value
+              font-size="12px"
+              v-model="insp_flow"
+              size="50px"
+              :thickness="0.22"
+              :min="0"
+              :max="20"
+              :step="1"
+              color="teal"
+              track-color="grey-3"
+              class="col"
+              @update:model-value="update_ventilator_setttings"
+            >
+              {{ insp_flow }}
+            </q-knob>
+            <div :style="{ fontSize: '10px' }">l/min</div>
+        </div>
+        <div class="q-mr-sm text-center">
+          <div class="knob-label">TV</div>
+            <q-knob
+              show-value
+              font-size="12px"
+              v-model="tidal_volume"
+              size="50px"
+              :thickness="0.22"
+              :min="1"
+              :max="50"
+              :step="1"
+              color="teal"
+              track-color="grey-3"
+              class="col"
+              @update:model-value="update_ventilator_setttings"
+            >
+              {{ tidal_volume }}
+            </q-knob>
+            <div :style="{ fontSize: '10px' }">ml</div>
+        </div>
+
+
+
+      </div>
+    <div v-if="isEnabled"
+        class="text-overline justify-center q-gutter-xs row"
+      >
+      <div class="q-mr-sm text-center">
+        <q-btn-toggle
+          v-model="mode"
+          toggle-color="primary"
+          flat
+          :options="[
+            {label: 'PC', value: 'PC'},
+            {label: 'PRVC', value: 'PRVC'},
+          ]"
+        />
+      </div>
+
+      <q-btn @click="switch_vent">VENTILATOR</q-btn>
+      <div class="q-mr-sm text-center">
+          <q-input
                 v-model.number="rtWindow"
                 type="number"
                 label="rt window"
@@ -39,15 +180,10 @@
                 dense
                 min="1"
                 max="30"
-                width="100"
                 hide-bottom-space
                 @update:model-value="updateRtWindow"
               />
-      </div>
-    <div v-if="isEnabled"
-        class="text-overline justify-center q-gutter-xs row"
-      >
-      <q-btn @click="switch_vent">VENTILATOR</q-btn>
+        </div>
 
       </div>
 
@@ -220,6 +356,13 @@ export default {
       autoscale: true,
       loopMode: false,
       isEnabled: true,
+      pip_cmh2o: 14.0,
+      peep_cmh2o: 4.0,
+      freq: 40,
+      insp_time: 0.4,
+      insp_flow: 8.0,
+      tidal_volume: 15,
+      mode: "PC",
       x_min: 0,
       x_max: 5.0,
       y_min: 0,
@@ -272,6 +415,19 @@ export default {
     };
   },
   methods: {
+    update_ventilator_setttings() {
+      console.log(this.mode)
+      switch (this.mode) {
+        case "PC":
+          explain.callModelFunction("Ventilator.set_ventilator_pc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.insp_time, this.insp_flow])
+
+          break;
+        case "PRVC":
+          explain.callModelFunction("Ventilator.set_ventilator_prvc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.tidal_volume, this.insp_time, this.insp_flow])
+          break;
+
+      }
+    },
     switch_vent() {
       explain.callModelFunction("Ventilator.switch_ventilator", [true])
     },

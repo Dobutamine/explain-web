@@ -292,7 +292,7 @@ export class Ventilator {
     this.peep_cmh2o = peep;
     this.vent_rate = rate;
     this.insp_time = t_in;
-    this.tidal_volume = tv;
+    this.tidal_volume = tv / 1000.0;
     this.insp_flow = insp_flow;
     this.vent_mode = "PRVC";
   }
@@ -450,12 +450,14 @@ export class Ventilator {
 
   pressure_regulated_volume_control() {
     if (this.exp_tidal_volume < this.tidal_volume - this._tv_tolerance) {
+      console.log("too low", this.exp_tidal_volume);
       this.pip_cmh2o += 0.5;
       if (this.pip_cmh2o > this.pip_cmh2o_max) {
         this.pip_cmh2o = this.pip_cmh2o_max;
       }
 
       if (this.exp_tidal_volume > this.tidal_volume + this._tv_tolerance) {
+        console.log("too high", this.exp_tidal_volume);
         this.pip_cmh2o -= 0.5;
         if (this.pip_cmh2o < this.peep_cmh2o + 2.0) {
           this.pip_cmh2o = this.peep_cmh2o + 2.0;
