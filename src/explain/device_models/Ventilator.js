@@ -44,6 +44,7 @@ export class Ventilator {
 
   // dependent parameters
   pres = 0.0;
+  pres_cmh2o = 0.0;
   flow = 0.0;
   vol = 0.0;
   compliance = 0.0;
@@ -321,25 +322,25 @@ export class Ventilator {
     this._pip_max = this.pip_cmh2o_max / 1.35951;
     this._peep = this.peep_cmh2o / 1.35951;
 
-    // check for triggered breath
-    this.trigger_volume = (this.tidal_volume / 100) * this.trigger_volume_perc;
-    if (
-      this._trigger_volume_counter > this.trigger_volume &&
-      !this._triggered_breath
-    ) {
-      this._triggered_breath = true;
-      // reset the trigger volume counter
-      this._trigger_volume_counter = 0.0;
-    }
+    // // check for triggered breath
+    // this.trigger_volume = (this.tidal_volume / 100) * this.trigger_volume_perc;
+    // if (
+    //   this._trigger_volume_counter > this.trigger_volume &&
+    //   !this._triggered_breath
+    // ) {
+    //   this._triggered_breath = true;
+    //   // reset the trigger volume counter
+    //   this._trigger_volume_counter = 0.0;
+    // }
 
-    // calculate the triggered volume
-    if (
-      !this._triggered_breath &&
-      !this._inspiration &&
-      this.et_tube.flow > 0.0
-    ) {
-      this._trigger_volume_counter += this.et_tube.flow * this._t;
-    }
+    // // calculate the triggered volume
+    // if (
+    //   !this._triggered_breath &&
+    //   !this._inspiration &&
+    //   this.et_tube.flow > 0.0
+    // ) {
+    //   this._trigger_volume_counter += this.et_tube.flow * this._t;
+    // }
 
     // calculate the expiration time
     this.exp_time = 60.0 / this.vent_rate - this.insp_time;
@@ -349,7 +350,6 @@ export class Ventilator {
       this._insp_time_counter = 0.0;
       this._inspiration = false;
       this._expiration = true;
-      this.vol = 0.0;
       this._triggered_breath = false;
       this.etco2 = this._model_engine.models["DS"].pco2;
     }
@@ -357,6 +357,7 @@ export class Ventilator {
     // has the expiration time elapsed?
     if (this._exp_time_counter > this.exp_time || this._triggered_breath) {
       this._triggered_breath = false;
+      this.vol = 0.0;
       this._exp_time_counter = 0.0;
       this._inspiration = true;
       this._expiration = false;
@@ -393,7 +394,7 @@ export class Ventilator {
     // store the values
     this.pres = (this.vent_circuit.pres - this.p_atm) * 1.35951; // in cmH2O
     this.flow = this.et_tube.flow * 60.0; // in l/min
-    this.vol += -this.et_tube.flow * 1000 * this._t; // in ml
+    this.vol += this.et_tube.flow * 1000 * this._t; // in ml
     this.co2 = this._model_engine.models["DS"].pco2; // in mmHg
     this.vc_po2 = this.vent_circuit.po2;
     this.vc_pco2 = this.vent_circuit.pco2;

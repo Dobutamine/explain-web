@@ -541,8 +541,7 @@ export default {
       redrawTimer: 0.0,
       debug_mode: true,
       presets: {
-        "mob": ["Mob.cor_po2", "Mob.cor_pco2", "Mob.cor_so2"],
-        "mob2": ["Mob.test"]
+        "vent": ["Ventilator.pres"]
       }
     };
   },

@@ -4,7 +4,6 @@
       <div class="row">
 
         <div class="col-3">
-          <q-btn @click="switch_vent">VENT</q-btn>
           <q-tabs
             v-model="tab_left"
             dense
@@ -56,6 +55,10 @@
                 <q-icon name="fa-solid fa-chart-line" size="xs"></q-icon>
                 <q-tooltip>time chart</q-tooltip>
             </q-tab>
+            <q-tab name="ventilator">
+                <q-icon name="fa-solid fa-lungs" size="xs"></q-icon>
+                <q-tooltip>mechanical ventilator</q-tooltip>
+            </q-tab>
           </q-tabs>
           <q-tab-panels v-model="tab_center" keep-alive>
             <q-tab-panel name="time_chart">
@@ -70,6 +73,20 @@
                   width: '5px',
                   opacity: 0.5 }">
                 <TimeBasedChartComponent></TimeBasedChartComponent>
+              </q-scroll-area>
+            </q-tab-panel>
+            <q-tab-panel name="ventilator">
+              <q-scroll-area
+                class="q-pa-xs"
+                dark
+                :style="screen_height"
+                :vertical-bar-style="{
+                  right: '5px',
+                  borderRadius: '5px',
+                  background: 'grey-10',
+                  width: '5px',
+                  opacity: 0.5 }">
+                <VentilatorComponent></VentilatorComponent>
               </q-scroll-area>
             </q-tab-panel>
           </q-tab-panels>
@@ -128,6 +145,7 @@ import { defineComponent } from 'vue'
 import NumericsComponent from "src/components/NumericsComponent.vue";
 import ModelEditor from "src/components/ModelEditorComponent.vue"
 import TimeBasedChartComponent from 'src/components/TimeBasedChartComponent.vue';
+import VentilatorComponent from 'src/components/VentilatorComponent.vue';
 
 import { explain } from 'src/boot/explain';
 
@@ -137,7 +155,8 @@ export default defineComponent({
   components: {
     NumericsComponent,
     ModelEditor,
-    TimeBasedChartComponent
+    TimeBasedChartComponent,
+    VentilatorComponent
   },
   data() {
     return {
@@ -203,9 +222,7 @@ export default defineComponent({
     }
   },
   methods: {
-    switch_vent() {
-      explain.callModelFunction("Ventilator.switch_ventilator", [true])
-    },
+
     tabLeftChanged() {},
     tabRightChanged() {},
     tabCenterChanged() {},
