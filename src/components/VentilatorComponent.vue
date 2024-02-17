@@ -9,30 +9,78 @@
 
 
     <!-- chart -->
+    <div class="q-mt-sm row text-overline justify-center">pressure (cmh2o)</div>
     <Line v-if="isEnabled"
         id="my-chart-vent-pres"
         :options="chartOptionsPres"
         :data="chartDataPres"
         style="max-height: 100px;"
     />
-    <Line v-if="isEnabled" class="q-mt-md"
+    <div class="row text-overline justify-center">flow (l/min)</div>
+    <Line v-if="isEnabled"
         id="my-chart-vent-flow"
         :options="chartOptionsFlow"
         :data="chartDataFlow"
         style="max-height: 100px;"
     />
-    <Line v-if="isEnabled" class="q-mt-md"
+    <div class="row text-overline justify-center">volume (ml)</div>
+    <Line v-if="isEnabled"
         id="my-chart-vent-vol"
         :options="chartOptionsVol"
         :data="chartDataVol"
         style="max-height: 100px;"
     />
-    <!-- bottom buttons -->
     <div v-if="isEnabled"
-        class="q-ma-sm text-overline justify-center q-gutter-sm row"
+        class="q-mt-sm text-overline justify-center q-gutter-xs row"
+      >
+      <div>
+        <q-btn-toggle
+          v-model="mode"
+          color="grey-9"
+          text-color="white"
+          toggle-color="primary"
+          :options="[
+            {label: 'OFF', value: 'OFF'},
+            {label: 'PC', value: 'PC'},
+            {label: 'PRVC', value: 'PRVC'},
+            {label: 'PS', value: 'PS'},
+            {label: 'VC', value: 'VC'},
+          ]"
+          @update:model-value="update_ventilator_setttings"
+        />
+
+      </div>
+      <div>
+        <q-input
+                class="q-ml-sm q-pb-lg"
+                v-model.number="rtWindow"
+                type="number"
+                label="time"
+                filled
+                dense
+                min="1"
+                max="30"
+                hide-bottom-space
+                @update:model-value="updateRtWindow"
+              />
+      </div>
+      <div>
+        <q-toggle
+        v-model="spont_breathing"
+        label="breathing"
+        @update:model-value="toggle_spont_breathing"
+      />
+      </div>
+
+
+    </div>
+    <!-- ventilator controls -->
+    <div v-if="isEnabled && ventilator_running" class="row text-overline justify-center">VENTILATOR CONTROLS</div>
+    <div v-if="isEnabled && ventilator_running"
+        class="text-overline justify-center q-gutter-sm row"
       >
         <div class="q-mr-sm text-center">
-          <div>PIP</div>
+          <div>{{ pip_caption}}</div>
             <q-knob
               show-value
               font-size="12px"
@@ -52,7 +100,7 @@
             <div :style="{ fontSize: '10px' }">cmh2o</div>
         </div>
         <div class="q-mr-sm text-center">
-          <div>PEEP</div>
+          <div>peep</div>
             <q-knob
               show-value
               font-size="12px"
@@ -72,7 +120,7 @@
             <div :style="{ fontSize: '10px' }">cmH2O</div>
         </div>
         <div class="q-mr-sm text-center">
-          <div class="knob-label">T INSP</div>
+          <div class="knob-label">t insp</div>
             <q-knob
               show-value
               font-size="12px"
@@ -92,7 +140,7 @@
             <div :style="{ fontSize: '10px' }">sec</div>
         </div>
         <div class="q-mr-sm text-center">
-          <div class="knob-label">FREQ</div>
+          <div class="knob-label">freq</div>
             <q-knob
               show-value
               font-size="12px"
@@ -112,7 +160,7 @@
             <div :style="{ fontSize: '10px' }">/min</div>
         </div>
         <div class="q-mr-sm text-center">
-          <div class="knob-label">FLOW</div>
+          <div class="knob-label">flow</div>
             <q-knob
               show-value
               font-size="12px"
@@ -131,8 +179,8 @@
             </q-knob>
             <div :style="{ fontSize: '10px' }">l/min</div>
         </div>
-        <div class="q-mr-sm text-center">
-          <div class="knob-label">TV</div>
+        <div v-if="mode =='PRVC'" class="q-mr-sm text-center">
+          <div class="knob-label">tv</div>
             <q-knob
               show-value
               font-size="12px"
@@ -151,41 +199,29 @@
             </q-knob>
             <div :style="{ fontSize: '10px' }">ml</div>
         </div>
-
-
-
-      </div>
-    <div v-if="isEnabled"
-        class="text-overline justify-center q-gutter-xs row"
-      >
-      <div class="q-mr-sm text-center">
-        <q-btn-toggle
-          v-model="mode"
-          toggle-color="primary"
-          flat
-          :options="[
-            {label: 'PC', value: 'PC'},
-            {label: 'PRVC', value: 'PRVC'},
-          ]"
-        />
-      </div>
-
-      <q-btn @click="switch_vent">VENTILATOR</q-btn>
-      <div class="q-mr-sm text-center">
-          <q-input
-                v-model.number="rtWindow"
-                type="number"
-                label="rt window"
-                filled
-                dense
-                min="1"
-                max="30"
-                hide-bottom-space
-                @update:model-value="updateRtWindow"
-              />
+        <div class="q-mr-sm text-center">
+          <div class="knob-label">fio2</div>
+            <q-knob
+              show-value
+              font-size="12px"
+              v-model="fio2"
+              size="50px"
+              :thickness="0.22"
+              :min="21"
+              :max="100"
+              :step="1"
+              color="teal"
+              track-color="grey-3"
+              class="col"
+              @update:model-value="set_fio2"
+            >
+              {{ fio2 }}
+            </q-knob>
+            <div :style="{ fontSize: '10px' }">%</div>
         </div>
-
       </div>
+    <div v-if="isEnabled" class="text-overline justify-center q-gutter-xs row">
+    </div>
 
   </q-card>
 </template>
@@ -346,6 +382,8 @@ export default {
   },
   data() {
     return {
+      ventilator_running: false,
+      spont_breathing: true,
       presetsEnabled: true,
       showPresets: false,
       show_summary: false,
@@ -356,13 +394,15 @@ export default {
       autoscale: true,
       loopMode: false,
       isEnabled: true,
+      pip_caption: "pip",
       pip_cmh2o: 14.0,
       peep_cmh2o: 4.0,
       freq: 40,
       insp_time: 0.4,
       insp_flow: 8.0,
       tidal_volume: 15,
-      mode: "PC",
+      fio2: 21,
+      mode: "OFF",
       x_min: 0,
       x_max: 5.0,
       y_min: 0,
@@ -415,15 +455,36 @@ export default {
     };
   },
   methods: {
+    toggle_spont_breathing() {
+      explain.callModelFunction("Breathing.switch_breathing", [this.spont_breathing])
+    },
+    set_fio2() {
+      explain.callModelFunction("Ventilator.set_fio2", [parseFloat(this.fio2)])
+    },
     update_ventilator_setttings() {
-      console.log(this.mode)
       switch (this.mode) {
+        case "OFF":
+          this.ventilator_running = false
+          explain.callModelFunction("Ventilator.switch_ventilator", [false])
+          break;
         case "PC":
-          explain.callModelFunction("Ventilator.set_ventilator_pc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.insp_time, this.insp_flow])
-
+          if (!this.ventilator_running) {
+            this.ventilator_running = true;
+            explain.callModelFunction("Ventilator.switch_ventilator", [true])
+          }
+          if (this.ventilator_running) {
+            explain.callModelFunction("Ventilator.set_ventilator_pc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.insp_time, this.insp_flow])
+          }
           break;
         case "PRVC":
-          explain.callModelFunction("Ventilator.set_ventilator_prvc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.tidal_volume, this.insp_time, this.insp_flow])
+          if (!this.ventilator_running) {
+            this.ventilator_running = true;
+            explain.callModelFunction("Ventilator.switch_ventilator", [true])
+          }
+          if (this.ventilator_running) {
+            this.pip_caption = "pip max"
+            explain.callModelFunction("Ventilator.set_ventilator_prvc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.tidal_volume, this.insp_time, this.insp_flow])
+            }
           break;
 
       }

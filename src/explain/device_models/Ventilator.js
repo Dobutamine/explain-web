@@ -19,7 +19,7 @@ export class Ventilator {
   fio2 = 0.205;
   temp = 37.0;
   humidity = 1.0;
-  vent_running = true;
+  vent_running = false;
   ettube_diameter = 0.0035;
   ettube_length = 0.11;
   vent_mode = "PRVC";
@@ -81,6 +81,8 @@ export class Ventilator {
   _peep = 0.0;
   _tv_tolerance = 0.0005; // tidal volume tolerance for volume control in l
   _triggered_breath = false;
+  _block_trigger_counter = 0.0;
+  _block_trigger = false;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -253,7 +255,10 @@ export class Ventilator {
     // add to the vent parts array
     this._vent_parts.push(this.exp_valve);
   }
-
+  set_fio2(new_fio2) {
+    this.fio2 = new_fio2 / 100.0;
+    set_gas_composition(this.vent_in, this.fio2, this.temp, this.humidity);
+  }
   set_ventilator_cpap(peep = 4.0, rate = 1.0, t_in = 0.4, insp_flow = 10.0) {
     this.pip_cmh2o = peep + 0.5;
     this.pip_cmh2o_max = peep + 0.5;
@@ -287,7 +292,7 @@ export class Ventilator {
     t_in = 0.4,
     insp_flow = 10.0
   ) {
-    this.pip_cmh2o = pip_max;
+    //this.pip_cmh2o = pip_max;
     this.pip_cmh2o_max = pip_max;
     this.peep_cmh2o = peep;
     this.vent_rate = rate;
@@ -305,7 +310,6 @@ export class Ventilator {
   switch_ventilator(state) {
     this._model_engine.models["MOUTH_DS"].no_flow = state;
     this._model_engine.models["Breathing"].is_intubated = state;
-    this._model_engine.models["Breathing"].breathing_enabled = !state;
     this.et_tube.no_flow = !state;
     this.vent_running = state;
     this.is_enabled = state;
@@ -322,25 +326,28 @@ export class Ventilator {
     this._pip_max = this.pip_cmh2o_max / 1.35951;
     this._peep = this.peep_cmh2o / 1.35951;
 
-    // // check for triggered breath
-    // this.trigger_volume = (this.tidal_volume / 100) * this.trigger_volume_perc;
-    // if (
-    //   this._trigger_volume_counter > this.trigger_volume &&
-    //   !this._triggered_breath
-    // ) {
-    //   this._triggered_breath = true;
-    //   // reset the trigger volume counter
-    //   this._trigger_volume_counter = 0.0;
-    // }
+    // check for triggered breath
+    this.trigger_volume = (this.tidal_volume / 100) * this.trigger_volume_perc;
+    if (
+      this._trigger_volume_counter > this.trigger_volume &&
+      !this._triggered_breath
+    ) {
+      // we have a triggered breath
+      this._triggered_breath = true;
+      // reset the trigger volume counter
+      this._trigger_volume_counter = 0.0;
+      console.log("triggered breath");
+    }
 
-    // // calculate the triggered volume
-    // if (
-    //   !this._triggered_breath &&
-    //   !this._inspiration &&
-    //   this.et_tube.flow > 0.0
-    // ) {
-    //   this._trigger_volume_counter += this.et_tube.flow * this._t;
-    // }
+    // calculate the triggered volume
+    if (
+      !this._triggered_breath &&
+      !this._inspiration &&
+      !this._block_trigger &&
+      this.et_tube.flow > 0.0
+    ) {
+      this._trigger_volume_counter += this.et_tube.flow * this._t;
+    }
 
     // calculate the expiration time
     this.exp_time = 60.0 / this.vent_rate - this.insp_time;
@@ -352,6 +359,13 @@ export class Ventilator {
       this._expiration = true;
       this._triggered_breath = false;
       this.etco2 = this._model_engine.models["DS"].pco2;
+      this._block_trigger_counter = 0.0;
+      this._block_trigger = true;
+    }
+
+    if (this._block_trigger_counter > this.insp_time * 1.5) {
+      this._block_trigger_counter = 0.0;
+      this._block_trigger = false;
     }
 
     // has the expiration time elapsed?
@@ -377,6 +391,10 @@ export class Ventilator {
       if (this.vent_mode == "PRVC") {
         this.pressure_regulated_volume_control();
       }
+    }
+
+    if (this._block_trigger) {
+      this._block_trigger_counter += this._t;
     }
 
     // inspiration
@@ -450,18 +468,16 @@ export class Ventilator {
 
   pressure_regulated_volume_control() {
     if (this.exp_tidal_volume < this.tidal_volume - this._tv_tolerance) {
-      console.log("too low", this.exp_tidal_volume);
-      this.pip_cmh2o += 0.5;
+      this.pip_cmh2o += 1.0;
       if (this.pip_cmh2o > this.pip_cmh2o_max) {
         this.pip_cmh2o = this.pip_cmh2o_max;
       }
+    }
 
-      if (this.exp_tidal_volume > this.tidal_volume + this._tv_tolerance) {
-        console.log("too high", this.exp_tidal_volume);
-        this.pip_cmh2o -= 0.5;
-        if (this.pip_cmh2o < this.peep_cmh2o + 2.0) {
-          this.pip_cmh2o = this.peep_cmh2o + 2.0;
-        }
+    if (this.exp_tidal_volume > this.tidal_volume + this._tv_tolerance) {
+      this.pip_cmh2o -= 1.0;
+      if (this.pip_cmh2o < this.peep_cmh2o + 2.0) {
+        this.pip_cmh2o = this.peep_cmh2o + 2.0;
       }
     }
   }
