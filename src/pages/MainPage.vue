@@ -207,6 +207,18 @@ export default defineComponent({
           collapsed: true,
           parameters: []
         },
+        vent_numerics: {
+          title: "VENTILATOR",
+          collapsed: false,
+          parameters: [
+          {label: "Pip", unit: "cmh2o", factor: 1.0, rounding: 0, props: ["Ventilator.pip_cmh2o"]},
+          {label: "Peep", unit: "cmh2o", factor: 1.0, rounding: 0, props: ["Ventilator.peep_cmh2o"]},
+          {label: "Freq", unit: "/min", factor: 1.0, rounding: 0, props: ["Ventilator.vent_rate"]},
+          {label: "Tv", unit: "ml", factor: 1000.0, rounding: 1, props: ["Ventilator.exp_tidal_volume"]},
+          {label: "Comp", unit: "ml/cmh2o", factor: 1.0, rounding: 1, props: ["Ventilator.compliance"]},
+          {label: "Etco2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Ventilator.etco2"]},
+          ]
+        },
         lab_numerics: {
           title: "LABS",
           collapsed: false,

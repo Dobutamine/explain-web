@@ -358,7 +358,6 @@ export class Ventilator {
       this._inspiration = false;
       this._expiration = true;
       this._triggered_breath = false;
-      this.etco2 = this._model_engine.models["DS"].pco2;
       this._block_trigger_counter = 0.0;
       this._block_trigger = true;
     }
@@ -377,6 +376,7 @@ export class Ventilator {
       this._expiration = false;
       // reset the volume counters
       this.exp_tidal_volume = -this._exp_tidal_volume_counter;
+      this.etco2 = this._model_engine.models["DS"].pco2;
       this.tv_kg = (this.exp_tidal_volume * 1000.0) / this._model_engine.weight;
 
       if (this.exp_tidal_volume > 0) {
