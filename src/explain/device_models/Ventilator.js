@@ -275,6 +275,11 @@ export class Ventilator {
     this.synchronized = false;
     this.vent_mode = "CPAP";
   }
+  set_trigger_perc(new_perc) {
+    if (new_perc > 1.0 && new_perc < 50.0) {
+      this.trigger_volume_perc = new_perc;
+    }
+  }
   set_ventilator_ps(
     pip = 14.0,
     peep = 4.0,
@@ -374,9 +379,9 @@ export class Ventilator {
     ) {
       // we have a triggered breath
       this._triggered_breath = true;
+      console.log("triggered breath");
       // reset the trigger volume counter
       this._trigger_volume_counter = 0.0;
-      console.log("triggered breath");
     }
 
     // update the triggered volume
@@ -433,12 +438,16 @@ export class Ventilator {
         if (this.et_tube.flow > this._peak_flow) {
           this._peak_flow = this.et_tube.flow;
         }
+        // store the current exhaled tidal volume
+        this.exp_tidal_volume = -this._exp_tidal_volume_counter;
       } else {
         // if decreasing wait until it is 70% of the peak flow
         if (this.et_tube.flow < 0.7 * this._peak_flow) {
           // go into expiration
           this._inspiration = false;
           this._expiration = true;
+          // reset the tidal volume counter
+          this._exp_tidal_volume_counter = 0.0;
           // reset the triggered breath flag
           this._triggered_breath = false;
         }
@@ -451,6 +460,8 @@ export class Ventilator {
       this._prev_et_tube_flow = 0.0;
       this._inspiration = false;
       this._expiration = true;
+      // calculate the expiratory tidal volume
+      this._exp_tidal_volume_counter += this.et_tube.flow * this._t;
     }
   }
 
@@ -478,7 +489,7 @@ export class Ventilator {
     }
 
     // release the triggered breath block over 1.5 times the inspiration time
-    if (this._block_trigger_counter > this.insp_time * 1.25) {
+    if (this._block_trigger_counter > this.insp_time * 0.25) {
       // reset the block trigger counter
       this._block_trigger_counter = 0.0;
       // release the blocked trigger lock

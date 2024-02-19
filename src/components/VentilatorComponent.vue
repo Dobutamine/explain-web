@@ -219,6 +219,26 @@
             </q-knob>
             <div :style="{ fontSize: '10px' }">%</div>
         </div>
+        <div class="q-mr-sm text-center">
+          <div class="knob-label">trigger</div>
+            <q-knob
+              show-value
+              font-size="12px"
+              v-model="trigger_perc"
+              size="50px"
+              :thickness="0.22"
+              :min="1"
+              :max="50"
+              :step="1"
+              color="teal"
+              track-color="grey-3"
+              class="col"
+              @update:model-value="set_trigger"
+            >
+              {{ trigger_perc }}
+            </q-knob>
+            <div :style="{ fontSize: '10px' }">%</div>
+        </div>
       </div>
     <div v-if="isEnabled" class="text-overline justify-center q-gutter-xs row">
     </div>
@@ -387,8 +407,8 @@ export default {
       presetsEnabled: true,
       showPresets: false,
       show_summary: false,
-      rtWindow: 3,
-      rtWindowValidated: 3,
+      rtWindow: 5,
+      rtWindowValidated: 5,
       analysisEnabled: true,
       autoscaleEnabled: true,
       autoscale: true,
@@ -402,6 +422,7 @@ export default {
       insp_flow: 8.0,
       tidal_volume: 15,
       fio2: 21,
+      trigger_perc: 6.0,
       mode: "OFF",
       x_min: 0,
       x_max: 5.0,
@@ -457,6 +478,9 @@ export default {
   methods: {
     toggle_spont_breathing() {
       explain.callModelFunction("Breathing.switch_breathing", [this.spont_breathing])
+    },
+    set_trigger() {
+      explain.callModelFunction("Ventilator.set_trigger_perc", [parseFloat[this.trigger_perc]])
     },
     set_fio2() {
       explain.callModelFunction("Ventilator.set_fio2", [parseFloat(this.fio2)])
