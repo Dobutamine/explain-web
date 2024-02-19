@@ -76,6 +76,7 @@ export class Ventilator {
   _tube_resistance = 25.0;
   _max_flow = 0.0;
   _pres_reached = false;
+  _vol_reached = false;
   _pip = 0.0;
   _pip_max = 0.0;
   _peep = 0.0;
@@ -83,6 +84,11 @@ export class Ventilator {
   _triggered_breath = false;
   _block_trigger_counter = 0.0;
   _block_trigger = false;
+  _prev_et_tube_flow = 0.0;
+  _prev_et_tube_flow_delta = 0.0;
+  _peak_flow = 0.0;
+  _peak_flow_temp = 0.0;
+  _end_insp = false;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -269,6 +275,21 @@ export class Ventilator {
     this.synchronized = false;
     this.vent_mode = "CPAP";
   }
+  set_ventilator_ps(
+    pip = 14.0,
+    peep = 4.0,
+    rate = 40.0,
+    t_in = 0.4,
+    insp_flow = 10.0
+  ) {
+    this.pip_cmh2o = pip;
+    this.pip_cmh2o_max = pip;
+    this.peep_cmh2o = peep;
+    this.vent_rate = rate;
+    this.insp_time = t_in;
+    this.insp_flow = insp_flow;
+    this.vent_mode = "PS";
+  }
   set_ventilator_pc(
     pip = 14.0,
     peep = 4.0,
@@ -301,6 +322,23 @@ export class Ventilator {
     this.insp_flow = insp_flow;
     this.vent_mode = "PRVC";
   }
+  set_ventilator_vc(
+    pip_max = 18.0,
+    peep = 4.0,
+    rate = 40.0,
+    tv = 15.0,
+    t_in = 0.4,
+    insp_flow = 10.0
+  ) {
+    //this.pip_cmh2o = pip_max;
+    this.pip_cmh2o_max = pip_max;
+    this.peep_cmh2o = peep;
+    this.vent_rate = rate;
+    this.insp_time = t_in;
+    this.tidal_volume = tv / 1000.0;
+    this.insp_flow = insp_flow;
+    this.vent_mode = "VC";
+  }
   set_ventilator_mode(new_mode) {
     if (new_mode == "PRVC" || new_mode == "PC" || new_mode == "CPAP") {
       this.vent_mode = new_mode;
@@ -326,8 +364,10 @@ export class Ventilator {
     this._pip_max = this.pip_cmh2o_max / 1.35951;
     this._peep = this.peep_cmh2o / 1.35951;
 
-    // check for triggered breath
+    // determine the trigger volume
     this.trigger_volume = (this.tidal_volume / 100) * this.trigger_volume_perc;
+
+    // check whether the trigger volume is reached
     if (
       this._trigger_volume_counter > this.trigger_volume &&
       !this._triggered_breath
@@ -339,7 +379,7 @@ export class Ventilator {
       console.log("triggered breath");
     }
 
-    // calculate the triggered volume
+    // update the triggered volume
     if (
       !this._triggered_breath &&
       !this._inspiration &&
@@ -349,65 +389,25 @@ export class Ventilator {
       this._trigger_volume_counter += this.et_tube.flow * this._t;
     }
 
-    // calculate the expiration time
-    this.exp_time = 60.0 / this.vent_rate - this.insp_time;
-
-    // has the inspiration time elapsed?
-    if (this._insp_time_counter > this.insp_time) {
-      this._insp_time_counter = 0.0;
-      this._inspiration = false;
-      this._expiration = true;
-      this._triggered_breath = false;
-      this._block_trigger_counter = 0.0;
-      this._block_trigger = true;
-    }
-
-    if (this._block_trigger_counter > this.insp_time * 1.5) {
-      this._block_trigger_counter = 0.0;
-      this._block_trigger = false;
-    }
-
-    // has the expiration time elapsed?
-    if (this._exp_time_counter > this.exp_time || this._triggered_breath) {
-      this._triggered_breath = false;
-      this.vol = 0.0;
-      this._exp_time_counter = 0.0;
-      this._inspiration = true;
-      this._expiration = false;
-      // reset the volume counters
-      this.exp_tidal_volume = -this._exp_tidal_volume_counter;
-      this.etco2 = this._model_engine.models["DS"].pco2;
-      this.tv_kg = (this.exp_tidal_volume * 1000.0) / this._model_engine.weight;
-
-      if (this.exp_tidal_volume > 0) {
-        this.elastance = (this._pip - this._peep) / this.exp_tidal_volume; // in mmHg/l
-        this.compliance =
-          1 /
-          (((this._pip - this._peep) * 1.35951) /
-            (this.exp_tidal_volume * 1000.0)); // in ml/cmH2O
-      }
-      this._exp_tidal_volume_counter = 0.0;
-      // check whether the ventilator is in PRVC mode
-      if (this.vent_mode == "PRVC") {
-        this.pressure_regulated_volume_control();
-      }
-    }
-
-    if (this._block_trigger) {
-      this._block_trigger_counter += this._t;
-    }
-
-    // inspiration
-    if (this._inspiration) {
-      this._insp_time_counter += this._t;
-    }
-
-    if (this._expiration) {
-      this._exp_time_counter += this._t;
-    }
-
     // call the correct ventilation mode
-    this.pressure_control();
+    switch (this.vent_mode) {
+      case "VC":
+        this.time_cycling();
+        this.volume_control();
+        break;
+      case "PC":
+        this.time_cycling();
+        this.pressure_control();
+        break;
+      case "PRVC":
+        this.time_cycling();
+        this.pressure_control();
+        break;
+      case "PS":
+        this.flow_cycling();
+        this.pressure_support();
+        break;
+    }
 
     // store the values
     this.pres = (this.vent_circuit.pres - this.p_atm) * 1.35951; // in cmH2O
@@ -417,10 +417,219 @@ export class Ventilator {
     this.vc_po2 = this.vent_circuit.po2;
     this.vc_pco2 = this.vent_circuit.pco2;
 
+    // do the model step of the ventilator parts
     this._vent_parts.forEach((vent_part) => vent_part.step_model());
   }
 
+  flow_cycling() {
+    // is there flow moving to the lungs and the breath is triggered
+    if (this.et_tube.flow > 0.0 && this._triggered_breath) {
+      // check whether the flow is increasing
+      if (this.et_tube.flow > this._prev_et_tube_flow) {
+        // if increasing then keep inspiration going
+        this._inspiration = true;
+        this._expiration = false;
+        // determine the peak flow
+        if (this.et_tube.flow > this._peak_flow) {
+          this._peak_flow = this.et_tube.flow;
+        }
+      } else {
+        // if decreasing wait until it is 70% of the peak flow
+        if (this.et_tube.flow < 0.7 * this._peak_flow) {
+          // go into expiration
+          this._inspiration = false;
+          this._expiration = true;
+          // reset the triggered breath flag
+          this._triggered_breath = false;
+        }
+      }
+      this._prev_et_tube_flow = this.et_tube.flow;
+    }
+
+    if (this.et_tube.flow < 0.0 && !this._triggered_breath) {
+      this._peak_flow = 0.0;
+      this._prev_et_tube_flow = 0.0;
+      this._inspiration = false;
+      this._expiration = true;
+    }
+  }
+
+  volume_cycling() {}
+
+  time_cycling() {
+    // calculate the expiration time
+    this.exp_time = 60.0 / this.vent_rate - this.insp_time;
+
+    // has the inspiration time elapsed?
+    if (this._insp_time_counter > this.insp_time) {
+      // reset the inspiration time counter
+      this._insp_time_counter = 0.0;
+      // reset the inspiratory tidal volume counter
+      this._insp_tidal_volume_counter = 0.0;
+      // flag the inspiration and expiration
+      this._inspiration = false;
+      this._expiration = true;
+      // reset the triggered breath flag
+      this._triggered_breath = false;
+      // reset the block trigger counter
+      this._block_trigger_counter = 0.0;
+      // as the inspiration is just finished block the triggered breath for a while
+      this._block_trigger = true;
+    }
+
+    // release the triggered breath block over 1.5 times the inspiration time
+    if (this._block_trigger_counter > this.insp_time * 1.25) {
+      // reset the block trigger counter
+      this._block_trigger_counter = 0.0;
+      // release the blocked trigger lock
+      this._block_trigger = false;
+    }
+
+    // has the expiration time elapsed or is the expiration phase ended by a triggered breath
+    if (this._exp_time_counter > this.exp_time || this._triggered_breath) {
+      // reset the expiration time counter
+      this._exp_time_counter = 0.0;
+      // flag the inspiration and expiration
+      this._inspiration = true;
+      this._expiration = false;
+      // reset the triggered breath flag
+      this._triggered_breath = false;
+      // reset the volume counter
+      this.vol = 0.0;
+      // reset the volume counters
+      this.exp_tidal_volume = -this._exp_tidal_volume_counter;
+      // store the end tidal co2
+      this.etco2 = this._model_engine.models["DS"].pco2;
+      // calculate the tidal volume per kg
+      this.tv_kg = (this.exp_tidal_volume * 1000.0) / this._model_engine.weight;
+      // calculate the compliance of the lung
+      if (this.exp_tidal_volume > 0) {
+        this.compliance =
+          1 /
+          (((this._pip - this._peep) * 1.35951) /
+            (this.exp_tidal_volume * 1000.0)); // in ml/cmH2O
+      }
+      // reset the expiratory tidal volume counter
+      this._exp_tidal_volume_counter = 0.0;
+      // check whether the ventilator is in PRVC mode because we need to adjust the pressure depending on the tidal volume
+      if (this.vent_mode == "PRVC") {
+        this.pressure_regulated_volume_control();
+      }
+    }
+
+    // if the trigger volume is blocked increase the timer for the blokkade duration
+    if (this._block_trigger) {
+      this._block_trigger_counter += this._t;
+    }
+
+    // if in inspiration increase the timer
+    if (this._inspiration) {
+      this._insp_time_counter += this._t;
+    }
+
+    // if in expiration increase the timer
+    if (this._expiration) {
+      this._exp_time_counter += this._t;
+    }
+  }
+
+  volume_control() {
+    if (this._inspiration) {
+      // close the expiration valve and open the inspiration valve
+      this.exp_valve.no_flow = true;
+      this.insp_valve.no_flow = false;
+
+      // prevent back flow to the ventilator
+      this.insp_valve.no_back_flow = true;
+
+      // set the resistance of the inspiration valve
+      this.insp_valve.r_for =
+        (this.vent_in.pres + this._pip - this.p_atm - this._peep) /
+        (this.insp_flow / 60.0);
+
+      // guard the inspiratory pressure
+      if (this._insp_tidal_volume_counter > this.tidal_volume) {
+        this.insp_valve.no_flow = true;
+        this.insp_valve.r_for_factor = 1.0;
+        if (this.insp_valve.flow > 0 && !this._vol_reached) {
+          this.resistance =
+            (this.vent_circuit.pres - this.p_atm) / this.insp_valve.flow;
+          this._vol_reached = true;
+        }
+      }
+      // calculate the expiratory tidal volume
+      if (this.insp_valve.flow > 0) {
+        this._insp_tidal_volume_counter += this.insp_valve.flow * this._t;
+      }
+    }
+
+    if (this._expiration) {
+      this._vol_reached = false;
+      // close the inspiration valve and open the expiration valve
+      this.insp_valve.no_flow = true;
+
+      this.exp_valve.no_flow = false;
+      this.exp_valve.no_back_flow = true;
+
+      // set the resistance of the expiration valve to and calculate the pressure in the expiration block
+      this.exp_valve.r_for = 10;
+      this.vent_out.vol =
+        this._peep / this.vent_out.el_base + this.vent_out.u_vol;
+
+      // calculate the expiratory tidal volume
+      if (this.et_tube.flow < 0) {
+        this._exp_tidal_volume_counter += this.et_tube.flow * this._t;
+      }
+    }
+  }
+
   pressure_control() {
+    if (this._inspiration) {
+      // close the expiration valve and open the inspiration valve
+      this.exp_valve.no_flow = true;
+      this.insp_valve.no_flow = false;
+
+      // prevent back flow to the ventilator
+      this.insp_valve.no_back_flow = true;
+
+      // set the resistance of the inspiration valve
+      this.insp_valve.r_for =
+        (this.vent_in.pres + this._pip - this.p_atm - this._peep) /
+        (this.insp_flow / 60.0);
+
+      // guard the inspiratory pressure
+      if (this.vent_circuit.pres > this._pip + this.p_atm) {
+        this.insp_valve.no_flow = true;
+        this.insp_valve.r_for_factor = 1.0;
+        if (this.insp_valve.flow > 0 && !this._pres_reached) {
+          this.resistance =
+            (this.vent_circuit.pres - this.p_atm) / this.insp_valve.flow;
+          this._pres_reached = true;
+        }
+      }
+    }
+
+    if (this._expiration) {
+      this._pres_reached = false;
+      // close the inspiration valve and open the expiration valve
+      this.insp_valve.no_flow = true;
+
+      this.exp_valve.no_flow = false;
+      this.exp_valve.no_back_flow = true;
+
+      // set the resistance of the expiration valve to and calculate the pressure in the expiration block
+      this.exp_valve.r_for = 10;
+      this.vent_out.vol =
+        this._peep / this.vent_out.el_base + this.vent_out.u_vol;
+
+      // calculate the expiratory tidal volume
+      if (this.et_tube.flow < 0) {
+        this._exp_tidal_volume_counter += this.et_tube.flow * this._t;
+      }
+    }
+  }
+
+  pressure_support() {
     if (this._inspiration) {
       // close the expiration valve and open the inspiration valve
       this.exp_valve.no_flow = true;

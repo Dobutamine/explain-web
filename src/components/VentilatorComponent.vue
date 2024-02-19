@@ -179,7 +179,7 @@
             </q-knob>
             <div :style="{ fontSize: '10px' }">l/min</div>
         </div>
-        <div v-if="mode =='PRVC'" class="q-mr-sm text-center">
+        <div v-if="mode =='PRVC' || mode == 'VC'" class="q-mr-sm text-center">
           <div class="knob-label">tv</div>
             <q-knob
               show-value
@@ -485,6 +485,25 @@ export default {
             this.pip_caption = "pip max"
             explain.callModelFunction("Ventilator.set_ventilator_prvc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.tidal_volume, this.insp_time, this.insp_flow])
             }
+          break;
+        case "PS":
+          if (!this.ventilator_running) {
+            this.ventilator_running = true;
+            explain.callModelFunction("Ventilator.switch_ventilator", [true])
+          }
+          if (this.ventilator_running) {
+            explain.callModelFunction("Ventilator.set_ventilator_ps", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.insp_time, this.insp_flow])
+          }
+          break;
+        case "VC":
+          if (!this.ventilator_running) {
+            this.ventilator_running = true;
+            explain.callModelFunction("Ventilator.switch_ventilator", [true])
+          }
+          if (this.ventilator_running) {
+            this.pip_caption = "pip max"
+            explain.callModelFunction("Ventilator.set_ventilator_vc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.tidal_volume, this.insp_time, this.insp_flow])
+          }
           break;
 
       }
