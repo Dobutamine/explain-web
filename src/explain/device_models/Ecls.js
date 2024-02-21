@@ -3,6 +3,7 @@ import {
   BloodPump,
   BloodResistor,
   GasCapacitance,
+  GasExchanger,
   GasResistor,
 } from "../ModelIndex";
 import { set_gas_composition } from "../helpers/GasComposition";
@@ -115,6 +116,7 @@ export class Ecls {
     // build the ecls system
     this.build_blood_part();
     this.build_gas_part();
+    this.build_gasexchanger();
 
     console.log(this._ecls_parts);
     // set the flag to model is initialized
@@ -435,6 +437,21 @@ export class Ecls {
       { key: "r_k", value: 0.0 },
     ]);
     this._ecls_parts.push(this._gas_oxy_out);
+  }
+  build_gasexchanger() {
+    this._gasex = new GasExchanger(
+      this._model_engine,
+      "_gasex",
+      "GasExchanger"
+    );
+    this._gasex.init_model([
+      { key: "is_enabled", value: true },
+      { key: "comp_blood", value: this._oxy },
+      { key: "comp_gas", value: this._gas_oxy },
+      { key: "dif_o2", value: this.diff_o2 },
+      { key: "dif_co2", value: this.diff_co2 },
+    ]);
+    this._ecls_parts.push(this._gasex);
   }
 
   step_model() {

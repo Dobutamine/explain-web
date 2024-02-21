@@ -51,8 +51,17 @@ export class GasExchanger {
     this._t = this._model_engine.modeling_stepsize;
 
     // get a reference to the blood and gas capacitances
-    this._blood = this._model_engine.models[this.comp_blood];
-    this._gas = this._model_engine.models[this.comp_gas];
+    if (typeof this.comp_blood == "string") {
+      this._blood = this._model_engine.models[this.comp_blood];
+    } else {
+      this._blood = this.comp_blood;
+    }
+
+    if (typeof this.comp_gas == "string") {
+      this._gas = this._model_engine.models[this.comp_gas];
+    } else {
+      this._gas = this.comp_gas;
+    }
 
     // set the flag to model is initialized
     this._is_initialized = true;
