@@ -5,6 +5,7 @@ import {
   GasCapacitance,
   GasResistor,
 } from "../ModelIndex";
+import { set_gas_composition } from "../helpers/GasComposition";
 
 export class Ecls {
   static class_type = "Ecls";
@@ -12,6 +13,7 @@ export class Ecls {
     { name: "inlet_res", unit: "", type: "number", factor: 1.0, rounding: 2 },
     { name: "outlet_res", unit: "", type: "number", factor: 1.0, rounding: 2 },
     { name: "pump_rpm", unit: "", type: "number", factor: 1.0, rounding: 0 },
+    { name: "sweep_gas", unit: "", type: "number", factor: 1.0, rounding: 0 },
   ];
   // independent parameters
   name = "";
@@ -63,6 +65,7 @@ export class Ecls {
   pre_oxy_pres = 0.0;
   post_oxy_pres = 0.0;
   flow = 0.0;
+  gas_flow = 0.0;
 
   // local parameters
   _model_engine = {};
@@ -111,7 +114,9 @@ export class Ecls {
 
     // build the ecls system
     this.build_blood_part();
+    this.build_gas_part();
 
+    console.log(this._ecls_parts);
     // set the flag to model is initialized
     this._is_initialized = true;
   }
@@ -323,11 +328,113 @@ export class Ecls {
     this.init_pump();
   }
   build_gas_part() {
-    this._gas_in = new GasCapacitance(this._model_engine, "_gas_in");
-    this._gas_in_oxy = new GasResistor(this._model_engine, "_gas_in_oxy");
-    this._gas_oxy = new GasCapacitance(this._model_engine, "_gas_oxy");
-    this._gas_oxy_out = new GasResistor(this._model_engine, "_gas_oxy_out");
-    this._gas_out = new GasCapacitance(this._model_engine, "_gas_out");
+    this._gas_in = new GasCapacitance(
+      this._model_engine,
+      "_gas_in",
+      "GasCapacitance"
+    );
+    this._gas_in.init_model([
+      { key: "is_enabled", value: true },
+      { key: "fixed_composition", value: true },
+      { key: "vol", value: 5.4 },
+      { key: "u_vol", value: 5.0 },
+      { key: "el_base", value: 1000.0 },
+      { key: "el_k", value: 0.0 },
+      { key: "pres_atm", value: this.pres_atm },
+    ]);
+    // calculate the current pressure
+    this._gas_in.calc_model();
+    // set the gas composition
+    set_gas_composition(
+      this._gas_in,
+      this.fio2_gas,
+      this.temp_gas,
+      this.humidity_gas
+    );
+    // add to the vent parts array
+    this._ecls_parts.push(this._gas_in);
+
+    this._gas_oxy = new GasCapacitance(
+      this._model_engine,
+      "_gas_oxy",
+      "GasCapacitance"
+    );
+    this._gas_oxy.init_model([
+      { key: "is_enabled", value: true },
+      { key: "fixed_composition", value: false },
+      { key: "vol", value: 0.1 },
+      { key: "u_vol", value: 0.1 },
+      { key: "el_base", value: 10000.0 },
+      { key: "el_k", value: 0.0 },
+      { key: "pres_atm", value: this.pres_atm },
+    ]);
+    // calculate the current pressure
+    this._gas_oxy.calc_model();
+    // set the gas composition
+    set_gas_composition(
+      this._gas_oxy,
+      this.fio2_gas,
+      this.temp_gas,
+      this.humidity_gas
+    );
+    // add to the vent parts array
+    this._ecls_parts.push(this._gas_oxy);
+
+    this._gas_out = new GasCapacitance(
+      this._model_engine,
+      "_gas_out",
+      "GasCapacitance"
+    );
+    this._gas_out.init_model([
+      { key: "is_enabled", value: true },
+      { key: "fixed_composition", value: true },
+      { key: "vol", value: 5.0 },
+      { key: "u_vol", value: 5.0 },
+      { key: "el_base", value: 1000.0 },
+      { key: "el_k", value: 0.0 },
+      { key: "pres_atm", value: this.pres_atm },
+    ]);
+    // calculate the current pressure
+    this._gas_out.calc_model();
+    // set the gas composition
+    set_gas_composition(this._gas_out, 0.205, 20.0, 0.5);
+    // add to the vent parts array
+    this._ecls_parts.push(this._gas_out);
+
+    // connect the parts
+    this._gas_in_oxy = new GasResistor(
+      this._model_engine,
+      "_gas_in_oxy",
+      "GasResistor"
+    );
+    this._gas_in_oxy.init_model([
+      { key: "is_enabled", value: true },
+      { key: "no_flow", value: false },
+      { key: "no_back_flow", value: false },
+      { key: "comp_from", value: this._gas_in },
+      { key: "comp_to", value: this._gas_oxy },
+      { key: "r_for", value: 2000.0 },
+      { key: "r_back", value: 2000.0 },
+      { key: "r_k", value: 0.0 },
+    ]);
+    this._ecls_parts.push(this._gas_in_oxy);
+
+    this._gas_oxy_out = new GasResistor(
+      this._model_engine,
+      "_gas_oxy_out",
+      "GasResistor"
+    );
+    this._gas_oxy_out.init_model([
+      { key: "is_enabled", value: true },
+      { key: "no_flow", value: false },
+      { key: "no_back_flow", value: false },
+      { key: "comp_from", value: this._gas_oxy },
+      { key: "comp_to", value: this._gas_out },
+      { key: "r_for", value: 50.0 },
+      { key: "r_back", value: 50.0 },
+      { key: "r_k", value: 0.0 },
+    ]);
+    this._ecls_parts.push(this._gas_oxy_out);
   }
 
   step_model() {
@@ -345,10 +452,16 @@ export class Ecls {
     this._return_cannula.r_for = this.outlet_res;
     this._return_cannula.r_back = this.outlet_res;
 
+    // set the resistance of the inspiration valve
+    this._gas_in_oxy.r_for =
+      (this._gas_in.pres - this.pres_atm) / (this.sweep_gas / 60.0);
+
     // do the model step of the ventilator parts
     this._ecls_parts.forEach((_ecls_part) => _ecls_part.step_model());
+
     // get the dependent parameters
     this.flow = this._oxy_tubing_out.flow * 60.0;
+    this.gas_flow = this._gas_oxy_out.flow * 60.0;
   }
 
   calc_volume(length, diameter) {
