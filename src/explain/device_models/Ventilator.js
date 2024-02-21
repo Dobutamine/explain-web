@@ -1,9 +1,5 @@
 import { GasCapacitance } from "../core_models/GasCapacitance";
-import {
-  set_gas_composition,
-  calc_gas_composition,
-} from "../helpers/GasComposition";
-import { GasExchanger } from "../core_models/GasExchanger";
+import { set_gas_composition } from "../helpers/GasComposition";
 import { GasResistor } from "../core_models/GasResistor";
 
 export class Ventilator {

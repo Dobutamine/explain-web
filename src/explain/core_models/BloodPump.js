@@ -129,8 +129,17 @@ export class BloodPump {
     this._t = this._model_engine.modeling_stepsize;
 
     // get a reference to the models
-    this._inlet_res = this._model_engine.models[this.inlet];
-    this._outlet_res = this._model_engine.models[this.outlet];
+    if (typeof this.inlet == "string") {
+      this._inlet_res = this._model_engine.models[this.inlet];
+    } else {
+      this._inlet_res = this.inlet;
+    }
+
+    if (typeof this.outlet == "string") {
+      this._outlet_res = this._model_engine.models[this.outlet];
+    } else {
+      this._outlet_res = this.outlet;
+    }
 
     // set the flag to model is initialized
     this._is_initialized = true;
@@ -192,18 +201,14 @@ export class BloodPump {
     // calculate the total pressure
     this.pres = this.pres_in + this.pres_out;
 
-    // create a pressure gradient across the pump
-    this._inlet_res = this._model_engine.models[this.inlet];
-    this._outlet_res = this._model_engine.models[this.outlet];
-
     this.pump_pressure = -this.pump_rpm / 25.0;
 
     if (this.pump_mode == 0) {
-      this._inlet_res.set_p1_ext(0.0);
-      this._inlet_res.set_p2_ext(this.pump_pressure);
+      this._inlet_res.p1_ext = 0.0;
+      this._inlet_res.p2_ext = this.pump_pressure;
     } else {
-      this._outlet_res.set_p1_ext(this.pump_pressure);
-      this._outlet_res.set_p2_ext(0.0);
+      this._outlet_res.p1_ext = this.pump_pressure;
+      this._outlet_res.p2_ext = 0.0;
     }
 
     // analyze the pressures and volume

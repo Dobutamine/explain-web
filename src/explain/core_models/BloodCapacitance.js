@@ -38,7 +38,7 @@ export class BloodCapacitance {
 
   // independent parameters
   name = "";
-  model_type = "";
+  model_type = "BloodCapacitance";
   description = "";
   is_enabled = false;
   dependencies = [];

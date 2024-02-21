@@ -389,6 +389,7 @@ export default {
       chartOptionsPres,
       chartOptionsFlow,
       chartOptionsVol
+
     }
 
   },
@@ -829,6 +830,8 @@ export default {
             labels: this.x_axis,
             datasets: [data_set_vol]
       }
+
+
 
       if (this.show_summary)
       {

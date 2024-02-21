@@ -63,6 +63,10 @@ export class BloodResistor {
 
   p1 = 0.0;
   p2 = 0.0;
+  p1_ext = 0.0;
+  p2_ext = 0.0;
+  p1_ext_factor = 1.0;
+  p2_ext_factor = 1.0;
   // local parameters
   _model_engine = {};
   _heart = {};
@@ -123,8 +127,12 @@ export class BloodResistor {
 
   calc_model() {
     // get the pressures of the connected model components
-    let _p1 = this._model_comp_from.pres;
-    let _p2 = this._model_comp_to.pres;
+    let _p1 = this._model_comp_from.pres + this.p1_ext * this.p1_ext_factor;
+    let _p2 = this._model_comp_to.pres + this.p2_ext * this.p2_ext_factor;
+
+    // reset the external pressures
+    this.p1_ext = 0;
+    this.p2_ext = 0;
 
     // calculate the resistances
     let _r_for_base = this.r_for * this.r_scaling_factor;
