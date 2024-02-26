@@ -4,7 +4,16 @@ import { GasResistor } from "../core_models/GasResistor";
 
 export class Ventilator {
   static class_type = "Ventilator";
-  static indepent_parameters = [];
+  static indepent_parameters = [
+    {
+      name: "set_ettube_resistance",
+      unit: "",
+      type: "function",
+      factor: "",
+      rounding: 1,
+      local_value: "et_tube_resistance",
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";
@@ -56,6 +65,7 @@ export class Ventilator {
   tv_kg = 0.0;
   vc_po2 = 0.0;
   vc_pco2 = 0.0;
+  et_tube_resistance = 60.0;
 
   // local parameters
   _model_engine = {};
@@ -229,8 +239,8 @@ export class Ventilator {
       { key: "no_back_flow", value: false },
       { key: "comp_from", value: this.vent_circuit },
       { key: "comp_to", value: this._model_engine.models["DS"] },
-      { key: "r_for", value: 100.0 },
-      { key: "r_back", value: 100.0 },
+      { key: "r_for", value: this.et_tube_resistance },
+      { key: "r_back", value: this.et_tube_resistance },
       { key: "r_k", value: 0.0 },
     ]);
     // add to the vent parts array
@@ -257,10 +267,19 @@ export class Ventilator {
     // add to the vent parts array
     this._vent_parts.push(this.exp_valve);
   }
+
+  set_ettube_resistance(new_res) {
+    if (new_res > 10.0) {
+      this.et_tube_resistance = new_res;
+      this.et_tube.r_for = new_res;
+      this.et_tube.r_back = new_res;
+    }
+  }
   set_fio2(new_fio2) {
     this.fio2 = new_fio2 / 100.0;
     set_gas_composition(this.vent_in, this.fio2, this.temp, this.humidity);
   }
+
   set_ventilator_cpap(peep = 4.0, rate = 1.0, t_in = 0.4, insp_flow = 10.0) {
     this.pip_cmh2o = peep + 0.5;
     this.pip_cmh2o_max = peep + 0.5;
@@ -271,11 +290,13 @@ export class Ventilator {
     this.synchronized = false;
     this.vent_mode = "CPAP";
   }
+
   set_trigger_perc(new_perc) {
     if (new_perc > 1.0 && new_perc < 50.0) {
       this.trigger_volume_perc = new_perc;
     }
   }
+
   set_ventilator_ps(
     pip = 14.0,
     peep = 4.0,
@@ -291,6 +312,7 @@ export class Ventilator {
     this.insp_flow = insp_flow;
     this.vent_mode = "PS";
   }
+
   set_ventilator_pc(
     pip = 14.0,
     peep = 4.0,
@@ -306,6 +328,7 @@ export class Ventilator {
     this.insp_flow = insp_flow;
     this.vent_mode = "PC";
   }
+
   set_ventilator_prvc(
     pip_max = 18.0,
     peep = 4.0,
@@ -323,6 +346,7 @@ export class Ventilator {
     this.insp_flow = insp_flow;
     this.vent_mode = "PRVC";
   }
+
   set_ventilator_vc(
     pip_max = 18.0,
     peep = 4.0,
@@ -340,6 +364,7 @@ export class Ventilator {
     this.insp_flow = insp_flow;
     this.vent_mode = "VC";
   }
+
   set_ventilator_mode(new_mode) {
     if (new_mode == "PRVC" || new_mode == "PC" || new_mode == "CPAP") {
       this.vent_mode = new_mode;
@@ -353,6 +378,7 @@ export class Ventilator {
     this.vent_running = state;
     this.is_enabled = state;
   }
+
   step_model() {
     if (this.is_enabled && this.vent_running) {
       this.calc_model();
@@ -460,8 +486,6 @@ export class Ventilator {
       this._exp_tidal_volume_counter += this.et_tube.flow * this._t;
     }
   }
-
-  volume_cycling() {}
 
   time_cycling() {
     // calculate the expiration time

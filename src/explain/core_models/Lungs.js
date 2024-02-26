@@ -10,20 +10,20 @@ export class Lungs {
       local_value: "thorax_comp_change",
     },
     {
-      name: "change_chestwall_compliance",
-      unit: "",
-      type: "function",
-      factor: "",
-      rounding: 1,
-      local_value: "chestwall_comp_change",
-    },
-    {
       name: "change_lung_compliance",
       unit: "",
       type: "function",
       factor: "",
       rounding: 1,
       local_value: "lung_comp_change",
+    },
+    {
+      name: "change_chestwall_compliance",
+      unit: "",
+      type: "function",
+      factor: "",
+      rounding: 1,
+      local_value: "chestwall_comp_change",
     },
     {
       name: "change_upper_airway_resistance",
