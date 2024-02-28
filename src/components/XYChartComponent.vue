@@ -174,7 +174,7 @@
               <q-input
                 v-model.number="rtWindow"
                 type="number"
-                label="rt window"
+                label="sec"
                 filled
                 dense
                 min="1"
@@ -198,7 +198,7 @@
     </div>
     <!-- presets -->
     <div v-if="isEnabled && showPresets"
-        class="text-overline justify-center q-gutter-xs row"
+        class="q-mb-sm text-overline justify-center q-gutter-xs row"
       >
         <div v-for="(field, index) in presets" :key="index">
           <div
@@ -411,7 +411,7 @@ export default {
   data() {
     return {
       presetsEnabled: true,
-      showPresets: false,
+      showPresets: true,
       show_summary: false,
       rtWindow: 3,
       rtWindowValidated: 3,
@@ -462,9 +462,11 @@ export default {
       redrawTimer: 0.0,
       debug_mode: true,
       presets: {
+        "RV": ["RV.vol", "RV.pres"],
+        "LA": ["LA.vol", "LA.pres"],
         "LV": ["LV.vol", "LV.pres"],
-        "VENT": ["Ventilator.pres", "Ventilator.vol"],
-        "LUNGS": ["ALL.pres", "ALL.vol"]
+        "PV VENT": ["Ventilator.pres", "Ventilator.vol"],
+        "BREATHING": ["ALL.pres", "ALL.vol"]
       }
     };
   },
@@ -757,7 +759,7 @@ export default {
       let data_sets = []
 
       if (this.p1 !== '') {
-        this.y1_axis = explain.modelData.map((item) => {return item[this.p1] * this.chart1_factor;});
+        this.y1_axis = explain.modelData.map((item) => {return {x: item[this.p1] * this.chart1_factor, y: item[this.p2] * this.chart2_factor}});
         data_sets.push({
               data: this.y1_axis,
               borderColor: 'rgb(192, 0, 0)',
@@ -766,32 +768,11 @@ export default {
             })
       }
 
-      if (this.p2 !== '') {
-        this.y2_axis = explain.modelData.map((item) => {return item[this.p2] * this.chart2_factor;});
-        data_sets.push({
-              data: this.y2_axis,
-              borderColor: 'rgb(0, 192, 0)',
-              borderWidth: 1,
-              pointStyle: false
-            });
-      }
-
-      if (this.p3 !== '') {
-        this.y3_axis = explain.modelData.map((item) => {return item[this.p3] * this.chart3_factor;});
-        data_sets.push({
-              data: this.y3_axis,
-              borderColor: 'rgb(0, 192, 192)',
-              borderWidth: 1,
-              pointStyle: false
-            });
-      }
-
       if (data_sets.length > 0) {
         this.x_axis = [...Array(this.y1_axis.length).keys()]
       }
 
       this.chartData = {
-            labels: this.x_axis,
             datasets: [...data_sets]
       }
 
@@ -818,17 +799,12 @@ export default {
         let h1 = this.selectedModel1.toUpperCase() + this.selectedProp1.toUpperCase() + "_";
         header += h1
         data[h1] = explain.modelData.map((item) => {return (parseFloat(item[this.p1])).toFixed(5)});
-      }
-      if (this.p2 !== "") {
+
         let h2 = this.selectedModel2.toUpperCase() + this.selectedProp2.toUpperCase() + "_";
         header += h2
         data[h2] = explain.modelData.map((item) => {return (parseFloat(item[this.p2])).toFixed(5)});
       }
-      if (this.p3 !== "") {
-        let h3 = this.selectedModel3.toUpperCase() + this.selectedProp3.toUpperCase();
-        header += h3
-        data[h3] = explain.modelData.map((item) => {return (parseFloat(item[this.p3])).toFixed(5)});
-      }
+
       this.exportFileName = `time_vs_${header}.csv`;
       this.writeDataToDisk(data)
 
