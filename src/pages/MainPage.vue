@@ -55,14 +55,15 @@
                 <q-icon name="fa-solid fa-chart-line" size="xs"></q-icon>
                 <q-tooltip>time chart</q-tooltip>
             </q-tab>
+            <q-tab name="xy_chart">
+                <q-icon name="fa-solid fa-chart-area" size="xs"></q-icon>
+                <q-tooltip>xy chart</q-tooltip>
+            </q-tab>
             <q-tab name="ventilator">
                 <q-icon name="fa-solid fa-lungs" size="xs"></q-icon>
                 <q-tooltip>mechanical ventilator</q-tooltip>
             </q-tab>
-            <q-tab name="xy_chart">
-                <q-icon name="fa-solid fa-chart-line" size="xs"></q-icon>
-                <q-tooltip>xy chart</q-tooltip>
-            </q-tab>
+
           </q-tabs>
           <q-tab-panels v-model="tab_center" keep-alive>
             <q-tab-panel name="time_chart">
