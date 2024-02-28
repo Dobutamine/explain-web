@@ -9,27 +9,32 @@
 
 
     <!-- chart -->
+    <div v-if="!show_loops">
     <div class="q-mt-sm row text-overline justify-center">pressure (cmh2o)</div>
-    <Line v-if="isEnabled"
-        id="my-chart-vent-pres"
-        :options="chartOptionsPres"
-        :data="chartDataPres"
-        style="max-height: 100px;"
-    />
-    <div class="row text-overline justify-center">flow (l/min)</div>
-    <Line v-if="isEnabled"
-        id="my-chart-vent-flow"
-        :options="chartOptionsFlow"
-        :data="chartDataFlow"
-        style="max-height: 100px;"
-    />
-    <div class="row text-overline justify-center">volume (ml)</div>
-    <Line v-if="isEnabled"
-        id="my-chart-vent-vol"
-        :options="chartOptionsVol"
-        :data="chartDataVol"
-        style="max-height: 100px;"
-    />
+      <Line v-if="isEnabled && !show_loops"
+          id="my-chart-vent-pres"
+          :options="chartOptionsPres"
+          :data="chartDataPres"
+          style="max-height: 100px;"
+      />
+      <div class="row text-overline justify-center">flow (l/min)</div>
+      <Line v-if="isEnabled && !show_loops"
+          id="my-chart-vent-flow"
+          :options="chartOptionsFlow"
+          :data="chartDataFlow"
+          style="max-height: 100px;"
+      />
+      <div class="row text-overline justify-center">volume (ml)</div>
+      <Line v-if="isEnabled"
+          id="my-chart-vent-vol"
+          :options="chartOptionsVol"
+          :data="chartDataVol"
+          style="max-height: 100px;"
+      />
+    </div>
+
+    <XYChartComponent v-if="isEnabled && show_loops" :alive="show_loops" title="" :presets="presets_loops"></XYChartComponent>
+
     <div v-if="isEnabled"
         class="q-mt-sm text-overline justify-center q-gutter-xs row"
       >
@@ -37,6 +42,7 @@
         <q-btn-toggle
           v-model="mode"
           color="grey-9"
+          size="sm"
           text-color="white"
           toggle-color="primary"
           :options="[
@@ -49,6 +55,30 @@
           @update:model-value="update_ventilator_setttings"
         />
 
+      </div>
+
+
+      <div>
+      <q-btn-toggle
+      class="q-ml-sm"
+          v-model="show_loops"
+          color="grey-9"
+          size="sm"
+          text-color="white"
+          toggle-color="primary"
+          :options="[
+            {label: 'CURVES', value: false},
+            {label: 'LOOPS', value: true},
+          ]"
+        />
+      </div>
+      <div>
+        <q-toggle
+        v-model="spont_breathing"
+        size="sm"
+        label="breathing"
+        @update:model-value="toggle_spont_breathing"
+      />
       </div>
       <div>
         <q-input
@@ -64,15 +94,6 @@
                 @update:model-value="updateRtWindow"
               />
       </div>
-      <div>
-        <q-toggle
-        v-model="spont_breathing"
-        label="breathing"
-        @update:model-value="toggle_spont_breathing"
-      />
-      </div>
-
-
     </div>
     <!-- ventilator controls -->
     <div v-if="isEnabled && ventilator_running" class="row text-overline justify-center">VENTILATOR CONTROLS</div>
@@ -252,10 +273,9 @@ import { Bar, Line, Scatter } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'
 import { ref } from 'vue'
 import * as Stat from "simple-statistics";
+import XYChartComponent from "./XYChartComponent.vue";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement)
-
-
 export default {
   setup() {
     // make the chartdata reactive
@@ -399,7 +419,8 @@ export default {
   components: {
     Bar,
     Line,
-    Scatter
+    Scatter,
+    XYChartComponent
   },
   data() {
     return {
@@ -408,6 +429,7 @@ export default {
       presetsEnabled: true,
       showPresets: false,
       show_summary: false,
+      show_loops: false,
       rtWindow: 5,
       rtWindowValidated: 5,
       analysisEnabled: true,
@@ -473,6 +495,10 @@ export default {
       debug_mode: true,
       presets: {
         "vent": ["Ventilator.pres"]
+      },
+      presets_loops: {
+        "PV LOOP": ["Ventilator.pres", "Ventilator.vol"],
+        "VF LOOP": ["Ventilator.vol", "Ventilator.flow"],
       }
     };
   },

@@ -107,7 +107,7 @@
                   background: 'grey-10',
                   width: '5px',
                   opacity: 0.5 }">
-                <XYChartComponent :alive="xy_alive"></XYChartComponent>
+                <XYChartComponent :alive="xy_alive" title="XY Graph" :presets={}></XYChartComponent>
               </q-scroll-area>
             </q-tab-panel>
 

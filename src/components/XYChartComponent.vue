@@ -171,17 +171,7 @@
                 label="presets"
                 size="sm"
               />
-              <q-input
-                v-model.number="rtWindow"
-                type="number"
-                label="sec"
-                filled
-                dense
-                min="1"
-                max="30"
-                hide-bottom-space
-                @update:model-value="updateRtWindow"
-              />
+
               <q-btn
                 v-if="exportEnabled"
                 color="black"
@@ -195,6 +185,17 @@
                 @click="clearProps"
                 icon="fa-solid fa-trash-can"
                 ></q-btn>
+                <q-input
+                v-model.number="rtWindow"
+                type="number"
+                label="sec"
+                filled
+                dense
+                min="1"
+                max="30"
+                hide-bottom-space
+                @update:model-value="updateRtWindow"
+              />
     </div>
     <!-- presets -->
     <div v-if="isEnabled && showPresets"
@@ -400,7 +401,9 @@ export default {
 
   },
   props: {
-    alive: Boolean
+    alive: Boolean,
+    title: String,
+    presets: Object
 
   },
   components: {
@@ -428,7 +431,6 @@ export default {
       chart1_factor: 1.0,
       chart2_factor: 1.0,
       exportEnabled: true,
-      title: "XY CHART",
       isEnabled: true,
       selectedModel1: "",
       selectedProp1: "",
@@ -460,14 +462,7 @@ export default {
       y_values: [],
       redrawInterval: -1,
       redrawTimer: 0.0,
-      debug_mode: true,
-      presets: {
-        "RV": ["RV.vol", "RV.pres"],
-        "LA": ["LA.vol", "LA.pres"],
-        "LV": ["LV.vol", "LV.pres"],
-        "PV VENT": ["Ventilator.pres", "Ventilator.vol"],
-        "BREATHING": ["ALL.pres", "ALL.vol"]
-      }
+      debug_mode: true
     };
   },
   methods: {
