@@ -20,9 +20,19 @@
               ><q-icon name="fa-solid fa-pen-to-square" size="xs"></q-icon
               ><q-tooltip>edit model parameters</q-tooltip>
             </q-tab>
+            <q-tab
+              name="circulatory_system"
+              ><q-icon name="fa-solid fa-heart" size="xs"></q-icon
+              ><q-tooltip>edit heart and circulatory system</q-tooltip>
+            </q-tab>
+            <q-tab
+              name="respiratory_system"
+              ><q-icon name="fa-solid fa-lungs" size="xs"></q-icon
+              ><q-tooltip>edit respiratory system</q-tooltip>
+            </q-tab>
           </q-tabs>
-          <q-tab-panels v-model="tab_right" keep-alive>
-            <q-tab-panel name="numerics">
+          <q-tab-panels v-model="tab_left" keep-alive>
+            <q-tab-panel name="model_editor">
               <q-scroll-area
                 class="q-pa-xs"
                 dark
@@ -34,6 +44,34 @@
                   width: '5px',
                   opacity: 0.5 }">
                   <ModelEditor></ModelEditor>
+              </q-scroll-area>
+            </q-tab-panel>
+            <q-tab-panel name="circulatory_system">
+              <q-scroll-area
+                class="q-pa-xs"
+                dark
+                :style="screen_height"
+                :vertical-bar-style="{
+                  right: '5px',
+                  borderRadius: '5px',
+                  background: 'grey-10',
+                  width: '5px',
+                  opacity: 0.5 }">
+                  <CirculatorySystemComponent></CirculatorySystemComponent>
+              </q-scroll-area>
+            </q-tab-panel>
+            <q-tab-panel name="respiratory_system">
+              <q-scroll-area
+                class="q-pa-xs"
+                dark
+                :style="screen_height"
+                :vertical-bar-style="{
+                  right: '5px',
+                  borderRadius: '5px',
+                  background: 'grey-10',
+                  width: '5px',
+                  opacity: 0.5 }">
+                  <RespiratorySystemComponent></RespiratorySystemComponent>
               </q-scroll-area>
             </q-tab-panel>
           </q-tab-panels>
@@ -60,6 +98,10 @@
                 <q-tooltip>xy chart</q-tooltip>
             </q-tab>
             <q-tab name="ventilator">
+                <q-icon name="fa-solid fa-mask-ventilator" size="xs"></q-icon>
+                <q-tooltip>mechanical ventilator</q-tooltip>
+            </q-tab>
+            <q-tab name="ecls">
                 <q-icon name="fa-solid fa-lungs" size="xs"></q-icon>
                 <q-tooltip>mechanical ventilator</q-tooltip>
             </q-tab>
@@ -169,6 +211,8 @@ import ModelEditor from "src/components/ModelEditorComponent.vue"
 import TimeBasedChartComponent from 'src/components/TimeBasedChartComponent.vue';
 import VentilatorComponent from 'src/components/VentilatorComponent.vue';
 import XYChartComponent from 'src/components/XYChartComponent.vue';
+import CirculatorySystemComponent from 'src/components/CirculatorySystemComponent.vue';
+import RespiratorySystemComponent from 'src/components/RespiratorySystemComponent.vue';
 
 import { explain } from 'src/boot/explain';
 
@@ -180,7 +224,9 @@ export default defineComponent({
     ModelEditor,
     TimeBasedChartComponent,
     VentilatorComponent,
-    XYChartComponent
+    XYChartComponent,
+    CirculatorySystemComponent,
+    RespiratorySystemComponent
   },
   data() {
     return {
@@ -204,6 +250,18 @@ export default defineComponent({
             {label: "SpO2(post)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_post"]},
             {label: "SpO2(ven)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_ven"]}
 
+          ]
+        },
+        lab_numerics: {
+          title: "LABS",
+          collapsed: false,
+          parameters: [
+          {label: "pH", unit: "", factor: 1.0, rounding: 2, props: ["Blood.ph"]},
+          {label: "pO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.po2"]},
+          {label: "pCO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.pco2"]},
+          {label: "HCO3", unit: "mmol/l", factor: 1.0, rounding: 0, props: ["Blood.hco3"]},
+          {label: "BE", unit: "mmol/l", factor: 1.0, rounding: 1, props: ["Blood.be"]},
+          {label: "SO2", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2"]},
           ]
         },
         heart_numerics: {
@@ -244,18 +302,6 @@ export default defineComponent({
           {label: "Res", unit: "ml/cmh2o", factor: 1.0, rounding: 1, props: ["Ventilator.resistance"]},
           {label: "Etco2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Ventilator.etco2"]},
           ]
-        },
-        lab_numerics: {
-          title: "LABS",
-          collapsed: false,
-          parameters: [
-          {label: "pH", unit: "", factor: 1.0, rounding: 2, props: ["Blood.ph"]},
-          {label: "pO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.po2"]},
-          {label: "pCO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.pco2"]},
-          {label: "HCO3", unit: "mmol/l", factor: 1.0, rounding: 0, props: ["Blood.hco3"]},
-          {label: "BE", unit: "mmol/l", factor: 1.0, rounding: 1, props: ["Blood.be"]},
-          {label: "SO2", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2"]},
-          ]
         }
       }
 
@@ -263,30 +309,24 @@ export default defineComponent({
   },
   methods: {
 
-    tabLeftChanged() {},
+    tabLeftChanged(tabName) {
+      console.log(tabName)
+    },
     tabRightChanged() {},
     tabCenterChanged(tabName) {
       switch (tabName) {
         case "ventilator":
-          console.log("ventilator component on!")
-          console.log("chart component off!")
-          console.log("xy chart component off!")
+          this.numerics.vent_numerics.collapsed = false
           this.ventilator_alive = true
           this.chart_alive = false
           this.xy_alive = false
           break;
         case "time_chart":
-          console.log("ventilator component off!")
-          console.log("chart component on!")
-          console.log("xy chart component off!")
           this.ventilator_alive = false
           this.chart_alive = true
           this.xy_alive = false
           break;
         case "xy_chart":
-          console.log("ventilator component off!")
-          console.log("chart component off!")
-          console.log("xy chart component on!")
           this.ventilator_alive = false
           this.chart_alive = false
           this.xy_alive = true

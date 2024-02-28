@@ -188,7 +188,7 @@
                 <q-input
                 v-model.number="rtWindow"
                 type="number"
-                label="sec"
+                label="time"
                 filled
                 dense
                 min="1"
@@ -403,7 +403,8 @@ export default {
   props: {
     alive: Boolean,
     title: String,
-    presets: Object
+    presets: Object,
+    loadPreset: Boolean
 
   },
   components: {
@@ -853,6 +854,11 @@ export default {
 
     this.$bus.on("state", this.processAvailableModels)
     this.$bus.on("data", () => this.dataUpdate())
+
+    if (this.loadPreset) {
+
+      this.processDefault(this.presets["PV LOOP"])
+    }
 
   },
 };

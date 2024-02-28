@@ -188,7 +188,7 @@
               <q-input
                 v-model.number="rtWindow"
                 type="number"
-                label="rt window"
+                label="time"
                 filled
                 dense
                 min="1"

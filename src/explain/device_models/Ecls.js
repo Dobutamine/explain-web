@@ -118,7 +118,6 @@ export class Ecls {
     this.build_gas_part();
     this.build_gasexchanger();
 
-    console.log(this._ecls_parts);
     // set the flag to model is initialized
     this._is_initialized = true;
   }

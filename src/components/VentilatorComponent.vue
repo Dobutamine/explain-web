@@ -33,7 +33,7 @@
       />
     </div>
 
-    <XYChartComponent v-if="isEnabled && show_loops" :alive="show_loops" title="" :presets="presets_loops"></XYChartComponent>
+    <XYChartComponent v-if="isEnabled && show_loops" :alive="show_loops" title="" :presets="presets_loops" :load-preset="true"></XYChartComponent>
 
     <div v-if="isEnabled"
         class="q-mt-sm text-overline justify-center q-gutter-xs row"
@@ -82,6 +82,7 @@
       </div>
       <div>
         <q-input
+                v-if="!show_loops"
                 class="q-ml-sm q-pb-lg"
                 v-model.number="rtWindow"
                 type="number"
@@ -96,7 +97,7 @@
       </div>
     </div>
     <!-- ventilator controls -->
-    <div v-if="isEnabled && ventilator_running" class="row text-overline justify-center">VENTILATOR CONTROLS</div>
+
     <div v-if="isEnabled && ventilator_running"
         class="text-overline justify-center q-gutter-sm row"
       >
@@ -516,6 +517,8 @@ export default {
       switch (this.mode) {
         case "OFF":
           this.ventilator_running = false
+          this.spont_breathing = true
+          this.toggle_spont_breathing()
           explain.callModelFunction("Ventilator.switch_ventilator", [false])
           break;
         case "PC":
@@ -526,6 +529,8 @@ export default {
           if (this.ventilator_running) {
             explain.callModelFunction("Ventilator.set_ventilator_pc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.insp_time, this.insp_flow])
           }
+          this.spont_breathing = false
+          this.toggle_spont_breathing()
           break;
         case "PRVC":
           if (!this.ventilator_running) {
@@ -536,6 +541,8 @@ export default {
             this.pip_caption = "pip max"
             explain.callModelFunction("Ventilator.set_ventilator_prvc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.tidal_volume, this.insp_time, this.insp_flow])
             }
+            this.spont_breathing = false
+          this.toggle_spont_breathing()
           break;
         case "PS":
           if (!this.ventilator_running) {
@@ -555,6 +562,8 @@ export default {
             this.pip_caption = "pip max"
             explain.callModelFunction("Ventilator.set_ventilator_vc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.tidal_volume, this.insp_time, this.insp_flow])
           }
+          this.spont_breathing = false
+          this.toggle_spont_breathing()
           break;
 
       }
