@@ -59,6 +59,10 @@
                 <q-icon name="fa-solid fa-lungs" size="xs"></q-icon>
                 <q-tooltip>mechanical ventilator</q-tooltip>
             </q-tab>
+            <q-tab name="xy_chart">
+                <q-icon name="fa-solid fa-chart-line" size="xs"></q-icon>
+                <q-tooltip>xy chart</q-tooltip>
+            </q-tab>
           </q-tabs>
           <q-tab-panels v-model="tab_center" keep-alive>
             <q-tab-panel name="time_chart">
@@ -75,6 +79,7 @@
                 <TimeBasedChartComponent :alive="chart_alive"></TimeBasedChartComponent>
               </q-scroll-area>
             </q-tab-panel>
+
             <q-tab-panel name="ventilator">
               <q-scroll-area
                 class="q-pa-xs"
@@ -89,6 +94,22 @@
                 <VentilatorComponent :alive="ventilator_alive"></VentilatorComponent>
               </q-scroll-area>
             </q-tab-panel>
+
+            <q-tab-panel name="xy_chart">
+              <q-scroll-area
+                class="q-pa-xs"
+                dark
+                :style="screen_height"
+                :vertical-bar-style="{
+                  right: '5px',
+                  borderRadius: '5px',
+                  background: 'grey-10',
+                  width: '5px',
+                  opacity: 0.5 }">
+                <XYChartComponent :alive="xy_alive"></XYChartComponent>
+              </q-scroll-area>
+            </q-tab-panel>
+
           </q-tab-panels>
 
 
@@ -146,6 +167,7 @@ import NumericsComponent from "src/components/NumericsComponent.vue";
 import ModelEditor from "src/components/ModelEditorComponent.vue"
 import TimeBasedChartComponent from 'src/components/TimeBasedChartComponent.vue';
 import VentilatorComponent from 'src/components/VentilatorComponent.vue';
+import XYChartComponent from 'src/components/XYChartComponent.vue';
 
 import { explain } from 'src/boot/explain';
 
@@ -156,15 +178,17 @@ export default defineComponent({
     NumericsComponent,
     ModelEditor,
     TimeBasedChartComponent,
-    VentilatorComponent
+    VentilatorComponent,
+    XYChartComponent
   },
   data() {
     return {
       tab_left: "model_editor",
       tab_right: "numerics",
-      tab_center: "time_chart",
+      tab_center: "xy_chart",
       chart_alive: true,
       ventilator_alive: false,
+      xy_alive: true,
       screen_offset: 10.0,
       screen_height: 100.0,
       numerics: {
@@ -216,6 +240,7 @@ export default defineComponent({
           {label: "Freq", unit: "/min", factor: 1.0, rounding: 0, props: ["Ventilator.vent_rate"]},
           {label: "Tv", unit: "ml", factor: 1000.0, rounding: 1, props: ["Ventilator.exp_tidal_volume"]},
           {label: "Comp", unit: "ml/cmh2o", factor: 1.0, rounding: 1, props: ["Ventilator.compliance"]},
+          {label: "Res", unit: "ml/cmh2o", factor: 1.0, rounding: 1, props: ["Ventilator.resistance"]},
           {label: "Etco2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Ventilator.etco2"]},
           ]
         },
@@ -244,14 +269,26 @@ export default defineComponent({
         case "ventilator":
           console.log("ventilator component on!")
           console.log("chart component off!")
+          console.log("xy chart component off!")
           this.ventilator_alive = true
           this.chart_alive = false
+          this.xy_alive = false
           break;
         case "time_chart":
           console.log("ventilator component off!")
           console.log("chart component on!")
+          console.log("xy chart component off!")
           this.ventilator_alive = false
           this.chart_alive = true
+          this.xy_alive = false
+          break;
+        case "xy_chart":
+          console.log("ventilator component off!")
+          console.log("chart component off!")
+          console.log("xy chart component on!")
+          this.ventilator_alive = false
+          this.chart_alive = false
+          this.xy_alive = true
           break;
 
       }
