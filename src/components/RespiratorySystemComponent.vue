@@ -1,119 +1,45 @@
 <template>
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
     <div
-      class="q-mt-es row gutter text-overline justify-center"
+      class="q-mt-es row gutter text-overline justify-center text-red"
       @click="isEnabled = !isEnabled"
     >
       {{ title }}
     </div>
     <div v-if="isEnabled">
-      <!-- <div
-        class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center"
-      >
-        <q-select
-          class="q-pa-xs row"
-          v-model="selectedModelName"
-          square
-          label="select model"
-          hide-hint
-          :options="modelNames"
-          dense
-          dark
-          stack-label
-          @update:model-value="selectModel"
-        />
-      </div> -->
-      <div class="q-ma-sm">
-        <div v-for="(field, index) in selectedModelProps" :key="index">
-          <div v-if="field.type == 'number'">
-            <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.name }} {{ field.unit }}
-            </div>
-            <q-input
-              v-model="field.value"
-              color="blue"
-              hide-hint
-              filled
-              dense
-              @update:model-value="field.changed = true"
-              stack-label
-              type="number"
-              style="font-size: 14px"
-              class="q-ml-md q-mr-md q-mb-sm"
-              squared>
-            </q-input>
-          </div>
-          <div v-if="field.type == 'boolean'">
-            <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.name }}
-            </div>
-            <q-toggle
-              v-model="field.value"
-              color="primary"
-              size="sm"
-              hide-hint
-              filled
-              dense
-              @update:model-value="field.changed = true"
-              style="font-size: 14px"
-              class="q-ml-md q-mr-md q-mb-sm">
-            </q-toggle>
-          </div>
-          <div v-if="field.type == 'function'">
-            <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.name }}
-            </div>
-            <q-input
-              v-model="field.value"
-              color="blue"
-              hide-hint
-              filled
-              dense
-              @update:model-value="field.changed = true"
-              stack-label
-              type="number"
-              style="font-size: 14px"
-              class="q-ml-md q-mr-md q-mb-sm"
-              squared>
-            </q-input>
-          </div>
-        </div>
+      <div class="row text-overline justify-center">
+        <div class="col text-center">thoracic cage compliance</div>
       </div>
-      <div v-if="selectedModelProps.length > 0" class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
-        <q-input
-          label-color="primary"
-          class="q-ml-md q-mr-md row"
-          v-model="changeInTime"
-          square
-          type="number"
-          label="apply changes in sec."
-          style="width: 50%; font-size: 12px"
-          hide-hint
-          dense
-          dark
-          stack-label
-        />
+      <div class="row text-overline justify-center">
+        <q-slider v-model="thorax_compliance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeThoraxCompliance"/>
       </div>
-      <div v-if="selectedModelProps.length > 0" class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
 
-        <q-btn
-          color="negative"
-          size="xs"
-          dense
-          style="width: 70px"
-          icon="fa-solid fa-xmark"
-          @click="cancel"
-        ></q-btn>
-        <q-btn
-          color="primary"
-          size="sm"
-          style="width: 70px"
-          icon="fa-solid fa-check"
-          @click="updateValue"
-          ></q-btn
-        >
+      <div class="row text-overline justify-center">
+        <div class="col text-center">lung compliance</div>
+      </div>
+      <div class="row text-overline justify-center">
+        <q-slider v-model="lungs_compliance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeLungCompliance"/>
+      </div>
 
+      <div class="row text-overline justify-center">
+        <div class="col text-center">upper airway resistance</div>
+      </div>
+      <div class="row text-overline justify-center">
+        <q-slider v-model="upper_airway_resistance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeUpperAirwayResistance"/>
+      </div>
 
+      <div class="row text-overline justify-center">
+        <div class="col text-center">lower airway resistance</div>
+      </div>
+      <div class="row text-overline justify-center">
+        <q-slider v-model="lower_airway_resistance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeLowerAirwayResistance"/>
+      </div>
+
+      <div class="row text-overline justify-center">
+        <div class="col text-center">diffusion coefficients</div>
+      </div>
+      <div class="row text-overline justify-center">
+        <q-slider v-model="diffusion_coefficient" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDiffusionCoefficient"/>
       </div>
 
     </div>
@@ -129,93 +55,76 @@ export default {
     return {
       title: "RESPIRATORY SYSTEM",
       isEnabled: true,
-      selectedModelName: "Lungs",
-      selectedModelProps: [],
-      modelNames: [],
-      changeInTime: 5
+      thorax_compliance: 0,
+      lungs_compliance: 0,
+      upper_airway_resistance: 0,
+      lower_airway_resistance: 0,
+      diffusion_coefficient: 0
+
     };
   },
   methods: {
-    updateValue() {
-      let update = false
-      this.selectedModelProps.forEach((p) => {
-        if (p.type === 'number') {
-          let v = parseFloat(p.value / p.factor);
-          let prop = this.selectedModelName + "." + p.name;
-          if (p.changed) {
-            update = true;
-            explain.setPropValue(prop, v, this.changeInTime)
-          }
-        }
-
-        if (p.type === 'boolean') {
-          let v = p.value;
-          let prop = this.selectedModelName + "." + p.name;
-          if (p.changed) {
-            update = true;
-            explain.setPropValue(prop, v)
-          }
-        }
-
-        if (p.type === 'function') {
-          let v = [p.value];
-          let f = this.selectedModelName + "." + p.name;
-          if (p.changed) {
-            update = true;
-            explain.callModelFunction(f, v)
-          }
-        }
-      })
-
-      if (update) {
-        //explain.calculate(parseInt(this.changeInTime))
+    translateSliderToValue(v) {
+      if (v == 0) {
+        return 1;
       }
 
-    },
-    cancel() {
-      this.selectedModelName = ""
-      this.selectedModelProps = {}
-    },
-    selectModel () {
-      this.selectedModelProps = {}
+      if (v < 0) {
+        return -(1 / (v - 1));
+      }
 
+      if (v < 1) {
+        return 1 + v
+      }
 
-      this.selectedModelProps = Object.values(explain.modelState.models[this.selectedModelName].independent_parameters)
-
-      // fill the values
-      this.selectedModelProps.forEach(param => {
-        if (param["type"] === 'number') {
-          param['value'] =  explain.modelState.models[this.selectedModelName][param.name] * param.factor;
-        }
-        if (param["type"] === 'boolean') {
-          param['value'] =  explain.modelState.models[this.selectedModelName][param.name];
-        }
-        if (param["type"] === 'function') {
-          param['value'] =  explain.modelState.models[this.selectedModelName][param.local_value];
-        }
-        if (param["unit"] !== "") {
-          param["unit"] = "(" + param["unit"] + ")"
-        }
-
-        param['changed'] = false
-      })
+      return 1 + v
     },
-    getAvailableModels() {
-      explain.getModelState()
+    translateValueToSlider(v) {
+      if (v < 1) {
+        return (-(1 / v) + 1.0)
+      }
+
+      if (v > 1) {
+        return (v - 1)
+      }
+
+      return 0;
     },
-    processAvailableModels() {
-      this.modelNames = ["Lungs"]
-      this.selectModel()
-    }
+    changeLungCompliance() {
+      let factor = parseFloat(this.translateSliderToValue(this.lungs_compliance))
+      explain.callModelFunction("Lungs.change_lung_compliance", [factor])
+    },
+    changeThoraxCompliance() {
+      let factor = parseFloat(this.translateSliderToValue(this.thorax_compliance))
+      explain.callModelFunction("Lungs.change_thorax_compliance", [factor])
+    },
+    changeUpperAirwayResistance() {
+      let factor = this.translateSliderToValue(this.upper_airway_resistance)
+      explain.callModelFunction("Lungs.change_upper_airway_resistance", [factor])
+    },
+    changeLowerAirwayResistance() {
+      let factor = this.translateSliderToValue(this.lower_airway_resistance)
+      explain.callModelFunction("Lungs.change_lower_airway_resistance", [factor])
+    },
+    changeDiffusionCoefficient() {
+      let factor = this.translateSliderToValue(this.diffusion_coefficient)
+      explain.callModelFunction("Lungs.change_dif_o2", [factor])
+      explain.callModelFunction("Lungs.change_dif_co2", [factor])
+    },
+    processModelState() {
+      this.thorax_compliance = this.translateValueToSlider(explain.modelState.models['Lungs'].thorax_comp_change)
+      this.lungs_compliance = this.translateValueToSlider(explain.modelState.models['Lungs'].lung_comp_change)
+      this.upper_airway_resistance = this.translateValueToSlider(explain.modelState.models['Lungs'].upper_aw_res_change)
+      this.lower_airway_resistance = this.translateValueToSlider(explain.modelState.models['Lungs'].lower_aw_res_change)
+      this.diffusion_coefficient = this.translateValueToSlider(explain.modelState.models['Lungs'].dif_o2_change)
+    },
   },
   beforeUnmount() {
+
   },
   mounted() {
-    console.log('monuted c')
-    this.$bus.on("state", this.processAvailableModels)
-
+    this.$bus.on("state", this.processModelState)
     explain.getModelState()
-    this.processAvailableModels()
 
   },
 };

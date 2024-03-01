@@ -8,35 +8,25 @@
     </div>
     <div v-if="isEnabled">
       <div class="row text-overline justify-center">
-        <div class="col text-center">Total blood volume = {{ upper_airway_resistance * 10.0 }}</div>
-      </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="upper_airway_resistance" :min="-10" :max="10" :step="0.1"  color="teal" class="q-ml-sm q-mr-sm col" @update:model-value="changeUpperAirwayResistance"/>
-      </div>
-
-      <div class="row text-overline justify-center">
-        <div class="col text-center">Systemic vascular resistance = {{ thorax_compliance * 10.0 }}</div>
+        <div class="col text-center">Ductus arteriosus resistance = {{ thorax_compliance * 10.0 }}</div>
       </div>
       <div class="row text-overline justify-center">
         <q-slider v-model="thorax_compliance" :min="-10" :max="10" :step="0.1" color="teal" class="q-ml-sm q-mr-sm col" @update:model-value="changeThoraxCompliance"/>
       </div>
 
       <div class="row text-overline justify-center">
-        <div class="col text-center">Pulmonary vascular resistance = {{ lungs_compliance * 10.0 }}</div>
+        <div class="col text-center">Foramen ovale resistance = {{ lungs_compliance * 10.0 }}</div>
       </div>
       <div class="row text-overline justify-center">
         <q-slider v-model="lungs_compliance" :min="-10" :max="10" :step="0.1"  color="teal" class="q-ml-sm q-mr-sm col" @update:model-value="changeLungCompliance"/>
       </div>
 
       <div class="row text-overline justify-center">
-        <div class="col text-center">Venous pool size = {{ lungs_compliance * 10.0 }}</div>
+        <div class="col text-center">Pulmonary AV shunting = {{ upper_airway_resistance * 10.0 }}</div>
       </div>
       <div class="row text-overline justify-center">
-        <q-slider v-model="lungs_compliance" :min="-10" :max="10" :step="0.1"  color="teal" class="q-ml-sm q-mr-sm col" @update:model-value="changeLungCompliance"/>
+        <q-slider v-model="upper_airway_resistance" :min="-10" :max="10" :step="0.1"  color="teal" class="q-ml-sm q-mr-sm col" @update:model-value="changeUpperAirwayResistance"/>
       </div>
-
-
-
 
 
     </div>
@@ -50,7 +40,7 @@ import { explain } from "../boot/explain";
 export default {
   data() {
     return {
-      title: "CIRCULATORY SYSTEM",
+      title: "SHUNTS",
       isEnabled: false,
       thorax_compliance: 0,
       lungs_compliance: 0,

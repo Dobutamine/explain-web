@@ -443,6 +443,7 @@ export class Ventilator {
     this.co2 = this._model_engine.models["DS"].pco2; // in mmHg
     this.vc_po2 = this.vent_circuit.po2;
     this.vc_pco2 = this.vent_circuit.pco2;
+    this.minute_volume = this.exp_tidal_volume * this.vent_rate;
 
     // do the model step of the ventilator parts
     this._vent_parts.forEach((vent_part) => vent_part.step_model());

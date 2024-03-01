@@ -261,9 +261,112 @@
             </q-knob>
             <div :style="{ fontSize: '10px' }">%</div>
         </div>
+        <div class="q-mr-sm text-center">
+          <div class="knob-label">temp</div>
+            <q-knob
+              show-value
+              font-size="12px"
+              v-model="trigger_perc"
+              size="50px"
+              :thickness="0.22"
+              :min="1"
+              :max="50"
+              :step="1"
+              color="teal"
+              track-color="grey-3"
+              class="col"
+              @update:model-value="set_trigger"
+            >
+              {{ trigger_perc }}
+            </q-knob>
+            <div :style="{ fontSize: '10px' }">C</div>
+        </div>
+        <div class="q-mr-sm text-center">
+          <div class="knob-label">humidity</div>
+            <q-knob
+              show-value
+              font-size="12px"
+              v-model="trigger_perc"
+              size="50px"
+              :thickness="0.22"
+              :min="1"
+              :max="50"
+              :step="1"
+              color="teal"
+              track-color="grey-3"
+              class="col"
+              @update:model-value="set_trigger"
+            >
+              {{ trigger_perc }}
+            </q-knob>
+            <div :style="{ fontSize: '10px' }">%</div>
+        </div>
       </div>
-    <div v-if="isEnabled" class="text-overline justify-center q-gutter-xs row">
-    </div>
+
+
+      <div v-if="isEnabled && ventilator_running" class="q-mt-md q-mb-md text-overline justify-center q-gutter-xs row">
+        <q-input
+              v-model="et_tube_length"
+              color="blue"
+              hide-hint
+              filled
+              label="et tube diameter"
+              :min="2.5"
+              :max="11.0"
+              dense
+              stack-label
+              type="number"
+              style="font-size: 14px; width: 120px;"
+              class="q-mr-sm text-center"
+              squared>
+        </q-input>
+        <q-input
+              v-model="et_tube_length"
+              color="blue"
+              hide-hint
+              filled
+              label="et tube length (cm)"
+              :min="2.5"
+              :max="11.0"
+              dense
+              stack-label
+              type="number"
+              style="font-size: 14px; width: 120px;"
+              class="q-mr-sm text-center"
+              squared>
+        </q-input>
+        <q-input
+              v-model="et_tube_length"
+              color="blue"
+              hide-hint
+              filled
+              label="tubing diameter"
+              :min="2.5"
+              :max="11.0"
+              dense
+              stack-label
+              type="number"
+              style="font-size: 14px; width: 120px;"
+              class="q-mr-sm text-center"
+              squared>
+        </q-input>
+        <q-input
+              v-model="et_tube_length"
+              color="blue"
+              hide-hint
+              filled
+              label="tubing length"
+              :min="2.5"
+              :max="11.0"
+              dense
+              stack-label
+              type="number"
+              style="font-size: 14px; width: 120px;"
+              class="q-mr-sm text-center"
+              squared>
+        </q-input>
+      </div>
+
 
   </q-card>
 </template>
@@ -438,6 +541,9 @@ export default {
       autoscale: true,
       loopMode: false,
       isEnabled: true,
+      et_tube_size: 4,
+      et_tube_length: 11.0,
+      et_tube_sizes: [2.5, 3.0, 3.5, 4.0, 4.5, 5.0],
       pip_caption: "pip",
       pip_cmh2o: 14.0,
       peep_cmh2o: 4.0,
