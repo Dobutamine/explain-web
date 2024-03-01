@@ -278,7 +278,7 @@ export class Ventilator {
 
   set_ettube_length(new_length) {}
   set_tubing_diameter(new_diameter) {
-    // resistances
+    // resistances -> empirical!
     // 2.5    res = 6   * flow + 30
     // 3.0    res = 3.5 * flow + 17.5
     // 3.5    res = 2.0  * flow + 10.0
