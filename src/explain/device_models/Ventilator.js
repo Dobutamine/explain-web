@@ -275,6 +275,18 @@ export class Ventilator {
       this.et_tube.r_back = new_res;
     }
   }
+
+  set_ettube_length(new_length) {}
+  set_tubing_diameter(new_diameter) {
+    // resistances
+    // 2.5    res = 6   * flow + 30
+    // 3.0    res = 3.5 * flow + 17.5
+    // 3.5    res = 2.0  * flow + 10.0
+    // 4.0    res = 1.5  * flow + 7.5
+    // 4.5    res = 1.25 * flow + 1.25
+  }
+  set_tubing_length(new_length) {}
+
   set_fio2(new_fio2) {
     this.fio2 = new_fio2 / 100.0;
     set_gas_composition(this.vent_in, this.fio2, this.temp, this.humidity);
