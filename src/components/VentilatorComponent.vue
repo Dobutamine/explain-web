@@ -261,46 +261,8 @@
             </q-knob>
             <div :style="{ fontSize: '10px' }">%</div>
         </div>
-        <div class="q-mr-sm text-center">
-          <div class="knob-label">temp</div>
-            <q-knob
-              show-value
-              font-size="12px"
-              v-model="trigger_perc"
-              size="50px"
-              :thickness="0.22"
-              :min="1"
-              :max="50"
-              :step="1"
-              color="teal"
-              track-color="grey-3"
-              class="col"
-              @update:model-value="set_trigger"
-            >
-              {{ trigger_perc }}
-            </q-knob>
-            <div :style="{ fontSize: '10px' }">C</div>
-        </div>
-        <div class="q-mr-sm text-center">
-          <div class="knob-label">humidity</div>
-            <q-knob
-              show-value
-              font-size="12px"
-              v-model="trigger_perc"
-              size="50px"
-              :thickness="0.22"
-              :min="1"
-              :max="50"
-              :step="1"
-              color="teal"
-              track-color="grey-3"
-              class="col"
-              @update:model-value="set_trigger"
-            >
-              {{ trigger_perc }}
-            </q-knob>
-            <div :style="{ fontSize: '10px' }">%</div>
-        </div>
+
+
       </div>
 
 
@@ -333,6 +295,40 @@
               :min="50"
               :max="110"
               :step="5"
+              dense
+              stack-label
+              type="number"
+              style="font-size: 14px; width: 120px;"
+              class="q-mr-sm text-center"
+              squared>
+        </q-input>
+        <q-input
+              v-model="temp"
+              @update:model-value="set_temp"
+              color="blue"
+              hide-hint
+              filled
+              label="temperature (C)"
+              :min="0"
+              :max="60"
+              :step="0.1"
+              dense
+              stack-label
+              type="number"
+              style="font-size: 14px; width: 120px;"
+              class="q-mr-sm text-center"
+              squared>
+        </q-input>
+        <q-input
+              v-model="humidity"
+              @update:model-value="set_humidity"
+              color="blue"
+              hide-hint
+              filled
+              label="humidity (%)"
+              :min="0"
+              :max="100"
+              :step="1"
               dense
               stack-label
               type="number"
@@ -528,6 +524,8 @@ export default {
       insp_flow: 8.0,
       tidal_volume: 15,
       fio2: 21,
+      temp: 37.0,
+      humidity: 100,
       trigger_perc: 6.0,
       mode: "OFF",
       x_min: 0,
@@ -604,6 +602,12 @@ export default {
     },
     set_fio2() {
       explain.callModelFunction("Ventilator.set_fio2", [parseFloat(this.fio2)])
+    },
+    set_temp() {
+      explain.callModelFunction("Ventilator.set_temp", [parseFloat(this.temp)])
+    },
+    set_humidity() {
+      explain.callModelFunction("Ventilator.set_humidity", [parseFloat(this.humidity / 100.0)])
     },
     update_ventilator_setttings() {
       switch (this.mode) {

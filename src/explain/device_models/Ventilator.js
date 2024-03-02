@@ -307,6 +307,20 @@ export class Ventilator {
     set_gas_composition(this.vent_in, this.fio2, this.temp, this.humidity);
   }
 
+  set_temp(new_temp) {
+    if (new_temp > 0 && new_temp < 60) {
+      this.temp = new_temp;
+      set_gas_composition(this.vent_in, this.fio2, this.temp, this.humidity);
+    }
+  }
+
+  set_humidity(new_hum) {
+    if (new_hum > 0 && new_hum <= 1.0) {
+      this.humidity = new_hum;
+      set_gas_composition(this.vent_in, this.fio2, this.temp, this.humidity);
+    }
+  }
+
   set_ventilator_cpap(peep = 4.0, rate = 1.0, t_in = 0.4, insp_flow = 10.0) {
     this.pip_cmh2o = peep + 0.5;
     this.pip_cmh2o_max = peep + 0.5;
