@@ -1,6 +1,7 @@
 import { GasCapacitance } from "../core_models/GasCapacitance";
 import { set_gas_composition } from "../helpers/GasComposition";
 import { GasResistor } from "../core_models/GasResistor";
+import { calc_resistance_tube } from "../helpers/ResistanceTube";
 
 export class Ventilator {
   static class_type = "Ventilator";
@@ -25,8 +26,8 @@ export class Ventilator {
   temp = 37.0;
   humidity = 1.0;
   vent_running = false;
-  ettube_diameter = 0.0035;
-  ettube_length = 0.11;
+  ettube_diameter = 3.5; // in mm
+  ettube_length = 110; // in mm
   vent_mode = "PRVC";
   vent_rate = 40.0;
   insp_time = 0.4;
@@ -95,6 +96,8 @@ export class Ventilator {
   _peak_flow = 0.0;
   _peak_flow_temp = 0.0;
   _end_insp = false;
+  _a = 0.0;
+  _b = 0.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -225,6 +228,10 @@ export class Ventilator {
     // add to the vent parts array
     this._vent_parts.push(this.insp_valve);
 
+    // calculate the tube resistance
+    this.set_tubing_diameter(this.ettube_diameter);
+    this.et_tube_resistance = this.calc_ettube_resistance(this.insp_flow);
+
     this.et_tube = new GasResistor(
       this._model_engine,
       "et_tube",
@@ -276,14 +283,27 @@ export class Ventilator {
     }
   }
 
-  set_ettube_length(new_length) {}
+  set_ettube_length(new_length) {
+    this.ettube_length = new_length;
+    if (new_length > 5.0) {
+      this.ettube_length = new_length;
+    }
+  }
+  calc_ettube_resistance(flow) {
+    let res = this._a * flow + this._b;
+    if (res < 15.0) {
+      res = 15;
+    }
+    return res;
+  }
   set_tubing_diameter(new_diameter) {
-    // resistances -> empirical!
-    // 2.5    res = 6   * flow + 30
-    // 3.0    res = 3.5 * flow + 17.5
-    // 3.5    res = 2.0  * flow + 10.0
-    // 4.0    res = 1.5  * flow + 7.5
-    // 4.5    res = 1.25 * flow + 1.25
+    // diameter in mm
+    if (new_diameter > 2.0) {
+      this.ettube_diameter = new_diameter;
+      /// set the flow dependent parameters
+      this._a = -2.375 * new_diameter + 11.9375;
+      this._b = -14.375 * new_diameter + 65.9374;
+    }
   }
   set_tubing_length(new_length) {}
 
@@ -456,6 +476,11 @@ export class Ventilator {
     this.vc_po2 = this.vent_circuit.po2;
     this.vc_pco2 = this.vent_circuit.pco2;
     this.minute_volume = this.exp_tidal_volume * this.vent_rate;
+
+    // set the flow dependent endotracheal tube resistance
+    this.et_tube_resistance = this.calc_ettube_resistance(this.flow);
+    this.et_tube.r_for = this.et_tube_resistance;
+    this.et_tube.r_back = this.et_tube_resistance;
 
     // do the model step of the ventilator parts
     this._vent_parts.forEach((vent_part) => vent_part.step_model());
