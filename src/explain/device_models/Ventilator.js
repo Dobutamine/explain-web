@@ -36,7 +36,7 @@ export class Ventilator {
   hfo_map_cmh2o = 10.0;
   hfo_bias_flow = 10.0;
   hfo_freq = 12;
-  hfo_amplitude_cmh2o = 20.0;
+  hfo_amplitude_cmh2o = 10.0;
   exp_flow = 3.0;
   pip_cmh2o = 10.3;
   pip_cmh2o_max = 10.3;
@@ -52,8 +52,6 @@ export class Ventilator {
   et_tube = {};
   exp_valve = {};
   vent_out = {};
-  hfo_valve = {};
-  hfo_out = {};
 
   // dependent parameters
   pres = 0.0;
@@ -468,7 +466,6 @@ export class Ventilator {
     ) {
       // we have a triggered breath
       this._triggered_breath = true;
-      console.log("triggered breath");
       // reset the trigger volume counter
       this._trigger_volume_counter = 0.0;
     }
@@ -545,7 +542,7 @@ export class Ventilator {
       (this.hfo_bias_flow / 60.0);
 
     // set the expiration valve
-    this.exp_valve.r_for = 15;
+    this.exp_valve.r_for = 10;
     this.vent_out.vol =
       this._hfo_map / this.vent_out.el_base + this.vent_out.u_vol;
 
@@ -555,6 +552,11 @@ export class Ventilator {
     this._hfo_time_counter += this._t;
 
     this.hfo_pres = hfo_p;
+
+    // guard the inspiratory pressure
+    if (this.vent_circuit.pres > this._hfo_map + this.p_atm + hfo_p) {
+      this.insp_valve.no_flow = true;
+    }
 
     this.vent_circuit.pres_ext += hfo_p;
   }

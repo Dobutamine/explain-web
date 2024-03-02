@@ -1180,6 +1180,11 @@ export default {
         this.tidal_volume = explain.modelState.models["Ventilator"].tidal_volume * 1000.0
         this.fio2 = explain.modelState.models["Ventilator"].fio2 * 100.0
         this.trigger_perc = explain.modelState.models["Ventilator"].trigger_volume_perc
+        this.hfo_amplitude_cmh2o = explain.modelState.models["Ventilator"].hfo_amplitude_cmh2o
+        this.hfo_map_cmh2o = explain.modelState.models["Ventilator"].hfo_map_cmh2o
+        this.hfo_freq = explain.modelState.models["Ventilator"].hfo_freq
+        this.hfo_bias_flow = explain.modelState.models["Ventilator"].hfo_bias_flow
+
       }
     }
   },
