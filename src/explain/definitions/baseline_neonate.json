@@ -3018,8 +3018,8 @@
             "insp_time": 0.4,
             "insp_flow": 8.0,
             "exp_flow": 3.0,
-            "pip_cmh2o": 10.0,
-            "pip_cmh2o_max": 20.0,
+            "pip_cmh2o": 14.0,
+            "pip_cmh2o_max": 14.0,
             "peep_cmh2o": 3.0,
             "tidal_volume": 0.015
         }

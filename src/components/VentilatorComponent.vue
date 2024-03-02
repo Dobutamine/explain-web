@@ -1039,6 +1039,24 @@ export default {
       }
 
       return rows.join('\n');
+    },
+    processModelState() {
+      this.et_tube_diameter = explain.modelState.models["Ventilator"].ettube_diameter
+      this.et_tube_length = explain.modelState.models["Ventilator"].ettube_length
+      this.temp = explain.modelState.models["Ventilator"].temp
+      this.humidity = explain.modelState.models["Ventilator"].humidity * 100.0
+      this.pip_cmh2o = explain.modelState.models["Ventilator"].pip_cmh2o_max
+      this.peep_cmh2o = explain.modelState.models["Ventilator"].peep_cmh2o
+      this.freq = explain.modelState.models["Ventilator"].vent_rate
+      this.insp_time = explain.modelState.models["Ventilator"].insp_time
+      this.insp_flow = explain.modelState.models["Ventilator"].insp_flow
+      this.tidal_volume = explain.modelState.models["Ventilator"].tidal_volume * 1000.0
+      this.fio2 = explain.modelState.models["Ventilator"].fio2 * 100.0
+      this.trigger_perc = explain.modelState.models["Ventilator"].trigger_volume_perc
+
+
+      console.log(explain.modelState)
+
     }
   },
   beforeRouteLeave() {
@@ -1052,6 +1070,9 @@ export default {
     this.$bus.on("rtf", () => {
       this.dataUpdateRt()
     });
+
+    this.$bus.on("state", this.processModelState)
+    explain.getModelState()
 
     // this.$bus.on("state", this.processAvailableModels)
     this.$bus.on("data", () => this.dataUpdate())

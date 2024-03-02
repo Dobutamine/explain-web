@@ -35,7 +35,7 @@ export class Ventilator {
   insp_flow = 10.0;
   exp_flow = 3.0;
   pip_cmh2o = 10.3;
-  pip_cmh2o_max = 20.0;
+  pip_cmh2o_max = 10.3;
   peep_cmh2o = 3.65;
   tidal_volume = 0.0165;
   trigger_volume_perc = 6;
