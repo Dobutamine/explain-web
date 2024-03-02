@@ -218,8 +218,6 @@ export default {
   mounted() {
     this.$bus.on("state", this.processAvailableModels)
 
-    explain.getModelState()
-
   },
 };
 </script>

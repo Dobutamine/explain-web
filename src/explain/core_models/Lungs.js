@@ -172,6 +172,7 @@ export class Lungs {
       });
     }
   }
+
   change_thorax_compliance(change) {
     if (change > 0.0) {
       this.thorax_comp_change = change;

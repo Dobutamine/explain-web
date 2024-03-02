@@ -242,7 +242,7 @@ export default defineComponent({
       tab_right: "numerics",
       tab_center: "ventilator",
       chart_alive: true,
-      ventilator_alive: false,
+      ventilator_alive: true,
       xy_alive: true,
       screen_offset: 10.0,
       screen_height: 100.0,
@@ -320,9 +320,13 @@ export default defineComponent({
 
     tabLeftChanged(tabName) {
       console.log(tabName)
+      explain.getModelState()
     },
-    tabRightChanged() {},
+    tabRightChanged() {
+      explain.getModelState()
+    },
     tabCenterChanged(tabName) {
+      explain.getModelState()
       switch (tabName) {
         case "ventilator":
           this.numerics.vent_numerics.collapsed = false
@@ -363,8 +367,13 @@ export default defineComponent({
     // make sure the modelengine watches everything which is visible on the main screen.
     this.updateWatchlist()
 
+    // get the model state
+    explain.getModelState()
+
     // do a small model test run of 5 seconds
     explain.calculate(5)
+
+
   }
 })
 </script>

@@ -99,11 +99,6 @@ export default {
       explain.callModelFunction("Lungs.change_dif_co2", [factor])
     },
     processModelState() {
-      this.thorax_compliance = this.translateValueToSlider(explain.modelState.models['Lungs'].thorax_comp_change)
-      this.lungs_compliance = this.translateValueToSlider(explain.modelState.models['Lungs'].lung_comp_change)
-      this.upper_airway_resistance = this.translateValueToSlider(explain.modelState.models['Lungs'].upper_aw_res_change)
-      this.lower_airway_resistance = this.translateValueToSlider(explain.modelState.models['Lungs'].lower_aw_res_change)
-      this.diffusion_coefficient = this.translateValueToSlider(explain.modelState.models['Lungs'].dif_o2_change)
     },
   },
   beforeUnmount() {
@@ -111,7 +106,6 @@ export default {
   },
   mounted() {
     this.$bus.on("state", this.processModelState)
-    explain.getModelState()
 
   },
 };
