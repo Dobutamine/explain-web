@@ -238,9 +238,9 @@ export default defineComponent({
   },
   data() {
     return {
-      tab_left: "model_editor",
+      tab_left: "respiratory_system",
       tab_right: "numerics",
-      tab_center: "xy_chart",
+      tab_center: "ventilator",
       chart_alive: true,
       ventilator_alive: false,
       xy_alive: true,

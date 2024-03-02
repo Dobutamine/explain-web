@@ -42,6 +42,13 @@
         <q-slider v-model="diffusion_coefficient" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDiffusionCoefficient"/>
       </div>
 
+      <div class="row text-overline justify-center">
+        <div class="col text-center">ventilation perfusion mismatch</div>
+      </div>
+      <div class="row text-overline justify-center q-mb-sm">
+        <q-slider v-model="diffusion_coefficient" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDiffusionCoefficient"/>
+      </div>
+
     </div>
   </q-card>
 </template>
