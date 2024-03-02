@@ -306,28 +306,33 @@
 
       <div v-if="isEnabled && ventilator_running" class="q-mt-md q-mb-md text-overline justify-center q-gutter-xs row">
         <q-input
-              v-model="et_tube_length"
+              v-model="et_tube_diameter"
+              @update:model-value="set_ettube_diameter"
               color="blue"
               hide-hint
               filled
-              label="et tube diameter"
-              :min="2.5"
-              :max="11.0"
+              label="et tube diameter (mm)"
+              :min="2.0"
+              :max="5.0"
+              :step="0.5"
               dense
               stack-label
               type="number"
               style="font-size: 14px; width: 120px;"
               class="q-mr-sm text-center"
               squared>
+
         </q-input>
         <q-input
               v-model="et_tube_length"
+              @update:model-value="set_ettube_length"
               color="blue"
               hide-hint
               filled
-              label="et tube length (cm)"
-              :min="2.5"
-              :max="11.0"
+              label="et tube length (mm)"
+              :min="50"
+              :max="110"
+              :step="5"
               dense
               stack-label
               type="number"
@@ -335,36 +340,8 @@
               class="q-mr-sm text-center"
               squared>
         </q-input>
-        <q-input
-              v-model="et_tube_length"
-              color="blue"
-              hide-hint
-              filled
-              label="tubing diameter"
-              :min="2.5"
-              :max="11.0"
-              dense
-              stack-label
-              type="number"
-              style="font-size: 14px; width: 120px;"
-              class="q-mr-sm text-center"
-              squared>
-        </q-input>
-        <q-input
-              v-model="et_tube_length"
-              color="blue"
-              hide-hint
-              filled
-              label="tubing length"
-              :min="2.5"
-              :max="11.0"
-              dense
-              stack-label
-              type="number"
-              style="font-size: 14px; width: 120px;"
-              class="q-mr-sm text-center"
-              squared>
-        </q-input>
+
+
       </div>
 
 
@@ -541,9 +518,8 @@ export default {
       autoscale: true,
       loopMode: false,
       isEnabled: true,
-      et_tube_size: 4,
-      et_tube_length: 11.0,
-      et_tube_sizes: [2.5, 3.0, 3.5, 4.0, 4.5, 5.0],
+      et_tube_diameter: 3.5,
+      et_tube_length: 110,
       pip_caption: "pip",
       pip_cmh2o: 14.0,
       peep_cmh2o: 4.0,
@@ -612,6 +588,16 @@ export default {
   methods: {
     toggle_spont_breathing() {
       explain.callModelFunction("Breathing.switch_breathing", [this.spont_breathing])
+    },
+    set_ettube_diameter() {
+      if (this.et_tube_diameter >=1.5 && this.et_tube_diameter < 10.0) {
+        explain.callModelFunction("Ventilator.set_ettube_diameter", [this.et_tube_diameter])
+      }
+    },
+    set_ettube_length() {
+      if (this.et_tube_length >=50 && this.et_tube_length < 300) {
+        explain.callModelFunction("Ventilator.set_ettube_length", [this.et_tube_length])
+      }
     },
     set_trigger() {
       explain.callModelFunction("Ventilator.set_trigger_perc", [parseFloat[this.trigger_perc]])

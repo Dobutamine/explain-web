@@ -28,6 +28,7 @@ export class Ventilator {
   vent_running = false;
   ettube_diameter = 3.5; // in mm
   ettube_length = 110; // in mm
+  ettube_length_ref = 110;
   vent_mode = "PRVC";
   vent_rate = 40.0;
   insp_time = 0.4;
@@ -229,7 +230,7 @@ export class Ventilator {
     this._vent_parts.push(this.insp_valve);
 
     // calculate the tube resistance
-    this.set_tubing_diameter(this.ettube_diameter);
+    this.set_ettube_diameter(this.ettube_diameter);
     this.et_tube_resistance = this.calc_ettube_resistance(this.insp_flow);
 
     this.et_tube = new GasResistor(
@@ -275,35 +276,29 @@ export class Ventilator {
     this._vent_parts.push(this.exp_valve);
   }
 
-  set_ettube_resistance(new_res) {
-    if (new_res > 10.0) {
-      this.et_tube_resistance = new_res;
-      this.et_tube.r_for = new_res;
-      this.et_tube.r_back = new_res;
-    }
-  }
-
   set_ettube_length(new_length) {
     this.ettube_length = new_length;
-    if (new_length > 5.0) {
+    if (new_length >= 50) {
       this.ettube_length = new_length;
     }
   }
-  calc_ettube_resistance(flow) {
-    let res = this._a * flow + this._b;
-    if (res < 15.0) {
-      res = 15;
-    }
-    return res;
-  }
-  set_tubing_diameter(new_diameter) {
+  set_ettube_diameter(new_diameter) {
     // diameter in mm
-    if (new_diameter > 2.0) {
+    if (new_diameter > 1.5) {
       this.ettube_diameter = new_diameter;
       /// set the flow dependent parameters
       this._a = -2.375 * new_diameter + 11.9375;
       this._b = -14.375 * new_diameter + 65.9374;
     }
+  }
+  calc_ettube_resistance(flow) {
+    let res =
+      (this._a * flow + this._b) *
+      (this.ettube_length / this.ettube_length_ref);
+    if (res < 15.0) {
+      res = 15;
+    }
+    return res;
   }
   set_tubing_length(new_length) {}
 
