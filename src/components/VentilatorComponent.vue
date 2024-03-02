@@ -51,6 +51,7 @@
             {label: 'PRVC', value: 'PRVC'},
             {label: 'PS', value: 'PS'},
             {label: 'VC', value: 'VC'},
+            {label: 'HFOV', value: 'HFOV'},
           ]"
           @update:model-value="update_ventilator_setttings"
         />
@@ -101,7 +102,7 @@
     <div v-if="isEnabled && ventilator_running"
         class="text-overline justify-center q-gutter-sm row"
       >
-        <div class="q-mr-sm text-center">
+        <div v-if="mode != 'HFOV'" class="q-mr-sm text-center">
           <div>{{ pip_caption}}</div>
             <q-knob
               show-value
@@ -121,7 +122,7 @@
             </q-knob>
             <div :style="{ fontSize: '10px' }">cmh2o</div>
         </div>
-        <div class="q-mr-sm text-center">
+        <div v-if="mode != 'HFOV'" class="q-mr-sm text-center">
           <div>peep</div>
             <q-knob
               show-value
@@ -141,7 +142,7 @@
             </q-knob>
             <div :style="{ fontSize: '10px' }">cmH2O</div>
         </div>
-        <div class="q-mr-sm text-center">
+        <div v-if="mode != 'HFOV'" class="q-mr-sm text-center">
           <div class="knob-label">t insp</div>
             <q-knob
               show-value
@@ -161,7 +162,7 @@
             </q-knob>
             <div :style="{ fontSize: '10px' }">sec</div>
         </div>
-        <div class="q-mr-sm text-center">
+        <div v-if="mode != 'HFOV'" class="q-mr-sm text-center">
           <div class="knob-label">freq</div>
             <q-knob
               show-value
@@ -181,7 +182,7 @@
             </q-knob>
             <div :style="{ fontSize: '10px' }">/min</div>
         </div>
-        <div class="q-mr-sm text-center">
+        <div v-if="mode != 'HFOV'" class="q-mr-sm text-center">
           <div class="knob-label">flow</div>
             <q-knob
               show-value
@@ -201,7 +202,7 @@
             </q-knob>
             <div :style="{ fontSize: '10px' }">l/min</div>
         </div>
-        <div v-if="mode =='PRVC' || mode == 'VC'" class="q-mr-sm text-center">
+        <div v-if="(mode =='PRVC' || mode == 'VC') && mode != 'HFOV'" class="q-mr-sm text-center">
           <div class="knob-label">tv</div>
             <q-knob
               show-value
@@ -221,6 +222,92 @@
             </q-knob>
             <div :style="{ fontSize: '10px' }">ml</div>
         </div>
+
+        <div v-if="mode == 'HFOV'" class="q-mr-sm text-center">
+          <div class="knob-label">map</div>
+            <q-knob
+              show-value
+              font-size="12px"
+              v-model="hfo_map_cmh2o"
+              size="50px"
+              :thickness="0.22"
+              :min="5"
+              :max="50"
+              :step="1"
+              color="teal"
+              track-color="grey-3"
+              class="col"
+              @update:model-value="update_hfo"
+            >
+              {{ hfo_map_cmh2o }}
+            </q-knob>
+            <div :style="{ fontSize: '10px' }">cmh2o</div>
+        </div>
+
+        <div v-if="mode == 'HFOV'" class="q-mr-sm text-center">
+          <div class="knob-label">freq</div>
+            <q-knob
+              show-value
+              font-size="12px"
+              v-model="hfo_freq"
+              size="50px"
+              :thickness="0.22"
+              :min="5"
+              :max="15"
+              :step="1"
+              color="teal"
+              track-color="grey-3"
+              class="col"
+              @update:model-value="update_hfo"
+            >
+              {{ hfo_freq }}
+            </q-knob>
+            <div :style="{ fontSize: '10px' }">hz</div>
+        </div>
+
+        <div v-if="mode == 'HFOV'" class="q-mr-sm text-center">
+          <div class="knob-label">amplitude</div>
+            <q-knob
+              show-value
+              font-size="12px"
+              v-model="hfo_amplitude_cmh2o"
+              size="50px"
+              :thickness="0.22"
+              :min="1"
+              :max="75"
+              :step="1"
+              color="teal"
+              track-color="grey-3"
+              class="col"
+              @update:model-value="update_hfo"
+            >
+              {{ hfo_amplitude_cmh2o }}
+            </q-knob>
+            <div :style="{ fontSize: '10px' }">cmh2o</div>
+        </div>
+
+        <div v-if="mode == 'HFOV'" class="q-mr-sm text-center">
+          <div class="knob-label">bias flow</div>
+            <q-knob
+              show-value
+              font-size="12px"
+              v-model="hfo_bias_flow"
+              size="50px"
+              :thickness="0.22"
+              :min="1"
+              :max="20"
+              :step="1"
+              color="teal"
+              track-color="grey-3"
+              class="col"
+              @update:model-value="update_hfo"
+            >
+              {{ hfo_bias_flow }}
+            </q-knob>
+            <div :style="{ fontSize: '10px' }">l/min</div>
+        </div>
+
+
         <div class="q-mr-sm text-center">
           <div class="knob-label">fio2</div>
             <q-knob
@@ -241,7 +328,7 @@
             </q-knob>
             <div :style="{ fontSize: '10px' }">%</div>
         </div>
-        <div class="q-mr-sm text-center">
+        <div v-if="mode != 'HFOV'" class="q-mr-sm text-center">
           <div class="knob-label">trigger</div>
             <q-knob
               show-value
@@ -261,6 +348,7 @@
             </q-knob>
             <div :style="{ fontSize: '10px' }">%</div>
         </div>
+
 
 
       </div>
@@ -519,6 +607,10 @@ export default {
       pip_caption: "pip",
       pip_cmh2o: 14.0,
       peep_cmh2o: 4.0,
+      hfo_map_cmh2o: 10,
+      hfo_amplitude_cmh2o: 20,
+      hfo_freq: 10,
+      hfo_bias_flow: 10,
       freq: 40,
       insp_time: 0.4,
       insp_flow: 8.0,
@@ -571,7 +663,7 @@ export default {
       y1_axis: [],
       y2_axis: [],
       y3_axis: [],
-      redrawInterval: 0.015,
+      redrawInterval: 0.029,
       redrawTimer: 0.0,
       debug_mode: true,
       presets: {
@@ -580,92 +672,126 @@ export default {
       presets_loops: {
         "PV LOOP": ["Ventilator.pres", "Ventilator.vol"],
         "VF LOOP": ["Ventilator.vol", "Ventilator.flow"],
-      }
+      },
+      update_model: true
     };
   },
   methods: {
     toggle_spont_breathing() {
-      explain.callModelFunction("Breathing.switch_breathing", [this.spont_breathing])
+      if (this.update_model) {
+        explain.callModelFunction("Breathing.switch_breathing", [this.spont_breathing])
+      }
     },
     set_ettube_diameter() {
-      if (this.et_tube_diameter >=1.5 && this.et_tube_diameter < 10.0) {
-        explain.callModelFunction("Ventilator.set_ettube_diameter", [this.et_tube_diameter])
+      if (this.update_model) {
+        if (this.et_tube_diameter >=1.5 && this.et_tube_diameter < 10.0) {
+          explain.callModelFunction("Ventilator.set_ettube_diameter", [this.et_tube_diameter])
+        }
       }
     },
     set_ettube_length() {
-      if (this.et_tube_length >=50 && this.et_tube_length < 300) {
-        explain.callModelFunction("Ventilator.set_ettube_length", [this.et_tube_length])
+      if (this.update_model) {
+        if (this.et_tube_length >=50 && this.et_tube_length < 300) {
+          explain.callModelFunction("Ventilator.set_ettube_length", [this.et_tube_length])
+        }
       }
     },
     set_trigger() {
-      explain.callModelFunction("Ventilator.set_trigger_perc", [parseFloat[this.trigger_perc]])
+      if (this.update_model) {
+        explain.callModelFunction("Ventilator.set_trigger_perc", [parseFloat[this.trigger_perc]])
+      }
     },
     set_fio2() {
-      explain.callModelFunction("Ventilator.set_fio2", [parseFloat(this.fio2)])
+      if (this.update_model) {
+        explain.callModelFunction("Ventilator.set_fio2", [parseFloat(this.fio2)])
+      }
     },
     set_temp() {
-      explain.callModelFunction("Ventilator.set_temp", [parseFloat(this.temp)])
+      if (this.update_model) {
+        explain.callModelFunction("Ventilator.set_temp", [parseFloat(this.temp)])
+      }
     },
     set_humidity() {
-      explain.callModelFunction("Ventilator.set_humidity", [parseFloat(this.humidity / 100.0)])
+      if (this.update_model) {
+        explain.callModelFunction("Ventilator.set_humidity", [parseFloat(this.humidity / 100.0)])
+      }
+    },
+    update_hfo() {
+      explain.callModelFunction("Ventilator.set_ventilator_hfov", [this.hfo_map_cmh2o, this.hfo_freq, this.hfo_amplitude_cmh2o, this.hfo_bias_flow])
     },
     update_ventilator_setttings() {
-      switch (this.mode) {
-        case "OFF":
-          this.ventilator_running = false
-          this.spont_breathing = true
-          this.toggle_spont_breathing()
-          explain.callModelFunction("Ventilator.switch_ventilator", [false])
-          break;
-        case "PC":
-          if (!this.ventilator_running) {
-            this.ventilator_running = true;
-            explain.callModelFunction("Ventilator.switch_ventilator", [true])
-          }
-          if (this.ventilator_running) {
-            explain.callModelFunction("Ventilator.set_ventilator_pc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.insp_time, this.insp_flow])
-          }
-          this.spont_breathing = false
-          this.toggle_spont_breathing()
-          break;
-        case "PRVC":
-          if (!this.ventilator_running) {
-            this.ventilator_running = true;
-            explain.callModelFunction("Ventilator.switch_ventilator", [true])
-          }
-          if (this.ventilator_running) {
-            this.pip_caption = "pip max"
-            explain.callModelFunction("Ventilator.set_ventilator_prvc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.tidal_volume, this.insp_time, this.insp_flow])
+      if (this.update_model) {
+        switch (this.mode) {
+          case "OFF":
+            this.ventilator_running = false
+            this.spont_breathing = true
+            this.toggle_spont_breathing()
+            explain.callModelFunction("Ventilator.switch_ventilator", [false])
+            break;
+          case "PC":
+            if (!this.ventilator_running) {
+              this.ventilator_running = true;
+              explain.callModelFunction("Ventilator.switch_ventilator", [true])
+            }
+            if (this.ventilator_running) {
+              explain.callModelFunction("Ventilator.set_ventilator_pc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.insp_time, this.insp_flow])
             }
             this.spont_breathing = false
-          this.toggle_spont_breathing()
-          break;
-        case "PS":
+            this.toggle_spont_breathing()
+            break;
+          case "PRVC":
+            if (!this.ventilator_running) {
+              this.ventilator_running = true;
+              explain.callModelFunction("Ventilator.switch_ventilator", [true])
+            }
+            if (this.ventilator_running) {
+              this.pip_caption = "pip max"
+              explain.callModelFunction("Ventilator.set_ventilator_prvc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.tidal_volume, this.insp_time, this.insp_flow])
+              }
+              this.spont_breathing = false
+            this.toggle_spont_breathing()
+            break;
+          case "PS":
+            if (!this.ventilator_running) {
+              this.ventilator_running = true;
+              explain.callModelFunction("Ventilator.switch_ventilator", [true])
+            }
+            if (this.ventilator_running) {
+              explain.callModelFunction("Ventilator.set_ventilator_ps", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.insp_time, this.insp_flow])
+            }
+            break;
+          case "VC":
+            if (!this.ventilator_running) {
+              this.ventilator_running = true;
+              explain.callModelFunction("Ventilator.switch_ventilator", [true])
+            }
+            if (this.ventilator_running) {
+              this.pip_caption = "pip max"
+              explain.callModelFunction("Ventilator.set_ventilator_vc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.tidal_volume, this.insp_time, this.insp_flow])
+            }
+            this.spont_breathing = false
+            this.toggle_spont_breathing()
+            break;
+          case "HFOV":
           if (!this.ventilator_running) {
-            this.ventilator_running = true;
-            explain.callModelFunction("Ventilator.switch_ventilator", [true])
-          }
-          if (this.ventilator_running) {
-            explain.callModelFunction("Ventilator.set_ventilator_ps", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.insp_time, this.insp_flow])
-          }
-          break;
-        case "VC":
-          if (!this.ventilator_running) {
-            this.ventilator_running = true;
-            explain.callModelFunction("Ventilator.switch_ventilator", [true])
-          }
-          if (this.ventilator_running) {
-            this.pip_caption = "pip max"
-            explain.callModelFunction("Ventilator.set_ventilator_vc", [this.pip_cmh2o, this.peep_cmh2o, this.freq, this.tidal_volume, this.insp_time, this.insp_flow])
-          }
-          this.spont_breathing = false
-          this.toggle_spont_breathing()
-          break;
+              this.ventilator_running = true;
+              explain.callModelFunction("Ventilator.switch_ventilator", [true])
+            }
+            if (this.ventilator_running) {
+              this.pip_caption = "pip max"
+              explain.callModelFunction("Ventilator.set_ventilator_hfov", [this.hfo_map_cmh2o, this.hfo_freq, this.hfo_amplitude_cmh2o, this.hfo_bias_flow])
 
+            }
+            this.spont_breathing = false
+            this.toggle_spont_breathing()
+
+          }
       }
     },
     switch_vent() {
-      explain.callModelFunction("Ventilator.switch_ventilator", [true])
+      if (this.update_model) {
+        explain.callModelFunction("Ventilator.switch_ventilator", [true])
+      }
     },
     clearProps() {
       this.p1 = "Ventilator.pres"
@@ -1041,28 +1167,26 @@ export default {
       return rows.join('\n');
     },
     processModelState() {
-      // this.et_tube_diameter = explain.modelState.models["Ventilator"].ettube_diameter
-      // this.et_tube_length = explain.modelState.models["Ventilator"].ettube_length
-      // this.temp = explain.modelState.models["Ventilator"].temp
-      // this.humidity = explain.modelState.models["Ventilator"].humidity * 100.0
-      // this.pip_cmh2o = explain.modelState.models["Ventilator"].pip_cmh2o_max
-      // this.peep_cmh2o = explain.modelState.models["Ventilator"].peep_cmh2o
-      // this.freq = explain.modelState.models["Ventilator"].vent_rate
-      // this.insp_time = explain.modelState.models["Ventilator"].insp_time
-      // this.insp_flow = explain.modelState.models["Ventilator"].insp_flow
-      // this.tidal_volume = explain.modelState.models["Ventilator"].tidal_volume * 1000.0
-      // this.fio2 = explain.modelState.models["Ventilator"].fio2 * 100.0
-      // this.trigger_perc = explain.modelState.models["Ventilator"].trigger_volume_perc
+      if (explain.modelState.models) {
+        this.et_tube_diameter = explain.modelState.models["Ventilator"].ettube_diameter
+        this.et_tube_length = explain.modelState.models["Ventilator"].ettube_length
+        this.temp = explain.modelState.models["Ventilator"].temp
+        this.humidity = explain.modelState.models["Ventilator"].humidity * 100.0
+        this.pip_cmh2o = explain.modelState.models["Ventilator"].pip_cmh2o_max
+        this.peep_cmh2o = explain.modelState.models["Ventilator"].peep_cmh2o
+        this.freq = explain.modelState.models["Ventilator"].vent_rate
+        this.insp_time = explain.modelState.models["Ventilator"].insp_time
+        this.insp_flow = explain.modelState.models["Ventilator"].insp_flow
+        this.tidal_volume = explain.modelState.models["Ventilator"].tidal_volume * 1000.0
+        this.fio2 = explain.modelState.models["Ventilator"].fio2 * 100.0
+        this.trigger_perc = explain.modelState.models["Ventilator"].trigger_volume_perc
+      }
     }
   },
   mounted() {
-    // get the realtime slow data
     this.$bus.on("rtf", () => this.dataUpdateRt());
-
-    this.$bus.on("state", this.processModelState)
-
     this.$bus.on("data", () => this.dataUpdate())
-
+    this.$bus.on("state", this.processModelState)
     explain.watchModelProps(["Ventilator.pres", "Ventilator.flow", "Ventilator.vol", "Ventilator.co2", "Ventilator.etco2"])
 
   },

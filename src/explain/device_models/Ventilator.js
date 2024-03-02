@@ -33,6 +33,10 @@ export class Ventilator {
   vent_rate = 40.0;
   insp_time = 0.4;
   insp_flow = 10.0;
+  hfo_map_cmh2o = 10.0;
+  hfo_bias_flow = 10.0;
+  hfo_freq = 12;
+  hfo_amplitude_cmh2o = 20.0;
   exp_flow = 3.0;
   pip_cmh2o = 10.3;
   pip_cmh2o_max = 10.3;
@@ -48,6 +52,8 @@ export class Ventilator {
   et_tube = {};
   exp_valve = {};
   vent_out = {};
+  hfo_valve = {};
+  hfo_out = {};
 
   // dependent parameters
   pres = 0.0;
@@ -68,6 +74,7 @@ export class Ventilator {
   vc_po2 = 0.0;
   vc_pco2 = 0.0;
   et_tube_resistance = 60.0;
+  hfo_pres = 0.0;
 
   // local parameters
   _model_engine = {};
@@ -88,6 +95,8 @@ export class Ventilator {
   _pip = 0.0;
   _pip_max = 0.0;
   _peep = 0.0;
+  _hfo_map = 0.0;
+  _hfo_amplitude = 0.0;
   _tv_tolerance = 0.0005; // tidal volume tolerance for volume control in l
   _triggered_breath = false;
   _block_trigger_counter = 0.0;
@@ -99,6 +108,7 @@ export class Ventilator {
   _end_insp = false;
   _a = 0.0;
   _b = 0.0;
+  _hfo_time_counter = 0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -332,6 +342,20 @@ export class Ventilator {
     this.vent_mode = "CPAP";
   }
 
+  set_ventilator_hfov(
+    map = 10.0,
+    freq = 12.0,
+    amplitude = 25,
+    bias_flow = 10.0
+  ) {
+    this.hfo_map_cmh2o = map;
+    this.hfo_freq = freq;
+    this.hfo_amplitude_cmh2o = amplitude;
+    this.hfo_bias_flow = bias_flow;
+    this.synchronized = false;
+    this.vent_mode = "HFOV";
+  }
+
   set_trigger_perc(new_perc) {
     if (new_perc > 1.0 && new_perc < 50.0) {
       this.trigger_volume_perc = new_perc;
@@ -431,6 +455,8 @@ export class Ventilator {
     this._pip = this.pip_cmh2o / 1.35951;
     this._pip_max = this.pip_cmh2o_max / 1.35951;
     this._peep = this.peep_cmh2o / 1.35951;
+    this._hfo_map = this.hfo_map_cmh2o / 1.35951;
+    this._hfo_amplitude = (this.hfo_amplitude_cmh2o / 1.35951) * 0.5;
 
     // determine the trigger volume
     this.trigger_volume = (this.tidal_volume / 100) * this.trigger_volume_perc;
@@ -475,6 +501,9 @@ export class Ventilator {
         this.flow_cycling();
         this.pressure_support();
         break;
+      case "HFOV":
+        this.hfov();
+        break;
     }
 
     // store the values
@@ -493,6 +522,41 @@ export class Ventilator {
 
     // do the model step of the ventilator parts
     this._vent_parts.forEach((vent_part) => vent_part.step_model());
+  }
+  hfov() {
+    // shut down flow to patient
+    this.et_tube.no_flow = false;
+
+    // open the inspiration valve
+    this.insp_valve.no_flow = false;
+
+    // open the expiration valve
+    this.exp_valve.no_flow = false;
+
+    // back flow to the ventilator
+    this.insp_valve.no_back_flow = true;
+
+    // back flow to the ventilator
+    this.exp_valve.no_back_flow = false;
+
+    // set the resistance of the inspiration valve to supply the bias flow
+    this.insp_valve.r_for =
+      (this.vent_in.pres - this.p_atm - this._hfo_map) /
+      (this.hfo_bias_flow / 60.0);
+
+    // set the expiration valve
+    this.exp_valve.r_for = 15;
+    this.vent_out.vol =
+      this._hfo_map / this.vent_out.el_base + this.vent_out.u_vol;
+
+    let hfo_p =
+      this._hfo_amplitude *
+      Math.sin(2 * Math.PI * this.hfo_freq * this._hfo_time_counter);
+    this._hfo_time_counter += this._t;
+
+    this.hfo_pres = hfo_p;
+
+    this.vent_circuit.pres_ext += hfo_p;
   }
 
   flow_cycling() {
