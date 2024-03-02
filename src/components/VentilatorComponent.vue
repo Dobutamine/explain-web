@@ -571,7 +571,7 @@ export default {
       y1_axis: [],
       y2_axis: [],
       y3_axis: [],
-      redrawInterval: 0.03,
+      redrawInterval: 0.015,
       redrawTimer: 0.0,
       debug_mode: true,
       presets: {
@@ -1053,10 +1053,6 @@ export default {
       this.tidal_volume = explain.modelState.models["Ventilator"].tidal_volume * 1000.0
       this.fio2 = explain.modelState.models["Ventilator"].fio2 * 100.0
       this.trigger_perc = explain.modelState.models["Ventilator"].trigger_volume_perc
-
-
-      console.log(explain.modelState)
-
     }
   },
   beforeRouteLeave() {
