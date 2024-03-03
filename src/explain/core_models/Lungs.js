@@ -83,6 +83,7 @@ export class Lungs {
   upper_aw_res_change = 1.0;
   lower_aw_res_change = 1.0;
   lung_shunt_change = 1.0;
+  atelectasis_change = 1.0;
 
   // local parameters
   _model_engine = {};
@@ -176,6 +177,12 @@ export class Lungs {
       });
     }
   }
+  change_atelectasis(change) {
+    if (change > 0.0) {
+      this.atelectasis_change = change;
+    }
+  }
+
   change_dead_space(change) {
     if (change > 0.0) {
       this.dead_space_change = change;
