@@ -8,33 +8,74 @@
     </div>
     <div v-if="isEnabled">
       <div class="row text-overline justify-center">
-        <div class="col text-center">Total blood volume = {{ upper_airway_resistance * 10.0 }}</div>
+        <div class="col text-center">left heart contractility</div>
       </div>
       <div class="row text-overline justify-center">
-        <q-slider v-model="upper_airway_resistance" :min="-10" :max="10" :step="0.1"  color="teal" class="q-ml-sm q-mr-sm col" @update:model-value="changeUpperAirwayResistance"/>
+        <q-slider v-model="thorax_compliance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeThoraxCompliance"/>
       </div>
 
       <div class="row text-overline justify-center">
-        <div class="col text-center">Systemic vascular resistance = {{ thorax_compliance * 10.0 }}</div>
+        <div class="col text-center">left heart relaxation</div>
       </div>
       <div class="row text-overline justify-center">
-        <q-slider v-model="thorax_compliance" :min="-10" :max="10" :step="0.1" color="teal" class="q-ml-sm q-mr-sm col" @update:model-value="changeThoraxCompliance"/>
+        <q-slider v-model="lungs_compliance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeLungCompliance"/>
       </div>
 
       <div class="row text-overline justify-center">
-        <div class="col text-center">Pulmonary vascular resistance = {{ lungs_compliance * 10.0 }}</div>
+        <div class="col text-center">right heart contractility</div>
       </div>
       <div class="row text-overline justify-center">
-        <q-slider v-model="lungs_compliance" :min="-10" :max="10" :step="0.1"  color="teal" class="q-ml-sm q-mr-sm col" @update:model-value="changeLungCompliance"/>
+        <q-slider v-model="upper_airway_resistance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeUpperAirwayResistance"/>
       </div>
 
       <div class="row text-overline justify-center">
-        <div class="col text-center">Venous pool size = {{ lungs_compliance * 10.0 }}</div>
+        <div class="col text-center">right heart relaxation</div>
       </div>
       <div class="row text-overline justify-center">
-        <q-slider v-model="lungs_compliance" :min="-10" :max="10" :step="0.1"  color="teal" class="q-ml-sm q-mr-sm col" @update:model-value="changeLungCompliance"/>
+        <q-slider v-model="lower_airway_resistance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeLowerAirwayResistance"/>
       </div>
 
+      <div class="row text-overline justify-center">
+        <div class="col text-center">systemic vascular resistance</div>
+      </div>
+      <div class="row text-overline justify-center">
+        <q-slider v-model="dead_space" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDeadSpace"/>
+      </div>
+
+      <div class="row text-overline justify-center">
+        <div class="col text-center">pulmonary vascular resistance</div>
+      </div>
+      <div class="row text-overline justify-center">
+        <q-slider v-model="atelectasis" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeAtelectasis"/>
+      </div>
+
+      <div class="row text-overline justify-center">
+        <div class="col text-center">venous pool size</div>
+      </div>
+      <div class="row text-overline justify-center">
+        <q-slider v-model="lung_shunt" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
+      </div>
+
+      <div class="row text-overline justify-center">
+        <div class="col text-center">blood volume</div>
+      </div>
+      <div class="row text-overline justify-center">
+        <q-slider v-model="lung_shunt" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
+      </div>
+
+      <div class="row text-overline justify-center">
+        <div class="col text-center">systemic arteries compliance</div>
+      </div>
+      <div class="row text-overline justify-center">
+        <q-slider v-model="lung_shunt" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
+      </div>
+
+      <div class="row text-overline justify-center">
+        <div class="col text-center">pulmonary arteries compliance</div>
+      </div>
+      <div class="row text-overline justify-center q-mb-sm">
+        <q-slider v-model="lung_shunt" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
+      </div>
 
 
 
@@ -51,12 +92,15 @@ export default {
   data() {
     return {
       title: "CIRCULATORY SYSTEM",
-      isEnabled: false,
+      isEnabled: true,
       thorax_compliance: 0,
       lungs_compliance: 0,
       upper_airway_resistance: 0,
       lower_airway_resistance: 0,
       diffusion_coefficient: 0,
+      dead_space: 0,
+      lung_shunt: 0,
+      atelectasis: 0
 
     };
   },
@@ -87,6 +131,18 @@ export default {
 
       return 0;
     },
+    changeAtelectasis() {
+      let factor = parseFloat(this.translateSliderToValue(this.atelectasis))
+      explain.callModelFunction("Lungs.change_atelactasis", [factor])
+    },
+    changeIntrapulmonaryShunt() {
+      let factor = parseFloat(this.translateSliderToValue(this.lung_shunt))
+      explain.callModelFunction("Lungs.change_lung_shunt", [1 / factor])
+    },
+    changeDeadSpace() {
+      let factor = parseFloat(this.translateSliderToValue(this.dead_space))
+      explain.callModelFunction("Lungs.change_dead_space", [factor])
+    },
     changeLungCompliance() {
       let factor = parseFloat(this.translateSliderToValue(this.lungs_compliance))
       explain.callModelFunction("Lungs.change_lung_compliance", [factor])
@@ -109,7 +165,15 @@ export default {
       explain.callModelFunction("Lungs.change_dif_co2", [factor])
     },
     processModelState() {
-
+      if (explain.modelState.models) {
+        this.thorax_compliance = this.translateValueToSlider(explain.modelState.models['Lungs'].thorax_comp_change)
+        this.lungs_compliance = this.translateValueToSlider(explain.modelState.models['Lungs'].lung_comp_change)
+        this.upper_airway_resistance = this.translateValueToSlider(explain.modelState.models['Lungs'].upper_aw_res_change)
+        this.lower_airway_resistance = this.translateValueToSlider(explain.modelState.models['Lungs'].lower_aw_res_change)
+        this.dead_space = this.translateValueToSlider(explain.modelState.models['Lungs'].dead_space_change)
+        this.lung_shunt = this.translateValueToSlider(1.0 / explain.modelState.models['Lungs'].lung_shunt_change)
+        this.atelectasis = this.translateValueToSlider(explain.modelState.models['Lungs'].atelectasis_change)
+      }
     },
   },
   beforeUnmount() {
@@ -117,7 +181,6 @@ export default {
   },
   mounted() {
     this.$bus.on("state", this.processModelState)
-
   },
 };
 </script>

@@ -7,60 +7,33 @@
       {{ title }}
     </div>
     <div v-if="isEnabled">
-      <div class="row text-overline justify-center">
-        <div class="col text-center">thorax compliance</div>
-      </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="thorax_compliance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeThoraxCompliance"/>
-      </div>
 
       <div class="row text-overline justify-center">
-        <div class="col text-center">lung compliance</div>
-      </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="lungs_compliance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeLungCompliance"/>
-      </div>
-
-      <div class="row text-overline justify-center">
-        <div class="col text-center">upper airway resistance</div>
-      </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="upper_airway_resistance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeUpperAirwayResistance"/>
-      </div>
-
-      <div class="row text-overline justify-center">
-        <div class="col text-center">lower airway resistance</div>
-      </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="lower_airway_resistance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeLowerAirwayResistance"/>
-      </div>
-
-      <div class="row text-overline justify-center">
-        <div class="col text-center">dead space</div>
-      </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="dead_space" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDeadSpace"/>
-      </div>
-
-      <div class="row text-overline justify-center">
-        <div class="col text-center">atelectasis</div>
-      </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="atelectasis" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeAtelectasis"/>
-      </div>
-
-      <div class="row text-overline justify-center">
-        <div class="col text-center">intra-pulmonary shunting</div>
+        <div class="col text-center">ductus arteriosus size</div>
       </div>
       <div class="row text-overline justify-center">
         <q-slider v-model="lung_shunt" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
       </div>
 
       <div class="row text-overline justify-center">
-        <div class="col text-center">diffusion capacity</div>
+        <div class="col text-center">foramen ovale size</div>
+      </div>
+      <div class="row text-overline justify-center">
+        <q-slider v-model="lung_shunt" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
+      </div>
+
+      <div class="row text-overline justify-center">
+        <div class="col text-center">ventricular septal defect size</div>
+      </div>
+      <div class="row text-overline justify-center">
+        <q-slider v-model="lung_shunt" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
+      </div>
+
+      <div class="row text-overline justify-center">
+        <div class="col text-center">intra-pulmonary shunting</div>
       </div>
       <div class="row text-overline justify-center q-mb-sm">
-        <q-slider v-model="diffusion_coefficient" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDiffusionCoefficient"/>
+        <q-slider v-model="lung_shunt" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
       </div>
 
     </div>
@@ -74,7 +47,7 @@ import { explain } from "../boot/explain";
 export default {
   data() {
     return {
-      title: "RESPIRATORY SYSTEM",
+      title: "SHUNTS",
       isEnabled: true,
       thorax_compliance: 0,
       lungs_compliance: 0,

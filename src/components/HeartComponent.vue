@@ -48,13 +48,17 @@
           :options="[
             {label: 'LEFT HEART', value: 'LEFT'},
             {label: 'RIGHT HEART', value: 'RIGHT'},
+            {label: 'ARTERIAL SYSTEM', value: 'ART'},
+            {label: 'VENOUS SYSTEM', value: 'VEN'},
+            {label: 'SHUNTS', value: 'SHUNTS'},
           ]"
           @update:model-value="select_heart_chamber"
         />
-
       </div>
-
-
+    </div>
+    <div v-if="isEnabled"
+        class="q-mt-sm text-overline justify-center q-gutter-xs row"
+      >
       <div>
       <q-btn-toggle
       class="q-ml-sm"
@@ -292,7 +296,7 @@ export default {
       chart6_factor: 1.0,
       chart7_factor: 1000.0,
       exportEnabled: true,
-      title: "HEART",
+      title: "HEART AND CIRCULATION",
       selectedModel1: "LV",
       selectedProp1: "pres",
       p1: "LV.pres",
@@ -377,8 +381,10 @@ export default {
       debug_mode: true,
       presets: {},
       presets_loops: {
-        "PV LOOP": ["LV.vol", "LV.pres"],
+        "LV LOOP": ["LV.vol", "LV.pres"],
+        "LA LOOP": ["LA.vol", "LA.pres"],
         "RV LOOP": ["RV.vol", "RV.pres"],
+        "RA LOOP": ["RA.vol", "RA.pres"],
       },
       update_model: true
     };
@@ -413,7 +419,7 @@ export default {
 
           break;
         case "RIGHT":
-        this.p1 = "RV.pres"
+          this.p1 = "RV.pres"
           this.selectedModel1 = "RV"
           this.selectedProp1 = "pres"
           this.p2 = "RA.pres"
@@ -435,6 +441,38 @@ export default {
           this.selectedModel7 = "RA"
           this.selectedProp7 = "vol"
           break;
+        case "SHUNTS":
+          this.p1 = "AAR.pres"
+          this.selectedModel1 = "AAR"
+          this.selectedProp1 = "pres"
+          this.p2 = "PA.pres"
+          this.selectedModel2 = "PA"
+          this.selectedProp2 = "pres"
+          this.p3 = ""
+          this.selectedModel3 = ""
+          this.selectedProp3 = ""
+
+          this.p5 = "DuctusArteriosus.flow"
+          this.selectedModel5 = "DuctusArteriosus"
+          this.selectedProp5 = "flow"
+
+          this.p6 = ""
+          this.selectedModel6 = ""
+          this.selectedProp6 = ""
+
+          this.p4 = "LV.vol"
+          this.selectedModel4 = "LV"
+          this.selectedProp4 = "vol"
+
+          this.p7 = "RV.vol"
+          this.selectedModel7 = "RV"
+          this.selectedProp7 = "vol"
+          console.log("SUNTSCD")
+          explain.watchModelProps(["AAR.pres", "PA.pres", "DuctusArteriosus.flow", "LV.vol", "RV.vol" ])
+
+          break;
+
+
       }
     },
     clearProps() {

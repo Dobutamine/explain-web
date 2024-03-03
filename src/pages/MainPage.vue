@@ -57,6 +57,8 @@
                   background: 'grey-10',
                   width: '5px',
                   opacity: 0.5 }">
+                  <CirculatorySystemComponent></CirculatorySystemComponent>
+                  <ShuntSystemComponent></ShuntSystemComponent>
 
               </q-scroll-area>
             </q-tab-panel>
@@ -94,19 +96,23 @@
                 <q-icon name="fa-solid fa-chart-line" size="xs"></q-icon>
                 <q-tooltip>time chart</q-tooltip>
             </q-tab>
+
             <q-tab name="xy_chart">
                 <q-icon name="fa-solid fa-chart-area" size="xs"></q-icon>
                 <q-tooltip>xy chart</q-tooltip>
-            </q-tab>
-            <q-tab name="ventilator">
-                <q-icon name="fa-solid fa-lungs" size="xs"></q-icon>
-                <q-tooltip>mechanical ventilator</q-tooltip>
             </q-tab>
 
             <q-tab name="heart">
                 <q-icon name="fa-solid fa-heart" size="xs"></q-icon>
                 <q-tooltip>mechanical ventilator</q-tooltip>
             </q-tab>
+
+            <q-tab name="ventilator">
+                <q-icon name="fa-solid fa-lungs" size="xs"></q-icon>
+                <q-tooltip>mechanical ventilator</q-tooltip>
+            </q-tab>
+
+
 
           </q-tabs>
           <q-tab-panels v-model="tab_center" keep-alive>
@@ -191,6 +197,12 @@
               <q-icon name="fa-solid fa-keyboard" size="xs"></q-icon>
               <q-tooltip>numerical model parameters</q-tooltip>
             </q-tab>
+
+            <q-tab name="heart">
+                <q-icon name="fa-solid fa-heart" size="xs"></q-icon>
+                <q-tooltip>heart monitoring</q-tooltip>
+            </q-tab>
+
             <q-tab name="respiration">
                 <q-icon name="fa-solid fa-lungs" size="xs"></q-icon>
                 <q-tooltip>respiratory monitoring</q-tooltip>
@@ -238,6 +250,27 @@
                   </div>
               </q-scroll-area>
             </q-tab-panel>
+
+            <q-tab-panel name="heart">
+              <q-scroll-area
+                class="q-pa-xs"
+                dark
+                :style="screen_height"
+                :vertical-bar-style="{
+                  right: '5px',
+                  borderRadius: '5px',
+                  background: 'grey-10',
+                  width: '5px',
+                  opacity: 0.5 }">
+                  <div v-for="(numeric, index) in heart" :key="index">
+                    <NumericsComponent
+                      :title="numeric.title"
+                      :collapsed="numeric.collapsed"
+                      :parameters="numeric.parameters"
+                    ></NumericsComponent>
+                  </div>
+              </q-scroll-area>
+            </q-tab-panel>
           </q-tab-panels>
         </div>
 
@@ -256,7 +289,7 @@ import XYChartComponent from 'src/components/XYChartComponent.vue';
 import CirculatorySystemComponent from 'src/components/CirculatorySystemComponent.vue';
 import RespiratorySystemComponent from 'src/components/RespiratorySystemComponent.vue';
 import HeartComponent from 'src/components/HeartComponent.vue';
-import ShuntsComponent from 'src/components/ShuntsComponent.vue'
+import ShuntSystemComponent from 'src/components/ShuntSystemComponent.vue'
 
 import { explain } from 'src/boot/explain';
 
@@ -272,7 +305,7 @@ export default defineComponent({
     CirculatorySystemComponent,
     RespiratorySystemComponent,
     HeartComponent,
-    ShuntsComponent
+    ShuntSystemComponent
   },
   data() {
     return {
@@ -327,8 +360,6 @@ export default defineComponent({
           {label: "dco2", unit: "ml^2/s", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_dco2"]},
           ]
         }
-
-
       },
       numerics: {
         vitals_numerics: {
@@ -398,7 +429,43 @@ export default defineComponent({
           {label: "dco2", unit: "ml^2/s", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_dco2"]},
           ]
         }
-      }
+      },
+      heart: {
+        vitals_numerics: {
+          title: "VITALS",
+          collapsed: false,
+          parameters: [
+            {label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"]},
+            {label: "Abp", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AA.pres_max", "AA.pres_min"]},
+            {label: "Resp rate", unit: "/min", factor: 1.0, rounding: 0, props: ["Breathing.resp_rate"]},
+            {label: "SpO2(pre)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_pre"]},
+            {label: "SpO2(post)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_post"]},
+            {label: "SpO2(ven)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_ven"]}
+
+          ]
+        },
+        heart_numerics: {
+          title: "HEART",
+          collapsed: false,
+          parameters: [
+            {label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"]},
+            {label: "LVO", unit: "ml/min", factor: 1000.0, rounding: 0, props: ["LV_AA.flow_lmin"]},
+            {label: "RVO", unit: "ml/min", factor: 1000.0, rounding: 0, props: ["RV_PA.flow_lmin"]},
+            {label: "COR", unit: "ml/min", factor: 1000.0, rounding: 1, props: ["COR_RA.flow_lmin"]},
+            {label: "LVP", unit: "mmHg", factor: 1.0, rounding: 1, props: ["LV.pres_max", "LV.pres_min"]},
+            {label: "LVV", unit: "ml", factor: 1000.0, rounding: 1, props: ["LV.vol_max", "LV.vol_min"]},
+            {label: "LV_SV", unit: "ml", factor: 1000.0, rounding: 1, props: ["LV.vol_sv"]},
+            {label: "RVP", unit: "mmHg", factor: 1.0, rounding: 1, props: ["RV.pres_max", "RV.pres_min"]},
+            {label: "RVV", unit: "mL", factor: 1000.0, rounding: 1, props: ["RV.vol_max", "RV.vol_min"]},
+            {label: "RV_SV", unit: "mL", factor: 1000.0, rounding: 1, props: ["RV.vol_sv"]},
+          ]
+        },
+        circulation_numerics: {
+          title: "CIRCULATION",
+          collapsed: true,
+          parameters: []
+        }
+      },
 
     }
   },

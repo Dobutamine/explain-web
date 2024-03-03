@@ -6,7 +6,7 @@
     >
       {{ title }}
     </div>
-    <div v-if="isEnabled"
+    <div v-if="isEnabled && !loadPreset"
         class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center q-gutter-xs row"
       >
       <q-select
@@ -856,8 +856,10 @@ export default {
     this.$bus.on("data", () => this.dataUpdate())
 
     if (this.loadPreset) {
+      const firstKey = Object.keys(this.presets)[0]; // Get the key of the first property
+      const firstValue = this.presets[firstKey]; // Access the value of the first property
 
-      this.processDefault(this.presets["PV LOOP"])
+      this.processDefault(firstValue)
     }
 
   },
