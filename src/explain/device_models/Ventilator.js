@@ -360,6 +360,17 @@ export class Ventilator {
     this.hfo_bias_flow = bias_flow;
     this.synchronized = false;
     this.vent_mode = "HFOV";
+
+    // reset others
+    this.exp_tidal_volume = 0.0;
+    this.insp_tidal_volume = 0.0;
+    this.minute_volume = 0.0;
+    this.pip_cmh2o = 0.0;
+    this.peep_cmh2o = 0.0;
+    this.vent_rate = 0.0;
+    this.compliance = 0.0;
+    this.resistance = 0.0;
+    this.etco2 = 0.0;
   }
 
   set_trigger_perc(new_perc) {

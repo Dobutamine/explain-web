@@ -102,10 +102,6 @@
                 <q-tooltip>xy chart</q-tooltip>
             </q-tab>
             <q-tab name="ventilator">
-                <q-icon name="fa-solid fa-mask-ventilator" size="xs"></q-icon>
-                <q-tooltip>mechanical ventilator</q-tooltip>
-            </q-tab>
-            <q-tab name="ecls">
                 <q-icon name="fa-solid fa-lungs" size="xs"></q-icon>
                 <q-tooltip>mechanical ventilator</q-tooltip>
             </q-tab>
@@ -178,6 +174,10 @@
               <q-icon name="fa-solid fa-keyboard" size="xs"></q-icon>
               <q-tooltip>numerical model parameters</q-tooltip>
             </q-tab>
+            <q-tab name="respiration">
+                <q-icon name="fa-solid fa-lungs" size="xs"></q-icon>
+                <q-tooltip>respiratory monitoring</q-tooltip>
+            </q-tab>
           </q-tabs>
           <q-tab-panels v-model="tab_right" keep-alive>
             <q-tab-panel name="numerics">
@@ -192,6 +192,27 @@
                   width: '5px',
                   opacity: 0.5 }">
                   <div v-for="(numeric, index) in numerics" :key="index">
+                    <NumericsComponent
+                      :title="numeric.title"
+                      :collapsed="numeric.collapsed"
+                      :parameters="numeric.parameters"
+                    ></NumericsComponent>
+                  </div>
+              </q-scroll-area>
+            </q-tab-panel>
+
+            <q-tab-panel name="respiration">
+              <q-scroll-area
+                class="q-pa-xs"
+                dark
+                :style="screen_height"
+                :vertical-bar-style="{
+                  right: '5px',
+                  borderRadius: '5px',
+                  background: 'grey-10',
+                  width: '5px',
+                  opacity: 0.5 }">
+                  <div v-for="(numeric, index) in respiration" :key="index">
                     <NumericsComponent
                       :title="numeric.title"
                       :collapsed="numeric.collapsed"
@@ -239,13 +260,58 @@ export default defineComponent({
   data() {
     return {
       tab_left: "respiratory_system",
-      tab_right: "numerics",
+      tab_right: "respiration",
       tab_center: "ventilator",
       chart_alive: true,
       ventilator_alive: true,
       xy_alive: true,
       screen_offset: 10.0,
       screen_height: 100.0,
+      respiration: {
+        vitals_numerics: {
+          title: "VITALS",
+          collapsed: false,
+          parameters: [
+            {label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"]},
+            {label: "Abp", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AA.pres_max", "AA.pres_min"]},
+            {label: "Resp rate", unit: "/min", factor: 1.0, rounding: 0, props: ["Breathing.resp_rate"]},
+            {label: "SpO2(pre)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_pre"]},
+            {label: "SpO2(post)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_post"]},
+            {label: "SpO2(ven)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_ven"]}
+
+          ]
+        },
+        lab_numerics: {
+          title: "LABS",
+          collapsed: false,
+          parameters: [
+          {label: "pH", unit: "", factor: 1.0, rounding: 2, props: ["Blood.ph"]},
+          {label: "pO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.po2"]},
+          {label: "pCO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.pco2"]},
+          {label: "HCO3", unit: "mmol/l", factor: 1.0, rounding: 0, props: ["Blood.hco3"]},
+          {label: "BE", unit: "mmol/l", factor: 1.0, rounding: 1, props: ["Blood.be"]},
+          {label: "SO2", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2"]},
+          ]
+        },
+        vent_numerics: {
+          title: "VENTILATOR",
+          collapsed: false,
+          parameters: [
+          {label: "Pip", unit: "cmh2o", factor: 1.0, rounding: 0, props: ["Ventilator.pip_cmh2o"]},
+          {label: "Peep", unit: "cmh2o", factor: 1.0, rounding: 0, props: ["Ventilator.peep_cmh2o"]},
+          {label: "Freq", unit: "/min", factor: 1.0, rounding: 0, props: ["Ventilator.vent_rate"]},
+          {label: "Tv", unit: "ml", factor: 1000.0, rounding: 1, props: ["Ventilator.exp_tidal_volume"]},
+          {label: "Mv", unit: "ml/min", factor: 1000.0, rounding: 0, props: ["Ventilator.minute_volume"]},
+          {label: "Comp", unit: "ml/cmh2o", factor: 1.0, rounding: 1, props: ["Ventilator.compliance"]},
+          {label: "Res", unit: "ml/cmh2o", factor: 1.0, rounding: 1, props: ["Ventilator.resistance"]},
+          {label: "Etco2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Ventilator.etco2"]},
+          {label: "Tv_hfo", unit: "ml", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_tv"]},
+          {label: "dco2", unit: "ml^2/s", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_dco2"]},
+          ]
+        }
+
+
+      },
       numerics: {
         vitals_numerics: {
           title: "VITALS",

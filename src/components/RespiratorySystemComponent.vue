@@ -36,32 +36,32 @@
       </div>
 
       <div class="row text-overline justify-center">
-        <div class="col text-center">diffusion capacity</div>
+        <div class="col text-center">dead space</div>
       </div>
       <div class="row text-overline justify-center">
-        <q-slider v-model="diffusion_coefficient" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDiffusionCoefficient"/>
+        <q-slider v-model="dead_space" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDeadSpace"/>
       </div>
 
       <div class="row text-overline justify-center">
-        <div class="col text-center">dead space</div>
+        <div class="col text-center">atelectasis</div>
       </div>
-      <div class="row text-overline justify-center q-mb-sm">
-        <q-slider v-model="dead_space" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDeadSpace"/>
+      <div class="row text-overline justify-center">
+        <q-slider v-model="atelectasis" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeAtelectasis"/>
       </div>
 
       <div class="row text-overline justify-center">
         <div class="col text-center">intra-pulmonary shunting</div>
       </div>
-      <div class="row text-overline justify-center q-mb-sm">
+      <div class="row text-overline justify-center">
         <q-slider v-model="lung_shunt" :step="0.1" :min="-100" :max="100" snap :markers="100" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
       </div>
 
-      <!-- <div class="row text-overline justify-center">
-        <div class="col text-center">atelectasis</div>
+      <div class="row text-overline justify-center">
+        <div class="col text-center">diffusion capacity</div>
       </div>
       <div class="row text-overline justify-center q-mb-sm">
-        <q-slider v-model="atelectasis" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeAtelectasis"/>
-      </div> -->
+        <q-slider v-model="diffusion_coefficient" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDiffusionCoefficient"/>
+      </div>
 
     </div>
   </q-card>
