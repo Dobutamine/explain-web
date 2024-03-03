@@ -72,9 +72,6 @@
                   width: '5px',
                   opacity: 0.5 }">
                   <RespiratorySystemComponent></RespiratorySystemComponent>
-                  <HeartComponent></HeartComponent>
-                  <CirculatorySystemComponent></CirculatorySystemComponent>
-                  <ShuntsComponent></ShuntsComponent>
 
               </q-scroll-area>
             </q-tab-panel>

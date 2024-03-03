@@ -53,7 +53,7 @@
         <div class="col text-center">intra-pulmonary shunting</div>
       </div>
       <div class="row text-overline justify-center">
-        <q-slider v-model="lung_shunt" :step="0.1" :min="-100" :max="100" snap :markers="100" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
+        <q-slider v-model="lung_shunt" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
       </div>
 
       <div class="row text-overline justify-center">
@@ -154,7 +154,8 @@ export default {
         this.upper_airway_resistance = this.translateValueToSlider(explain.modelState.models['Lungs'].upper_aw_res_change)
         this.lower_airway_resistance = this.translateValueToSlider(explain.modelState.models['Lungs'].lower_aw_res_change)
         this.dead_space = this.translateValueToSlider(explain.modelState.models['Lungs'].dead_space_change)
-        this.lung_shunt = this.translateValueToSlider(explain.modelState.models['Lungs'].lung_shunt_change)
+        this.lung_shunt = this.translateValueToSlider(1.0 / explain.modelState.models['Lungs'].lung_shunt_change)
+        console.log(this.lung_shunt)
         this.atelectasis = this.translateValueToSlider(explain.modelState.models['Lungs'].atelectasis_change)
       }
     },
