@@ -71,27 +71,32 @@ export class Lungs {
   alveolar_spaces = ["ALL", "ALR"];
   lower_airways = ["DS_ALL", "DS_ALR"];
   gas_exchangers = ["GASEX_LL", "GASEX_RL"];
+  lung_shunts = ["IPS"];
 
   // dependent parameters
   dif_o2_change = 1.0;
   dif_co2_change = 1.0;
+  dead_space_change = 1.0;
   lung_comp_change = 1.0;
   chestwall_comp_change = 1.0;
   thorax_comp_change = 1.0;
   upper_aw_res_change = 1.0;
   lower_aw_res_change = 1.0;
+  lung_shunt_change = 1.0;
 
   // local parameters
   _model_engine = {};
   _is_initialized = false;
   _t = 0.0005;
   _upper_airways = [];
+  _lung_shunts = [];
   _dead_space = [];
   _lower_airways = [];
   _alveolar_spaces = [];
   _thorax = [];
   _chestwall = [];
   _gas_exchangers = [];
+  _lung_shunts = [];
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -143,6 +148,10 @@ export class Lungs {
       this._gas_exchangers.push(this._model_engine.models[target]);
     });
 
+    this.lung_shunts.forEach((target) => {
+      this._lung_shunts.push(this._model_engine.models[target]);
+    });
+
     // set the flag to model is initialized
     this._is_initialized = true;
   }
@@ -154,6 +163,27 @@ export class Lungs {
   }
 
   calc_model() {}
+
+  change_lung_shunt(change_forward, change_backward = -1) {
+    if (change_forward > 0.0) {
+      this.lung_shunt_change = change_forward;
+      this._lung_shunts.forEach((target) => {
+        target.r_for_factor = change_forward;
+        target.r_back_factor = change_forward;
+        if (change_backward >= 0.0) {
+          target.r_back_factor = change_backward;
+        }
+      });
+    }
+  }
+  change_dead_space(change) {
+    if (change > 0.0) {
+      this.dead_space_change = change;
+      this._dead_space.forEach((target) => {
+        target.u_vol_factor = change;
+      });
+    }
+  }
 
   change_dif_o2(change) {
     if (change > 0.0) {

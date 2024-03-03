@@ -73,6 +73,10 @@ export class Ventilator {
   vc_pco2 = 0.0;
   et_tube_resistance = 60.0;
   hfo_pres = 0.0;
+  hfo_tv = 0.0;
+  hfo_dco2 = 0.0;
+  hfo_insp_tv = 0.0;
+  hfo_exp_tv = 0.0;
 
   // local parameters
   _model_engine = {};
@@ -107,6 +111,10 @@ export class Ventilator {
   _a = 0.0;
   _b = 0.0;
   _hfo_time_counter = 0;
+  _hfo_insp_tv_counter = 0;
+  _hfo_exp_tv_counter = 0;
+  _hfo_state = 0;
+  _prev_hfo_state = 0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -531,7 +539,7 @@ export class Ventilator {
     this.exp_valve.no_flow = false;
 
     // back flow to the ventilator
-    this.insp_valve.no_back_flow = true;
+    this.insp_valve.no_back_flow = false;
 
     // back flow to the ventilator
     this.exp_valve.no_back_flow = false;
@@ -558,7 +566,31 @@ export class Ventilator {
       this.insp_valve.no_flow = true;
     }
 
-    this.vent_circuit.pres_ext += hfo_p;
+    // find the state
+    if (this.et_tube.flow > 0) {
+      this._hfo_state = 0;
+      this._hfo_insp_tv_counter += this.et_tube.flow * this._t;
+    } else {
+      this._hfo_state = 1;
+      this._hfo_exp_tv_counter += this.et_tube.flow * this._t;
+    }
+
+    // store the tidal volume
+    if (this._hfo_state == 0 && this._prev_hfo_state == 1) {
+      this.hfo_exp_tv = -this._hfo_exp_tv_counter;
+      this._hfo_exp_tv_counter = 0;
+    }
+
+    if (this._hfo_state == 1 && this._prev_hfo_state == 0) {
+      this.hfo_insp_tv = this._hfo_insp_tv_counter;
+      this._hfo_insp_tv_counter = 0;
+    }
+
+    this.hfo_tv = ((this.hfo_insp_tv + this.hfo_exp_tv) / 2.0) * 1000.0;
+    this.hfo_dco2 = this.hfo_tv * this.hfo_tv * this.hfo_freq;
+
+    this.vent_out.pres_ext += hfo_p;
+    this._prev_hfo_state = this._hfo_state;
   }
 
   flow_cycling() {

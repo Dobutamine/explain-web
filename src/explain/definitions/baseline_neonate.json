@@ -2519,7 +2519,10 @@
             "gas_exchangers": [
                 "GASEX_LL",
                 "GASEX_RL"
-            ]
+            ],
+            "lung_shunts": [
+              "IPS"
+          ]
         },
         "Ans": {
             "name": "Ans",

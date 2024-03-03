@@ -43,10 +43,17 @@
       </div>
 
       <div class="row text-overline justify-center">
-        <div class="col text-center">ventilation perfusion mismatch</div>
+        <div class="col text-center">dead space</div>
       </div>
       <div class="row text-overline justify-center q-mb-sm">
-        <q-slider v-model="diffusion_coefficient" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDiffusionCoefficient"/>
+        <q-slider v-model="dead_space" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDeadSpace"/>
+      </div>
+
+      <div class="row text-overline justify-center">
+        <div class="col text-center">intra-pulmonary shunting</div>
+      </div>
+      <div class="row text-overline justify-center q-mb-sm">
+        <q-slider v-model="lung_shunt" :step="0.1" :min="-100" :max="100" snap :markers="100" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
       </div>
 
     </div>
@@ -66,7 +73,9 @@ export default {
       lungs_compliance: 0,
       upper_airway_resistance: 0,
       lower_airway_resistance: 0,
-      diffusion_coefficient: 0
+      diffusion_coefficient: 0,
+      dead_space: 0,
+      lung_shunt: 0,
 
     };
   },
@@ -97,6 +106,14 @@ export default {
 
       return 0;
     },
+    changeIntrapulmonaryShunt() {
+      let factor = parseFloat(this.translateSliderToValue(this.lung_shunt))
+      explain.callModelFunction("Lungs.change_lung_shunt", [1 / factor])
+    },
+    changeDeadSpace() {
+      let factor = parseFloat(this.translateSliderToValue(this.dead_space))
+      explain.callModelFunction("Lungs.change_dead_space", [factor])
+    },
     changeLungCompliance() {
       let factor = parseFloat(this.translateSliderToValue(this.lungs_compliance))
       explain.callModelFunction("Lungs.change_lung_compliance", [factor])
@@ -124,7 +141,8 @@ export default {
         this.lungs_compliance = this.translateValueToSlider(explain.modelState.models['Lungs'].lung_comp_change)
         this.upper_airway_resistance = this.translateValueToSlider(explain.modelState.models['Lungs'].upper_aw_res_change)
         this.lower_airway_resistance = this.translateValueToSlider(explain.modelState.models['Lungs'].lower_aw_res_change)
-        this.diffusion_coefficient = this.translateValueToSlider(explain.modelState.models['Lungs'].dif_o2_change)
+        this.dead_space = this.translateValueToSlider(explain.modelState.models['Lungs'].dead_space_change)
+        this.lung_shunt = this.translateValueToSlider(explain.modelState.models['Lungs'].lung_shunt_change)
       }
     },
   },
