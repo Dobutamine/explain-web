@@ -103,6 +103,11 @@
                 <q-tooltip>mechanical ventilator</q-tooltip>
             </q-tab>
 
+            <q-tab name="heart">
+                <q-icon name="fa-solid fa-heart" size="xs"></q-icon>
+                <q-tooltip>mechanical ventilator</q-tooltip>
+            </q-tab>
+
           </q-tabs>
           <q-tab-panels v-model="tab_center" keep-alive>
             <q-tab-panel name="time_chart">
@@ -132,6 +137,21 @@
                   width: '5px',
                   opacity: 0.5 }">
                 <VentilatorComponent :alive="ventilator_alive"></VentilatorComponent>
+              </q-scroll-area>
+            </q-tab-panel>
+
+            <q-tab-panel name="heart">
+              <q-scroll-area
+                class="q-pa-xs"
+                dark
+                :style="screen_height"
+                :vertical-bar-style="{
+                  right: '5px',
+                  borderRadius: '5px',
+                  background: 'grey-10',
+                  width: '5px',
+                  opacity: 0.5 }">
+                <HeartComponent :alive="heart_alive"></HeartComponent>
               </q-scroll-area>
             </q-tab-panel>
 
@@ -261,6 +281,7 @@ export default defineComponent({
       tab_center: "ventilator",
       chart_alive: true,
       ventilator_alive: true,
+      heart_alive: false,
       xy_alive: true,
       screen_offset: 10.0,
       screen_height: 100.0,
@@ -394,18 +415,26 @@ export default defineComponent({
       explain.getModelState()
       switch (tabName) {
         case "ventilator":
-          this.numerics.vent_numerics.collapsed = false
           this.ventilator_alive = true
+          this.heart_alive = false
+          this.chart_alive = false
+          this.xy_alive = false
+          break;
+        case "heart":
+          this.ventilator_alive = false
+          this.heart_alive = true
           this.chart_alive = false
           this.xy_alive = false
           break;
         case "time_chart":
           this.ventilator_alive = false
+          this.heart_alive = false
           this.chart_alive = true
           this.xy_alive = false
           break;
         case "xy_chart":
           this.ventilator_alive = false
+          this.heart_alive = false
           this.chart_alive = false
           this.xy_alive = true
           break;

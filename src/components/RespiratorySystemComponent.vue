@@ -155,7 +155,6 @@ export default {
         this.lower_airway_resistance = this.translateValueToSlider(explain.modelState.models['Lungs'].lower_aw_res_change)
         this.dead_space = this.translateValueToSlider(explain.modelState.models['Lungs'].dead_space_change)
         this.lung_shunt = this.translateValueToSlider(1.0 / explain.modelState.models['Lungs'].lung_shunt_change)
-        console.log(this.lung_shunt)
         this.atelectasis = this.translateValueToSlider(explain.modelState.models['Lungs'].atelectasis_change)
       }
     },
