@@ -357,7 +357,8 @@ export default defineComponent({
           {label: "Res", unit: "ml/cmh2o", factor: 1.0, rounding: 1, props: ["Ventilator.resistance"]},
           {label: "Etco2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Ventilator.etco2"]},
           {label: "Tv_hfo", unit: "ml", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_tv"]},
-          {label: "dco2", unit: "ml^2/s", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_dco2"]},
+          {label: "Mv_hfo", unit: "ml/min", factor: 1.0, rounding: 0, props: ["Ventilator.hfo_mv"]},
+          {label: "Dco2", unit: "ml^2/s", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_dco2"]},
           ]
         }
       },
@@ -426,6 +427,7 @@ export default defineComponent({
           {label: "Res", unit: "ml/cmh2o", factor: 1.0, rounding: 1, props: ["Ventilator.resistance"]},
           {label: "Etco2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Ventilator.etco2"]},
           {label: "Tv_hfo", unit: "ml", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_tv"]},
+          {label: "Mv_hfo", unit: "ml/min", factor: 1.0, rounding: 0, props: ["Ventilator.hfo_mv"]},
           {label: "dco2", unit: "ml^2/s", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_dco2"]},
           ]
         }
@@ -510,6 +512,16 @@ export default defineComponent({
     },
     updateWatchlist() {
       Object.keys(this.numerics).forEach(numeric => {
+        this.numerics[numeric].parameters.forEach((p) => {
+          explain.watchModelPropsSlow([...p.props])
+        })
+      })
+      Object.keys(this.respiration).forEach(numeric => {
+        this.numerics[numeric].parameters.forEach((p) => {
+          explain.watchModelPropsSlow([...p.props])
+        })
+      })
+      Object.keys(this.heart).forEach(numeric => {
         this.numerics[numeric].parameters.forEach((p) => {
           explain.watchModelPropsSlow([...p.props])
         })

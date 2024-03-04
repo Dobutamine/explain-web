@@ -119,6 +119,25 @@ export class BloodResistor {
     this._is_initialized = true;
   }
 
+  reconnect(comp_from, comp_to) {
+    // store the references
+    this.comp_from = comp_from;
+    this.comp_to = comp_to;
+
+    // get a reference to the connected components
+    if (typeof this.comp_from == "string") {
+      this._model_comp_from = this._model_engine.models[this.comp_from];
+    } else {
+      this._model_comp_from = this.comp_from;
+    }
+
+    if (typeof this.comp_to == "string") {
+      this._model_comp_to = this._model_engine.models[this.comp_to];
+    } else {
+      this._model_comp_to = this.comp_to;
+    }
+  }
+
   step_model() {
     if (this.is_enabled && this._is_initialized) {
       this.calc_model();

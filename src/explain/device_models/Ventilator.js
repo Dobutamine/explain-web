@@ -77,6 +77,7 @@ export class Ventilator {
   hfo_dco2 = 0.0;
   hfo_insp_tv = 0.0;
   hfo_exp_tv = 0.0;
+  hfo_mv = 0.0;
 
   // local parameters
   _model_engine = {};
@@ -599,6 +600,7 @@ export class Ventilator {
 
     this.hfo_tv = ((this.hfo_insp_tv + this.hfo_exp_tv) / 2.0) * 1000.0;
     this.hfo_dco2 = this.hfo_tv * this.hfo_tv * this.hfo_freq;
+    this.hfo_mv = this.hfo_tv * this.hfo_freq * 60.0;
 
     this.vent_out.pres_ext += hfo_p;
     this._prev_hfo_state = this._hfo_state;

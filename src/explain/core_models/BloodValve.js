@@ -89,8 +89,17 @@ export class BloodValve {
     });
 
     // get a reference to the connected components
-    this._model_comp_from = this._model_engine.models[this.comp_from];
-    this._model_comp_to = this._model_engine.models[this.comp_to];
+    if (typeof this.comp_from == "string") {
+      this._model_comp_from = this._model_engine.models[this.comp_from];
+    } else {
+      this._model_comp_from = this.comp_from;
+    }
+
+    if (typeof this.comp_to == "string") {
+      this._model_comp_to = this._model_engine.models[this.comp_to];
+    } else {
+      this._model_comp_to = this.comp_to;
+    }
 
     // reference to the heart
     this._heart = this._model_engine.models["Heart"];
@@ -100,6 +109,25 @@ export class BloodValve {
 
     // set the flag to model is initialized
     this._is_initialized = true;
+  }
+
+  reconnect(comp_from, comp_to) {
+    // store the references
+    this.comp_from = comp_from;
+    this.comp_to = comp_to;
+
+    // get a reference to the connected components
+    if (typeof this.comp_from == "string") {
+      this._model_comp_from = this._model_engine.models[this.comp_from];
+    } else {
+      this._model_comp_from = this.comp_from;
+    }
+
+    if (typeof this.comp_to == "string") {
+      this._model_comp_to = this._model_engine.models[this.comp_to];
+    } else {
+      this._model_comp_to = this.comp_to;
+    }
   }
 
   step_model() {
