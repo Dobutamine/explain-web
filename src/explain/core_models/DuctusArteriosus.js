@@ -2,12 +2,39 @@ export class DuctusArteriosus {
   static class_type = "DuctusArteriosus";
   static indepent_parameters = [
     {
+      name: "current diameter",
+      caption: "current diameter",
+      unit: "",
+      type: "info",
+      factor: 1.0,
+      rounding: 2,
+      value: 0.0,
+      local_value: "diameter",
+    },
+    {
       name: "open_ductus",
+      caption: "open ductus arteriosus",
       unit: "",
       type: "function",
       factor: 1.0,
       rounding: 2,
-      local_value: "diameter",
+      arguments: [
+        { name: "diameter", value: 0.0 },
+        { name: "in_time", value: 5.0 },
+        { name: "at_time", value: 0.0 },
+      ],
+    },
+    {
+      name: "close_ductus",
+      caption: "close ductus arteriosus",
+      unit: "",
+      type: "function",
+      factor: 1.0,
+      rounding: 2,
+      arguments: [
+        { name: "in_time", value: 5.0 },
+        { name: "at_time", value: 0.0 },
+      ],
     },
   ];
   // independent parameters
@@ -67,6 +94,9 @@ export class DuctusArteriosus {
     this._pda_in = this._model_engine.models[this.da_connectors[0]];
     this._pda_out = this._model_engine.models[this.da_connectors[1]];
 
+    // set the current diameter
+    this._current_diameter = this.diameter;
+
     // set the flag to model is initialized
     this._is_initialized = true;
   }
@@ -108,20 +138,26 @@ export class DuctusArteriosus {
       this.velocity = this.velocity * 4.0;
     }
 
-    if (this._diameter_stepsize != 0) {
-      this._current_diameter += this._diameter_stepsize;
-      this._in_time -= this._t;
-      if (
-        Math.abs(this._current_diameter - this._target_diameter) <
-        Math.abs(self._diameter_stepsize)
-      ) {
-        this._diameter_stepsize = 0.0;
-        this._current_diameter = this._target_diameter;
-        if (this._target_diameter < 0.11) {
-          this.no_flow = true;
+    console.log(this._at_time);
+    if (this._at_time >= 0) {
+      this._at_time -= this.t;
+    } else {
+      if (this._diameter_stepsize != 0) {
+        this._current_diameter += this._diameter_stepsize;
+        this._in_time -= this._t;
+        if (
+          Math.abs(this._current_diameter - this._target_diameter) <
+          Math.abs(this._diameter_stepsize)
+        ) {
+          this._diameter_stepsize = 0.0;
+          this._current_diameter = this._target_diameter;
+          if (this._target_diameter < 0.11) {
+            this.no_flow = true;
+          }
         }
       }
     }
+
     this.diameter = this._current_diameter;
   }
 
@@ -136,7 +172,6 @@ export class DuctusArteriosus {
       this.close_ductus(in_time, at_time);
     }
 
-    this.diameter = new_diameter;
     this.no_flow = false;
     this._target_diameter = new_diameter;
     this._current_diameter = this.diameter;
@@ -149,7 +184,6 @@ export class DuctusArteriosus {
 
   close_ductus(in_time = 5.0, at_time = 0.0) {
     this._target_diameter = 0.1;
-    this._current_diameter = this.diameter;
     this._in_time = in_time;
     this._at_time = at_time;
     this._diameter_stepsize =

@@ -2771,7 +2771,7 @@
             "is_enabled": true,
             "dependencies": [],
             "vo2": 6.5,
-            "resp_q": 0.7,
+            "resp_q": 0.8,
             "body_temp": 37,
             "metabolic_active_models": {
                 "RLB": 0.15,
@@ -2869,7 +2869,7 @@
                 "DA_PA"
             ],
             "no_flow": true,
-            "diameter": 2.0,
+            "diameter": 1.2,
             "length": 10,
             "viscosity": 6.0,
             "non_lin_factor": 1.0

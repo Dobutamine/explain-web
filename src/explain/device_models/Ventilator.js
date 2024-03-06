@@ -328,6 +328,12 @@ export class Ventilator {
     if (new_temp > 0 && new_temp < 60) {
       this.temp = new_temp;
       set_gas_composition(this.vent_in, this.fio2, this.temp, this.humidity);
+      set_gas_composition(
+        this.vent_circuit,
+        this.fio2,
+        this.temp,
+        this.humidity
+      );
     }
   }
 
@@ -335,6 +341,12 @@ export class Ventilator {
     if (new_hum > 0 && new_hum <= 1.0) {
       this.humidity = new_hum;
       set_gas_composition(this.vent_in, this.fio2, this.temp, this.humidity);
+      set_gas_composition(
+        this.vent_circuit,
+        this.fio2,
+        this.temp,
+        this.humidity
+      );
     }
   }
 
@@ -732,11 +744,14 @@ export class Ventilator {
       this.insp_valve.no_back_flow = true;
 
       // set the resistance of the inspiration valve
-      this.insp_valve.r_for =
-        (this.vent_in.pres + this._pip - this.p_atm - this._peep) /
-        (this.insp_flow / 60.0);
+      this.insp_valve.r_for = 1000.0;
 
-      // guard the inspiratory pressure
+      // guard the inspiratory flow
+      if (this.et_tube.flow > this.insp_flow / 60.0) {
+        this.insp_valve.no_flow = true;
+      }
+
+      // guard the inspiratory volume
       if (this._insp_tidal_volume_counter > this.tidal_volume) {
         this.insp_valve.no_flow = true;
         this.insp_valve.r_for_factor = 1.0;

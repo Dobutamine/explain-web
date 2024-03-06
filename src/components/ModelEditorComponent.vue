@@ -61,21 +61,31 @@
           </div>
           <div v-if="field.type == 'function'">
             <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.name }}
+                {{ field.caption }}
+              </div>
+            <div v-for="(arg, index_arg) in field.arguments" :key="index_arg">
+              <div class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '12px' }">
+                {{ arg.name }}
+              </div>
+              <q-input
+                v-model="arg.value"
+                color="blue"
+                hide-hint
+                filled
+                dense
+                @update:model-value="field.changed = true"
+                stack-label
+                type="number"
+                style="font-size: 14px"
+                class="q-ml-md q-mr-md q-mb-sm"
+                squared>
+              </q-input>
             </div>
-            <q-input
-              v-model="field.value"
-              color="blue"
-              hide-hint
-              filled
-              dense
-              @update:model-value="field.changed = true"
-              stack-label
-              type="number"
-              style="font-size: 14px"
-              class="q-ml-md q-mr-md q-mb-sm"
-              squared>
-            </q-input>
+          </div>
+          <div v-if="field.type == 'info'">
+            <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+                {{ field.caption }} = {{ (field.value * field.factor).toFixed(field.rounding) }}
+              </div>
           </div>
         </div>
       </div>
@@ -158,7 +168,8 @@ export default {
         }
 
         if (p.type === 'function') {
-          let v = [p.value];
+          let v = []
+          p.arguments.forEach(arg => v.push(parseFloat(arg.value)))
           let f = this.selectedModelName + "." + p.name;
           if (p.changed) {
             update = true;
@@ -190,11 +201,16 @@ export default {
           param['value'] =  explain.modelState.models[this.selectedModelName][param.name];
         }
         if (param["type"] === 'function') {
-          param['value'] =  explain.modelState.models[this.selectedModelName][param.local_value];
+
+        }
+        if (param["type"] === "info") {
+          param["value"] = explain.modelState.models[this.selectedModelName][param.local_value];
+
         }
         if (param["unit"] !== "") {
           param["unit"] = "(" + param["unit"] + ")"
         }
+
 
         param['changed'] = false
       })
