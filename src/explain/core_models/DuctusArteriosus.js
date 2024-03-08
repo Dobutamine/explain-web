@@ -2,7 +2,7 @@ export class DuctusArteriosus {
   static model_type = "DuctusArteriosus";
   static model_interface = [
     {
-      name: "set_diameter",
+      name: "open_ductus",
       caption: "set ductus arteriosus diameter",
       type: "function",
       target: "diameter",

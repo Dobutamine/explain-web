@@ -23,7 +23,7 @@
           @update:model-value="selectModel"
         />
       </div>
-      <div class="q-ma-sm">
+      <div v-if="redraw > 0.0" class="q-ma-sm">
         <div v-for="(field, index) in selectedModelProps" :key="index">
           <div v-if="field.type == 'number'">
             <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '14px' }">
@@ -68,8 +68,8 @@
               {{ field.caption }}
             </div>
             <div class="q-ml-md q-mr-md q-mb-sm text-left text-grey" :style="{ 'font-size': '10px' }">
-                current {{ field.target }} = {{  field.value }}
-              </div>
+              current {{ field.target }} = {{  field.value }}
+            </div>
 
             <div v-for="(arg, index_arg) in field.args" :key="index_arg">
               <div v-if="arg.required == true" class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '10px' }">
@@ -85,7 +85,7 @@
                   hide-hint
                   filled
                   dense
-                  @update:model-value="arg.state_changed = true"
+                  @update:model-value="changePropState(field, arg)"
                   stack-label
                   type="number"
                   style="font-size: 14px"
@@ -93,6 +93,36 @@
                   squared>
                 </q-input>
               </div>
+
+            </div>
+
+            <div v-if="show_optionals">
+              <div v-for="(arg, index_arg) in field.args" :key="index_arg">
+                <div v-if="arg.required == false" class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '10px' }">
+                  {{ arg.caption }}
+                </div>
+                <div v-if="arg.type == 'number' && arg.required == false">
+                  <q-input
+                    v-model.number="arg.value"
+                    :max="arg.ul"
+                    :min="arg.ll"
+                    :step="arg.delta"
+                    color="blue"
+                    hide-hint
+                    filled
+                    dense
+                    @update:model-value="changePropState(field, arg)"
+                    stack-label
+                    style="font-size: 14px"
+                    class="q-ml-md q-mr-md q-mb-sm"
+                    squared>
+                  </q-input>
+                </div>
+              </div>
+            </div>
+
+            <div class="row justify-end q-mr-md">
+              <q-btn :color="optionals_color" dense size="xs" @click="showOptionals(field)">{{ optionals_caption }}</q-btn>
             </div>
           </div>
 
@@ -161,48 +191,79 @@ export default {
     return {
       title: "SUBMODEL EDITOR",
       isEnabled: true,
+      redraw: 1,
       selectedModelName: "",
-
+      show_optionals: false,
+      optionals_caption: "SHOW OPTIONALS",
+      optionals_color: "negative",
       modelNames: [],
       changeInTime: 5
     };
   },
   methods: {
+    changePropState(param, arg) {
+      param.state_changed = true
+      ///this.redraw += 1
+
+    },
+    showOptionals(param) {
+      if (this.show_optionals == true) {
+        this.show_optionals = false
+        this.optionals_caption = "SHOW OPTIONALS"
+        this.optionals_color = "negative"
+      } else {
+        this.show_optionals = true
+        this.optionals_caption = "HIDE OPTIONALS"
+        this.optionals_color = "primary"
+      }
+    },
     updateValue() {
-      let update = false
-      this.selectedModelProps.forEach((p) => {
-        if (p.type === 'number') {
-          let v = parseFloat(p.value / p.factor);
-          let prop = this.selectedModelName + "." + p.name;
-          if (p.changed) {
-            update = true;
-            explain.setPropValue(prop, v, this.changeInTime)
-          }
-        }
-
-        if (p.type === 'boolean') {
-          let v = p.value;
-          let prop = this.selectedModelName + "." + p.name;
-          if (p.changed) {
-            update = true;
-            explain.setPropValue(prop, v)
-          }
-        }
-
-        if (p.type === 'function') {
-          let v = []
-          p.arguments.forEach(arg => v.push(parseFloat(arg.value)))
-          let f = this.selectedModelName + "." + p.name;
-          if (p.changed) {
-            update = true;
-            explain.callModelFunction(f, v)
+      this.selectedModelProps.forEach(prop => {
+        if (prop.state_changed) {
+          if (prop.type == 'function') {
+            let function_name = this.selectedModelName + "." + prop.name;
+            let function_args = []
+            prop.args.forEach(arg => {
+              function_args.push(arg.value)
+            })
+            explain.callModelFunction(function_name, function_args)
           }
         }
       })
+      // let update = false
+      // this.selectedModelProps.forEach((p) => {
+      //   if (p.type === 'number') {
+      //     let v = parseFloat(p.value / p.factor);
+      //     let prop = this.selectedModelName + "." + p.name;
+      //     if (p.changed) {
+      //       update = true;
+      //       explain.setPropValue(prop, v, this.changeInTime)
+      //     }
+      //   }
 
-      if (update) {
-        //explain.calculate(parseInt(this.changeInTime))
-      }
+      //   if (p.type === 'boolean') {
+      //     let v = p.value;
+      //     let prop = this.selectedModelName + "." + p.name;
+      //     if (p.changed) {
+      //       update = true;
+      //       explain.setPropValue(prop, v)
+      //     }
+      //   }
+
+      //   if (p.type === 'function') {
+      //     let v = []
+      //     p.arguments.forEach(arg => v.push(parseFloat(arg.value)))
+      //     let f = this.selectedModelName + "." + p.name;
+      //     if (p.changed) {
+      //       update = true;
+      //       explain.callModelFunction(f, v)
+      //     }
+      //   }
+      // })
+
+      // if (update) {
+      //   //explain.calculate(parseInt(this.changeInTime))
+      // }
 
     },
     cancel() {
@@ -217,11 +278,9 @@ export default {
         if (param.target) {
           param['value'] = explain.modelState.models[this.selectedModelName][param.target]
         }
+        param['show_optionals'] = false
         param['state_changed'] = false
       })
-    },
-    getAvailableModels() {
-      explain.getModelState()
     },
     processAvailableModels() {
       this.modelNames = []
