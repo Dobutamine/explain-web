@@ -9,8 +9,9 @@ export class DuctusArteriosus {
       args: [
         {
           name: "diameter",
-          caption: "diameter",
+          caption: "new diameter(mm)",
           type: "number",
+          required: true,
           value: 0.0,
           factor: 1.0,
           delta: 0.1,
@@ -22,6 +23,7 @@ export class DuctusArteriosus {
           name: "in_time",
           caption: "in time(s)",
           type: "number",
+          required: false,
           value: 5.0,
           factor: 1.0,
           delta: 1,
@@ -33,6 +35,7 @@ export class DuctusArteriosus {
           name: "at_time",
           caption: "at time(s)",
           type: "number",
+          required: false,
           value: 0.0,
           factor: 1.0,
           delta: 1,

@@ -65,13 +65,17 @@
 
           <div v-if="field.type == 'function'">
             <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '16px' }">
-                {{ field.caption }}
+              {{ field.caption }}
+            </div>
+            <div class="q-ml-md q-mr-md q-mb-sm text-left text-grey" :style="{ 'font-size': '10px' }">
+                current {{ field.target }} = {{  field.value }}
               </div>
+
             <div v-for="(arg, index_arg) in field.args" :key="index_arg">
-              <div class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '12px' }">
-                - {{ arg.caption }}
+              <div v-if="arg.required == true" class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '10px' }">
+                {{ arg.caption }}
               </div>
-              <div v-if="arg.type == 'number'">
+              <div v-if="arg.type == 'number' && arg.required == true">
                 <q-input
                   v-model.number="arg.value"
                   :max="arg.ul"
@@ -210,6 +214,9 @@ export default {
       this.selectedModelProps = [...Object.values(explain.modelState.models[this.selectedModelName].model_interface)]
       // add a flag to the property which can be set when the property needs to be updated
       this.selectedModelProps.forEach(param => {
+        if (param.target) {
+          param['value'] = explain.modelState.models[this.selectedModelName][param.target]
+        }
         param['state_changed'] = false
       })
     },
