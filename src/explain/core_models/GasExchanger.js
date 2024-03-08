@@ -1,8 +1,8 @@
 import { set_blood_composition } from "../helpers/BloodComposition";
 
 export class GasExchanger {
-  static class_type = "GasExchanger";
-  static indepent_parameters = [];
+  static model_type = "GasExchanger";
+  static model_interface = [];
   // independent parameters
   name = "";
   model_type = "";

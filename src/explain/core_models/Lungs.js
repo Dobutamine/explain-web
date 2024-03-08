@@ -1,63 +1,6 @@
 export class Lungs {
-  static class_type = "Lungs";
-  static indepent_parameters = [
-    {
-      name: "change_thorax_compliance",
-      unit: "",
-      type: "function",
-      factor: "",
-      rounding: 1,
-      local_value: "thorax_comp_change",
-    },
-    {
-      name: "change_lung_compliance",
-      unit: "",
-      type: "function",
-      factor: "",
-      rounding: 1,
-      local_value: "lung_comp_change",
-    },
-    {
-      name: "change_chestwall_compliance",
-      unit: "",
-      type: "function",
-      factor: "",
-      rounding: 1,
-      local_value: "chestwall_comp_change",
-    },
-    {
-      name: "change_upper_airway_resistance",
-      unit: "",
-      type: "function",
-      factor: "",
-      rounding: 1,
-      local_value: "upper_aw_res_change",
-    },
-    {
-      name: "change_lower_airway_resistance",
-      unit: "",
-      type: "function",
-      factor: "",
-      rounding: 1,
-      local_value: "lower_aw_res_change",
-    },
-    {
-      name: "change_dif_o2",
-      unit: "",
-      type: "function",
-      factor: "",
-      rounding: 1,
-      local_value: "dif_o2_change",
-    },
-    {
-      name: "change_dif_co2",
-      unit: "",
-      type: "function",
-      factor: "",
-      rounding: 1,
-      local_value: "dif_co2_change",
-    },
-  ];
+  static model_type = "Lungs";
+  static model_interface = [];
   // independent parameters
   name = "";
   model_type = "";

@@ -1,8 +1,8 @@
 import { calc_gas_composition } from "../helpers/GasComposition";
 
 export class Gas {
-  static class_type = "Gas";
-  static indepent_parameters = [];
+  static model_type = "Gas";
+  static model_interface = [];
   // independent parameters
   name = "";
   model_type = "";

@@ -1,6 +1,6 @@
 export class Kidneys {
-  static class_type = "Kidneys";
-  static indepent_parameters = [];
+  static model_type = "Kidneys";
+  static model_interface = [];
   // independent parameters
   name = "";
   model_type = "";

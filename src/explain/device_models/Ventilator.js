@@ -1,20 +1,10 @@
 import { GasCapacitance } from "../core_models/GasCapacitance";
 import { set_gas_composition } from "../helpers/GasComposition";
 import { GasResistor } from "../core_models/GasResistor";
-import { calc_resistance_tube } from "../helpers/ResistanceTube";
 
 export class Ventilator {
-  static class_type = "Ventilator";
-  static indepent_parameters = [
-    {
-      name: "set_ettube_resistance",
-      unit: "",
-      type: "function",
-      factor: "",
-      rounding: 1,
-      local_value: "et_tube_resistance",
-    },
-  ];
+  static model_type = "Ventilator";
+  static model_interface = [];
   // independent parameters
   name = "";
   model_type = "";

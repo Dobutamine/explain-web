@@ -240,7 +240,7 @@ const process_model_definition = function (model_definition) {
     // check if the model is available in the available model list
     let index = available_models.findIndex(
       (available_model) =>
-        available_model.class_type === sub_model_def.model_type
+        available_model.model_type === sub_model_def.model_type
     );
 
     // if the component model was found then instantiate a model
@@ -253,9 +253,9 @@ const process_model_definition = function (model_definition) {
       );
       // add the new component to the model object
       model.models[sub_model_def.name] = new_sub_model;
-      // copy the independent parameters
-      model.models[sub_model_def.name].independent_parameters = [
-        ...available_models[index].indepent_parameters,
+      // copy the model interface object
+      model.models[sub_model_def.name].model_interface = [
+        ...available_models[index].model_interface,
       ];
     } else {
       errors += 1;

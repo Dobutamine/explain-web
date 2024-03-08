@@ -1,8 +1,7 @@
 export class Breathing {
-  static class_type = "Breathing";
-  static indepent_parameters = [
-    { name: "is_enabled", unit: "", type: "boolean", factor: 1.0, rounding: 1 },
-  ];
+  static model_type = "Breathing";
+  static model_interface = [];
+
   // independent parameters
   name = "";
   model_type = "";

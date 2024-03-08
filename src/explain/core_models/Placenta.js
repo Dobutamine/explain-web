@@ -1,6 +1,6 @@
 export class Placenta {
-  static class_type = "Placenta";
-  static indepent_parameters = [];
+  static model_type = "Placenta";
+  static model_interface = [];
   // independent parameters
   name = "";
   model_type = "";

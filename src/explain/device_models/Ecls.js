@@ -9,13 +9,8 @@ import {
 import { set_gas_composition } from "../helpers/GasComposition";
 
 export class Ecls {
-  static class_type = "Ecls";
-  static indepent_parameters = [
-    { name: "inlet_res", unit: "", type: "number", factor: 1.0, rounding: 2 },
-    { name: "outlet_res", unit: "", type: "number", factor: 1.0, rounding: 2 },
-    { name: "pump_rpm", unit: "", type: "number", factor: 1.0, rounding: 0 },
-    { name: "sweep_gas", unit: "", type: "number", factor: 1.0, rounding: 0 },
-  ];
+  static model_type = "Ecls";
+  static model_interface = [];
   // independent parameters
   name = "";
   model_type = "";

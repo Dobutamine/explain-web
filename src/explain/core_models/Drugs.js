@@ -1,6 +1,6 @@
 export class Drugs {
-  static class_type = "Drugs";
-  static indepent_parameters = [];
+  static model_type = "Drugs";
+  static model_interface = [];
   // independent parameters
   name = "";
   model_type = "";

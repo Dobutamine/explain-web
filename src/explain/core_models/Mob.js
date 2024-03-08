@@ -1,39 +1,8 @@
 import { set_blood_composition } from "../helpers/BloodComposition";
 
 export class Mob {
-  static class_type = "Mob";
-  static indepent_parameters = [
-    { name: "is_enabled", unit: "", type: "boolean", factor: 1.0, rounding: 1 },
-    { name: "description", unit: "", type: "string", factor: 1.0, rounding: 1 },
-    {
-      name: "bm_vo2_ref",
-      unit: "",
-      type: "number",
-      factor: 1000.0,
-      rounding: 2,
-    },
-    {
-      name: "pva_c",
-      unit: "",
-      type: "number",
-      factor: 1000.0,
-      rounding: 2,
-    },
-    {
-      name: "ecc_c",
-      unit: "",
-      type: "number",
-      factor: 1000.0,
-      rounding: 2,
-    },
-    {
-      name: "resp_q",
-      unit: "",
-      type: "number",
-      factor: 1.0,
-      rounding: 2,
-    },
-  ];
+  static model_type = "Mob";
+  static model_interface = [];
   // independent parameters
   name = "";
   model_type = "";

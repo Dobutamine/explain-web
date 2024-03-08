@@ -1,71 +1,7 @@
 export class Circulation {
-  static class_type = "Circulation";
-  static indepent_parameters = [
-    {
-      name: "change_svr",
-      unit: "",
-      type: "function",
-      factor: "",
-      rounding: 1,
-      local_value: "svr_change",
-    },
-    {
-      name: "change_pvr",
-      unit: "",
-      type: "function",
-      factor: 1.0,
-      rounding: 1,
-      local_value: "pvr_change",
-    },
-    {
-      name: "change_venpool",
-      unit: "",
-      type: "function",
-      factor: 1.0,
-      rounding: 1,
-      local_value: "venpool_change",
-    },
-    {
-      name: "change_arterial_compliance",
-      unit: "",
-      type: "function",
-      factor: 1.0,
-      rounding: 1,
-      local_value: "artcomp_change",
-    },
-    {
-      name: "change_venous_compliance",
-      unit: "",
-      type: "function",
-      factor: 1.0,
-      rounding: 1,
-      local_value: "vencomp_change",
-    },
-    {
-      name: "change_lungshunt",
-      unit: "",
-      type: "function",
-      factor: 1.0,
-      rounding: 1,
-      local_value: "lungshunt_change",
-    },
-    {
-      name: "change_ofo",
-      unit: "",
-      type: "function",
-      factor: 1.0,
-      rounding: 1,
-      local_value: "fo_change",
-    },
-    {
-      name: "change_vsd",
-      unit: "",
-      type: "function",
-      factor: 1.0,
-      rounding: 1,
-      local_value: "vsd_change",
-    },
-  ];
+  static model_type = "Circulation";
+  static model_interface = [];
+
   // independent parameters
   name = "";
   model_type = "";

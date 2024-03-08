@@ -1,8 +1,8 @@
 import { set_blood_composition } from "../helpers/BloodComposition";
 
 export class Ans {
-  static class_type = "Ans";
-  static indepent_parameters = [
+  static model_type = "Ans";
+  static model_interface = [
     { name: "is_enabled", unit: "", type: "boolean", factor: 1.0, rounding: 1 },
     { name: "min_map", unit: "mmhg", type: "number", factor: 1.0, rounding: 1 },
     { name: "set_map", unit: "mmhg", type: "number", factor: 1.0, rounding: 1 },

@@ -1,8 +1,8 @@
 import { set_blood_composition } from "../helpers/BloodComposition";
 
 export class Blood {
-  static class_type = "Blood";
-  static indepent_parameters = [];
+  static model_type = "Blood";
+  static model_interface = [];
   // independent parameters
   name = "";
   model_type = "";

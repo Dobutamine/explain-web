@@ -43,6 +43,8 @@
               squared>
             </q-input>
           </div>
+
+
           <div v-if="field.type == 'boolean'">
             <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '14px' }">
               {{ field.name }}
@@ -59,11 +61,13 @@
               class="q-ml-md q-mr-md q-mb-sm">
             </q-toggle>
           </div>
+
+
           <div v-if="field.type == 'function'">
             <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '14px' }">
                 {{ field.caption }}
               </div>
-            <div v-for="(arg, index_arg) in field.arguments" :key="index_arg">
+            <!-- <div v-for="(arg, index_arg) in field.arguments" :key="index_arg">
               <div class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '12px' }">
                 {{ arg.name }}
               </div>
@@ -80,8 +84,10 @@
                 class="q-ml-md q-mr-md q-mb-sm"
                 squared>
               </q-input>
-            </div>
+            </div> -->
           </div>
+
+
           <div v-if="field.type == 'info'">
             <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '14px' }">
                 {{ field.caption }} = {{ (field.value * field.factor).toFixed(field.rounding) }}
@@ -188,8 +194,7 @@ export default {
       this.selectedModelProps = {}
     },
     selectModel () {
-      this.selectedModelProps = {}
-
+      // select the interfacing props
       this.selectedModelProps = Object.values(explain.modelState.models[this.selectedModelName].independent_parameters)
 
       // fill the values
@@ -223,7 +228,6 @@ export default {
       try {
         if (Object.keys(explain.modelState.models)) {
           this.modelNames = [...Object.keys(explain.modelState.models)].sort();
-          //this.selectedModelName = this.modelNames[0]
           this.selectModel()
       }
       } catch {}

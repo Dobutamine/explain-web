@@ -1,42 +1,6 @@
 export class DuctusArteriosus {
-  static class_type = "DuctusArteriosus";
-  static indepent_parameters = [
-    {
-      name: "current diameter",
-      caption: "current diameter",
-      unit: "",
-      type: "info",
-      factor: 1.0,
-      rounding: 2,
-      value: 0.0,
-      local_value: "diameter",
-    },
-    {
-      name: "open_ductus",
-      caption: "open ductus arteriosus",
-      unit: "",
-      type: "function",
-      factor: 1.0,
-      rounding: 2,
-      arguments: [
-        { name: "diameter", value: 0.0 },
-        { name: "in_time", value: 5.0 },
-        { name: "at_time", value: 0.0 },
-      ],
-    },
-    {
-      name: "close_ductus",
-      caption: "close ductus arteriosus",
-      unit: "",
-      type: "function",
-      factor: 1.0,
-      rounding: 2,
-      arguments: [
-        { name: "in_time", value: 5.0 },
-        { name: "at_time", value: 0.0 },
-      ],
-    },
-  ];
+  static model_type = "DuctusArteriosus";
+  static model_interface = [];
   // independent parameters
   name = "";
   model_type = "";
@@ -137,8 +101,6 @@ export class DuctusArteriosus {
       this.velocity = (this.flow * 0.001) / area;
       this.velocity = this.velocity * 4.0;
     }
-
-    console.log(this._at_time);
     if (this._at_time >= 0) {
       this._at_time -= this.t;
     } else {
@@ -157,7 +119,6 @@ export class DuctusArteriosus {
         }
       }
     }
-
     this.diameter = this._current_diameter;
   }
 

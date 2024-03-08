@@ -6,8 +6,8 @@ import { GasResistor } from "../ModelIndex";
 import { GasExchanger } from "../ModelIndex";
 
 export class ArtificialWhomb {
-  static class_type = "ArtificialWhomb";
-  static indepent_parameters = [];
+  static model_type = "ArtificialWhomb";
+  static model_interface = [];
   // independent parameters
   name = "";
   model_type = "";

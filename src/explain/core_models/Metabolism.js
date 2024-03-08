@@ -1,35 +1,6 @@
 export class Metabolism {
-  static class_type = "Metabolism";
-  static indepent_parameters = [
-    {
-      name: "vo2",
-      unit: "",
-      type: "number",
-      factor: 1.0,
-      rounding: 1,
-    },
-    {
-      name: "vo2_factor",
-      unit: "",
-      type: "number",
-      factor: 1.0,
-      rounding: 1,
-    },
-    {
-      name: "resp_q",
-      unit: "",
-      type: "number",
-      factor: 1.0,
-      rounding: 1,
-    },
-    {
-      name: "body_temp",
-      unit: "",
-      type: "number",
-      factor: 1.0,
-      rounding: 1,
-    },
-  ];
+  static model_type = "Metabolism";
+  static model_interface = [];
   // independent parameters
   name = "";
   model_type = "";

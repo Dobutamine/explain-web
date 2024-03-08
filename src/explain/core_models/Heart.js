@@ -1,6 +1,6 @@
 export class Heart {
-  static class_type = "Heart";
-  static indepent_parameters = [];
+  static model_type = "Heart";
+  static model_interface = [];
 
   // independent parameters
   name = "";
