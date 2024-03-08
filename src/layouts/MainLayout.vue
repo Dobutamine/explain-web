@@ -148,6 +148,8 @@ export default defineComponent({
         this.butColor = "white";
         this.butIcon = "fa-solid fa-play";
         this.butCaption = "PLAY";
+        // get the model state
+        explain.getModelState()
       }
     },
     reload() {

@@ -67,7 +67,7 @@
             <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '16px' }">
               {{ field.caption }}
             </div>
-            <div class="q-ml-md q-mr-md q-mb-sm text-left text-grey" :style="{ 'font-size': '10px' }">
+            <div v-if="show_current_value" class="q-ml-md q-mr-md q-mb-sm text-left text-grey" :style="{ 'font-size': '10px' }">
               current {{ field.target }} = {{  field.value }}
             </div>
 
@@ -197,13 +197,14 @@ export default {
       optionals_caption: "SHOW OPTIONALS",
       optionals_color: "negative",
       modelNames: [],
-      changeInTime: 5
+      changeInTime: 5,
+      show_current_value: true
     };
   },
   methods: {
     changePropState(param, arg) {
       param.state_changed = true
-      ///this.redraw += 1
+      this.redraw += 1
 
     },
     showOptionals(param) {
@@ -229,41 +230,10 @@ export default {
             explain.callModelFunction(function_name, function_args)
           }
         }
+        prop.state_changed = false
       })
-      // let update = false
-      // this.selectedModelProps.forEach((p) => {
-      //   if (p.type === 'number') {
-      //     let v = parseFloat(p.value / p.factor);
-      //     let prop = this.selectedModelName + "." + p.name;
-      //     if (p.changed) {
-      //       update = true;
-      //       explain.setPropValue(prop, v, this.changeInTime)
-      //     }
-      //   }
 
-      //   if (p.type === 'boolean') {
-      //     let v = p.value;
-      //     let prop = this.selectedModelName + "." + p.name;
-      //     if (p.changed) {
-      //       update = true;
-      //       explain.setPropValue(prop, v)
-      //     }
-      //   }
-
-      //   if (p.type === 'function') {
-      //     let v = []
-      //     p.arguments.forEach(arg => v.push(parseFloat(arg.value)))
-      //     let f = this.selectedModelName + "." + p.name;
-      //     if (p.changed) {
-      //       update = true;
-      //       explain.callModelFunction(f, v)
-      //     }
-      //   }
-      // })
-
-      // if (update) {
-      //   //explain.calculate(parseInt(this.changeInTime))
-      // }
+      this.show_current_value = false
 
     },
     cancel() {
@@ -281,6 +251,7 @@ export default {
         param['show_optionals'] = false
         param['state_changed'] = false
       })
+      this.show_current_value = true
     },
     processAvailableModels() {
       this.modelNames = []

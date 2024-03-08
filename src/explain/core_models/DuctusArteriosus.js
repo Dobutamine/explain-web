@@ -146,8 +146,9 @@ export class DuctusArteriosus {
       this.velocity = (this.flow * 0.001) / area;
       this.velocity = this.velocity * 4.0;
     }
+
     if (this._at_time >= 0) {
-      this._at_time -= this.t;
+      this._at_time -= this._t;
     } else {
       if (this._diameter_stepsize != 0) {
         this._current_diameter += this._diameter_stepsize;
@@ -177,7 +178,6 @@ export class DuctusArteriosus {
     if (new_diameter < 0.1) {
       this.close_ductus(in_time, at_time);
     }
-
     this.no_flow = false;
     this._target_diameter = new_diameter;
     this._current_diameter = this.diameter;
