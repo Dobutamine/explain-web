@@ -45,6 +45,46 @@ export class DuctusArteriosus {
         },
       ],
     },
+    {
+      name: "set_length",
+      caption: "set ductus arteriosus length",
+      type: "function",
+      target: "length",
+      args: [
+        {
+          name: "length",
+          caption: "new length (mm)",
+          type: "number",
+          required: true,
+          value: 10.0,
+          factor: 1.0,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100,
+          ll: 0.1,
+        },
+      ],
+    },
+    {
+      name: "set_non_linear_factor",
+      caption: "non linear factor",
+      type: "function",
+      target: "non_lin_factor",
+      args: [
+        {
+          name: "non_lin_factor",
+          caption: "new non linear factor",
+          type: "number",
+          required: true,
+          value: 0.0,
+          factor: 1.0,
+          delta: 10,
+          rounding: 1,
+          ul: 1000000,
+          ll: 0.0,
+        },
+      ],
+    },
   ];
   // independent parameters
   name = "";
@@ -55,8 +95,8 @@ export class DuctusArteriosus {
   da_model = "DA";
   da_connectors = ["AAR_DA", "DA_PA"];
   no_flow = true;
-  diameter = 0.1;
-  length = 0.1;
+  diameter = 1.2;
+  length = 10.0;
   viscosity = 6.0;
   non_lin_factor = 1.0;
 
@@ -122,12 +162,18 @@ export class DuctusArteriosus {
     this._pda_out.no_flow = this.no_flow;
 
     // enable the pda components
-    this._pda.is_enabled = this.is_enabled;
-    this._pda_in.is_enabled = this.is_enabled;
-    this._pda_out.is_enabled = this.is_enabled;
+    let res = 1000000;
+    if (this.diameter > 0.1) {
+      this._pda.is_enabled = this.is_enabled;
+      this._pda_in.is_enabled = this.is_enabled;
+      this._pda_out.is_enabled = this.is_enabled;
 
-    // calculate the resistance
-    let res = this.calc_resistance(this.diameter, this.length, this.viscosity);
+      // calculate the resistance
+      res = this.calc_resistance(this.diameter, this.length, this.viscosity);
+    } else {
+      this._pda_in.no_flow = false;
+      this._pda_out.no_flow = false;
+    }
 
     // set the resistances
     this._pda_out.r_for = res;

@@ -64,7 +64,7 @@
 
 
           <div v-if="field.type == 'function'">
-            <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '16px' }">
+            <div class="q-ml-md q-mr-md q-mt-sm text-left text-secondary" :style="{ 'font-size': '16px' }">
               {{ field.caption }}
             </div>
             <div v-if="show_current_value" class="q-ml-md q-mr-md q-mb-sm text-left text-grey" :style="{ 'font-size': '10px' }">

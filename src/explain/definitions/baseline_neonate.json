@@ -2868,7 +2868,7 @@
                 "AAR_DA",
                 "DA_PA"
             ],
-            "no_flow": true,
+            "no_flow": false,
             "diameter": 1.2,
             "length": 10,
             "viscosity": 6.0,
