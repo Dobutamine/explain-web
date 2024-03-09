@@ -23,48 +23,83 @@
           @update:model-value="selectModel"
         />
       </div>
+
       <div v-if="redraw > 0.0" class="q-ma-sm">
         <div v-for="(field, index) in selectedModelProps" :key="index">
+
           <div v-if="field.type == 'number'">
-            <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.name }} {{ field.unit }}
+            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+                {{ field.caption }}
+              <div v-for="(arg, index_arg) in field.args" :key="index_arg">
+                <div v-if="arg.required == true" class="text-white" :style="{ 'font-size': '10px' }">
+                  <q-input
+                    v-model="field.value"
+                    :max="arg.ul"
+                    :min="arg.ll"
+                    :step="arg.delta"
+                    color="blue"
+                    hide-hint
+                    filled
+                    dense
+                    @update:model-value="changePropState(field, arg)"
+                    stack-label
+                    type="number"
+                    style="font-size: 14px"
+                    class="q-mr-md q-mb-sm"
+                    squared>
+                  </q-input>
+                </div>
+              </div>
             </div>
-            <q-input
-              v-model="field.value"
-              color="blue"
-              hide-hint
-              filled
-              dense
-              @update:model-value="field.changed = true"
-              stack-label
-              type="number"
-              style="font-size: 14px"
-              class="q-ml-md q-mr-md q-mb-sm"
-              squared>
-            </q-input>
           </div>
 
+          <div v-if="field.type == 'string'">
+            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+                {{ field.caption }}
+              <div v-for="(arg, index_arg) in field.args" :key="index_arg">
+                <div v-if="arg.required == true" class="text-white" :style="{ 'font-size': '10px' }">
+                  <q-input
+                    v-model="field.value"
+                    color="blue"
+                    hide-hint
+                    filled
+                    dense
+                    @update:model-value="changePropState(field, arg)"
+                    stack-label
+                    style="font-size: 14px"
+                    class="q-mr-md q-mb-sm"
+                    squared>
+                  </q-input>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div v-if="field.type == 'boolean'">
-            <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.name }}
+            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary row" :style="{ 'font-size': '14px' }">
+              <div class="col">
+                {{ field.caption }}
+              </div>
+              <div v-for="(arg, index_arg) in field.args" :key="index_arg">
+                <div v-if="arg.required == true" class="text-white col" :style="{ 'font-size': '10px' }">
+                  <q-toggle
+                    v-model="field.value"
+                    color="primary"
+                    size="sm"
+                    hide-hint
+                    filled
+                    dense
+                    @update:model-value="changePropState(field, arg)"
+                    style="font-size: 14px"
+                    class="q-mr-md q-mb-sm">
+                  </q-toggle>
+                </div>
+              </div>
             </div>
-            <q-toggle
-              v-model="field.value"
-              color="primary"
-              size="sm"
-              hide-hint
-              filled
-              dense
-              @update:model-value="field.changed = true"
-              style="font-size: 14px"
-              class="q-ml-md q-mr-md q-mb-sm">
-            </q-toggle>
           </div>
 
-
           <div v-if="field.type == 'function'">
-            <div class="q-ml-md q-mr-md q-mt-sm text-left text-secondary" :style="{ 'font-size': '16px' }">
+            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
               {{ field.caption }}
             </div>
             <div v-if="show_current_value" class="q-ml-md q-mr-md q-mb-sm text-left text-grey" :style="{ 'font-size': '10px' }">
@@ -78,6 +113,7 @@
               <div v-if="arg.type == 'number' && arg.required == true">
                 <q-input
                   v-model.number="arg.value"
+                  type="number"
                   :max="arg.ul"
                   :min="arg.ll"
                   :step="arg.delta"
@@ -87,7 +123,20 @@
                   dense
                   @update:model-value="changePropState(field, arg)"
                   stack-label
-                  type="number"
+                  style="font-size: 14px"
+                  class="q-ml-md q-mr-md q-mb-sm"
+                  squared>
+                </q-input>
+              </div>
+              <div v-if="arg.type == 'string' && arg.required == true">
+                <q-input
+                  v-model="arg.value"
+                  color="blue"
+                  hide-hint
+                  filled
+                  dense
+                  @update:model-value="changePropState(field, arg)"
+                  stack-label
                   style="font-size: 14px"
                   class="q-ml-md q-mr-md q-mb-sm"
                   squared>
@@ -104,6 +153,7 @@
                 <div v-if="arg.type == 'number' && arg.required == false">
                   <q-input
                     v-model.number="arg.value"
+                    type="number"
                     :max="arg.ul"
                     :min="arg.ll"
                     :step="arg.delta"
@@ -118,20 +168,29 @@
                     squared>
                   </q-input>
                 </div>
+                <div v-if="arg.type == 'string' && arg.required == false">
+                <q-input
+                  v-model="arg.value"
+                  color="blue"
+                  hide-hint
+                  filled
+                  dense
+                  @update:model-value="changePropState(field, arg)"
+                  stack-label
+                  style="font-size: 14px"
+                  class="q-ml-md q-mr-md q-mb-sm"
+                  squared>
+                </q-input>
+              </div>
               </div>
             </div>
 
-            <div class="row justify-end q-mr-md">
+
+          <div class="row justify-end q-mr-md">
               <q-btn :color="optionals_color" dense size="xs" @click="showOptionals(field)">{{ optionals_caption }}</q-btn>
             </div>
           </div>
 
-
-          <div v-if="field.type == 'info'">
-            <div class="q-ml-md q-mr-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-                {{ field.caption }} = {{ (field.value * field.factor).toFixed(field.rounding) }}
-              </div>
-          </div>
         </div>
       </div>
       <div v-if="selectedModelProps.length > 0" class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">

@@ -2,6 +2,21 @@ export class DuctusArteriosus {
   static model_type = "DuctusArteriosus";
   static model_interface = [
     {
+      name: "no_flow",
+      caption: "ductus flow enabled",
+      type: "boolean",
+      target: "no_flow",
+      args: [
+        {
+          name: "no_flow",
+          caption: "",
+          type: "boolean",
+          required: true,
+          value: false,
+        },
+      ],
+    },
+    {
       name: "open_ductus",
       caption: "set ductus arteriosus diameter",
       type: "function",
@@ -46,41 +61,41 @@ export class DuctusArteriosus {
       ],
     },
     {
-      name: "set_length",
-      caption: "set ductus arteriosus length",
-      type: "function",
+      name: "length",
+      caption: "ductus length (mm)",
+      type: "number",
       target: "length",
       args: [
         {
           name: "length",
-          caption: "new length (mm)",
+          caption: "",
           type: "number",
           required: true,
-          value: 10.0,
+          value: true,
           factor: 1.0,
           delta: 0.1,
           rounding: 1,
-          ul: 100,
+          ul: 100.0,
           ll: 0.1,
         },
       ],
     },
     {
-      name: "set_non_linear_factor",
-      caption: "non linear factor",
-      type: "function",
+      name: "non_lin_factor",
+      caption: "non linear factor (mmhg)",
+      type: "number",
       target: "non_lin_factor",
       args: [
         {
           name: "non_lin_factor",
-          caption: "new non linear factor",
+          caption: "",
           type: "number",
           required: true,
-          value: 0.0,
+          value: true,
           factor: 1.0,
           delta: 10,
-          rounding: 1,
-          ul: 1000000,
+          rounding: 0,
+          ul: 10000000.0,
           ll: 0.0,
         },
       ],
@@ -93,7 +108,8 @@ export class DuctusArteriosus {
   is_enabled = false;
   dependencies = [];
   da_model = "DA";
-  da_connectors = ["AAR_DA", "DA_PA"];
+  da_in = "AAR";
+  da_out = "DA";
   no_flow = true;
   diameter = 1.2;
   length = 10.0;
@@ -140,8 +156,15 @@ export class DuctusArteriosus {
 
     // get a reference to the models
     this._pda = this._model_engine.models[this.da_model];
-    this._pda_in = this._model_engine.models[this.da_connectors[0]];
-    this._pda_out = this._model_engine.models[this.da_connectors[1]];
+
+    let _comp_from = this.da_in + "_" + this.da_model;
+    let _comp_to = this.da_model + "_" + this.da_out;
+
+    console.log(_comp_from);
+    console.log(_comp_to);
+
+    this._pda_in = this._model_engine.models[_comp_from];
+    this._pda_out = this._model_engine.models[_comp_to];
 
     // set the current diameter
     this._current_diameter = this.diameter;

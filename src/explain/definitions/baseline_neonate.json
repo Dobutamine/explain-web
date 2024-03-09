@@ -2864,10 +2864,8 @@
                 "DA_PA"
             ],
             "da_model": "DA",
-            "da_connectors": [
-                "AAR_DA",
-                "DA_PA"
-            ],
+            "da_in": "AAR",
+            "da_out": "PA",
             "no_flow": false,
             "diameter": 1.2,
             "length": 10,
