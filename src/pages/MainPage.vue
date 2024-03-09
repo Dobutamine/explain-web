@@ -310,8 +310,8 @@ export default defineComponent({
   data() {
     return {
       tab_left: "model_editor",
-      tab_right: "respiration",
-      tab_center: "ventilator",
+      tab_center: "time_chart",
+      tab_right: "numerics",
       chart_alive: true,
       ventilator_alive: true,
       heart_alive: false,
