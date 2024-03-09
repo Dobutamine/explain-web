@@ -1,6 +1,117 @@
 export class Circulation {
   static model_type = "Circulation";
-  static model_interface = [];
+  static model_interface = [
+    {
+      name: "change_svr",
+      caption: "systemic vascular resistance factor",
+      type: "function",
+      target: "svr_change",
+      optionals: false,
+      args: [
+        {
+          name: "change_svr",
+          caption: "",
+          type: "number",
+          required: true,
+          value: 1.0,
+          factor: 1.0,
+          delta: 0.01,
+          rounding: 2,
+          ul: 100.0,
+          ll: 0.01,
+          is_target: true,
+        },
+      ],
+    },
+    {
+      name: "change_pvr",
+      caption: "pulmonary vascular resistance factor",
+      type: "function",
+      target: "pvr_change",
+      optionals: false,
+      args: [
+        {
+          name: "change_pvr",
+          caption: "",
+          type: "number",
+          required: true,
+          value: 1.0,
+          factor: 1.0,
+          delta: 0.01,
+          rounding: 2,
+          ul: 100.0,
+          ll: 0.01,
+          is_target: true,
+        },
+      ],
+    },
+    {
+      name: "change_venpool",
+      caption: "venous pool factor",
+      type: "function",
+      target: "venpool_change",
+      optionals: false,
+      args: [
+        {
+          name: "change_venpool",
+          caption: "",
+          type: "number",
+          required: true,
+          value: 1.0,
+          factor: 1.0,
+          delta: 0.01,
+          rounding: 2,
+          ul: 100.0,
+          ll: 0.01,
+          is_target: true,
+        },
+      ],
+    },
+    {
+      name: "change_syst_arterial_compliance",
+      caption: "systemic arterial compliance factor",
+      type: "function",
+      target: "systartcomp_change",
+      optionals: false,
+      args: [
+        {
+          name: "change_syst_arterial_compliance",
+          caption: "",
+          type: "number",
+          required: true,
+          value: 1.0,
+          factor: 1.0,
+          delta: 0.01,
+          rounding: 2,
+          ul: 100.0,
+          ll: 0.01,
+          is_target: true,
+        },
+      ],
+    },
+    {
+      name: "change_pulm_arterial_compliance",
+      caption: "pulmonary arterial compliance factor",
+      type: "function",
+      target: "pulmartcomp_change",
+      optionals: false,
+      args: [
+        {
+          name: "change_pulm_arterial_compliance",
+          caption: "",
+          type: "number",
+          required: true,
+          value: 1.0,
+          factor: 1.0,
+          delta: 0.01,
+          rounding: 2,
+          ul: 100.0,
+          ll: 0.01,
+          is_target: true,
+        },
+      ],
+    },
+  ];
 
   // independent parameters
   name = "";
@@ -31,7 +142,8 @@ export class Circulation {
   pvr_change = 1.0;
   svr_change = 1.0;
   venpool_change = 1.0;
-  artcomp_change = 1.0;
+  pulmartcomp_change = 1.0;
+  systartcomp_change = 1.0;
   vencomp_change = 1.0;
 
   // local parameters
@@ -214,10 +326,19 @@ export class Circulation {
     }
   }
 
-  change_arterial_compliance(change) {
+  change_syst_arterial_compliance(change) {
     if (change > 0.0) {
-      this.artcomp_change = change;
+      this.systartcomp_change = change;
       this._systemic_arteries.forEach((target) => {
+        target.el_base_factor = 1.0 / change;
+      });
+    }
+  }
+
+  change_pulm_arterial_compliance(change) {
+    if (change > 0.0) {
+      this.pulmartcomp_change = change;
+      this._pulmonary_arteries.forEach((target) => {
         target.el_base_factor = 1.0 / change;
       });
     }

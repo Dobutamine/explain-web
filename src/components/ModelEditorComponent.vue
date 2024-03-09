@@ -102,10 +102,6 @@
             <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
               {{ field.caption }}
             </div>
-            <div v-if="show_current_value" class="q-ml-md q-mr-md q-mb-sm text-left text-grey" :style="{ 'font-size': '10px' }">
-              current {{ field.target }} = {{  field.value }}
-            </div>
-
             <div v-for="(arg, index_arg) in field.args" :key="index_arg">
               <div v-if="arg.required == true" class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '10px' }">
                 {{ arg.caption }}
@@ -186,7 +182,7 @@
             </div>
 
 
-          <div class="row justify-end q-mr-md">
+          <div v-if="field.optionals" class="row justify-end q-mr-md">
               <q-btn :color="optionals_color" dense size="xs" @click="showOptionals(field)">{{ optionals_caption }}</q-btn>
             </div>
           </div>
@@ -194,38 +190,38 @@
         </div>
       </div>
       <div v-if="selectedModelProps.length > 0" class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
-        <q-input
-          label-color="primary"
-          class="q-ml-md q-mr-md row"
+
+      </div>
+      <div v-if="selectedModelProps.length > 0" class="row q-ma-md">
+
+        <q-btn
+          class="col q-ma-xs"
+          color="negative"
+          size="xs"
+          dense
+          icon="fa-solid fa-xmark"
+          @click="cancel"
+        ></q-btn>
+        <q-btn
+          class="col q-ma-xs"
+          color="primary"
+          size="xs"
+          icon="fa-solid fa-check"
+          @click="updateValue"
+          ></q-btn
+        >
+        <q-select
+          label-color="secondary"
+          class="q-ml-md q-mr-md col"
           v-model="changeInTime"
-          square
-          type="number"
-          label="apply changes in sec."
-          style="width: 50%; font-size: 12px"
+          :options="timeOptions"
+          label="in sec."
+          style="font-size: 10px"
           hide-hint
           dense
           dark
           stack-label
         />
-      </div>
-      <div v-if="selectedModelProps.length > 0" class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
-
-        <q-btn
-          color="negative"
-          size="xs"
-          dense
-          style="width: 70px"
-          icon="fa-solid fa-xmark"
-          @click="cancel"
-        ></q-btn>
-        <q-btn
-          color="primary"
-          size="sm"
-          style="width: 70px"
-          icon="fa-solid fa-check"
-          @click="updateValue"
-          ></q-btn
-        >
 
 
       </div>
@@ -256,6 +252,7 @@ export default {
       optionals_caption: "SHOW OPTIONALS",
       optionals_color: "negative",
       modelNames: [],
+      timeOptions: [1, 5, 10, 30, 60, 120, 240, 360],
       changeInTime: 5,
       show_current_value: true
     };
@@ -291,7 +288,7 @@ export default {
 
           if (prop.type == 'number') {
             let p = this.selectedModelName + "." + prop.name
-            explain.setPropValue(p, parseFloat(prop.args[0].value), parseFloat(this.changeInTime), 0)
+            explain.setPropValue(p, parseFloat(prop.args[0].value / prop.args[0].factor) , parseFloat(this.changeInTime), 0)
           }
           if (prop.type == 'boolean') {
             let p = this.selectedModelName + "." + prop.name
@@ -318,7 +315,7 @@ export default {
       // add a flag to the property which can be set when the property needs to be updated
       this.selectedModelProps.forEach(param => {
         if (param.type == 'number') {
-          param.args[0].value = explain.modelState.models[this.selectedModelName][param.target]
+          param.args[0].value = explain.modelState.models[this.selectedModelName][param.target] * param.args[0].factor
         }
         if (param.type == 'boolean') {
           param.args[0].value = explain.modelState.models[this.selectedModelName][param.target]
@@ -326,6 +323,15 @@ export default {
         if (param.type == 'string') {
           param.args[0].value = explain.modelState.models[this.selectedModelName][param.target]
         }
+
+        if (param.type == 'function') {
+          param.args.forEach(arg => {
+            if (arg.is_target) {
+              arg.value = explain.modelState.models[this.selectedModelName][param.target]
+            }
+          })
+        }
+
 
         if (param.target) {
           param['value'] = explain.modelState.models[this.selectedModelName][param.target]

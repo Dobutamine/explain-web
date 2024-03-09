@@ -1,6 +1,62 @@
 export class Breathing {
   static model_type = "Breathing";
-  static model_interface = [];
+  static model_interface = [
+    {
+      name: "breathing_enabled",
+      caption: "spont breathing",
+      type: "boolean",
+      target: "breathing_enabled",
+      args: [
+        {
+          name: "breathing_enabled",
+          caption: "",
+          type: "boolean",
+          required: true,
+          value: false,
+        },
+      ],
+    },
+    {
+      name: "minute_volume_ref",
+      caption: "reference minute volume (ml/min)",
+      type: "number",
+      target: "minute_volume_ref",
+      args: [
+        {
+          name: "minute_volume_ref",
+          caption: "",
+          type: "number",
+          required: true,
+          value: true,
+          factor: 1000,
+          delta: 1,
+          rounding: 0,
+          ul: 10000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+    {
+      name: "vt_rr_ratio",
+      caption: "vt rr ratio",
+      type: "number",
+      target: "vt_rr_ratio",
+      args: [
+        {
+          name: "vt_rr_ratio",
+          caption: "",
+          type: "number",
+          required: true,
+          value: true,
+          factor: 1000,
+          delta: 0.0001,
+          rounding: 4,
+          ul: 10.0,
+          ll: 0.0,
+        },
+      ],
+    },
+  ];
 
   // independent parameters
   name = "";
