@@ -1863,42 +1863,6 @@
             "r_back": 335.11988716502117,
             "r_k": 0
         },
-        "AAR_DA": {
-            "name": "AAR_DA",
-            "description": "aortic arch to ductus arteriosus",
-            "model_type": "BloodResistor",
-            "category": "shunts",
-            "is_enabled": true,
-            "dependencies": [
-                "AAR",
-                "DA"
-            ],
-            "no_flow": true,
-            "no_back_flow": false,
-            "comp_from": "AAR",
-            "comp_to": "DA",
-            "r_for": 300.0,
-            "r_back": 300.0,
-            "r_k": 0
-        },
-        "DA_PA": {
-            "name": "DA_PA",
-            "description": "ductus arteriosus to pulmonary artery",
-            "model_type": "BloodResistor",
-            "category": "shunts",
-            "is_enabled": true,
-            "dependencies": [
-                "DA",
-                "PA"
-            ],
-            "no_flow": true,
-            "no_back_flow": false,
-            "comp_from": "DA",
-            "comp_to": "PA",
-            "r_for": 3000.0,
-            "r_back": 3000.0,
-            "r_k": 0
-        },
         "PC": {
             "name": "PC",
             "description": "pericardium",
