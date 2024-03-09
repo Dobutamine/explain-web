@@ -3,7 +3,7 @@ export class DuctusArteriosus {
   static model_interface = [
     {
       name: "no_flow",
-      caption: "ductus flow enabled",
+      caption: "ductus flow disabled",
       type: "boolean",
       target: "no_flow",
       args: [
@@ -17,52 +17,28 @@ export class DuctusArteriosus {
       ],
     },
     {
-      name: "open_ductus",
-      caption: "set ductus arteriosus diameter",
-      type: "function",
-      target: "diameter",
+      name: "_current_diameter",
+      caption: "diameter (mm)",
+      type: "number",
+      target: "_current_diameter",
       args: [
         {
           name: "diameter",
-          caption: "new diameter(mm)",
+          caption: "",
           type: "number",
           required: true,
-          value: 0.0,
+          value: true,
           factor: 1.0,
           delta: 0.1,
           rounding: 1,
-          ul: 10.0,
-          ll: 0.0,
-        },
-        {
-          name: "in_time",
-          caption: "in time(s)",
-          type: "number",
-          required: false,
-          value: 5.0,
-          factor: 1.0,
-          delta: 1,
-          rounding: 0,
-          ul: 360.0,
-          ll: 0,
-        },
-        {
-          name: "at_time",
-          caption: "at time(s)",
-          type: "number",
-          required: false,
-          value: 0.0,
-          factor: 1.0,
-          delta: 1,
-          rounding: 0,
-          ul: 360.0,
-          ll: 0,
+          ul: 100.0,
+          ll: 0.1,
         },
       ],
     },
     {
       name: "length",
-      caption: "ductus length (mm)",
+      caption: "length (mm)",
       type: "number",
       target: "length",
       args: [
@@ -82,7 +58,7 @@ export class DuctusArteriosus {
     },
     {
       name: "non_lin_factor",
-      caption: "non linear factor (mmhg)",
+      caption: "non linear factor",
       type: "number",
       target: "non_lin_factor",
       args: [
@@ -160,9 +136,6 @@ export class DuctusArteriosus {
     let _comp_from = this.da_in + "_" + this.da_model;
     let _comp_to = this.da_model + "_" + this.da_out;
 
-    console.log(_comp_from);
-    console.log(_comp_to);
-
     this._pda_in = this._model_engine.models[_comp_from];
     this._pda_out = this._model_engine.models[_comp_to];
 
@@ -193,9 +166,6 @@ export class DuctusArteriosus {
 
       // calculate the resistance
       res = this.calc_resistance(this.diameter, this.length, this.viscosity);
-    } else {
-      this._pda_in.no_flow = false;
-      this._pda_out.no_flow = false;
     }
 
     // set the resistances
@@ -228,9 +198,6 @@ export class DuctusArteriosus {
         ) {
           this._diameter_stepsize = 0.0;
           this._current_diameter = this._target_diameter;
-          if (this._target_diameter < 0.11) {
-            this.no_flow = true;
-          }
         }
       }
     }
@@ -244,7 +211,7 @@ export class DuctusArteriosus {
       );
       return;
     }
-    if (new_diameter < 0.1) {
+    if (new_diameter <= 0.1) {
       this.close_ductus(in_time, at_time);
     }
     this.no_flow = false;

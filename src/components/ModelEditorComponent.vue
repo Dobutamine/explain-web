@@ -33,7 +33,7 @@
               <div v-for="(arg, index_arg) in field.args" :key="index_arg">
                 <div v-if="arg.required == true" class="text-white" :style="{ 'font-size': '10px' }">
                   <q-input
-                    v-model="field.value"
+                    v-model="arg.value"
                     :max="arg.ul"
                     :min="arg.ll"
                     :step="arg.delta"
@@ -59,7 +59,7 @@
               <div v-for="(arg, index_arg) in field.args" :key="index_arg">
                 <div v-if="arg.required == true" class="text-white" :style="{ 'font-size': '10px' }">
                   <q-input
-                    v-model="field.value"
+                    v-model="arg.value"
                     color="blue"
                     hide-hint
                     filled
@@ -83,7 +83,7 @@
               <div v-for="(arg, index_arg) in field.args" :key="index_arg">
                 <div v-if="arg.required == true" class="text-white col" :style="{ 'font-size': '10px' }">
                   <q-toggle
-                    v-model="field.value"
+                    v-model="arg.value"
                     color="primary"
                     size="sm"
                     hide-hint
@@ -288,6 +288,19 @@ export default {
             })
             explain.callModelFunction(function_name, function_args)
           }
+
+          if (prop.type == 'number') {
+            let p = this.selectedModelName + "." + prop.name
+            explain.setPropValue(p, parseFloat(prop.args[0].value), parseFloat(this.changeInTime), 0)
+          }
+          if (prop.type == 'boolean') {
+            let p = this.selectedModelName + "." + prop.name
+            explain.setPropValue(p, prop.args[0].value, 0, 0)
+          }
+          if (prop.type == 'string') {
+            let p = this.selectedModelName + "." + prop.name
+            explain.setPropValue(p, prop.args[0].value, 0, 0)
+          }
         }
         prop.state_changed = false
       })
@@ -304,6 +317,16 @@ export default {
       this.selectedModelProps = [...Object.values(explain.modelState.models[this.selectedModelName].model_interface)]
       // add a flag to the property which can be set when the property needs to be updated
       this.selectedModelProps.forEach(param => {
+        if (param.type == 'number') {
+          param.args[0].value = explain.modelState.models[this.selectedModelName][param.target]
+        }
+        if (param.type == 'boolean') {
+          param.args[0].value = explain.modelState.models[this.selectedModelName][param.target]
+        }
+        if (param.type == 'string') {
+          param.args[0].value = explain.modelState.models[this.selectedModelName][param.target]
+        }
+
         if (param.target) {
           param['value'] = explain.modelState.models[this.selectedModelName][param.target]
         }
