@@ -300,6 +300,8 @@ export default {
           }
         }
         prop.state_changed = false
+        // update the model state
+        explain.getModelState()
       })
 
       this.show_current_value = false
@@ -308,6 +310,7 @@ export default {
     cancel() {
       this.selectedModelName = ""
       this.selectedModelProps = {}
+      explain.getModelState()
     },
     selectModel () {
       // copy, don't reference the interfacing items

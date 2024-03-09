@@ -7,11 +7,10 @@ export { BloodResistor } from "./core_models/BloodResistor";
 export { BloodTimeVaryingElastance } from "./core_models/BloodTimeVaryingElastance";
 export { BloodValve } from "./core_models/BloodValve";
 export { Brain } from "./core_models/Brain";
-export { Breathing  } from "./core_models/Breathing";
+export { Breathing } from "./core_models/Breathing";
 export { Circulation } from "./core_models/Circulation";
 export { Container } from "./core_models/Container";
 export { Drugs } from "./core_models/Drugs";
-export { DuctusArteriosus } from "./core_models/DuctusArteriosus";
 export { Fluids } from "./core_models/Fluids";
 export { Gas } from "./core_models/Gas";
 export { GasCapacitance } from "./core_models/GasCapacitance";
@@ -29,5 +28,4 @@ export { ArtificialWhomb } from "./device_models/ArtificialWhomb";
 export { Ecls } from "./device_models/Ecls";
 export { Resuscitation } from "./device_models/Resuscitation";
 export { Ventilator } from "./device_models/Ventilator";
-
-
+export { Shunts } from "./core_models/Shunts";
