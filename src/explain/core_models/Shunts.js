@@ -2,7 +2,28 @@ import { BloodCapacitance, BloodResistor } from "../ModelIndex";
 
 export class Shunts {
   static model_type = "Shunts";
-  static model_interface = [];
+  static model_interface = [
+    {
+      name: "da_diameter",
+      caption: "ductus arteriosus diameter (mm)",
+      type: "number",
+      target: "da_diameter",
+      args: [
+        {
+          name: "da_diameter",
+          caption: "",
+          type: "number",
+          required: true,
+          value: true,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0,
+          ul: 10.0,
+          ll: 0.1,
+        },
+      ],
+    },
+  ];
 
   // independent parameters
   name = "";
@@ -11,29 +32,38 @@ export class Shunts {
   is_enabled = false;
   dependencies = [];
   viscosity = 6.0;
+  fo_enabled = true;
   fo_diameter = 2.0;
   fo_length = 2.0;
   fo_in = "LA";
   fo_out = "RA";
+  fo_res_backflow_factor = 1.0;
   fo_r_k = 1000;
+  vsd_enabled = true;
   vsd_diameter = 2.0;
   vsd_length = 2.0;
   vsd_in = "LV";
   vsd_out = "RV";
+  vsd_res_backflow_factor = 1.0;
   vsd_r_k = 1000;
+  da_enabled = true;
   da_diameter = 2.0;
   da_length = 2.0;
   da_in = "AAR";
   da_in_res = 300;
+  da_in_res_backflow_factor = 1.0;
   da_in_r_k = 1000;
   da_out = "PA";
+  da_out_res_backflow_factor = 1.0;
   da_out_r_k = 1000;
   da_u_vol = 0.0002;
   da_el_base = 50000;
   da_el_k = 1000.0;
+  ips_enabled = true;
   ips_in = "PA";
   ips_out = "PV";
   ips_res = 30719;
+  ips_res_backflow_factor = 1.0;
   ips_r_k = 1000;
   viscosity = 6.0;
 
@@ -112,34 +142,74 @@ export class Shunts {
   }
 
   calc_model() {
+    // set the enabled flows
+    this._da_in.no_flow = !this.da_enabled;
+    this._da_out.no_flow = !this.da_enabled;
+    this._ips.no_flow = !this.ips_enabled;
+    this._vsd.no_flow = !this.vsd_enabled;
+    this._fo.no_flow = !this.fo_enabled;
+
+    // set the shunts properties
+    if (!this._da_out.no_flow) {
+      this.da_res = this.calc_resistance(
+        this.da_diameter,
+        this.da_length,
+        this.viscosity
+      );
+      this._da_out.r_for = this.da_res;
+      this._da_out.r_back = this.da_res * this.da_out_res_backflow_factor;
+      this._da_out.r_k = this.da_out_r_k;
+    }
+
+    if (!this._fo.no_flow) {
+      this.fo_res = this.calc_resistance(
+        this.fo_diameter,
+        this.fo_length,
+        this.viscosity
+      );
+      this._fo.r_for = this.fo_res;
+      this._fo.r_back = this.fo_res * this.fo_res_backflow_factor;
+      this._fo.r_k = this.fo_r_k;
+    }
+
+    if (!this._vsd.no_flow) {
+      this.vsd_res = this.calc_resistance(
+        this.vsd_diameter,
+        this.vsd_length,
+        this.viscosity
+      );
+      this._vsd.r_for = this.vsd_res;
+      this._vsd.r_back = this.vsd_res * this.vsd_res_backflow_factor;
+      this._vsd.r_k = this.vsd_r_k;
+    }
+
+    if (!this._ips.no_flow) {
+      this._ips.r_for = this.ips_res;
+      this._ips.r_back = this.ips_res * this.ips_res_backflow_factor;
+      this._ips.r_k = this.ips_r_k;
+    }
+
     this.da_flow = this._da_out.flow;
     this.da_flow_lmin = this._da_out.flow * 60.0;
+    // calculate the velocity = flow_rate (in m^3/s) / (pi * radius^2) in m/s
+    let area = Math.pow((this.da_diameter * 0.001) / 2.0, 2.0) * Math.PI; // in m^2
+    // flow is in l/s
+    if (area > 0) {
+      this.da_velocity = (this.da_flow * 0.001) / area;
+      this.da_velocity = this.da_velocity * 4.0;
+    }
 
     this.ips_flow = this._ips.flow;
     this.ips_flow_lmin = this._ips.flow * 60.0;
 
+    this.fo_flow = this._fo.flow;
+    this.fo_flow_lmin = this._fo.flow * 60.0;
+
+    this.vsd_flow = this._vsd.flow;
+    this.vsd_flow_lmin = this._vsd.flow * 60.0;
+
     // do the model step of the ventilator parts
     this._shunts.forEach((_shunt) => _shunt.step_model());
-  }
-
-  set_fo_resistance() {}
-
-  set_vsd_resistance() {}
-
-  set_ips_resistance() {}
-
-  set_da_resistance() {
-    // calculate the duct resistance
-    this.da_res = this.calc_resistance(
-      this.da_diameter,
-      this.da_length,
-      this.viscosity
-    );
-    this._da_in.r_for = this.da_in_res;
-    this._da_in.r_back = this.da_in_res;
-
-    this._da_out.r_for = this.da_res;
-    this._da_out.r_back = this.da_res;
   }
 
   build_da() {
@@ -182,8 +252,8 @@ export class Shunts {
         value: this._model_engine.models[this.da_in],
       },
       { key: "comp_to", value: this._da },
-      { key: "r_for", value: 100000 },
-      { key: "r_back", value: 100000 },
+      { key: "r_for", value: this.da_in_res },
+      { key: "r_back", value: this.da_in_res },
       { key: "r_k", value: this.da_in_r_k },
     ]);
     // add the shunt to the list
@@ -204,15 +274,12 @@ export class Shunts {
         value: this._da,
       },
       { key: "comp_to", value: this._model_engine.models[this.da_out] },
-      { key: "r_for", value: 100000 },
-      { key: "r_back", value: 100000 },
+      { key: "r_for", value: this.da_res },
+      { key: "r_back", value: this.da_res },
       { key: "r_k", value: this.da_out_r_k },
     ]);
     // add the shunt to the list
     this._shunts.push(this._da_out);
-
-    // calculate the resistance of the duct
-    this.set_da_resistance();
   }
 
   build_fo() {
@@ -232,9 +299,6 @@ export class Shunts {
     ]);
     // add the shunt to the list
     this._shunts.push(this._fo);
-
-    // calculate the resistance of the fo
-    this.set_fo_resistance();
   }
 
   build_vsd() {
@@ -254,9 +318,6 @@ export class Shunts {
     ]);
     // add the shunt to the list
     this._shunts.push(this._vsd);
-
-    // calculate the resistance of the vsd
-    this.set_vsd_resistance();
   }
 
   build_ips() {
@@ -276,9 +337,6 @@ export class Shunts {
     ]);
     // add the shunt to the list
     this._shunts.push(this._ips);
-
-    // calculate the resistance of the ips
-    this.set_ips_resistance();
   }
 
   calc_resistance(diameter, length, viscosity = 6.0) {
