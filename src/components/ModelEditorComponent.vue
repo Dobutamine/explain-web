@@ -45,7 +45,7 @@
                         stack-label
                         type="number"
                         style="font-size: 14px"
-                        class="q-mr-md q-mb-sm"
+                        class="q-mb-sm"
                         squared>
                     </q-input>
                   </div>
@@ -53,9 +53,11 @@
             </div>
 
             <div v-if="field.type == 'boolean'">
-                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-                  {{ field.caption }}
-                  <div class="text-white" :style="{ 'font-size': '10px' }">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary row" :style="{ 'font-size': '14px' }">
+                  <div class="col">
+                    {{ field.caption }}
+                  </div>
+                  <div class="col-1 text-white" :style="{ 'font-size': '10px' }">
                     <q-toggle
                         v-model="field.value"
                         color="primary"
@@ -65,7 +67,7 @@
                         dense
                         @update:model-value="changePropState(field, arg)"
                         style="font-size: 14px"
-                        class="q-mr-md q-mb-sm">
+                        class="q-mb-sm">
                       </q-toggle>
                   </div>
               </div>
@@ -84,7 +86,7 @@
                         @update:model-value="changePropState(field, arg)"
                         stack-label
                         style="font-size: 14px"
-                        class="q-mr-md q-mb-sm"
+                        class="q-mb-sm"
                         squared>
                       </q-input>
                   </div>
@@ -96,86 +98,85 @@
                   {{ field.caption }}
                 </div>
                 <div v-for="(arg, index_arg) in field.args" :key="index_arg">
-                  <div class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '10px' }">
-                    {{ arg.caption }}
-                  </div>
-                  <div v-if="arg.type == 'number'">
-                    <q-input
-                      v-model.number="arg.value"
-                      type="number"
-                      :max="arg.ul"
-                      :min="arg.ll"
-                      :step="arg.delta"
-                      color="blue"
-                      hide-hint
-                      filled
-                      dense
-                      @update:model-value="changePropState(field, arg)"
-                      stack-label
-                      style="font-size: 14px"
-                      class="q-ml-md q-mr-md q-mb-sm"
-                      squared>
-                    </q-input>
-                  </div>
-                  <div v-if="arg.type == 'boolean'">
-                    <q-toggle
-                        v-model="arg.value"
-                        color="primary"
-                        size="sm"
+                    <div class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '10px' }">
+                        {{ arg.caption }}
+                    </div>
+                    <div v-if="arg.type == 'number'">
+                      <q-input
+                        v-model.number="arg.value"
+                        type="number"
+                        :max="arg.ul"
+                        :min="arg.ll"
+                        :step="arg.delta"
+                        color="blue"
                         hide-hint
                         filled
                         dense
                         @update:model-value="changePropState(field, arg)"
+                        stack-label
                         style="font-size: 14px"
-                        class="q-mr-md q-mb-sm">
-                      </q-toggle>
-                  </div>
-                  <div v-if="arg.type == 'string'">
-                    <q-input
-                      v-model="arg.value"
-                      color="blue"
-                      hide-hint
-                      filled
-                      dense
-                      @update:model-value="changePropState(field, arg)"
-                      stack-label
-                      style="font-size: 14px"
-                      class="q-ml-md q-mr-md q-mb-sm"
-                      squared>
-                    </q-input>
-                  </div>
-                </div>
-
-
-
-              <div v-if="field.optionals" class="row justify-end q-mr-md">
-                  <q-btn :color="optionals_color" dense size="xs" @click="showOptionals(field)">{{ optionals_caption }}</q-btn>
+                        class="q-ml-md q-mr-md q-mb-sm"
+                        squared>
+                      </q-input>
+                    </div>
+                    <div v-if="arg.type == 'boolean'" class="col-1">
+                      <q-toggle
+                          v-model="arg.value"
+                          color="primary"
+                          size="sm"
+                          hide-hint
+                          filled
+                          dense
+                          @update:model-value="changePropState(field, arg)"
+                          style="font-size: 14px"
+                          class="q-ml-md q-mt-xs q-mb-sm">
+                        </q-toggle>
+                    </div>
+                    <div v-if="arg.type == 'string'">
+                      <q-input
+                        v-model="arg.value"
+                        color="blue"
+                        hide-hint
+                        filled
+                        dense
+                        @update:model-value="changePropState(field, arg)"
+                        stack-label
+                        style="font-size: 14px"
+                        class="q-ml-md q-mr-md q-mb-sm"
+                        squared>
+                      </q-input>
+                    </div>
                 </div>
             </div>
           </div>
+        </div>
+        <div v-if="selectedModelName" class="row justify-end q-mt-sm q-mr-md">
+          <q-btn :color="optionals_color" size="sm" @click="showOptionals">{{ optionals_caption }}</q-btn>
         </div>
       </div>
 
 
       <div v-if="selectedModelProps.length > 0" class="row q-ma-md">
         <q-btn
-          class="col q-ma-xs"
+          class="col-1 q-ma-sm"
           color="negative"
           size="xs"
           dense
           icon="fa-solid fa-xmark"
           @click="cancel"
+          style="font-size: 8px; width: 100px;"
         ></q-btn>
         <q-btn
-          class="col q-ma-xs"
-          color="primary"
+          class="col-1 q-ma-sm"
+          color="secondary"
           size="xs"
           icon="fa-solid fa-check"
           @click="updateValue"
+          style="font-size: 8px; width: 100px;"
           ></q-btn
         >
         <q-select
-          label-color="secondary"
+          label-color="white"
           class="q-ml-md q-mr-md col"
           v-model="changeInTime"
           :options="timeOptions"
@@ -213,8 +214,8 @@ export default {
       redraw: 1,
       selectedModelName: "",
       show_optionals: false,
-      optionals_caption: "SHOW OPTIONALS",
-      optionals_color: "negative",
+      optionals_caption: "SHOW ADVANCED",
+      optionals_color: "black",
       modelNames: [],
       timeOptions: [1, 5, 10, 30, 60, 120, 240, 360],
       changeInTime: 5,
@@ -230,12 +231,12 @@ export default {
     showOptionals(param) {
       if (this.show_optionals == true) {
         this.show_optionals = false
-        this.optionals_caption = "SHOW OPTIONALS"
-        this.optionals_color = "negative"
+        this.optionals_caption = "SHOW ADVANCED"
+        this.optionals_color = "black"
       } else {
         this.show_optionals = true
-        this.optionals_caption = "HIDE OPTIONALS"
-        this.optionals_color = "primary"
+        this.optionals_caption = "HIDE ADVANCED"
+        this.optionals_color = "negative"
       }
     },
     updateValue() {

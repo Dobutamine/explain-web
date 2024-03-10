@@ -7,7 +7,7 @@ export class Shunts {
       target: "da_enabled",
       caption: "ductus arteriosus enabled",
       type: "boolean",
-      optional: false,
+      optional: true,
     },
     {
       target: "da_diameter",
@@ -19,24 +19,6 @@ export class Shunts {
       rounding: 0,
       ul: 10.0,
       ll: 0.1,
-    },
-    {
-      target: "test_function",
-      caption: "test function on shunts",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "test_value",
-          caption: "test value in mm",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 0,
-          ul: 10.0,
-          ll: 0.1,
-        },
-      ],
     },
   ];
 
