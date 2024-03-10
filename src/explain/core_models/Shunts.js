@@ -1,6 +1,9 @@
+import { BloodCapacitance, BloodResistor } from "../ModelIndex";
+
 export class Shunts {
   static model_type = "Shunts";
   static model_interface = [];
+
   // independent parameters
   name = "";
   model_type = "";
@@ -12,31 +15,44 @@ export class Shunts {
   fo_length = 2.0;
   fo_in = "LA";
   fo_out = "RA";
-  fo_el_k = 1000;
+  fo_r_k = 1000;
   vsd_diameter = 2.0;
   vsd_length = 2.0;
   vsd_in = "LV";
   vsd_out = "RV";
-  vsd_el_k = 1000;
+  vsd_r_k = 1000;
   da_diameter = 2.0;
   da_length = 2.0;
   da_in = "AAR";
+  da_in_res = 300;
+  da_in_r_k = 1000;
   da_out = "PA";
+  da_out_r_k = 1000;
   da_u_vol = 0.0002;
   da_el_base = 50000;
   da_el_k = 1000.0;
   ips_in = "PA";
   ips_out = "PV";
-  ips_r_for = 30719;
-  ips_r_back = 30719;
+  ips_res = 30719;
   ips_r_k = 1000;
   viscosity = 6.0;
 
   // dependent parameters
-  // FO res 2457 both sides
-  // VSD 2457
-  // IPS 30719  resk 1000
-  // PDA
+  da_flow = 0.0;
+  da_flow_lmin = 0.0;
+  da_res = 10000000;
+  da_velocity = 0.0;
+  ips_flow = 0.0;
+  ips_flow_lmin = 0.0;
+  ips_velocity = 0.0;
+  fo_flow = 0.0;
+  fo_flow_lmin = 0.0;
+  fo_velocity = 0.0;
+  fo_res = 10000000;
+  vsd_flow = 0.0;
+  vsd_flow_lmin = 0.0;
+  vsd_velocity = 0.0;
+  vsd_res = 10000000;
 
   // // calculate the velocity = flow_rate (in m^3/s) / (pi * radius^2) in m/s
   // let area = Math.pow((this.diameter * 0.001) / 2.0, 2.0) * Math.PI; // in m^2
@@ -46,74 +62,17 @@ export class Shunts {
   //   this.velocity = this.velocity * 4.0;
   // }
 
-  /*
-          "DA": {
-            "name": "DA",
-            "description": "ductus arteriosus",
-            "model_type": "BloodCapacitance",
-            "is_enabled": true,
-            "category": "arteries",
-            "dependencies": [],
-            "vol": 0.0001925987499367087,
-            "u_vol": 0.0001925987499367087,
-            "el_base": 50000,
-            "el_k": 0.0,
-            "solutes": {
-                "na": 138.0,
-                "k": 3.5,
-                "ca": 1.0,
-                "cl": 108.0,
-                "lact": 1.0,
-                "mg": 0.75
-            },
-            "aboxy": {
-                "tco2": 27.18,
-                "to2": 7.0,
-                "ph": 7.4,
-                "po2": 0.0,
-                "pco2": 35.0,
-                "hco3": 25.0,
-                "be": 0.0,
-                "so2": 98.0,
-                "sid": 35.9,
-                "albumin": 25.0,
-                "phosphates": 1.64,
-                "uma": 0.0,
-                "dpg": 5.0,
-                "hemoglobin": 8.0,
-                "temp": 37.0
-            },
-            "drugs": {},
-            "act_factor": 0.0,
-            "ans_activity_factor": 1.0,
-            "u_vol_factor": 1.0,
-            "u_vol_ans_factor": 1.0,
-            "u_vol_drug_factor": 1.0,
-            "u_vol_scaling_factor": 1.0,
-            "el_base_factor": 1.0,
-            "el_base_ans_factor": 1.0,
-            "el_base_drug_factor": 1.0,
-            "el_base_scaling_factor": 1.0,
-            "el_k_factor": 1.0,
-            "el_k_ans_factor": 1.0,
-            "el_k_drug_factor": 1.0,
-            "el_k_scaling_factor": 1.0,
-            "fixed_composition": false,
-            "pres": 0.0,
-            "pres_in": 0.0,
-            "pres_out": 0.0,
-            "pres_tm": 0.0,
-            "pres_ext": 0.0,
-            "pres_cc": 0.0,
-            "pres_atm": 0.0,
-            "pres_mus": 0.0
-        },
-    */
-
   // local parameters
   _model_engine = {};
   _is_initialized = false;
   _t = 0.0005;
+  _ips = {};
+  _da = {};
+  _da_in = {};
+  _da_out = {};
+  _vsd = {};
+  _fo = {};
+  _shunts = [];
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -136,6 +95,12 @@ export class Shunts {
     // set the modeling step size
     this._t = this._model_engine.modeling_stepsize;
 
+    // build the shunts
+    this.build_da();
+    this.build_fo();
+    this.build_ips();
+    this.build_vsd();
+
     // set the flag to model is initialized
     this._is_initialized = true;
   }
@@ -146,7 +111,175 @@ export class Shunts {
     }
   }
 
-  calc_model() {}
+  calc_model() {
+    this.da_flow = this._da_out.flow;
+    this.da_flow_lmin = this._da_out.flow * 60.0;
+
+    this.ips_flow = this._ips.flow;
+    this.ips_flow_lmin = this._ips.flow * 60.0;
+
+    // do the model step of the ventilator parts
+    this._shunts.forEach((_shunt) => _shunt.step_model());
+  }
+
+  set_fo_resistance() {}
+
+  set_vsd_resistance() {}
+
+  set_ips_resistance() {}
+
+  set_da_resistance() {
+    // calculate the duct resistance
+    this.da_res = this.calc_resistance(
+      this.da_diameter,
+      this.da_length,
+      this.viscosity
+    );
+    this._da_in.r_for = this.da_in_res;
+    this._da_in.r_back = this.da_in_res;
+
+    this._da_out.r_for = this.da_res;
+    this._da_out.r_back = this.da_res;
+  }
+
+  build_da() {
+    // define a blood capacitance which represents the ductus arteriosus
+    this._da = new BloodCapacitance(
+      this._model_engine,
+      "_da",
+      "BloodCapacitance"
+    );
+
+    this._da.init_model([
+      { key: "is_enabled", value: true },
+      { key: "fixed_composition", value: false },
+      { key: "vol", value: this.da_u_vol },
+      { key: "u_vol", value: this.da_u_vol },
+      { key: "el_base", value: this.da_el_base },
+      { key: "el_k", value: this.da_el_k },
+    ]);
+    // set the electrolytes
+    this._da.solutes = { ...this._model_engine.models["AA"].solutes };
+    this._da.aboxy = { ...this._model_engine.models["AA"].aboxy };
+    // calculate the starting pressure
+    this._da.calc_model();
+    // add the shunt to the list
+    this._shunts.push(this._da);
+
+    // connect the ductus
+    this._da_in = new BloodResistor(
+      this._model_engine,
+      "_da_in",
+      "BloodResistor"
+    );
+
+    this._da_in.init_model([
+      { key: "is_enabled", value: true },
+      { key: "no_flow", value: false },
+      { key: "no_back_flow", value: false },
+      {
+        key: "comp_from",
+        value: this._model_engine.models[this.da_in],
+      },
+      { key: "comp_to", value: this._da },
+      { key: "r_for", value: 100000 },
+      { key: "r_back", value: 100000 },
+      { key: "r_k", value: this.da_in_r_k },
+    ]);
+    // add the shunt to the list
+    this._shunts.push(this._da_in);
+
+    this._da_out = new BloodResistor(
+      this._model_engine,
+      "_da_out",
+      "BloodResistor"
+    );
+
+    this._da_out.init_model([
+      { key: "is_enabled", value: true },
+      { key: "no_flow", value: false },
+      { key: "no_back_flow", value: false },
+      {
+        key: "comp_from",
+        value: this._da,
+      },
+      { key: "comp_to", value: this._model_engine.models[this.da_out] },
+      { key: "r_for", value: 100000 },
+      { key: "r_back", value: 100000 },
+      { key: "r_k", value: this.da_out_r_k },
+    ]);
+    // add the shunt to the list
+    this._shunts.push(this._da_out);
+
+    // calculate the resistance of the duct
+    this.set_da_resistance();
+  }
+
+  build_fo() {
+    this._fo = new BloodResistor(this._model_engine, "_fo", "BloodResistor");
+    this._fo.init_model([
+      { key: "is_enabled", value: true },
+      { key: "no_flow", value: false },
+      { key: "no_back_flow", value: false },
+      {
+        key: "comp_from",
+        value: this._model_engine.models[this.fo_in],
+      },
+      { key: "comp_to", value: this._model_engine.models[this.fo_out] },
+      { key: "r_for", value: 100000 },
+      { key: "r_back", value: 100000 },
+      { key: "r_k", value: this.fo_r_k },
+    ]);
+    // add the shunt to the list
+    this._shunts.push(this._fo);
+
+    // calculate the resistance of the fo
+    this.set_fo_resistance();
+  }
+
+  build_vsd() {
+    this._vsd = new BloodResistor(this._model_engine, "_vsd", "BloodResistor");
+    this._vsd.init_model([
+      { key: "is_enabled", value: true },
+      { key: "no_flow", value: false },
+      { key: "no_back_flow", value: false },
+      {
+        key: "comp_from",
+        value: this._model_engine.models[this.vsd_in],
+      },
+      { key: "comp_to", value: this._model_engine.models[this.vsd_out] },
+      { key: "r_for", value: 100000 },
+      { key: "r_back", value: 100000 },
+      { key: "r_k", value: this.vsd_r_k },
+    ]);
+    // add the shunt to the list
+    this._shunts.push(this._vsd);
+
+    // calculate the resistance of the vsd
+    this.set_vsd_resistance();
+  }
+
+  build_ips() {
+    this._ips = new BloodResistor(this._model_engine, "_ips", "BloodResistor");
+    this._ips.init_model([
+      { key: "is_enabled", value: true },
+      { key: "no_flow", value: false },
+      { key: "no_back_flow", value: false },
+      {
+        key: "comp_from",
+        value: this._model_engine.models[this.ips_in],
+      },
+      { key: "comp_to", value: this._model_engine.models[this.ips_out] },
+      { key: "r_for", value: this.ips_res },
+      { key: "r_back", value: this.ips_res },
+      { key: "r_k", value: this.ips_r_k },
+    ]);
+    // add the shunt to the list
+    this._shunts.push(this._ips);
+
+    // calculate the resistance of the ips
+    this.set_ips_resistance();
+  }
 
   calc_resistance(diameter, length, viscosity = 6.0) {
     // resistance is calculated using Poiseuille's Law : R = (8 * n * L) / (PI * r^4)
