@@ -24,176 +24,140 @@
         />
       </div>
 
+      <!-- non optionals -->
       <div v-if="redraw > 0.0" class="q-ma-sm">
         <div v-for="(field, index) in selectedModelProps" :key="index">
-
-          <div v-if="field.type == 'number'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-                {{ field.caption }}
-              <div v-for="(arg, index_arg) in field.args" :key="index_arg">
-                <div v-if="arg.required == true" class="text-white" :style="{ 'font-size': '10px' }">
-                  <q-input
-                    v-model="arg.value"
-                    :max="arg.ul"
-                    :min="arg.ll"
-                    :step="arg.delta"
-                    color="blue"
-                    hide-hint
-                    filled
-                    dense
-                    @update:model-value="changePropState(field, arg)"
-                    stack-label
-                    type="number"
-                    style="font-size: 14px"
-                    class="q-mr-md q-mb-sm"
-                    squared>
-                  </q-input>
-                </div>
+          <div v-if="field.optional == false || show_optionals == true">
+            <div v-if="field.type == 'number'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+                  {{ field.caption }}
+                  <div class="text-white" :style="{ 'font-size': '10px' }">
+                    <q-input
+                        v-model="field.value"
+                        :max="field.ul"
+                        :min="field.ll"
+                        :step="field.delta"
+                        color="blue"
+                        hide-hint
+                        filled
+                        dense
+                        @update:model-value="changePropState(field, arg)"
+                        stack-label
+                        type="number"
+                        style="font-size: 14px"
+                        class="q-mr-md q-mb-sm"
+                        squared>
+                    </q-input>
+                  </div>
               </div>
+            </div>
+
+            <div v-if="field.type == 'boolean'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+                  {{ field.caption }}
+                  <div class="text-white" :style="{ 'font-size': '10px' }">
+                    <q-toggle
+                        v-model="field.value"
+                        color="primary"
+                        size="sm"
+                        hide-hint
+                        filled
+                        dense
+                        @update:model-value="changePropState(field, arg)"
+                        style="font-size: 14px"
+                        class="q-mr-md q-mb-sm">
+                      </q-toggle>
+                  </div>
+              </div>
+            </div>
+
+            <div v-if="field.type == 'string'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+                  {{ field.caption }}
+                  <div class="text-white" :style="{ 'font-size': '10px' }">
+                    <q-input
+                        v-model="field.value"
+                        color="blue"
+                        hide-hint
+                        filled
+                        dense
+                        @update:model-value="changePropState(field, arg)"
+                        stack-label
+                        style="font-size: 14px"
+                        class="q-mr-md q-mb-sm"
+                        squared>
+                      </q-input>
+                  </div>
+              </div>
+            </div>
+
+            <div v-if="field.type == 'function'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+                  {{ field.caption }}
+                </div>
+                <div v-for="(arg, index_arg) in field.args" :key="index_arg">
+                  <div class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '10px' }">
+                    {{ arg.caption }}
+                  </div>
+                  <div v-if="arg.type == 'number'">
+                    <q-input
+                      v-model.number="arg.value"
+                      type="number"
+                      :max="arg.ul"
+                      :min="arg.ll"
+                      :step="arg.delta"
+                      color="blue"
+                      hide-hint
+                      filled
+                      dense
+                      @update:model-value="changePropState(field, arg)"
+                      stack-label
+                      style="font-size: 14px"
+                      class="q-ml-md q-mr-md q-mb-sm"
+                      squared>
+                    </q-input>
+                  </div>
+                  <div v-if="arg.type == 'boolean'">
+                    <q-toggle
+                        v-model="arg.value"
+                        color="primary"
+                        size="sm"
+                        hide-hint
+                        filled
+                        dense
+                        @update:model-value="changePropState(field, arg)"
+                        style="font-size: 14px"
+                        class="q-mr-md q-mb-sm">
+                      </q-toggle>
+                  </div>
+                  <div v-if="arg.type == 'string'">
+                    <q-input
+                      v-model="arg.value"
+                      color="blue"
+                      hide-hint
+                      filled
+                      dense
+                      @update:model-value="changePropState(field, arg)"
+                      stack-label
+                      style="font-size: 14px"
+                      class="q-ml-md q-mr-md q-mb-sm"
+                      squared>
+                    </q-input>
+                  </div>
+                </div>
+
+
+
+              <div v-if="field.optionals" class="row justify-end q-mr-md">
+                  <q-btn :color="optionals_color" dense size="xs" @click="showOptionals(field)">{{ optionals_caption }}</q-btn>
+                </div>
             </div>
           </div>
-
-          <div v-if="field.type == 'string'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-                {{ field.caption }}
-              <div v-for="(arg, index_arg) in field.args" :key="index_arg">
-                <div v-if="arg.required == true" class="text-white" :style="{ 'font-size': '10px' }">
-                  <q-input
-                    v-model="arg.value"
-                    color="blue"
-                    hide-hint
-                    filled
-                    dense
-                    @update:model-value="changePropState(field, arg)"
-                    stack-label
-                    style="font-size: 14px"
-                    class="q-mr-md q-mb-sm"
-                    squared>
-                  </q-input>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div v-if="field.type == 'boolean'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary row" :style="{ 'font-size': '14px' }">
-              <div class="col">
-                {{ field.caption }}
-              </div>
-              <div v-for="(arg, index_arg) in field.args" :key="index_arg">
-                <div v-if="arg.required == true" class="text-white col" :style="{ 'font-size': '10px' }">
-                  <q-toggle
-                    v-model="arg.value"
-                    color="primary"
-                    size="sm"
-                    hide-hint
-                    filled
-                    dense
-                    @update:model-value="changePropState(field, arg)"
-                    style="font-size: 14px"
-                    class="q-mr-md q-mb-sm">
-                  </q-toggle>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div v-if="field.type == 'function'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.caption }}
-            </div>
-            <div v-for="(arg, index_arg) in field.args" :key="index_arg">
-              <div v-if="arg.required == true" class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '10px' }">
-                {{ arg.caption }}
-              </div>
-              <div v-if="arg.type == 'number' && arg.required == true">
-                <q-input
-                  v-model.number="arg.value"
-                  type="number"
-                  :max="arg.ul"
-                  :min="arg.ll"
-                  :step="arg.delta"
-                  color="blue"
-                  hide-hint
-                  filled
-                  dense
-                  @update:model-value="changePropState(field, arg)"
-                  stack-label
-                  style="font-size: 14px"
-                  class="q-ml-md q-mr-md q-mb-sm"
-                  squared>
-                </q-input>
-              </div>
-              <div v-if="arg.type == 'string' && arg.required == true">
-                <q-input
-                  v-model="arg.value"
-                  color="blue"
-                  hide-hint
-                  filled
-                  dense
-                  @update:model-value="changePropState(field, arg)"
-                  stack-label
-                  style="font-size: 14px"
-                  class="q-ml-md q-mr-md q-mb-sm"
-                  squared>
-                </q-input>
-              </div>
-
-            </div>
-
-            <div v-if="show_optionals">
-              <div v-for="(arg, index_arg) in field.args" :key="index_arg">
-                <div v-if="arg.required == false" class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '10px' }">
-                  {{ arg.caption }}
-                </div>
-                <div v-if="arg.type == 'number' && arg.required == false">
-                  <q-input
-                    v-model.number="arg.value"
-                    type="number"
-                    :max="arg.ul"
-                    :min="arg.ll"
-                    :step="arg.delta"
-                    color="blue"
-                    hide-hint
-                    filled
-                    dense
-                    @update:model-value="changePropState(field, arg)"
-                    stack-label
-                    style="font-size: 14px"
-                    class="q-ml-md q-mr-md q-mb-sm"
-                    squared>
-                  </q-input>
-                </div>
-                <div v-if="arg.type == 'string' && arg.required == false">
-                <q-input
-                  v-model="arg.value"
-                  color="blue"
-                  hide-hint
-                  filled
-                  dense
-                  @update:model-value="changePropState(field, arg)"
-                  stack-label
-                  style="font-size: 14px"
-                  class="q-ml-md q-mr-md q-mb-sm"
-                  squared>
-                </q-input>
-              </div>
-              </div>
-            </div>
-
-
-          <div v-if="field.optionals" class="row justify-end q-mr-md">
-              <q-btn :color="optionals_color" dense size="xs" @click="showOptionals(field)">{{ optionals_caption }}</q-btn>
-            </div>
-          </div>
-
         </div>
       </div>
-      <div v-if="selectedModelProps.length > 0" class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
 
-      </div>
+
       <div v-if="selectedModelProps.length > 0" class="row q-ma-md">
-
         <q-btn
           class="col q-ma-xs"
           color="negative"
@@ -278,7 +242,7 @@ export default {
       this.selectedModelProps.forEach(prop => {
         if (prop.state_changed) {
           if (prop.type == 'function') {
-            let function_name = this.selectedModelName + "." + prop.name;
+            let function_name = this.selectedModelName + "." + prop.target;
             let function_args = []
             prop.args.forEach(arg => {
               function_args.push(arg.value)
@@ -287,21 +251,19 @@ export default {
           }
 
           if (prop.type == 'number') {
-            let p = this.selectedModelName + "." + prop.name
-            explain.setPropValue(p, parseFloat(prop.args[0].value / prop.args[0].factor) , parseFloat(this.changeInTime), 0)
+            let p = this.selectedModelName + "." + prop.target
+            explain.setPropValue(p, parseFloat(prop.value / prop.factor) , parseFloat(this.changeInTime), 0)
           }
           if (prop.type == 'boolean') {
-            let p = this.selectedModelName + "." + prop.name
-            explain.setPropValue(p, prop.args[0].value, 0, 0)
+            let p = this.selectedModelName + "." + prop.target
+            explain.setPropValue(p, prop.value, 0, 0)
           }
           if (prop.type == 'string') {
-            let p = this.selectedModelName + "." + prop.name
-            explain.setPropValue(p, prop.args[0].value, 0, 0)
+            let p = this.selectedModelName + "." + prop.target
+            explain.setPropValue(p, prop.value, 0, 0)
           }
         }
         prop.state_changed = false
-        // update the model state
-        explain.getModelState()
       })
 
       this.show_current_value = false
@@ -317,30 +279,24 @@ export default {
       this.selectedModelProps = [...Object.values(explain.modelState.models[this.selectedModelName].model_interface)]
       // add a flag to the property which can be set when the property needs to be updated
       this.selectedModelProps.forEach(param => {
+        param['state_changed'] = false
         if (param.type == 'number') {
-          param.args[0].value = explain.modelState.models[this.selectedModelName][param.target] * param.args[0].factor
+          param['value'] = explain.modelState.models[this.selectedModelName][param.target] * param.factor
         }
         if (param.type == 'boolean') {
-          param.args[0].value = explain.modelState.models[this.selectedModelName][param.target]
+          param['value'] = explain.modelState.models[this.selectedModelName][param.target]
         }
         if (param.type == 'string') {
-          param.args[0].value = explain.modelState.models[this.selectedModelName][param.target]
+          param['value'] = explain.modelState.models[this.selectedModelName][param.target]
         }
 
         if (param.type == 'function') {
           param.args.forEach(arg => {
-            if (arg.is_target) {
-              arg.value = explain.modelState.models[this.selectedModelName][param.target]
+            if (arg.target) {
+              arg['value'] = explain.modelState.models[this.selectedModelName][arg.target]
             }
           })
         }
-
-
-        if (param.target) {
-          param['value'] = explain.modelState.models[this.selectedModelName][param.target]
-        }
-        param['show_optionals'] = false
-        param['state_changed'] = false
       })
       this.show_current_value = true
     },

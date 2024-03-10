@@ -4,17 +4,32 @@ export class Shunts {
   static model_type = "Shunts";
   static model_interface = [
     {
-      name: "da_diameter",
+      target: "da_enabled",
+      caption: "ductus arteriosus enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "da_diameter",
       caption: "ductus arteriosus diameter (mm)",
       type: "number",
-      target: "da_diameter",
+      optional: false,
+      factor: 1,
+      delta: 0.1,
+      rounding: 0,
+      ul: 10.0,
+      ll: 0.1,
+    },
+    {
+      target: "test_function",
+      caption: "test function on shunts",
+      type: "function",
+      optional: false,
       args: [
         {
-          name: "da_diameter",
-          caption: "",
+          target: "test_value",
+          caption: "test value in mm",
           type: "number",
-          required: true,
-          value: true,
           factor: 1,
           delta: 0.1,
           rounding: 0,
@@ -104,6 +119,8 @@ export class Shunts {
   _fo = {};
   _shunts = [];
 
+  test_value = 33.0;
+
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
     // name of the model
@@ -139,6 +156,10 @@ export class Shunts {
     if (this.is_enabled && this._is_initialized) {
       this.calc_model();
     }
+  }
+
+  test_function(value, t, x) {
+    console.log(value, t, x);
   }
 
   calc_model() {
@@ -340,29 +361,32 @@ export class Shunts {
   }
 
   calc_resistance(diameter, length, viscosity = 6.0) {
-    // resistance is calculated using Poiseuille's Law : R = (8 * n * L) / (PI * r^4)
+    if (diameter > 0.0 && length > 0.0) {
+      // resistance is calculated using Poiseuille's Law : R = (8 * n * L) / (PI * r^4)
 
-    // we have to watch the units carefully where we have to make sure that the units in the formula are
-    // resistance is in mmHg * s / l
-    // L = length in meters from millimeters
-    // r = radius in meters from millimeters
-    // n = viscosity in centiPoise
+      // we have to watch the units carefully where we have to make sure that the units in the formula are
+      // resistance is in mmHg * s / l
+      // L = length in meters from millimeters
+      // r = radius in meters from millimeters
+      // n = viscosity in centiPoise
 
-    // convert viscosity from centiPoise to Pa * s
-    let n_pas = viscosity / 1000.0;
+      // convert viscosity from centiPoise to Pa * s
+      let n_pas = viscosity / 1000.0;
 
-    // convert the length to meters
-    let length_meters = length / 1000.0;
+      // convert the length to meters
+      let length_meters = length / 1000.0;
 
-    // calculate radius in meters
-    let radius_meters = diameter / 2 / 1000.0;
+      // calculate radius in meters
+      let radius_meters = diameter / 2 / 1000.0;
 
-    // calculate the resistance    Pa *  / m3
-    let res =
-      (8.0 * n_pas * length_meters) / (Math.PI * Math.pow(radius_meters, 4));
+      // calculate the resistance    Pa *  / m3
+      let res =
+        (8.0 * n_pas * length_meters) / (Math.PI * Math.pow(radius_meters, 4));
 
-    // convert resistance of Pa/m3 to mmHg/l
-    res = res * 0.00000750062;
-    return res;
+      // convert resistance of Pa/m3 to mmHg/l
+      res = res * 0.00000750062;
+      return res;
+    }
+    return 100000000;
   }
 }
