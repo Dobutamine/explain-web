@@ -156,7 +156,7 @@
       </div>
 
 
-      <div v-if="selectedModelProps.length > 0" class="row q-ma-md">
+      <div v-if="selectedModelProps.length > 0 && state_changed" class="row q-ma-md">
         <q-btn
           class="col-1 q-ma-sm"
           color="negative"
@@ -219,11 +219,12 @@ export default {
       modelNames: [],
       timeOptions: [1, 5, 10, 30, 60, 120, 240, 360],
       changeInTime: 5,
-      show_current_value: true
+      state_changed: false
     };
   },
   methods: {
     changePropState(param, arg) {
+      this.state_changed = true
       param.state_changed = true
       this.redraw += 1
 
@@ -267,12 +268,13 @@ export default {
         prop.state_changed = false
       })
 
-      this.show_current_value = false
+      this.state_changed = false
 
     },
     cancel() {
       this.selectedModelName = ""
       this.selectedModelProps = {}
+      this.state_changed = false
       explain.getModelState()
     },
     selectModel () {
@@ -299,7 +301,6 @@ export default {
           })
         }
       })
-      this.show_current_value = true
     },
     processAvailableModels() {
       this.modelNames = []
@@ -312,6 +313,7 @@ export default {
     }
   },
   beforeUnmount() {
+    this.state_changed = false
   },
   mounted() {
     this.$bus.on("state", this.processAvailableModels)
