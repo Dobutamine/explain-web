@@ -219,7 +219,7 @@
             :style="{ 'font-size': '12px' }"
           >
           </div>
-            <q-select
+            <q-select v-if="!presetEditMode"
               class="q-pa-xs"
               v-model="selectedPresetName"
               square
@@ -232,6 +232,36 @@
               stack-label
               @update:model-value="selectPreset"
             />
+            <q-input v-if="presetEditMode"
+              class="q-pa-xs"
+              v-model="newPresetName"
+              square
+              label="preset name"
+              hide-hint
+              dense
+              dark
+              :style="{'width': '200px'}"
+              stack-label
+            />
+            <q-btn v-if="presetEditMode"
+              class="q-ma-sm"
+              color="black"
+              size="xs"
+              icon="fa-solid fa-plus"
+              @click="addToPresets"
+              style="font-size: 8px; width: 50px;"
+
+            ><q-tooltip>add to presets</q-tooltip></q-btn>
+
+            <q-btn v-if="!presetEditMode"
+              class="q-ma-sm"
+              color="black"
+              size="xs"
+              icon="fa-solid fa-bookmark"
+              @click="makeNewPreset"
+              style="font-size: 8px; width: 50px;"
+            ><q-tooltip>bookmark current configuration</q-tooltip></q-btn>
+
     </div>
     <!-- statistics -->
     <div v-if="show_summary && isEnabled" class="q-mt-sm">
@@ -546,8 +576,10 @@ export default {
       redrawInterval: -1,
       redrawTimer: 0.0,
       debug_mode: true,
+      presetEditMode: false,
       selectedPresetName: "",
       presetNames: [],
+      newPresetName: "",
       presets: {
         "PDA Doppler": {
           props: ["Shunts.da_velocity", "Shunts.da_diameter"],
@@ -573,6 +605,29 @@ export default {
     };
   },
   methods: {
+    makeNewPreset() {
+      this.presetEditMode = true
+
+    },
+    addToPresets() {
+      this.presetEditMode = false
+      if (this.newPresetName) {
+        let preset = {
+          props: [this.p1, this.p2, this.p3],
+          autoscale: this.autoscale,
+          y_min: this.y_min,
+          y_max: this.y_max,
+          factors: this.scaling,
+          chart1_factor: this.chart1_factor,
+          chart2_factor: this.chart2_factor,
+          chart3_factor: this.chart3_factor,
+        }
+        this.presetNames.push(this.newPresetName)
+        this.presets[this.newPresetName] = {...preset}
+        this.newPresetName = ""
+      }
+
+    },
     clearProps() {
       this.p1 = ""
       this.selectedModel1 = ""
@@ -591,7 +646,6 @@ export default {
       }
     },
     processDefault(settings) {
-      console.log(settings)
       let _default = [...settings.props]
       explain.watchModelProps(_default)
 
