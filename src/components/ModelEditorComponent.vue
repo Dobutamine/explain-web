@@ -4,7 +4,6 @@
       class="q-mt-es row gutter text-overline justify-center"
       @click="isEnabled = !isEnabled"
     >
-      {{ title }}
     </div>
     <div v-if="isEnabled">
       <div

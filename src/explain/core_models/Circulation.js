@@ -2,112 +2,87 @@ export class Circulation {
   static model_type = "Circulation";
   static model_interface = [
     {
-      name: "change_svr",
+      target: "change_svr",
       caption: "systemic vascular resistance factor",
       type: "function",
-      target: "svr_change",
-      optionals: false,
+      optional: false,
       args: [
         {
-          name: "change_svr",
-          caption: "",
+          target: "svr_change",
           type: "number",
-          required: true,
-          value: 1.0,
-          factor: 1.0,
-          delta: 0.01,
-          rounding: 2,
-          ul: 100.0,
-          ll: 0.01,
-          is_target: true,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0,
+          ul: 10.0,
+          ll: 0.1,
         },
       ],
     },
     {
-      name: "change_pvr",
+      target: "change_pvr",
       caption: "pulmonary vascular resistance factor",
       type: "function",
-      target: "pvr_change",
-      optionals: false,
+      optional: false,
       args: [
         {
-          name: "change_pvr",
-          caption: "",
+          target: "pvr_change",
           type: "number",
-          required: true,
-          value: 1.0,
-          factor: 1.0,
-          delta: 0.01,
-          rounding: 2,
-          ul: 100.0,
-          ll: 0.01,
-          is_target: true,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0,
+          ul: 10.0,
+          ll: 0.1,
         },
       ],
     },
     {
-      name: "change_venpool",
-      caption: "venous pool factor",
+      target: "change_venpool",
+      caption: "venous volume factor",
       type: "function",
-      target: "venpool_change",
-      optionals: false,
+      optional: false,
       args: [
         {
-          name: "change_venpool",
-          caption: "",
+          target: "venpool_change",
           type: "number",
-          required: true,
-          value: 1.0,
-          factor: 1.0,
-          delta: 0.01,
-          rounding: 2,
-          ul: 100.0,
-          ll: 0.01,
-          is_target: true,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0,
+          ul: 10.0,
+          ll: 0.1,
         },
       ],
     },
     {
-      name: "change_syst_arterial_compliance",
+      target: "change_syst_arterial_compliance",
       caption: "systemic arterial compliance factor",
       type: "function",
-      target: "systartcomp_change",
-      optionals: false,
+      optional: true,
       args: [
         {
-          name: "change_syst_arterial_compliance",
-          caption: "",
+          target: "systartcomp_change",
           type: "number",
-          required: true,
-          value: 1.0,
-          factor: 1.0,
-          delta: 0.01,
-          rounding: 2,
-          ul: 100.0,
-          ll: 0.01,
-          is_target: true,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0,
+          ul: 10.0,
+          ll: 0.1,
         },
       ],
     },
     {
-      name: "change_pulm_arterial_compliance",
+      target: "change_pulm_arterial_compliance",
       caption: "pulmonary arterial compliance factor",
       type: "function",
-      target: "pulmartcomp_change",
-      optionals: false,
+      optional: true,
       args: [
         {
-          name: "change_pulm_arterial_compliance",
-          caption: "",
+          target: "pulmartcomp_change",
           type: "number",
-          required: true,
-          value: 1.0,
-          factor: 1.0,
-          delta: 0.01,
-          rounding: 2,
-          ul: 100.0,
-          ll: 0.01,
-          is_target: true,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0,
+          ul: 10.0,
+          ll: 0.1,
         },
       ],
     },
@@ -125,8 +100,6 @@ export class Circulation {
   systemic_veins = [];
   svr_targets = [];
   pvr_targets = [];
-  ofo_targets = [];
-  vsd_targets = [];
   ips_targets = [];
   venpool_targets = [];
   heart_aorta = [];
@@ -136,9 +109,6 @@ export class Circulation {
   heart_pulmonary_veins = [];
 
   // dependent parameters
-  fo_change = 1.0;
-  vsd_change = 1.0;
-  lungshunt_change = 1.0;
   pvr_change = 1.0;
   svr_change = 1.0;
   venpool_change = 1.0;
@@ -162,9 +132,6 @@ export class Circulation {
   _heart_aorta = [];
   _heart_pulmonary_artery = [];
   _heart_pulmonary_veins = [];
-  _ofo_targets = [];
-  _vsd_targets = [];
-  _ips_targets = [];
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -228,18 +195,6 @@ export class Circulation {
       this._heart_pulmonary_veins.push(this._model_engine.models[res]);
     });
 
-    this.ofo_targets.forEach((res) => {
-      this._ofo_targets.push(this._model_engine.models[res]);
-    });
-
-    this.vsd_targets.forEach((res) => {
-      this._vsd_targets.push(this._model_engine.models[res]);
-    });
-
-    this.ips_targets.forEach((res) => {
-      this._ips_targets.push(this._model_engine.models[res]);
-    });
-
     // set the flag to model is initialized
     this._is_initialized = true;
   }
@@ -251,45 +206,6 @@ export class Circulation {
   }
 
   calc_model() {}
-
-  change_ofo(change_forward, change_backward = -1) {
-    if (change_forward >= 0.0) {
-      this.fo_change = change_forward;
-      this._ofo_targets.forEach((target) => {
-        target.r_for_factor = change_forward;
-        target.r_back_factor = change_forward;
-        if (change_backward >= 0.0) {
-          target.r_back_factor = change_backward;
-        }
-      });
-    }
-  }
-
-  change_vsd(change_forward, change_backward = -1) {
-    if (change_forward >= 0.0) {
-      this.vsd_change = change_forward;
-      this._vsd_targets.forEach((target) => {
-        target.r_for_factor = change_forward;
-        target.r_back_factor = change_forward;
-        if (change_backward >= 0.0) {
-          target.r_back_factor = change_backward;
-        }
-      });
-    }
-  }
-
-  change_lungshunt(change_forward, change_backward = -1) {
-    if (change_forward > 0.0) {
-      this.lungshunt_change = change_forward;
-      this._ips_targets.forEach((target) => {
-        target.r_for_factor = change_forward;
-        target.r_back_factor = change_forward;
-        if (change_backward >= 0.0) {
-          target.r_back_factor = change_backward;
-        }
-      });
-    }
-  }
 
   change_pvr(change_forward, change_backward = -1) {
     if (change_forward > 0.0) {

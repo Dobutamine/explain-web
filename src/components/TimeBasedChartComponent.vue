@@ -99,6 +99,59 @@
         :data="chartData"
         style="max-height: 300px;"
     />
+        <!-- presets -->
+        <div v-if="isEnabled && showPresets"
+        class="text-overline justify-center q-gutter-xs row q-mb-sm"
+      >
+          <div
+            class="q-mb-sm text-left text-secondary"
+            :style="{ 'font-size': '12px' }"
+          >
+          </div>
+            <q-select v-if="!presetEditMode"
+              class="q-pa-xs"
+              v-model="selectedPresetName"
+              square
+              label="selected preset"
+              hide-hint
+              :options="presetNames"
+              dense
+              dark
+              :style="{'width': '200px'}"
+              stack-label
+              @update:model-value="selectPreset"
+            />
+            <q-input v-if="presetEditMode"
+              class="q-pa-xs"
+              v-model="newPresetName"
+              square
+              label="new preset name"
+              hide-hint
+              dense
+              dark
+              :style="{'width': '200px'}"
+              stack-label
+            />
+            <q-btn v-if="presetEditMode"
+              class="q-ma-sm"
+              color="black"
+              size="xs"
+              icon="fa-solid fa-plus"
+              @click="addToPresets"
+              style="font-size: 8px; width: 50px;"
+
+            ><q-tooltip>add to presets</q-tooltip></q-btn>
+
+            <q-btn v-if="!presetEditMode"
+              class="q-ma-sm"
+              color="black"
+              size="xs"
+              icon="fa-solid fa-bookmark"
+              @click="makeNewPreset"
+              style="font-size: 8px; width: 50px;"
+            ><q-tooltip>bookmark current configuration</q-tooltip></q-btn>
+
+    </div>
     <!-- bottom buttons -->
     <div v-if="isEnabled"
         class="q-ma-sm text-overline justify-center q-gutter-sm row"
@@ -210,59 +263,8 @@
                 icon="fa-solid fa-trash-can"
                 ></q-btn>
     </div>
-    <!-- presets -->
-    <div v-if="isEnabled && showPresets"
-        class="text-overline justify-center q-gutter-xs row q-mb-sm"
-      >
-          <div
-            class="q-mb-sm text-left text-secondary"
-            :style="{ 'font-size': '12px' }"
-          >
-          </div>
-            <q-select v-if="!presetEditMode"
-              class="q-pa-xs"
-              v-model="selectedPresetName"
-              square
-              label="selected preset"
-              hide-hint
-              :options="presetNames"
-              dense
-              dark
-              :style="{'width': '200px'}"
-              stack-label
-              @update:model-value="selectPreset"
-            />
-            <q-input v-if="presetEditMode"
-              class="q-pa-xs"
-              v-model="newPresetName"
-              square
-              label="preset name"
-              hide-hint
-              dense
-              dark
-              :style="{'width': '200px'}"
-              stack-label
-            />
-            <q-btn v-if="presetEditMode"
-              class="q-ma-sm"
-              color="black"
-              size="xs"
-              icon="fa-solid fa-plus"
-              @click="addToPresets"
-              style="font-size: 8px; width: 50px;"
 
-            ><q-tooltip>add to presets</q-tooltip></q-btn>
 
-            <q-btn v-if="!presetEditMode"
-              class="q-ma-sm"
-              color="black"
-              size="xs"
-              icon="fa-solid fa-bookmark"
-              @click="makeNewPreset"
-              style="font-size: 8px; width: 50px;"
-            ><q-tooltip>bookmark current configuration</q-tooltip></q-btn>
-
-    </div>
     <!-- statistics -->
     <div v-if="show_summary && isEnabled" class="q-mt-sm">
           <div

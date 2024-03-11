@@ -43,7 +43,26 @@
                   background: 'grey-10',
                   width: '5px',
                   opacity: 0.5 }">
-                  <ModelEditor></ModelEditor>
+                  <div v-for="(index) in no_of_modeleditor" :key="index">
+                    <ModelEditor></ModelEditor>
+                  </div>
+
+                  <q-btn
+                    class="q-pb-xs q-pt-xs q-ma-sm"
+                    color="secondary"
+                    size="xs"
+                    icon="fa-solid fa-plus"
+                    @click="addModelEditor"
+                    style="font-size: 8px; width: 95%;"
+                  ></q-btn>
+                  <q-btn v-if="no_of_modeleditor > 1"
+                    class="q-pb-xs q-pt-xs q-ma-sm"
+                    color="negative"
+                    size="xs"
+                    icon="fa-solid fa-minus"
+                    @click="removeModelEditor"
+                    style="font-size: 8px; width: 95%;"
+                  ></q-btn>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="circulatory_system">
@@ -312,6 +331,7 @@ export default defineComponent({
       tab_left: "model_editor",
       tab_center: "time_chart",
       tab_right: "numerics",
+      no_of_modeleditor: 1,
       chart_alive: true,
       ventilator_alive: true,
       heart_alive: false,
@@ -507,6 +527,15 @@ export default defineComponent({
           this.xy_alive = true
           break;
 
+      }
+    },
+    addModelEditor() {
+      this.no_of_modeleditor += 1
+      explain.getModelState()
+    },
+    removeModelEditor() {
+      if (this.no_of_modeleditor > 1) {
+        this.no_of_modeleditor -= 1
       }
     },
     updateWatchlist() {

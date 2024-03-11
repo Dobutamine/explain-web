@@ -40,6 +40,7 @@ export class GasCapacitance {
 
   // dependent parameters
   pres = 0.0;
+  pres_rel = 0.0;
   pres_max = -1000.0;
   pres_min = 1000.0;
   pres_mean = 0.0;
@@ -161,6 +162,7 @@ export class GasCapacitance {
 
     // calculate the total pressure
     this.pres = this.pres_in + this.pres_out;
+    this.pres_rel = this.pres - this.pres_atm;
 
     // analyze the pressures and volume
     this.analyze();
