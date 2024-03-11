@@ -212,21 +212,26 @@
     </div>
     <!-- presets -->
     <div v-if="isEnabled && showPresets"
-        class="text-overline justify-center q-gutter-xs row"
+        class="text-overline justify-center q-gutter-xs row q-mb-sm"
       >
-        <div v-for="(field, index) in presets" :key="index">
           <div
-            class="col q-mb-sm text-left text-secondary"
+            class="q-mb-sm text-left text-secondary"
             :style="{ 'font-size': '12px' }"
           >
           </div>
-            <q-btn
-              @click="processDefault(field)"
-              color="primary"
-              size="sm"
-              squared
-            >{{ index }}</q-btn>
-        </div>
+            <q-select
+              class="q-pa-xs"
+              v-model="selectedPresetName"
+              square
+              label="selected preset"
+              hide-hint
+              :options="presetNames"
+              dense
+              dark
+              :style="{'width': '200px'}"
+              stack-label
+              @update:model-value="selectPreset"
+            />
     </div>
     <!-- statistics -->
     <div v-if="show_summary && isEnabled" class="q-mt-sm">
@@ -482,7 +487,7 @@ export default {
   data() {
     return {
       presetsEnabled: true,
-      showPresets: false,
+      showPresets: true,
       show_summary: false,
       rtWindow: 3,
       rtWindowValidated: 3,
@@ -541,8 +546,29 @@ export default {
       redrawInterval: -1,
       redrawTimer: 0.0,
       debug_mode: true,
+      selectedPresetName: "",
+      presetNames: [],
       presets: {
-        "vent": ["Ventilator.pres"]
+        "PDA Doppler": {
+          props: ["Shunts.da_velocity", "Shunts.da_diameter"],
+          autoscale: false,
+          y_min: 0,
+          y_max: 7,
+          factors: false,
+          chart1_factor: 1.0,
+          chart2_factor: 1.0,
+          chart3_factor: 1.0
+        },
+        "Heart": {
+          props: ["LV.pres", "RV.pres"],
+          autoscale: true,
+          y_min: 0,
+          y_max: 7,
+          factors: false,
+          chart1_factor: 1.0,
+          chart2_factor: 1.0,
+          chart3_factor: 1.0
+        }
       }
     };
   },
@@ -557,10 +583,28 @@ export default {
       this.p3 = ""
       this.selectedModel3 = ""
       this.selectedProp3 = ""
+      this.selectedPresetName = ""
     },
-    processDefault(props) {
-      let _default = [...props]
+    selectPreset(preset_name) {
+      if (preset_name) {
+        this.processDefault(this.presets[preset_name])
+      }
+    },
+    processDefault(settings) {
+      console.log(settings)
+      let _default = [...settings.props]
       explain.watchModelProps(_default)
+
+      this.autoscale = settings.autoscale
+      this.y_min = settings.y_min
+      this.y_max = settings.y_max
+      this.autoscaling()
+
+      this.scaling = settings.factors
+      this.chart1_factor = settings.chart1_factor
+      this.chart2_factor = settings.chart2_factor
+      this.chart3_factor = settings.chart3_factor
+      this.toggleFactors()
 
       if (_default.length > 0) {
         let p1 = _default[0].split(".")
@@ -1030,8 +1074,12 @@ export default {
       this.dataUpdateRt()
     });
 
+    // listen for state and data changes
     this.$bus.on("state", this.processAvailableModels)
     this.$bus.on("data", () => this.dataUpdate())
+
+    // fill the presets selector
+    this.presetNames = Object.keys(this.presets)
 
   },
 };

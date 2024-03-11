@@ -100,6 +100,9 @@ export class Shunts {
   _vsd = {};
   _fo = {};
   _shunts = [];
+  _da_volume_counter = 0.0;
+  _fo_volume_counter = 0.0;
+  _vsd_volume_counter = 0.0;
 
   test_value = 33.0;
 
@@ -193,7 +196,7 @@ export class Shunts {
     }
 
     this.da_flow = this._da_out.flow;
-    this.da_flow_lmin = this._da_out.flow * 60.0;
+    this.da_flow_lmin = this._da_out.flow_lmin;
     // calculate the velocity = flow_rate (in m^3/s) / (pi * radius^2) in m/s
     let area = Math.pow((this.da_diameter * 0.001) / 2.0, 2.0) * Math.PI; // in m^2
     // flow is in l/s
@@ -203,13 +206,13 @@ export class Shunts {
     }
 
     this.ips_flow = this._ips.flow;
-    this.ips_flow_lmin = this._ips.flow * 60.0;
+    this.ips_flow_lmin = this._ips.flow_lmin;
 
     this.fo_flow = this._fo.flow;
-    this.fo_flow_lmin = this._fo.flow * 60.0;
+    this.fo_flow_lmin = this._fo.flow_lmin;
 
     this.vsd_flow = this._vsd.flow;
-    this.vsd_flow_lmin = this._vsd.flow * 60.0;
+    this.vsd_flow_lmin = this._vsd.flow_lmin;
 
     // do the model step of the ventilator parts
     this._shunts.forEach((_shunt) => _shunt.step_model());

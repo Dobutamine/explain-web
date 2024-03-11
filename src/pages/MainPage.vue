@@ -373,7 +373,6 @@ export default defineComponent({
             {label: "SpO2(pre)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_pre"]},
             {label: "SpO2(post)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_post"]},
             {label: "SpO2(ven)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_ven"]}
-
           ]
         },
         lab_numerics: {
