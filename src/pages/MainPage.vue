@@ -49,7 +49,7 @@
 
                   <q-btn
                     class="q-pb-xs q-pt-xs q-ma-sm"
-                    color="secondary"
+                    color="grey-9"
                     size="xs"
                     icon="fa-solid fa-plus"
                     @click="addModelEditor"

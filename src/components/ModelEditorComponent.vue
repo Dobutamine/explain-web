@@ -5,12 +5,12 @@
       @click="isEnabled = !isEnabled"
     >
     </div>
-    <div v-if="isEnabled">
+    <div>
       <div
-        class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center"
+        class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center row"
       >
         <q-select
-          class="q-pa-xs row"
+          class="q-pa-xs col"
           v-model="selectedModelName"
           square
           label="select model"
@@ -19,10 +19,39 @@
           dense
           dark
           stack-label
-          @update:model-value="selectModel"
+          @update:model-value="modelChanged"
         />
+        <q-btn
+          class="col-1 q-ma-sm"
+          color="grey-9"
+          size="xs"
+          dense
+          :icon="collaps_icon"
+          @click="collapsEditor"
+          style="font-size: 8px"
+        ></q-btn>
+        <q-btn
+          v-if="selectedModelName"
+          class="col-1 q-ma-sm"
+          :color="optionals_color"
+          size="xs"
+          dense
+          icon="fa-solid fa-bars"
+          @click="showOptionals"
+          style="font-size: 8px"
+        ><q-tooltip>{{ optionals_text }}</q-tooltip></q-btn>
+        <q-btn
+          v-if="selectedModelName"
+          class="col-1 q-ma-sm"
+          color="grey-9"
+          size="xs"
+          dense
+          icon="fa-solid fa-xmark"
+          @click="cancel"
+          style="font-size: 8px"
+        ><q-tooltip>clear model editor</q-tooltip></q-btn>
       </div>
-
+      <div v-if="isEnabled">
       <!-- non optionals -->
       <div v-if="redraw > 0.0" class="q-ma-sm">
         <div v-for="(field, index) in selectedModelProps" :key="index">
@@ -149,47 +178,34 @@
             </div>
           </div>
         </div>
-        <div v-if="selectedModelName" class="row justify-end q-mt-sm q-mr-md">
-          <q-btn :color="optionals_color" size="sm" @click="showOptionals">{{ optionals_caption }}</q-btn>
-        </div>
       </div>
 
+      <div v-if="selectedModelName && state_changed" class="row q-ma-md">
 
-      <div v-if="selectedModelProps.length > 0 && state_changed" class="row q-ma-md">
-        <q-btn
-          class="col-1 q-ma-sm"
-          color="negative"
-          size="xs"
-          dense
-          icon="fa-solid fa-xmark"
-          @click="cancel"
-          style="font-size: 8px; width: 100px;"
-        ></q-btn>
-        <q-btn
-          class="col-1 q-ma-sm"
-          color="secondary"
-          size="xs"
-          icon="fa-solid fa-check"
-          @click="updateValue"
-          style="font-size: 8px; width: 100px;"
-          ></q-btn
-        >
         <q-select
           label-color="white"
           class="q-ml-md q-mr-md col"
           v-model="changeInTime"
           :options="timeOptions"
-          label="in sec."
-          style="font-size: 10px"
+          label="apply changes in (sec)"
+          style="font-size: 12px"
           hide-hint
           dense
           dark
           stack-label
         />
-
-
+        <q-btn
+          class="col-4 q-ma-sm"
+          color="negative"
+          size="xs"
+          dense
+          icon="fa-solid fa-play"
+          @click="updateValue"
+          style="font-size: 8px"
+          ><q-tooltip>apply property changes</q-tooltip></q-btn>
       </div>
 
+      </div>
     </div>
   </q-card>
 </template>
@@ -214,14 +230,27 @@ export default {
       selectedModelName: "",
       show_optionals: false,
       optionals_caption: "SHOW ADVANCED",
-      optionals_color: "black",
+      optionals_color: "grey-9",
+      optionals_text: "show advanced properties",
       modelNames: [],
       timeOptions: [1, 5, 10, 30, 60, 120, 240, 360],
       changeInTime: 5,
-      state_changed: false
+      state_changed: false,
+      collaps_icon: "fa-solid fa-chevron-up"
     };
   },
   methods: {
+    collapsEditor() {
+
+      if (this.isEnabled) {
+        this.isEnabled = false
+        this.collaps_icon ="fa-solid fa-chevron-up"
+      } else {
+        this.isEnabled = true
+        this.collaps_icon ="fa-solid fa-chevron-down"
+      }
+
+    },
     changePropState(param, arg) {
       this.state_changed = true
       param.state_changed = true
@@ -232,10 +261,12 @@ export default {
       if (this.show_optionals == true) {
         this.show_optionals = false
         this.optionals_caption = "SHOW ADVANCED"
-        this.optionals_color = "black"
+        this.optionals_text ="show advanced properties"
+        this.optionals_color = "grey-9"
       } else {
         this.show_optionals = true
         this.optionals_caption = "HIDE ADVANCED"
+        this.optionals_text ="hide advanced properties"
         this.optionals_color = "negative"
       }
     },
@@ -275,6 +306,12 @@ export default {
       this.selectedModelProps = {}
       this.state_changed = false
       explain.getModelState()
+    },
+    modelChanged() {
+      // enable the full control
+      this.isEnabled = true
+      this.collaps_icon ="fa-solid fa-chevron-down"
+      this.selectModel()
     },
     selectModel () {
       // copy, don't reference the interfacing items

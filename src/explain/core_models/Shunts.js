@@ -7,7 +7,7 @@ export class Shunts {
       target: "da_enabled",
       caption: "ductus arteriosus enabled",
       type: "boolean",
-      optional: true,
+      optional: false,
     },
     {
       target: "da_diameter",
@@ -24,7 +24,7 @@ export class Shunts {
       target: "fo_enabled",
       caption: "formane ovale enabled",
       type: "boolean",
-      optional: true,
+      optional: false,
     },
     {
       target: "fo_diameter",
@@ -38,33 +38,27 @@ export class Shunts {
       ll: 0.1,
     },
     {
+      target: "fo_res_backflow_factor",
+      caption: "foramen ovale backflow resistance factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 1000.0,
+      ll: 0.1,
+    },
+    {
       target: "ips_enabled",
       caption: "intrapulmonary shunt enabled",
       type: "boolean",
-      optional: true,
+      optional: false,
     },
     {
       target: "ips_res_factor",
       caption: "intrapulmonary shunt resistance factor",
       type: "number",
-      optional: true,
-      factor: 1,
-      delta: 0.1,
-      rounding: 2,
-      ul: 10.0,
-      ll: 0.1,
-    },
-    {
-      target: "vsd_enabled",
-      caption: "ventricular septal defect enabled",
-      type: "boolean",
-      optional: true,
-    },
-    {
-      target: "vsd_diameter",
-      caption: "ventricular septal defect diameter (mm)",
-      type: "number",
-      optional: true,
+      optional: false,
       factor: 1,
       delta: 0.1,
       rounding: 1,
@@ -72,15 +66,32 @@ export class Shunts {
       ll: 0.1,
     },
     {
-      target: "da_el_base",
-      caption: "ductus arteriosus elastance",
+      target: "vsd_enabled",
+      caption: "vsd enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "vsd_diameter",
+      caption: "vsd diameter (mm)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 10.0,
+      ll: 0.1,
+    },
+    {
+      target: "vsd_res_backflow_factor",
+      caption: "vsd backflow resistance factor",
       type: "number",
       optional: true,
       factor: 1,
-      delta: 10,
-      rounding: 0,
-      ul: 100000000.0,
-      ll: 1000,
+      delta: 0.1,
+      rounding: 1,
+      ul: 1000.0,
+      ll: 0.1,
     },
   ];
 
@@ -94,9 +105,9 @@ export class Shunts {
   fo_enabled = true;
   fo_diameter = 2.0;
   fo_length = 2.0;
-  fo_in = "LA";
-  fo_out = "RA";
-  fo_res_backflow_factor = 1.0;
+  fo_in = "RA";
+  fo_out = "LA";
+  fo_res_backflow_factor = 10.0;
   fo_r_k = 1000;
   vsd_enabled = true;
   vsd_diameter = 2.0;
@@ -112,9 +123,11 @@ export class Shunts {
   da_el_k = 1000;
   da_diameter = 2.0;
   da_length = 2.0;
+
   da_in = "AAR";
   da_in_res_backflow_factor = 1.0;
   da_in_r_k = 1000;
+
   da_out = "PA";
   da_out_res_backflow_factor = 1.0;
   da_out_r_k = 1000;

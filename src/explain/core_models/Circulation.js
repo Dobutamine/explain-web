@@ -2,6 +2,40 @@ export class Circulation {
   static model_type = "Circulation";
   static model_interface = [
     {
+      target: "set_total_blood_volume",
+      caption: "set total blood volume (ml)",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "current_blood_volume",
+          type: "number",
+          factor: 1000,
+          delta: 1,
+          rounding: 0,
+          ul: 100000.0,
+          ll: 10.0,
+        },
+      ],
+    },
+    {
+      target: "change_syst_arterial_elastance",
+      caption: "systemic arterial elastance factor",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "systartcomp_change",
+          type: "number",
+          factor: 1,
+          delta: 0.1,
+          rounding: 2,
+          ul: 10.0,
+          ll: 0.1,
+        },
+      ],
+    },
+    {
       target: "change_svr",
       caption: "systemic arteries outflow resistance factor",
       type: "function",
@@ -12,7 +46,24 @@ export class Circulation {
           type: "number",
           factor: 1,
           delta: 0.1,
-          rounding: 0,
+          rounding: 2,
+          ul: 10.0,
+          ll: 0.1,
+        },
+      ],
+    },
+    {
+      target: "change_pulm_arterial_elastance",
+      caption: "pulmonary arterial elastance factor",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "pulmartcomp_change",
+          type: "number",
+          factor: 1,
+          delta: 0.1,
+          rounding: 2,
           ul: 10.0,
           ll: 0.1,
         },
@@ -20,7 +71,7 @@ export class Circulation {
     },
     {
       target: "change_pvr",
-      caption: "pulmonary artery outflow resistance factor",
+      caption: "pulmonary artery resistance factor",
       type: "function",
       optional: false,
       args: [
@@ -43,57 +94,6 @@ export class Circulation {
       args: [
         {
           target: "venpool_change",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 0,
-          ul: 10.0,
-          ll: 0.1,
-        },
-      ],
-    },
-    {
-      target: "set_total_blood_volume",
-      caption: "set total blood volume (ml)",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "current_blood_volume",
-          type: "number",
-          factor: 1000,
-          delta: 1,
-          rounding: 0,
-          ul: 100000.0,
-          ll: 10.0,
-        },
-      ],
-    },
-    {
-      target: "change_syst_arterial_elastance",
-      caption: "systemic arterial elastance factor",
-      type: "function",
-      optional: true,
-      args: [
-        {
-          target: "systartcomp_change",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 2,
-          ul: 10.0,
-          ll: 0.1,
-        },
-      ],
-    },
-    {
-      target: "change_pulm_arterial_elastance",
-      caption: "pulmonary arterial elastance factor",
-      type: "function",
-      optional: true,
-      args: [
-        {
-          target: "pulmartcomp_change",
           type: "number",
           factor: 1,
           delta: 0.1,

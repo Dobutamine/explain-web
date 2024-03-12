@@ -596,7 +596,7 @@ export default {
         "PDA Doppler": {
           props: ["Shunts.da_velocity"],
           autoscale: false,
-          y_min: 0,
+          y_min: -5,
           y_max: 5,
           factors: false,
           fill: true,
@@ -661,6 +661,7 @@ export default {
       }
     },
     processDefault(settings) {
+      this.clearProps()
       let _default = [...settings.props]
       explain.watchModelProps(_default)
 
