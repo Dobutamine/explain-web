@@ -22,6 +22,7 @@
           @update:model-value="modelChanged"
         />
         <q-btn
+          v-if="selectedModelName"
           class="col-1 q-ma-sm"
           color="grey-9"
           size="xs"
@@ -31,7 +32,7 @@
           style="font-size: 8px"
         ></q-btn>
         <q-btn
-          v-if="selectedModelName"
+          v-if="selectedModelName && isEnabled"
           class="col-1 q-ma-sm"
           :color="optionals_color"
           size="xs"
@@ -52,8 +53,9 @@
         ><q-tooltip>clear model editor</q-tooltip></q-btn>
       </div>
       <div v-if="isEnabled">
+
       <!-- non optionals -->
-      <div v-if="redraw > 0.0" class="q-ma-sm">
+      <div v-if="redraw > 0.0" class="q-ma-sm q-mb-md">
         <div v-for="(field, index) in selectedModelProps" :key="index">
           <div v-if="field.optional == false || show_optionals == true">
             <div v-if="field.type == 'number'">
@@ -311,6 +313,7 @@ export default {
       // enable the full control
       this.isEnabled = true
       this.collaps_icon ="fa-solid fa-chevron-down"
+      this.state_changed = false
       this.selectModel()
     },
     selectModel () {
