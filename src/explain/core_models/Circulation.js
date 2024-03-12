@@ -3,7 +3,7 @@ export class Circulation {
   static model_interface = [
     {
       target: "change_svr",
-      caption: "systemic vascular resistance factor",
+      caption: "systemic arteries outflow resistance factor",
       type: "function",
       optional: false,
       args: [
@@ -20,7 +20,7 @@ export class Circulation {
     },
     {
       target: "change_pvr",
-      caption: "pulmonary vascular resistance factor",
+      caption: "pulmonary artery outflow resistance factor",
       type: "function",
       optional: false,
       args: [
@@ -29,7 +29,7 @@ export class Circulation {
           type: "number",
           factor: 1,
           delta: 0.1,
-          rounding: 0,
+          rounding: 2,
           ul: 10.0,
           ll: 0.1,
         },
@@ -37,7 +37,7 @@ export class Circulation {
     },
     {
       target: "change_venpool",
-      caption: "venous volume factor",
+      caption: "venous pool factor",
       type: "function",
       optional: false,
       args: [
@@ -53,8 +53,25 @@ export class Circulation {
       ],
     },
     {
-      target: "change_syst_arterial_compliance",
-      caption: "systemic arterial compliance factor",
+      target: "set_total_blood_volume",
+      caption: "set total blood volume (ml)",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "current_blood_volume",
+          type: "number",
+          factor: 1000,
+          delta: 1,
+          rounding: 0,
+          ul: 100000.0,
+          ll: 10.0,
+        },
+      ],
+    },
+    {
+      target: "change_syst_arterial_elastance",
+      caption: "systemic arterial elastance factor",
       type: "function",
       optional: true,
       args: [
@@ -63,15 +80,15 @@ export class Circulation {
           type: "number",
           factor: 1,
           delta: 0.1,
-          rounding: 0,
+          rounding: 2,
           ul: 10.0,
           ll: 0.1,
         },
       ],
     },
     {
-      target: "change_pulm_arterial_compliance",
-      caption: "pulmonary arterial compliance factor",
+      target: "change_pulm_arterial_elastance",
+      caption: "pulmonary arterial elastance factor",
       type: "function",
       optional: true,
       args: [
@@ -80,7 +97,24 @@ export class Circulation {
           type: "number",
           factor: 1,
           delta: 0.1,
-          rounding: 0,
+          rounding: 2,
+          ul: 10.0,
+          ll: 0.1,
+        },
+      ],
+    },
+    {
+      target: "change_venous_elastance",
+      caption: "venous elastance factor",
+      type: "function",
+      optional: true,
+      args: [
+        {
+          target: "vencomp_change",
+          type: "number",
+          factor: 1,
+          delta: 0.1,
+          rounding: 2,
           ul: 10.0,
           ll: 0.1,
         },
@@ -107,6 +141,7 @@ export class Circulation {
   heart_superior_vena_cava = [];
   heart_pulmonary_artery = [];
   heart_pulmonary_veins = [];
+  current_blood_volume = 0.0;
 
   // dependent parameters
   pvr_change = 1.0;
@@ -159,6 +194,10 @@ export class Circulation {
       this._systemic_arteries.push(this._model_engine.models[sa]);
     });
 
+    this.pulmonary_arteries.forEach((pa) => {
+      this._pulmonary_arteries.push(this._model_engine.models[pa]);
+    });
+
     this.systemic_veins.forEach((sv) => {
       this._systemic_veins.push(this._model_engine.models[sv]);
     });
@@ -194,6 +233,8 @@ export class Circulation {
     this.heart_pulmonary_veins.forEach((res) => {
       this._heart_pulmonary_veins.push(this._model_engine.models[res]);
     });
+
+    this.current_blood_volume = this.get_total_blood_volume();
 
     // set the flag to model is initialized
     this._is_initialized = true;
@@ -242,30 +283,79 @@ export class Circulation {
     }
   }
 
-  change_syst_arterial_compliance(change) {
+  change_syst_arterial_elastance(change) {
     if (change > 0.0) {
       this.systartcomp_change = change;
       this._systemic_arteries.forEach((target) => {
-        target.el_base_factor = 1.0 / change;
+        target.el_base_factor = change;
       });
     }
   }
 
-  change_pulm_arterial_compliance(change) {
+  change_pulm_arterial_elastance(change) {
     if (change > 0.0) {
       this.pulmartcomp_change = change;
       this._pulmonary_arteries.forEach((target) => {
-        target.el_base_factor = 1.0 / change;
+        target.el_base_factor = change;
       });
     }
   }
 
-  change_venous_compliance(change) {
+  change_venous_elastance(change) {
     if (change > 0.0) {
       this.vencomp_change = change;
       this._systemic_veins.forEach((target) => {
-        target.el_base_factor = 1.0 / change;
+        target.el_base_factor = change;
       });
     }
+  }
+
+  set_total_blood_volume(new_blood_volume) {
+    let current_blood_volume = this.get_total_blood_volume();
+    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+      if (
+        model.model_type === "BloodCapacitance" ||
+        model.model_type === "BloodTimeVaryingElastance"
+      ) {
+        if (model.is_enabled) {
+          // calculate the current fraction of the blood volume in this blood containing capacitance
+          let current_fraction = model.vol / current_blood_volume;
+          let v = model.vol;
+          let vu = model.u_vol;
+          // calculate the current uvol/vol fraction
+          let f = 0.0;
+          if (model.vol > 0.0) {
+            f = model.u_vol / model.vol;
+          }
+          // add the same fraction of the desired volume change to the blood containing capacitance
+          model.vol +=
+            current_fraction * (new_blood_volume - current_blood_volume);
+
+          // change the unstressed volume
+          model.u_vol = model.vol * f;
+
+          // guard for negative volumes
+          if (model.vol < 0.0) {
+            model.vol = 0.0;
+          }
+        }
+      }
+    }
+    this.current_blood_volume = this.get_total_blood_volume();
+  }
+
+  get_total_blood_volume() {
+    let total_volume = 0.0;
+    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+      if (
+        model.model_type === "BloodCapacitance" ||
+        model.model_type === "BloodTimeVaryingElastance"
+      ) {
+        if (model.is_enabled) {
+          total_volume += model.vol;
+        }
+      }
+    }
+    return total_volume;
   }
 }

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@arction/lcjs": "^5.0.7",
+    "@quasar/cli": "^2.4.0",
     "@quasar/extras": "^1.16.4",
     "@tensorflow/tfjs": "^4.17.0",
     "chart.js": "^4.4.1",

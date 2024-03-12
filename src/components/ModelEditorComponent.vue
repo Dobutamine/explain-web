@@ -246,7 +246,7 @@ export default {
             let function_name = this.selectedModelName + "." + prop.target;
             let function_args = []
             prop.args.forEach(arg => {
-              function_args.push(arg.value)
+              function_args.push(arg.value / arg.factor)
             })
             explain.callModelFunction(function_name, function_args)
           }
@@ -283,7 +283,7 @@ export default {
       this.selectedModelProps.forEach(param => {
         param['state_changed'] = false
         if (param.type == 'number') {
-          param['value'] = explain.modelState.models[this.selectedModelName][param.target] * param.factor
+          param['value'] = (explain.modelState.models[this.selectedModelName][param.target] * param.factor).toFixed(param.rounding)
         }
         if (param.type == 'boolean') {
           param['value'] = explain.modelState.models[this.selectedModelName][param.target]
@@ -295,7 +295,7 @@ export default {
         if (param.type == 'function') {
           param.args.forEach(arg => {
             if (arg.target) {
-              arg['value'] = explain.modelState.models[this.selectedModelName][arg.target]
+              arg['value'] = (explain.modelState.models[this.selectedModelName][arg.target] * arg.factor).toFixed(arg.rounding)
             }
           })
         }

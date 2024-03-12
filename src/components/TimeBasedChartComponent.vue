@@ -238,6 +238,12 @@
                 label="presets"
                 size="sm"
               />
+              <q-checkbox
+                v-model="chart_fill"
+                dense
+                label="fill"
+                size="sm"
+              />
               <q-input
                 v-model.number="rtWindow"
                 type="number"
@@ -449,11 +455,11 @@
 <script>
 import { explain } from "../boot/explain";
 import { Bar, Line, Scatter } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Filler } from 'chart.js'
 import { ref } from 'vue'
 import * as Stat from "simple-statistics";
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement)
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Filler)
 
 
 export default {
@@ -478,7 +484,7 @@ export default {
         datasets: {
             line: {
                 pointRadius: 0 // disable for all `'line'` datasets
-            }
+            },
         },
         scales: {
             x: {
@@ -575,6 +581,10 @@ export default {
       y1_axis: [],
       y2_axis: [],
       y3_axis: [],
+      chart_fill: false,
+      y1_axis_fill: false,
+      y2_axis_fill: false,
+      y3_axis_fill: false,
       redrawInterval: -1,
       redrawTimer: 0.0,
       debug_mode: true,
@@ -584,11 +594,12 @@ export default {
       newPresetName: "",
       presets: {
         "PDA Doppler": {
-          props: ["Shunts.da_velocity", "Shunts.da_diameter"],
+          props: ["Shunts.da_velocity"],
           autoscale: false,
           y_min: 0,
-          y_max: 7,
+          y_max: 5,
           factors: false,
+          fill: true,
           chart1_factor: 1.0,
           chart2_factor: 1.0,
           chart3_factor: 1.0
@@ -599,10 +610,11 @@ export default {
           y_min: 0,
           y_max: 7,
           factors: false,
+          fill: false,
           chart1_factor: 1.0,
           chart2_factor: 1.0,
           chart3_factor: 1.0
-        }
+        },
       }
     };
   },
@@ -620,6 +632,7 @@ export default {
           y_min: this.y_min,
           y_max: this.y_max,
           factors: this.scaling,
+          fill: this.chart_fill,
           chart1_factor: this.chart1_factor,
           chart2_factor: this.chart2_factor,
           chart3_factor: this.chart3_factor,
@@ -657,6 +670,7 @@ export default {
       this.autoscaling()
 
       this.scaling = settings.factors
+      this.chart_fill = settings.fill
       this.chart1_factor = settings.chart1_factor
       this.chart2_factor = settings.chart2_factor
       this.chart3_factor = settings.chart3_factor
@@ -937,6 +951,10 @@ export default {
     },
     dataUpdateRt() {
       if (this.alive) {
+        this.y1_axis_fill = this.chart_fill
+        this.y2_axis_fill = this.chart_fill
+        this.y3_axis_fill = this.chart_fill
+
         // update is every 0.015 ms and the data is sampled with 0.005 ms resolution (so 3 data points per 0.015 sec = 200 datapoints per second)
         for (let i=0; i < explain.modelData.length; i++) {
           this.y1_axis.push(explain.modelData[i][this.p1] * this.chart1_factor)
@@ -954,24 +972,30 @@ export default {
           this.y3_axis.splice(0, too_many)
         }
 
-
         if (this.redrawTimer > this.redrawInterval) {
           this.redrawTimer = 0;
           this.chartData = {
             labels: this.x_axis,
-            datasets: [ {
+            datasets: [
+            {
               data: [...this.y1_axis],
-              borderColor: 'rgb(192, 0, 0)',
+              fill: this.y1_axis_fill,
+              borderColor: 'rgb(192, 0, 0, 1.0)',
+              backgroundColor: 'rgba(192, 0, 0, 0.3)',
               borderWidth: 1,
               pointStyle: false
             }, {
               data: [...this.y2_axis],
-              borderColor: 'rgb(0, 192, 0)',
+              fill: this.y2_axis_fill,
+              borderColor: 'rgb(0, 192, 0, 1.0)',
+              backgroundColor: 'rgba(0, 192, 0, 0.3)',
               borderWidth: 1,
               pointStyle: false
             }, {
               data: [...this.y3_axis],
-              borderColor: 'rgb(0, 192, 192)',
+              fill: this.y3_axis_fill,
+              borderColor: 'rgb(0, 192, 192, 1.0)',
+              backgroundColor: 'rgb(0, 192, 192, 0.3)',
               borderWidth: 1,
               pointStyle: false
             } ]
@@ -1006,11 +1030,17 @@ export default {
 
       let data_sets = []
 
+      this.y1_axis_fill = this.chart_fill
+      this.y2_axis_fill = this.chart_fill
+      this.y3_axis_fill = this.chart_fill
+
       if (this.p1 !== '') {
         this.y1_axis = explain.modelData.map((item) => {return item[this.p1] * this.chart1_factor;});
         data_sets.push({
               data: this.y1_axis,
-              borderColor: 'rgb(192, 0, 0)',
+              borderColor: 'rgb(192, 0, 0, 1.0)',
+              backgroundColor: 'rgb(192, 0, 0, 0.3)',
+              fill: this.y1_axis_fill,
               borderWidth: 1,
               pointStyle: false
             })
@@ -1020,7 +1050,9 @@ export default {
         this.y2_axis = explain.modelData.map((item) => {return item[this.p2] * this.chart2_factor;});
         data_sets.push({
               data: this.y2_axis,
-              borderColor: 'rgb(0, 192, 0)',
+              borderColor: 'rgb(0, 192, 0, 1.0)',
+              backgroundColor: 'rgb(0, 192, 0, 0.3)',
+              fill: this.y2_axis_fill,
               borderWidth: 1,
               pointStyle: false
             });
@@ -1030,7 +1062,9 @@ export default {
         this.y3_axis = explain.modelData.map((item) => {return item[this.p3] * this.chart3_factor;});
         data_sets.push({
               data: this.y3_axis,
-              borderColor: 'rgb(0, 192, 192)',
+              borderColor: 'rgb(0, 192, 192, 1.0)',
+              backgroundColor: 'rgb(0, 192, 192, 0.3)',
+              fill: this.y3_axis_fill,
               borderWidth: 1,
               pointStyle: false
             });

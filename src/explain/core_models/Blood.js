@@ -2,7 +2,25 @@ import { set_blood_composition } from "../helpers/BloodComposition";
 
 export class Blood {
   static model_type = "Blood";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "set_total_blood_volume",
+      caption: "set new total blood volume",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "current_blood_volume",
+          type: "number",
+          factor: 1000,
+          delta: 1,
+          rounding: 0,
+          ul: 100000.0,
+          ll: 10.0,
+        },
+      ],
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";
@@ -14,6 +32,7 @@ export class Blood {
   inferior_vena_cava = "IVCI";
   superior_vena_cava = "SVC";
   right_atrium = "RA";
+  total_blood_volume = 0.0;
 
   // dependent parameters
   ph = 0.0;
@@ -99,6 +118,8 @@ export class Blood {
     this._svc = this._model_engine.models[this.superior_vena_cava];
     this._ra = this._model_engine.models[this.right_atrium];
 
+    this.current_blood_volume = this.get_total_blood_volume();
+
     // set the flag to model is initialized
     this._is_initialized = true;
   }
@@ -140,6 +161,7 @@ export class Blood {
         }
       }
     }
+    this.current_blood_volume = this.get_total_blood_volume();
   }
 
   get_total_blood_volume() {

@@ -16,20 +16,9 @@ export class Shunts {
       optional: false,
       factor: 1,
       delta: 0.1,
-      rounding: 0,
+      rounding: 1,
       ul: 10.0,
       ll: 0.1,
-    },
-    {
-      target: "da_el_base",
-      caption: "ductus arteriosus elastance",
-      type: "number",
-      optional: false,
-      factor: 1,
-      delta: 10,
-      rounding: 0,
-      ul: 100000000.0,
-      ll: 1000,
     },
     {
       target: "fo_enabled",
@@ -44,7 +33,7 @@ export class Shunts {
       optional: false,
       factor: 1,
       delta: 0.1,
-      rounding: 0,
+      rounding: 1,
       ul: 10.0,
       ll: 0.1,
     },
@@ -61,7 +50,7 @@ export class Shunts {
       optional: true,
       factor: 1,
       delta: 0.1,
-      rounding: 0,
+      rounding: 2,
       ul: 10.0,
       ll: 0.1,
     },
@@ -78,9 +67,20 @@ export class Shunts {
       optional: true,
       factor: 1,
       delta: 0.1,
-      rounding: 0,
+      rounding: 1,
       ul: 10.0,
       ll: 0.1,
+    },
+    {
+      target: "da_el_base",
+      caption: "ductus arteriosus elastance",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 10,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 1000,
     },
   ];
 
@@ -105,19 +105,20 @@ export class Shunts {
   vsd_out = "RV";
   vsd_res_backflow_factor = 1.0;
   vsd_r_k = 1000;
+
   da_enabled = true;
+  da_u_vol = 0.0002;
+  da_el_base = 50000;
+  da_el_k = 1000;
   da_diameter = 2.0;
   da_length = 2.0;
   da_in = "AAR";
-  da_in_res = 300;
   da_in_res_backflow_factor = 1.0;
   da_in_r_k = 1000;
   da_out = "PA";
   da_out_res_backflow_factor = 1.0;
   da_out_r_k = 1000;
-  da_u_vol = 0.0002;
-  da_el_base = 50000;
-  da_el_k = 1000.0;
+
   ips_enabled = true;
   ips_in = "PA";
   ips_out = "PV";
@@ -128,10 +129,14 @@ export class Shunts {
   viscosity = 6.0;
 
   // dependent parameters
+  da_vol = 0.0;
+  da_in_res = 150;
+  da_out_res = 10000000;
+
   da_flow = 0.0;
   da_flow_lmin = 0.0;
-  da_res = 10000000;
   da_velocity = 0.0;
+
   ips_flow = 0.0;
   ips_flow_lmin = 0.0;
   ips_velocity = 0.0;
@@ -144,30 +149,15 @@ export class Shunts {
   vsd_velocity = 0.0;
   vsd_res = 10000000;
 
-  // // calculate the velocity = flow_rate (in m^3/s) / (pi * radius^2) in m/s
-  // let area = Math.pow((this.diameter * 0.001) / 2.0, 2.0) * Math.PI; // in m^2
-  // // flow is in l/s
-  // if (area > 0) {
-  //   this.velocity = (this.flow * 0.001) / area;
-  //   this.velocity = this.velocity * 4.0;
-  // }
-
   // local parameters
   _model_engine = {};
   _is_initialized = false;
   _t = 0.0005;
   _ips = {};
   _da = {};
-  _da_in = {};
-  _da_out = {};
   _vsd = {};
   _fo = {};
   _shunts = [];
-  _da_volume_counter = 0.0;
-  _fo_volume_counter = 0.0;
-  _vsd_volume_counter = 0.0;
-
-  test_value = 33.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -220,15 +210,19 @@ export class Shunts {
 
     // set the shunts properties
     if (!this._da_out.no_flow) {
-      this.da_res = this.calc_resistance(
+      this.da_out_res = this.calc_resistance(
         this.da_diameter,
         this.da_length,
         this.viscosity
       );
       this._da.el_base = this.da_el_base;
-      this._da_out.r_for = this.da_res;
-      this._da_out.r_back = this.da_res * this.da_out_res_backflow_factor;
-      this._da_out.r_k = this.da_out_r_k;
+      this._da.u_vol = this.da_u_vol;
+      this._da.el_k = this.da_el_k;
+      this._da_in.r_for = this.da_in_res;
+      this._da_in.r_back = this.da_in_res * this.da_in_res_backflow_factor;
+      this._da_out.r_for = this.da_out_res;
+      this._da_out.r_back = this.da_out_res * this.da_out_res_backflow_factor;
+      this._da.r_k = this.da_out_r_k;
     }
 
     if (!this._fo.no_flow) {
@@ -263,11 +257,10 @@ export class Shunts {
     this.da_flow = this._da_out.flow;
     this.da_flow_lmin = this._da_out.flow_lmin;
     // calculate the velocity = flow_rate (in m^3/s) / (pi * radius^2) in m/s
-    let area = Math.pow((this.da_diameter * 0.001) / 2.0, 2.0) * Math.PI; // in m^2
+    let da_area = Math.pow((this.da_diameter * 0.001) / 2.0, 2.0) * Math.PI; // in m^2
     // flow is in l/s
-    if (area > 0) {
-      this.da_velocity = (this.da_flow * 0.001) / area;
-      this.da_velocity = this.da_velocity * 4.0;
+    if (da_area > 0) {
+      this.da_velocity = (this.da_flow * 0.001) / da_area;
     }
 
     this.ips_flow = this._ips.flow;
@@ -275,9 +268,21 @@ export class Shunts {
 
     this.fo_flow = this._fo.flow;
     this.fo_flow_lmin = this._fo.flow_lmin;
+    // calculate the velocity = flow_rate (in m^3/s) / (pi * radius^2) in m/s
+    let fo_area = Math.pow((this.fo_diameter * 0.001) / 2.0, 2.0) * Math.PI; // in m^2
+    // flow is in l/s
+    if (fo_area > 0) {
+      this.fo_velocity = (this.fo_flow * 0.001) / fo_area;
+    }
 
     this.vsd_flow = this._vsd.flow;
     this.vsd_flow_lmin = this._vsd.flow_lmin;
+    // calculate the velocity = flow_rate (in m^3/s) / (pi * radius^2) in m/s
+    let vsd_area = Math.pow((this.vsd_diameter * 0.001) / 2.0, 2.0) * Math.PI; // in m^2
+    // flow is in l/s
+    if (vsd_area > 0) {
+      this.vsd_velocity = (this.vsd_flow * 0.001) / vsd_area;
+    }
 
     // do the model step of the ventilator parts
     this._shunts.forEach((_shunt) => _shunt.step_model());
@@ -294,7 +299,7 @@ export class Shunts {
     this._da.init_model([
       { key: "is_enabled", value: true },
       { key: "fixed_composition", value: false },
-      { key: "vol", value: this.da_u_vol },
+      { key: "vol", value: this.da_vol },
       { key: "u_vol", value: this.da_u_vol },
       { key: "el_base", value: this.da_el_base },
       { key: "el_k", value: this.da_el_k },
@@ -324,7 +329,7 @@ export class Shunts {
       },
       { key: "comp_to", value: this._da },
       { key: "r_for", value: this.da_in_res },
-      { key: "r_back", value: this.da_in_res },
+      { key: "r_back", value: this.da_in_res * this.da_in_res_backflow_factor },
       { key: "r_k", value: this.da_in_r_k },
     ]);
     // add the shunt to the list
@@ -346,7 +351,7 @@ export class Shunts {
       },
       { key: "comp_to", value: this._model_engine.models[this.da_out] },
       { key: "r_for", value: this.da_res },
-      { key: "r_back", value: this.da_res },
+      { key: "r_back", value: this.da_res * this.da_out_res_backflow_factor },
       { key: "r_k", value: this.da_out_r_k },
     ]);
     // add the shunt to the list
