@@ -143,7 +143,7 @@ export class Shunts {
 
   // dependent parameters
   da_vol = 0.0;
-  da_in_res = 150;
+  da_in_res = 300;
   da_out_res = 10000000;
 
   da_flow = 0.0;
