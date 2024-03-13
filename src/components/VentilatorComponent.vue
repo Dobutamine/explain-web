@@ -672,6 +672,7 @@ export default {
       presets_loops: {
         "PV LOOP": ["Ventilator.pres", "Ventilator.vol"],
         "VF LOOP": ["Ventilator.vol", "Ventilator.flow"],
+        "PV SPONT": ["THORAX.pres", "THORAX.vol"]
       },
       update_model: true
     };
