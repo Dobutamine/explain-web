@@ -1,6 +1,46 @@
 export class Metabolism {
   static model_type = "Metabolism";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: true,
+    },
+    {
+      target: "vo2",
+      caption: "vo2 (mmol/s)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 1,
+      ul: 300.0,
+      ll: 0.0,
+    },
+    {
+      target: "resp_q",
+      caption: "respiratory quotient",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 10.0,
+      ll: 0.001,
+    },
+    {
+      target: "body_temp",
+      caption: "body temperature",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 43.0,
+      ll: 20.0,
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";

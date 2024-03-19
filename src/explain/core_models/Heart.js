@@ -1,6 +1,74 @@
 export class Heart {
   static model_type = "Heart";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: true,
+    },
+    {
+      target: "heart_rate_ref",
+      caption: "heartrate reference (bpm)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 300.0,
+      ll: 10.0,
+    },
+    {
+      target: "heart_rate_override",
+      caption: "override heartrate",
+      type: "boolean",
+      optional: true,
+    },
+    {
+      target: "heart_rate_forced",
+      caption: "heartrate override (bpm)",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 300.0,
+      ll: 10.0,
+    },
+    {
+      target: "pq_time",
+      caption: "pq time (ms)",
+      type: "number",
+      optional: false,
+      factor: 1000,
+      delta: 1,
+      rounding: 0,
+      ul: 30000.0,
+      ll: 10.0,
+    },
+    {
+      target: "qrs_time",
+      caption: "qrs time (ms)",
+      type: "number",
+      optional: false,
+      factor: 1000,
+      delta: 1,
+      rounding: 0,
+      ul: 30000.0,
+      ll: 10.0,
+    },
+    {
+      target: "qt_time",
+      caption: "qt time (ms)",
+      type: "number",
+      optional: false,
+      factor: 1000,
+      delta: 1,
+      rounding: 0,
+      ul: 30000.0,
+      ll: 10.0,
+    },
+  ];
 
   // independent parameters
   name = "";

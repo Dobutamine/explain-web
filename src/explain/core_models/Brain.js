@@ -21,10 +21,9 @@ export class Brain {
     this.name = name;
 
     // model type
-
     this.model_type = type;
-    // reference to the model engine
 
+    // reference to the model engine
     this._model_engine = model_ref;
   }
 

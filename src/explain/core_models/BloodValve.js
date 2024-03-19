@@ -5,7 +5,7 @@ export class BloodValve {
       target: "is_enabled",
       caption: "is enabled",
       type: "boolean",
-      optional: false,
+      optional: true,
     },
     {
       target: "no_flow",

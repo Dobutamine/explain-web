@@ -5,7 +5,13 @@ export class GasCapacitance {
       target: "is_enabled",
       caption: "is enabled",
       type: "boolean",
-      optional: false,
+      optional: true,
+    },
+    {
+      target: "fixed_composition",
+      caption: "fixed composition",
+      type: "boolean",
+      optional: true,
     },
     {
       target: "u_vol",
@@ -39,12 +45,6 @@ export class GasCapacitance {
       rounding: 2,
       ul: 100000000.0,
       ll: 1,
-    },
-    {
-      target: "fixed_composition",
-      caption: "fixed gas composition",
-      type: "boolean",
-      optional: false,
     },
   ];
   // independent parameters

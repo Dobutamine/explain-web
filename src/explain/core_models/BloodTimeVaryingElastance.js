@@ -5,6 +5,12 @@ export class BloodTimeVaryingElastance {
       target: "is_enabled",
       caption: "is enabled",
       type: "boolean",
+      optional: true,
+    },
+    {
+      target: "fixed_composition",
+      caption: "fixed composition",
+      type: "boolean",
       optional: false,
     },
     {

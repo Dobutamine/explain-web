@@ -2132,7 +2132,7 @@
             "heart_rate": 110.0,
             "heart_rate_ref": 110.0,
             "heart_rate_override": false,
-            "heart_rate_forced": 110.0,
+            "heart_rate_forced": 60.0,
             "rhythm_type": 0.0,
             "pq_time": 0.1,
             "qrs_time": 0.075,
