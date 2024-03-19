@@ -2,7 +2,36 @@ import { set_blood_composition } from "../helpers/BloodComposition";
 
 export class GasExchanger {
   static model_type = "GasExchanger";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "dif_o2",
+      caption: "oxygen diffusion constant (mmol/po2/sec) ",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 0.01,
+      rounding: 3,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+    {
+      target: "dif_co2",
+      caption: "carbon dioxide diffusion constant (mmol/pco2/sec) ",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 0.01,
+      rounding: 3,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";

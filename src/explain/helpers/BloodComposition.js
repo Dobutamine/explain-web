@@ -100,7 +100,7 @@ function get_blood_composition(
   // check whether there is a valid result
   if (!hp.Error) {
     result.valid_ab = true;
-    // process the result
+    // process the result (hp is in mmol/l -> convert to mol/l)
     ph = -Math.log10(hp.Result / 1000);
     result.ph = ph;
     result.pco2 = pco2;

@@ -1,6 +1,58 @@
 export class GasResistor {
   static model_type = "GasResistor";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "no_flow",
+      caption: "no flow allowed",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "no_back_flow",
+      caption: "no back flow allowed",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "r_for",
+      caption: "forward flow resistance (mmHg*sec/ml)",
+      type: "number",
+      optional: false,
+      factor: 0.001,
+      delta: 0.001,
+      rounding: 3,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+    {
+      target: "r_back",
+      caption: "forward flow resistance (mmHg*sec/ml)",
+      type: "number",
+      optional: false,
+      factor: 0.001,
+      delta: 0.001,
+      rounding: 3,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+    {
+      target: "r_k",
+      caption: "non-linear resistance (sec/ml)",
+      type: "number",
+      optional: false,
+      factor: 0.001,
+      delta: 0.001,
+      rounding: 3,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";

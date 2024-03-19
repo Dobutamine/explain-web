@@ -1,6 +1,46 @@
 export class BloodCapacitance {
   static model_type = "BloodCapacitance";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "u_vol",
+      caption: "unstressed volume (ml)",
+      type: "number",
+      optional: false,
+      factor: 1000,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+    {
+      target: "el_base",
+      caption: "baseline elastance (mmHg/ml)",
+      type: "number",
+      optional: false,
+      factor: 0.001,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 1,
+    },
+    {
+      target: "el_k",
+      caption: "non-linear elastance (mmHg/l^2)",
+      type: "number",
+      optional: false,
+      factor: 0.001,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 1,
+    },
+  ];
 
   // independent parameters
   name = "";

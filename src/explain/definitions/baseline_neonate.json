@@ -1898,7 +1898,7 @@
             "fixed_composition": true,
             "vol": 1000000,
             "u_vol": 1000000.0,
-            "el_base": 0.00076,
+            "el_base": 100,
             "el_k": 0.0
         },
         "MOUTH": {
@@ -1911,7 +1911,7 @@
             "fixed_composition": true,
             "vol": 1000000,
             "u_vol": 1000000.0,
-            "el_base": 0.00076,
+            "el_base": 100,
             "el_k": 0.0
         },
         "DS": {
