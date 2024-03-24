@@ -1,6 +1,13 @@
 export class Placenta {
   static model_type = "Placenta";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: true,
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";

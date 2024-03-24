@@ -1095,24 +1095,23 @@ export default {
     exportData() {
       let header = ""
       let data = {
-        time: explain.modelData.map((item) => {return item['time']}),
+        time: explain.modelData.map((item) => {return parseFloat(item['time'])}),
       }
-
 
       if (this.p1 !== "") {
         let h1 = this.selectedModel1.toUpperCase() + this.selectedProp1.toUpperCase() + "_";
         header += h1
-        data[h1] = explain.modelData.map((item) => {return (parseFloat(item[this.p1])).toFixed(5)});
+        data[h1] = explain.modelData.map((item) => {return (parseFloat(item[this.p1]))});
       }
       if (this.p2 !== "") {
         let h2 = this.selectedModel2.toUpperCase() + this.selectedProp2.toUpperCase() + "_";
         header += h2
-        data[h2] = explain.modelData.map((item) => {return (parseFloat(item[this.p2])).toFixed(5)});
+        data[h2] = explain.modelData.map((item) => {return (parseFloat(item[this.p2]))});
       }
       if (this.p3 !== "") {
         let h3 = this.selectedModel3.toUpperCase() + this.selectedProp3.toUpperCase();
         header += h3
-        data[h3] = explain.modelData.map((item) => {return (parseFloat(item[this.p3])).toFixed(5)});
+        data[h3] = explain.modelData.map((item) => {return (parseFloat(item[this.p3]))});
       }
       this.exportFileName = `time_vs_${header}.csv`;
       this.writeDataToDisk(data)

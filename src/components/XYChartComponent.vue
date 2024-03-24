@@ -794,11 +794,11 @@ export default {
       if (this.p1 !== "") {
         let h1 = this.selectedModel1.toUpperCase() + this.selectedProp1.toUpperCase() + "_";
         header += h1
-        data[h1] = explain.modelData.map((item) => {return (parseFloat(item[this.p1])).toFixed(5)});
+        data[h1] = explain.modelData.map((item) => {return (parseFloat(item[this.p1]))});
 
         let h2 = this.selectedModel2.toUpperCase() + this.selectedProp2.toUpperCase() + "_";
         header += h2
-        data[h2] = explain.modelData.map((item) => {return (parseFloat(item[this.p2])).toFixed(5)});
+        data[h2] = explain.modelData.map((item) => {return (parseFloat(item[this.p2]))});
       }
 
       this.exportFileName = `time_vs_${header}.csv`;
