@@ -571,10 +571,6 @@ export default defineComponent({
     // get the model state
     explain.getModelState()
 
-    // do a small model test run of 5 seconds
-    explain.calculate(5)
-
-
   }
 })
 </script>

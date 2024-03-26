@@ -2543,6 +2543,8 @@
             "is_enabled": true,
             "dependencies": [],
             "vo2": 6.5,
+            "vo2_factor": 1.0,
+            "vo2_scaling_factor": 1.0,
             "resp_q": 0.8,
             "body_temp": 37,
             "metabolic_active_models": {
