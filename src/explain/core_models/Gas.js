@@ -1,4 +1,4 @@
-import { calc_gas_composition } from "../helpers/GasComposition";
+import { set_gas_composition } from "../helpers/GasComposition";
 
 export class Gas {
   static model_type = "Gas";
@@ -9,6 +9,7 @@ export class Gas {
   description = "";
   is_enabled = false;
   dependencies = [];
+  total_gas_volume = 0.0;
 
   // dependent parameters
 
@@ -48,21 +49,8 @@ export class Gas {
     //  we need a pressure to calculate the composition of the gas in the gas capacitances
     for (let [model_name, model] of Object.entries(this._model_engine.models)) {
       if (model.model_type === "GasCapacitance") {
-        // calculate the pressure
-        model.calc_model();
-
         // calculate the gas composition
-        let result = calc_gas_composition(
-          model,
-          this.fio2,
-          model.temp,
-          model.humidity
-        );
-
-        // set the attributes
-        for (let [att, value] of Object.entries(result)) {
-          model[att] = value;
-        }
+        set_gas_composition(model, this.fio2, model.temp, model.humidity);
       }
     }
 
@@ -82,11 +70,13 @@ export class Gas {
     let total_volume = 0.0;
     for (let [model_name, model] of Object.entries(this._model_engine.models)) {
       if (model.model_type === "GasCapacitance") {
-        if (model.is_enabled) {
+        if (model.is_enabled && !model.fixed_composition) {
           total_volume += model.vol;
         }
       }
     }
+    this.total_gas_volume = total_volume;
+
     return total_volume;
   }
 

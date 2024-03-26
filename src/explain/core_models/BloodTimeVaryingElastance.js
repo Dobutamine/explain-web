@@ -212,12 +212,7 @@ export class BloodTimeVaryingElastance {
     let vol_diff = this.vol - _u_vol;
 
     // calculate the end diastolic pressure
-    this.pres_ed =
-      _e_min * vol_diff +
-      this.el_k *
-        this.el_k_factor *
-        this.el_k_scaling_factor *
-        Math.pow(vol_diff, 2);
+    this.pres_ed = _e_min * vol_diff + _el_k * Math.pow(vol_diff, 2);
 
     this.el = ((_e_max - _e_min) * this.act_factor) / 1000.0;
 

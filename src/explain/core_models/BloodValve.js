@@ -92,6 +92,8 @@ export class BloodValve {
   _t = 0.0005;
   _model_comp_from = {};
   _model_comp_to = {};
+  _cum_forward_flow = 0.0;
+  _cum_backward_flow = 0.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -166,7 +168,7 @@ export class BloodValve {
 
     // calculate the resistances
     let _r_for_base = this.r_for * this.r_scaling_factor;
-    let r_for =
+    this.r_for =
       _r_for_base +
       (this.r_for_factor * _r_for_base - _r_for_base) +
       (this.r_ans_factor * _r_for_base - _r_for_base) *
@@ -180,7 +182,7 @@ export class BloodValve {
         this.flow;
 
     let _r_back_base = this.r_back * this.r_scaling_factor;
-    let r_back =
+    this.r_back =
       _r_back_base +
       (this.r_back_factor * _r_back_base - _r_back_base) +
       (this.r_ans_factor * _r_back_base - _r_back_base) *
@@ -194,12 +196,12 @@ export class BloodValve {
         this.flow;
 
     // check if the resistances are not too small for the current stepsize
-    if (r_for < 20.0) {
-      r_for = 20.0;
+    if (this.r_for < 20.0) {
+      this.r_for = 20.0;
     }
 
-    if (r_back < 20.0) {
-      r_back = 20.0;
+    if (this.r_back < 20.0) {
+      this.r_back = 20.0;
     }
 
     this.p1 = this.ans_activity_factor;
@@ -209,11 +211,11 @@ export class BloodValve {
       this.flow = 0.0;
     } else if (_p1 > _p2) {
       // forward flow
-      this.flow = (_p1 - _p2) / r_for;
+      this.flow = (_p1 - _p2) / this.r_for;
       this._cum_forward_flow += this.flow * this._t;
     } else {
       // back flow
-      this.flow = (_p1 - _p2) / r_back;
+      this.flow = (_p1 - _p2) / this.r_back;
       this._cum_backward_flow += this.flow * this._t;
     }
 

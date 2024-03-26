@@ -274,26 +274,22 @@ export class Heart {
 
   calc_varying_elastance() {
     // calculate the atrial activation factor
-    if (this.ncc_atrial >= 0 && this.ncc_atrial < this.pq_time / this._t) {
-      this.aaf = Math.sin(
-        Math.PI * (this.ncc_atrial / (this.pq_time / this._t))
-      );
+    let _atrial_duration = this.pq_time / this._t;
+    if (this.ncc_atrial >= 0 && this.ncc_atrial < _atrial_duration) {
+      this.aaf = Math.sin(Math.PI * (this.ncc_atrial / _atrial_duration));
     } else {
       this.aaf = 0.0;
     }
 
     // calculate the ventricular activation factor
-    let _ventricular_duration = this.qrs_time + this.cqt_time;
+    let _ventricular_duration = (this.qrs_time + this.cqt_time) / this._t;
     if (
       this.ncc_ventricular >= 0 &&
-      this.ncc_ventricular < _ventricular_duration / this._t
+      this.ncc_ventricular < _ventricular_duration
     ) {
       this.vaf =
-        (this.ncc_ventricular /
-          (this._kn * (_ventricular_duration / this._t))) *
-        Math.sin(
-          Math.PI * (this.ncc_ventricular / (_ventricular_duration / this._t))
-        );
+        (this.ncc_ventricular / (this._kn * _ventricular_duration)) *
+        Math.sin(Math.PI * (this.ncc_ventricular / _ventricular_duration));
     } else {
       this.vaf = 0.0;
     }

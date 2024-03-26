@@ -118,7 +118,7 @@ export class Blood {
     this._svc = this._model_engine.models[this.superior_vena_cava];
     this._ra = this._model_engine.models[this.right_atrium];
 
-    this.current_blood_volume = this.get_total_blood_volume();
+    this.total_blood_volume = this.get_total_blood_volume();
 
     // set the flag to model is initialized
     this._is_initialized = true;
@@ -140,8 +140,6 @@ export class Blood {
         if (model.is_enabled) {
           // calculate the current fraction of the blood volume in this blood containing capacitance
           let current_fraction = model.vol / current_blood_volume;
-          let v = model.vol;
-          let vu = model.u_vol;
           // calculate the current uvol/vol fraction
           let f = 0.0;
           if (model.vol > 0.0) {
@@ -161,7 +159,7 @@ export class Blood {
         }
       }
     }
-    this.current_blood_volume = this.get_total_blood_volume();
+    this.total_blood_volume = this.get_total_blood_volume();
   }
 
   get_total_blood_volume() {
@@ -176,6 +174,8 @@ export class Blood {
         }
       }
     }
+    this.total_blood_volume = total_volume;
+
     return total_volume;
   }
 

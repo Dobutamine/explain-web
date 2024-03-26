@@ -2093,8 +2093,12 @@
             ],
             "comp_blood": "LL",
             "comp_gas": "ALL",
+            "dif_o2": 0.01,
+            "dif_o2_factor": 1.0,
+            "dif_o2_scaling_factor": 1.0,
             "dif_co2": 0.01,
-            "dif_o2": 0.01
+            "dif_co2_factor": 1.0,
+            "dif_co2_scaling_factor": 1.0
         },
         "GASEX_RL": {
             "name": "GASEX_RL",
@@ -2108,8 +2112,12 @@
             ],
             "comp_blood": "RL",
             "comp_gas": "ALR",
+            "dif_o2": 0.01,
+            "dif_o2_factor": 1.0,
+            "dif_o2_scaling_factor": 1.0,
             "dif_co2": 0.01,
-            "dif_o2": 0.01
+            "dif_co2_factor": 1.0,
+            "dif_co2_scaling_factor": 1.0
         },
         "Heart": {
             "name": "Heart",
