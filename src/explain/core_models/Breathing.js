@@ -67,6 +67,7 @@ export class Breathing {
   breathing_enabled = true;
   minute_volume_ref = 0.64; // in L/min/kg
   vt_rr_ratio = 0.03; // in L/bpm/kg
+  rmp_gain = 2.0;
   rmp_gain_max = 12.0;
   ie_ratio = 0.3;
   targets = [];
@@ -79,7 +80,7 @@ export class Breathing {
   resp_rate = 40.0;
   resp_signal = 0.0;
   minute_volume = 0.0;
-  target_minute_volume = 0.4; // in L/min
+  target_minute_volume = 0.4;
   target_tidal_volume = 16.0;
   exp_tidal_volume = 0.0;
   insp_tidal_volume = 0.0;
@@ -90,7 +91,6 @@ export class Breathing {
   _is_initialized = false;
   _t = 0.0005;
   _eMin4 = Math.pow(Math.E, -4);
-  _rmp_gain = 2.0;
   _ti = 0.4;
   _te = 1.0;
   _breath_timer = 0.0;
@@ -200,16 +200,16 @@ export class Breathing {
       // calculate the rmp gain
       if (this.breathing_enabled) {
         if (Math.abs(this.exp_tidal_volume) < this.target_tidal_volume) {
-          this._rmp_gain += 0.1;
+          this.rmp_gain += 0.1;
         }
         if (Math.abs(this.exp_tidal_volume) > this.target_tidal_volume) {
-          this._rmp_gain -= 0.1;
+          this.rmp_gain -= 0.1;
         }
-        if (this._rmp_gain < 0) {
-          this._rmp_gain = 0;
+        if (this.rmp_gain < 0) {
+          this.rmp_gain = 0;
         }
-        if (this._rmp_gain > this.rmp_gain_max) {
-          this._rmp_gain = this.rmp_gain_max;
+        if (this.rmp_gain > this.rmp_gain_max) {
+          this.rmp_gain = this.rmp_gain_max;
         }
       }
       this.minute_volume = this.exp_tidal_volume * this.resp_rate;
@@ -259,7 +259,7 @@ export class Breathing {
     let mp = 0.0;
     // inspiration
     if (this._insp_running) {
-      mp = (this._ncc_insp / (this._ti / this._t)) * this._rmp_gain;
+      mp = (this._ncc_insp / (this._ti / this._t)) * this.rmp_gain;
     }
 
     // expiration
@@ -268,7 +268,7 @@ export class Breathing {
         ((Math.pow(Math.E, -4.0 * (this._ncc_exp / (this._te / this._t))) -
           this._eMin4) /
           (1.0 - this._eMin4)) *
-        this._rmp_gain;
+        this.rmp_gain;
     }
 
     return mp;

@@ -2528,7 +2528,12 @@
             "ie_ratio": 0.3,
             "targets": [
                 "THORAX"
-            ]
+            ],
+            "is_intubated": false,
+            "tv_source":  "MOUTH_DS",
+            "mv_factor": 1.0,
+            "mv_ans_factor": 1.0,
+            "ans_activity_factor": 1.0
         },
         "Metabolism": {
             "name": "Metabolism",
