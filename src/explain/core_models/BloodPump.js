@@ -94,19 +94,6 @@ export class BloodPump {
     // set the modeling step size
     this._t = this._model_engine.modeling_stepsize;
 
-    // get a reference to the models
-    if (typeof this.inlet == "string") {
-      this._inlet_res = this._model_engine.models[this.inlet];
-    } else {
-      this._inlet_res = this.inlet;
-    }
-
-    if (typeof this.outlet == "string") {
-      this._outlet_res = this._model_engine.models[this.outlet];
-    } else {
-      this._outlet_res = this.outlet;
-    }
-
     // set the flag to model is initialized
     this._is_initialized = true;
   }
@@ -118,6 +105,9 @@ export class BloodPump {
   }
 
   calc_model() {
+    // conect the pump
+    this.connect_pump(this.inlet, this.outlet);
+
     // calculate the baseline elastance depending on the scaling factor
     let _el_base = this.el_base * this.el_base_scaling_factor;
 
@@ -187,8 +177,17 @@ export class BloodPump {
   }
 
   connect_pump(_in, _out) {
-    this._inlet_res = _in;
-    this._outlet_res = _out;
+    if (typeof _in == "string") {
+      this._inlet_res = this._model_engine.models[_in];
+    } else {
+      this._inlet_res = _in;
+    }
+
+    if (typeof _out == "string") {
+      this._outlet_res = this._model_engine.models[_out];
+    } else {
+      this._outlet_res = _out;
+    }
   }
 
   analyze() {

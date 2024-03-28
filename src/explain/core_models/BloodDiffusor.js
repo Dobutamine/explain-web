@@ -80,8 +80,16 @@ export class BloodDiffusor {
     this._t = this._model_engine.modeling_stepsize;
 
     // get a reference to the models
-    this._comp_blood1 = this._model_engine.models[this.comp_blood1];
-    this._comp_blood2 = this._model_engine.models[this.comp_blood2];
+    if (typeof this.comp_from == "string") {
+      this._comp_blood1 = this._model_engine.models[this.comp_blood1];
+    } else {
+      this._comp_blood1 = this.comp_blood1;
+    }
+    if (typeof this.comp_from == "string") {
+      this._comp_blood2 = this._model_engine.models[this.comp_blood2];
+    } else {
+      this._comp_blood2 = this.comp_blood2;
+    }
 
     // set the flag to model is initialized
     this._is_initialized = true;

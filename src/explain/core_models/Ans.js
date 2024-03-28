@@ -500,11 +500,11 @@ export class Ans {
   description = "";
   is_enabled = false;
   dependencies = [];
+
   baroreceptor_location = "";
   chemoreceptor_location = "";
   baroreceptor_location = "AAR";
   chemoreceptor_locatio = "AAR";
-
   hr_targets = ["Heart"];
   mv_targets = ["Breathing"];
   venpool_targets = ["IVCE", "SVC"];
