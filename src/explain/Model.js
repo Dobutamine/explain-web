@@ -201,12 +201,37 @@ export default class Model {
           document.dispatchEvent(this._rts_event);
           break;
 
+        case "saved_state":
+          this.download_model_state(e.data.payload[0]);
+          break;
+
         default:
           console.log("Unknown message type received from model engine");
           console.log(e.data);
           break;
       }
     };
+  }
+  download_model_state(state) {
+    let current_date = new Date();
+    let filename =
+      state["name"] + "_" + current_date.toLocaleTimeString() + ".json";
+    this.saveObjectAsJson(state, filename);
+  }
+  saveObjectAsJson(object, filename) {
+    const jsonString = JSON.stringify(object, null, 2); // Convert object to JSON string
+    const blob = new Blob([jsonString], { type: "application/json" }); // Create a blob with JSON content
+    const url = URL.createObjectURL(blob); // Create a URL for the blob
+
+    // Create a temporary anchor element and trigger download
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a); // Append the anchor to the document
+    a.click(); // Trigger the download
+
+    document.body.removeChild(a); // Remove the anchor from the document
+    URL.revokeObjectURL(url); // Clean up the URL object
   }
 
   loadBaselineNeonate() {
@@ -327,6 +352,14 @@ export default class Model {
   getModelState() {
     this.sendMessageToModelEngine({
       type: "get_state",
+      message: "",
+      payload: [],
+    });
+  }
+
+  saveModelState() {
+    this.sendMessageToModelEngine({
+      type: "save_state",
       message: "",
       payload: [],
     });

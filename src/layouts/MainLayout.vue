@@ -16,9 +16,18 @@
           <div>{{ statusMessage }}</div>
         </q-toolbar-title>
         <div class="q-mr-lg text-overline">
-          <b>{{ modelName }}</b>
-          <q-tooltip> {{ modelDescription }} </q-tooltip>
+          loaded model:
         </div>
+        <div class="q-mr-lg text-overline">
+          <q-file  class="text-overline text-bold" v-model="model_file" :display-value="modelName"  @update:model-value="upload">
+          <q-tooltip> {{ modelDescription }} </q-tooltip>
+        </q-file>
+        </div>
+        <div class="q-mr-md">
+          <q-icon name="fa-solid fa-upload"></q-icon>
+          <q-tooltip> load model definition </q-tooltip>
+        </div>
+
 
         <q-btn
           flat
@@ -68,6 +77,19 @@
           style="width: 90px; font-size: 12px"
           ><q-tooltip> fast forward step size</q-tooltip></q-select
         >
+
+        <q-btn
+          flat
+          round
+          dense
+          size="sm"
+          icon="fa-solid fa-download"
+          color="white"
+          class="q-mr-sm"
+          @click="save_state"
+        >
+          <q-tooltip> download model state </q-tooltip></q-btn
+        >
         <q-btn
           flat
           round
@@ -99,6 +121,7 @@ export default defineComponent({
   },
   data() {
     return {
+      model_file: [],
       modelName: "",
       modelDescription: "",
       playArmed: false,
@@ -121,6 +144,24 @@ export default defineComponent({
     }
   },
   methods: {
+    upload() {
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const fileContents = e.target.result;
+        let loaded_definition = JSON.parse(fileContents)
+        explain.loadModelDefinition(loaded_definition)
+        this.$bus.emit('reset')
+      };
+
+      // Read the file as Text or as needed
+      reader.readAsText(this.model_file);
+
+
+    },
+    save_state() {
+      explain.saveModelState()
+    },
     toggleDebug() {
       this.debugState = !this.debugState
       if (this.debugState) {

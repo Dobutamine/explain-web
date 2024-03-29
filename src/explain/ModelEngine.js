@@ -80,6 +80,9 @@ onmessage = (e) => {
     case "stop":
       stop();
       break;
+    case "save_state":
+      save_model_state_json();
+      break;
     case "get_state":
       get_state();
       break;
@@ -583,6 +586,48 @@ const get_model_data_rt_slow = function () {
     type: "rts",
     message: "",
     payload: [model_data],
+  });
+};
+
+const save_model_state_json = function () {
+  let current_data = new Date();
+  let new_json = {
+    explain_version: model["explain_version"],
+    owner: model["owner"],
+    date_created: model["date_created"],
+    date_modified: current_data.toLocaleTimeString(),
+    shared: model["shared"],
+    protected: model["protected"],
+    name: model["name"],
+    description: model["description"],
+    weight: model["weight"],
+    height: model["height"],
+    gestational_age: model["gestational_age"],
+    age: model["age"],
+    modeling_stepsize: model["modeling_stepsize"],
+    model_time_total: model["model_time_total"],
+    models: {},
+    scaler_settings: model["scaler_settings"],
+  };
+
+  // process the model definition file to find the necessary properties
+  for (let [mn, m] of Object.entries(model.models)) {
+    new_json["models"][mn] = {};
+    for (let [pn, pv] of Object.entries(m)) {
+      if (pn[0] !== "_") {
+        if (typeof pv == "object" && pv.hasOwnProperty("name")) {
+          new_json["models"][mn][pn] = pv.name;
+        } else {
+          new_json["models"][mn][pn] = pv;
+        }
+      }
+    }
+  }
+  // send data to the ui
+  postMessage({
+    type: "saved_state",
+    message: "",
+    payload: [new_json],
   });
 };
 

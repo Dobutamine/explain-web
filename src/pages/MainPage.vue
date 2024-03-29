@@ -539,6 +539,7 @@ export default defineComponent({
       }
     },
     updateWatchlist() {
+      console.log('reset')
       Object.keys(this.numerics).forEach(numeric => {
         this.numerics[numeric].parameters.forEach((p) => {
           explain.watchModelPropsSlow([...p.props])
@@ -556,7 +557,9 @@ export default defineComponent({
       })
     },
   },
-  beforeUnmount() {},
+  beforeUnmount() {
+    this.$bus.off("reset", this.updateWatchlist)
+  },
   mounted() {
     // set the dark theme
     this.$q.dark.set(true);
@@ -570,6 +573,8 @@ export default defineComponent({
 
     // get the model state
     explain.getModelState()
+
+    this.$bus.on("reset", this.updateWatchlist)
 
   }
 })
