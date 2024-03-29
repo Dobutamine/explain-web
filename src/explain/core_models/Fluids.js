@@ -184,8 +184,10 @@ export class Fluid {
 
   constructor(volume, fluid_comp, in_time, at_time, site, t) {
     this._t = t;
-    if (volume < 0) this._addition = False;
-    volume = -volume;
+    if (volume < 0) {
+      this._addition = false;
+      volume = -volume;
+    }
 
     if (fluid_comp) {
       this.fluid_comp = fluid_comp;

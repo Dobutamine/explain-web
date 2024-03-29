@@ -68,6 +68,7 @@ export class Ventilator {
   hfo_insp_tv = 0.0;
   hfo_exp_tv = 0.0;
   hfo_mv = 0.0;
+  synchronized = false;
 
   // local parameters
   _model_engine = {};
@@ -140,23 +141,14 @@ export class Ventilator {
     this._vent_parts = [];
 
     // ventilator gas reservoir
-    this.vent_in = new GasCapacitance(
-      this._model_engine,
-      "vent_in",
-      "GasCapacitance"
-    );
-    this.vent_in.init_model([
-      { key: "name", value: "vent_in" },
-      { key: "model_type", value: "GasCapacitance" },
-      { key: "description", value: "ventilator gas reservoir" },
-      { key: "is_enabled", value: true },
-      { key: "fixed_composition", value: true },
-      { key: "vol", value: 5.4 },
-      { key: "u_vol", value: 5.0 },
-      { key: "el_base", value: 1000.0 },
-      { key: "el_k", value: 0.0 },
-      { key: "pres_atm", value: this.p_atm },
-    ]);
+    this.vent_in = this._model_engine.models["VENT_GASIN"];
+    this.vent_in.is_enabled = false;
+    this.vent_in.fixed_composition = true;
+    this.vent_in.vol = 5.4;
+    this.vent_in.u_vol = 5.0;
+    this.vent_in.el_base = 1000.0;
+    this.vent_in.el_k = 0.0;
+    this.vent_in.pres_atm = this.p_atm;
     // calculate the current pressure
     this.vent_in.calc_model();
     // set the gas composition
@@ -165,23 +157,14 @@ export class Ventilator {
     this._vent_parts.push(this.vent_in);
 
     // ventilator circuit
-    this.vent_circuit = new GasCapacitance(
-      this._model_engine,
-      "vent_circuit",
-      "GasCapacitance"
-    );
-    this.vent_circuit.init_model([
-      { key: "name", value: "vent_circuit" },
-      { key: "model_type", value: "GasCapacitance" },
-      { key: "description", value: "ventilator circuit" },
-      { key: "is_enabled", value: true },
-      { key: "fixed_composition", value: false },
-      { key: "vol", value: 0.262 },
-      { key: "u_vol", value: 0.262 },
-      { key: "el_base", value: 1130.0 },
-      { key: "el_k", value: 0.0 },
-      { key: "pres_atm", value: this.p_atm },
-    ]);
+    this.vent_circuit = this._model_engine.models["VENT_GASCIRCUIT"];
+    this.vent_circuit.is_enabled = false;
+    this.vent_circuit.fixed_composition = false;
+    this.vent_circuit.vol = 0.262;
+    this.vent_circuit.u_vol = 0.262;
+    this.vent_circuit.el_base = 1130.0;
+    this.vent_circuit.el_k = 0.0;
+    this.vent_circuit.pres_atm = this.p_atm;
     // calculate the current pressure
     this.vent_circuit.calc_model();
     // set the gas composition
@@ -190,23 +173,14 @@ export class Ventilator {
     this._vent_parts.push(this.vent_circuit);
 
     // ventilator out reservoir
-    this.vent_out = new GasCapacitance(
-      this._model_engine,
-      "vent_out",
-      "GasCapacitance"
-    );
-    this.vent_out.init_model([
-      { key: "name", value: "vent_out" },
-      { key: "model_type", value: "GasCapacitance" },
-      { key: "description", value: "ventilator out gas reservoir" },
-      { key: "is_enabled", value: true },
-      { key: "fixed_composition", value: true },
-      { key: "vol", value: 5.0 },
-      { key: "u_vol", value: 5.0 },
-      { key: "el_base", value: 1000.0 },
-      { key: "el_k", value: 0.0 },
-      { key: "pres_atm", value: this.p_atm },
-    ]);
+    this.vent_out = this._model_engine.models["VENT_GASOUT"];
+    this.vent_out.is_enabled = false;
+    this.vent_out.fixed_composition = true;
+    this.vent_out.vol = 5.0;
+    this.vent_out.u_vol = 5.0;
+    this.vent_out.el_base = 1000.0;
+    this.vent_out.el_k = 0.0;
+    this.vent_out.pres_atm = this.p_atm;
     // calculate the current pressure
     this.vent_out.calc_model();
     // set the gas composition
@@ -215,24 +189,15 @@ export class Ventilator {
     this._vent_parts.push(this.vent_out);
 
     // connect the parts
-    this.insp_valve = new GasResistor(
-      this._model_engine,
-      "insp_valve",
-      "GasResistor"
-    );
-    this.insp_valve.init_model([
-      { key: "name", value: "insp_valve" },
-      { key: "model_type", value: "GasResistor" },
-      { key: "description", value: "inspiratory valve" },
-      { key: "is_enabled", value: true },
-      { key: "no_flow", value: true },
-      { key: "no_back_flow", value: false },
-      { key: "comp_from", value: this.vent_in },
-      { key: "comp_to", value: this.vent_circuit },
-      { key: "r_for", value: 2000.0 },
-      { key: "r_back", value: 2000.0 },
-      { key: "r_k", value: 0.0 },
-    ]);
+    this.insp_valve = this._model_engine.models["VENT_INSP_VALVE"];
+    this.insp_valve.is_enabled = false;
+    this.insp_valve.no_flow = true;
+    this.insp_valve.no_back_flow = false;
+    this.insp_valve.comp_from = this.vent_in;
+    this.insp_valve.comp_to = this.vent_circuit;
+    this.insp_valve.r_for = 2000.0;
+    this.insp_valve.r_back = 2000.0;
+    this.insp_valve.r_k = 0.0;
     // add to the vent parts array
     this._vent_parts.push(this.insp_valve);
 
@@ -240,51 +205,32 @@ export class Ventilator {
     this.set_ettube_diameter(this.ettube_diameter);
     this.et_tube_resistance = this.calc_ettube_resistance(this.insp_flow);
 
-    this.et_tube = new GasResistor(
-      this._model_engine,
-      "et_tube",
-      "GasResistor"
-    );
-    this.et_tube.init_model([
-      { key: "name", value: "et_tube" },
-      { key: "model_type", value: "GasResistor" },
-      { key: "description", value: "inspiratory tube" },
-      { key: "is_enabled", value: true },
-      { key: "no_flow", value: true },
-      { key: "no_back_flow", value: false },
-      { key: "comp_from", value: this.vent_circuit },
-      { key: "comp_to", value: this._model_engine.models["DS"] },
-      { key: "r_for", value: this.et_tube_resistance },
-      { key: "r_back", value: this.et_tube_resistance },
-      { key: "r_k", value: 0.0 },
-    ]);
+    this.et_tube = this._model_engine.models["VENT_ETTUBE"];
+    this.et_tube.is_enabled = false;
+    this.et_tube.no_flow = true;
+    this.et_tube.no_back_flow = false;
+    this.et_tube.comp_from = this.vent_circuit;
+    this.et_tube.comp_to = this._model_engine.models["DS"];
+    this.et_tube.r_for = this.et_tube_resistance;
+    this.et_tube.r_back = this.et_tube_resistance;
+    this.et_tube.r_k = 0.0;
     // add to the vent parts array
     this._vent_parts.push(this.et_tube);
 
-    this.exp_valve = new GasResistor(
-      this._model_engine,
-      "exp_valve",
-      "GasResistor"
-    );
-    this.exp_valve.init_model([
-      { key: "name", value: "exp_valve" },
-      { key: "model_type", value: "GasResistor" },
-      { key: "description", value: "expiratory tube" },
-      { key: "is_enabled", value: true },
-      { key: "no_flow", value: true },
-      { key: "no_back_flow", value: false },
-      { key: "comp_from", value: this.vent_circuit },
-      { key: "comp_to", value: this.vent_out },
-      { key: "r_for", value: 2000.0 },
-      { key: "r_back", value: 2000.0 },
-      { key: "r_k", value: 0.0 },
-    ]);
+    this.exp_valve = this._model_engine.models["VENT_EXP_VALVE"];
+    this.exp_valve.is_enabled = false;
+    this.exp_valve.no_flow = true;
+    this.exp_valve.no_back_flow = true;
+    this.exp_valve.comp_from = this.vent_circuit;
+    this.exp_valve.comp_to = this.vent_out;
+    this.exp_valve.r_for = 2000.0;
+    this.exp_valve.r_back = 2000.0;
+    this.exp_valve.r_k = 0.0;
     // add to the vent parts array
     this._vent_parts.push(this.exp_valve);
   }
 
   set_ettube_length(new_length) {
-    this.ettube_length = new_length;
     if (new_length >= 50) {
       this.ettube_length = new_length;
     }
@@ -343,7 +289,7 @@ export class Ventilator {
   set_ventilator_cpap(peep = 4.0, rate = 1.0, t_in = 0.4, insp_flow = 10.0) {
     this.pip_cmh2o = peep + 0.5;
     this.pip_cmh2o_max = peep + 0.5;
-    this.peep = peep;
+    this.peep_cmh2o = peep;
     this.vent_rate = 0.01;
     this.insp_time = t_in;
     this.insp_flow = insp_flow;
@@ -450,18 +396,18 @@ export class Ventilator {
     this.vent_mode = "VC";
   }
 
-  set_ventilator_mode(new_mode) {
-    if (new_mode == "PRVC" || new_mode == "PC" || new_mode == "CPAP") {
-      this.vent_mode = new_mode;
-    }
-  }
-
   switch_ventilator(state) {
     this._model_engine.models["MOUTH_DS"].no_flow = state;
     this._model_engine.models["Breathing"].is_intubated = state;
     this.et_tube.no_flow = !state;
     this.vent_running = state;
     this.is_enabled = state;
+    this.vent_in.is_enabled = state;
+    this.vent_circuit.is_enabled = state;
+    this.vent_out.is_enabled = state;
+    this.insp_valve.is_enabled = state;
+    this.exp_valve.is_enabled = state;
+    this.et_tube.is_enabled = state;
   }
 
   step_model() {
@@ -542,110 +488,6 @@ export class Ventilator {
     // do the model step of the ventilator parts
     this._vent_parts.forEach((vent_part) => vent_part.step_model());
   }
-  hfov() {
-    // shut down flow to patient
-    this.et_tube.no_flow = false;
-
-    // open the inspiration valve
-    this.insp_valve.no_flow = false;
-
-    // open the expiration valve
-    this.exp_valve.no_flow = false;
-
-    // back flow to the ventilator
-    this.insp_valve.no_back_flow = false;
-
-    // back flow to the ventilator
-    this.exp_valve.no_back_flow = false;
-
-    // set the resistance of the inspiration valve to supply the bias flow
-    this.insp_valve.r_for =
-      (this.vent_in.pres - this.p_atm - this._hfo_map) /
-      (this.hfo_bias_flow / 60.0);
-
-    // set the expiration valve
-    this.exp_valve.r_for = 10;
-    this.vent_out.vol =
-      this._hfo_map / this.vent_out.el_base + this.vent_out.u_vol;
-
-    let hfo_p =
-      this._hfo_amplitude *
-      Math.sin(2 * Math.PI * this.hfo_freq * this._hfo_time_counter);
-    this._hfo_time_counter += this._t;
-
-    this.hfo_pres = hfo_p;
-
-    // guard the inspiratory pressure
-    if (this.vent_circuit.pres > this._hfo_map + this.p_atm + hfo_p) {
-      this.insp_valve.no_flow = true;
-    }
-
-    // find the state
-    if (this.et_tube.flow > 0) {
-      this._hfo_state = 0;
-      this._hfo_insp_tv_counter += this.et_tube.flow * this._t;
-    } else {
-      this._hfo_state = 1;
-      this._hfo_exp_tv_counter += this.et_tube.flow * this._t;
-    }
-
-    // store the tidal volume
-    if (this._hfo_state == 0 && this._prev_hfo_state == 1) {
-      this.hfo_exp_tv = -this._hfo_exp_tv_counter;
-      this._hfo_exp_tv_counter = 0;
-    }
-
-    if (this._hfo_state == 1 && this._prev_hfo_state == 0) {
-      this.hfo_insp_tv = this._hfo_insp_tv_counter;
-      this._hfo_insp_tv_counter = 0;
-    }
-
-    this.hfo_tv = ((this.hfo_insp_tv + this.hfo_exp_tv) / 2.0) * 1000.0;
-    this.hfo_dco2 = this.hfo_tv * this.hfo_tv * this.hfo_freq;
-    this.hfo_mv = this.hfo_tv * this.hfo_freq * 60.0;
-
-    this.vent_out.pres_ext += hfo_p;
-    this._prev_hfo_state = this._hfo_state;
-  }
-
-  flow_cycling() {
-    // is there flow moving to the lungs and the breath is triggered
-    if (this.et_tube.flow > 0.0 && this._triggered_breath) {
-      // check whether the flow is increasing
-      if (this.et_tube.flow > this._prev_et_tube_flow) {
-        // if increasing then keep inspiration going
-        this._inspiration = true;
-        this._expiration = false;
-        // determine the peak flow
-        if (this.et_tube.flow > this._peak_flow) {
-          this._peak_flow = this.et_tube.flow;
-        }
-        // store the current exhaled tidal volume
-        this.exp_tidal_volume = -this._exp_tidal_volume_counter;
-      } else {
-        // if decreasing wait until it is 70% of the peak flow
-        if (this.et_tube.flow < 0.7 * this._peak_flow) {
-          // go into expiration
-          this._inspiration = false;
-          this._expiration = true;
-          // reset the tidal volume counter
-          this._exp_tidal_volume_counter = 0.0;
-          // reset the triggered breath flag
-          this._triggered_breath = false;
-        }
-      }
-      this._prev_et_tube_flow = this.et_tube.flow;
-    }
-
-    if (this.et_tube.flow < 0.0 && !this._triggered_breath) {
-      this._peak_flow = 0.0;
-      this._prev_et_tube_flow = 0.0;
-      this._inspiration = false;
-      this._expiration = true;
-      // calculate the expiratory tidal volume
-      this._exp_tidal_volume_counter += this.et_tube.flow * this._t;
-    }
-  }
 
   time_cycling() {
     // calculate the expiration time
@@ -721,6 +563,45 @@ export class Ventilator {
     // if in expiration increase the timer
     if (this._expiration) {
       this._exp_time_counter += this._t;
+    }
+  }
+
+  flow_cycling() {
+    // is there flow moving to the lungs and the breath is triggered
+    if (this.et_tube.flow > 0.0 && this._triggered_breath) {
+      // check whether the flow is increasing
+      if (this.et_tube.flow > this._prev_et_tube_flow) {
+        // if increasing then keep inspiration going
+        this._inspiration = true;
+        this._expiration = false;
+        // determine the peak flow
+        if (this.et_tube.flow > this._peak_flow) {
+          this._peak_flow = this.et_tube.flow;
+        }
+        // store the current exhaled tidal volume
+        this.exp_tidal_volume = -this._exp_tidal_volume_counter;
+      } else {
+        // if decreasing wait until it is 70% of the peak flow
+        if (this.et_tube.flow < 0.7 * this._peak_flow) {
+          // go into expiration
+          this._inspiration = false;
+          this._expiration = true;
+          // reset the tidal volume counter
+          this._exp_tidal_volume_counter = 0.0;
+          // reset the triggered breath flag
+          this._triggered_breath = false;
+        }
+      }
+      this._prev_et_tube_flow = this.et_tube.flow;
+    }
+
+    if (this.et_tube.flow < 0.0 && !this._triggered_breath) {
+      this._peak_flow = 0.0;
+      this._prev_et_tube_flow = 0.0;
+      this._inspiration = false;
+      this._expiration = true;
+      // calculate the expiratory tidal volume
+      this._exp_tidal_volume_counter += this.et_tube.flow * this._t;
     }
   }
 
@@ -883,5 +764,71 @@ export class Ventilator {
         this.pip_cmh2o = this.peep_cmh2o + 2.0;
       }
     }
+  }
+
+  hfov() {
+    // shut down flow to patient
+    this.et_tube.no_flow = false;
+
+    // open the inspiration valve
+    this.insp_valve.no_flow = false;
+
+    // open the expiration valve
+    this.exp_valve.no_flow = false;
+
+    // back flow to the ventilator
+    this.insp_valve.no_back_flow = false;
+
+    // back flow to the ventilator
+    this.exp_valve.no_back_flow = false;
+
+    // set the resistance of the inspiration valve to supply the bias flow
+    this.insp_valve.r_for =
+      (this.vent_in.pres - this.p_atm - this._hfo_map) /
+      (this.hfo_bias_flow / 60.0);
+
+    // set the expiration valve
+    this.exp_valve.r_for = 10;
+    this.vent_out.vol =
+      this._hfo_map / this.vent_out.el_base + this.vent_out.u_vol;
+
+    let hfo_p =
+      this._hfo_amplitude *
+      Math.sin(2 * Math.PI * this.hfo_freq * this._hfo_time_counter);
+    this._hfo_time_counter += this._t;
+
+    this.hfo_pres = hfo_p;
+
+    // guard the inspiratory pressure
+    if (this.vent_circuit.pres > this._hfo_map + this.p_atm + hfo_p) {
+      this.insp_valve.no_flow = true;
+    }
+
+    // find the state
+    if (this.et_tube.flow > 0) {
+      this._hfo_state = 0;
+      this._hfo_insp_tv_counter += this.et_tube.flow * this._t;
+    } else {
+      this._hfo_state = 1;
+      this._hfo_exp_tv_counter += this.et_tube.flow * this._t;
+    }
+
+    // store the tidal volume
+    if (this._hfo_state == 0 && this._prev_hfo_state == 1) {
+      this.hfo_exp_tv = -this._hfo_exp_tv_counter;
+      this._hfo_exp_tv_counter = 0;
+    }
+
+    if (this._hfo_state == 1 && this._prev_hfo_state == 0) {
+      this.hfo_insp_tv = this._hfo_insp_tv_counter;
+      this._hfo_insp_tv_counter = 0;
+    }
+
+    this.hfo_tv = ((this.hfo_insp_tv + this.hfo_exp_tv) / 2.0) * 1000.0;
+    this.hfo_dco2 = this.hfo_tv * this.hfo_tv * this.hfo_freq;
+    this.hfo_mv = this.hfo_tv * this.hfo_freq * 60.0;
+
+    this.vent_out.pres_ext += hfo_p;
+    this._prev_hfo_state = this._hfo_state;
   }
 }

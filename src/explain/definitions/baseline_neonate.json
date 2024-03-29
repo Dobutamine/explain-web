@@ -1520,6 +1520,8 @@
           "u_vol": 0.0002,
           "el_base": 11600.0,
           "el_k": 0.0,
+          "inlet": "ECLS_TUBIN_PUMP",
+          "outlet": "ECLS_PUMP_OXY",
           "solutes": {
               "na": 138.0,
               "k": 3.5,
@@ -2216,8 +2218,8 @@
           ],
           "no_flow": true,
           "no_back_flow": false,
-          "comp_from": "LA",
-          "comp_to": "RA",
+          "comp_from": "RA",
+          "comp_to": "LA",
           "r_for": 1000.0,
           "r_back": 1000.0,
           "r_k": 0
@@ -2881,19 +2883,20 @@
         "dependencies": ["LA","LV","RA","RV","AAR","PA","PV"],
         "viscosity": 6.0,
         "fo_enabled": true,
-        "fo_in": "RA",
-        "fo_out": "LA",
+        "fo": "FO",
         "fo_diameter": 3.0,
         "fo_length": 2.0,
         "fo_res_backflow_factor": 10.0,
         "fo_r_k": 1000,
+        "vsd": "VSD",
         "vsd_enabled": false,
-        "vsd_in": "LV",
-        "vsd_out": "RV",
         "vsd_diameter": 2.0,
         "vsd_length": 2.0,
         "vsd_res_backflow_factor": 1.0,
         "vsd_r_k": 1000,
+        "da": "DA",
+        "da_in": "DA_IN",
+        "da_out": "DA_OUT",
         "da_enabled": true,
         "da_vol": 0.0002,
         "da_u_vol": 0.0002,
@@ -2901,17 +2904,15 @@
         "da_el_k": 1000.0,
         "da_diameter": 0.1,
         "da_length": 10.0,
-        "da_in": "AAR",
         "da_in_res_backflow_factor": 1.0,
         "da_in_r_k": 1000,
-        "da_out": "PA",
         "da_out_res_backflow_factor": 1.0,
         "da_out_r_k": 1000,
         "ips_enabled": true,
-        "ips_in": "PA",
-        "ips_out": "PV",
+        "ips": "IPS",
         "ips_res": 30719,
-        "ips_r_k": 1000
+        "ips_r_k": 1000,
+        "ips_res_backflow_factor": 1.0
       },
       "Lungs": {
           "name": "Lungs",
@@ -3434,7 +3435,11 @@
           "pip_cmh2o": 14.0,
           "pip_cmh2o_max": 14.0,
           "peep_cmh2o": 3.0,
-          "tidal_volume": 0.015
+          "tidal_volume": 0.015,
+          "hfo_map_cmh2o": 10.0,
+          "hfo_bias_flow": 10.0,
+          "hfo_freq": 12,
+          "hfo_amplitude_cmh2o": 10.0
       }
   }
 }

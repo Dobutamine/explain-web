@@ -281,6 +281,7 @@ const process_model_definition = function (model_definition) {
       try {
         model_comp.init_model(args);
       } catch (e) {
+        console.log(e);
         errors += 1;
         sendMessage({
           type: "error",
