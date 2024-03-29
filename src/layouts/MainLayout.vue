@@ -15,18 +15,28 @@
       <q-toolbar-title class="text-overline">
           <div>{{ statusMessage }}</div>
         </q-toolbar-title>
-        <div class="q-mr-lg text-overline">
-          loaded model:
-        </div>
-        <div class="q-mr-lg text-overline">
-          <q-file  class="text-overline text-bold" v-model="model_file" :display-value="modelName"  @update:model-value="upload">
+        <div class="q-mr-sm text-overline">
+          <q-file  class="text-overline text-bold"  v-model="model_file" :display-value="modelName"  @update:model-value="upload">
+            <template v-slot:append>
+              <q-icon size="xs" name="fa-solid fa-upload" />
+            </template>
           <q-tooltip> {{ modelDescription }} </q-tooltip>
         </q-file>
+
         </div>
-        <div class="q-mr-md">
-          <q-icon name="fa-solid fa-upload"></q-icon>
-          <q-tooltip> load model definition </q-tooltip>
-        </div>
+        <q-btn
+          flat
+          round
+          dense
+          size="sm"
+          icon="fa-solid fa-download"
+          color="white"
+          class="q-mr-lg"
+          @click="save_state"
+        >
+          <q-tooltip> download model state </q-tooltip></q-btn
+        >
+
 
 
         <q-btn
@@ -78,18 +88,7 @@
           ><q-tooltip> fast forward step size</q-tooltip></q-select
         >
 
-        <q-btn
-          flat
-          round
-          dense
-          size="sm"
-          icon="fa-solid fa-download"
-          color="white"
-          class="q-mr-sm"
-          @click="save_state"
-        >
-          <q-tooltip> download model state </q-tooltip></q-btn
-        >
+
         <q-btn
           flat
           round
@@ -195,6 +194,7 @@ export default defineComponent({
     },
     reload() {
       explain.restartModelDefinition();
+      this.$bus.emit('reset')
     },
     calculate() {
       this.calcRunning = !this.calcRunning;
