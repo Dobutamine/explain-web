@@ -21,6 +21,17 @@ export class BloodDiffusor {
       ll: -10000000.0,
     },
     {
+      target: "dif_o2 factor",
+      caption: "oxygen diffusion constant factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.0,
+    },
+    {
       target: "dif_co2",
       caption: "carbon dioxide diffusion constant (mmol/mmHg*sec) ",
       type: "number",
@@ -30,6 +41,17 @@ export class BloodDiffusor {
       rounding: 2,
       ul: 100000000.0,
       ll: -10000000.0,
+    },
+    {
+      target: "dif_co2 factor",
+      caption: "carbon dioxide diffusion constant factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.0,
     },
   ];
   // independent parameters

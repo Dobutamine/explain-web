@@ -31,6 +31,17 @@ export class BloodValve {
       ll: -10000000.0,
     },
     {
+      target: "r_for_factor",
+      caption: "forward flow resistance factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.01,
+    },
+    {
       target: "r_back",
       caption: "forward flow resistance (mmHg*sec/ml)",
       type: "number",
@@ -40,6 +51,17 @@ export class BloodValve {
       rounding: 3,
       ul: 100000000.0,
       ll: -10000000.0,
+    },
+    {
+      target: "r_back_factor",
+      caption: "backward flow resistance factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.01,
     },
     {
       target: "r_k",
@@ -52,7 +74,19 @@ export class BloodValve {
       ul: 100000000.0,
       ll: -10000000.0,
     },
+    {
+      target: "r_k_factor",
+      caption: "non-linear resistance factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.01,
+    },
   ];
+
   // independent parameters
   name = "";
   model_type = "";
@@ -83,17 +117,23 @@ export class BloodValve {
   flow_lmin = 0.0;
   flow_forward_lmin = 0.0;
   flow_backward_lmin = 0.0;
+
   p1 = 0.0;
   p2 = 0.0;
+  p1_ext = 0.0;
+  p2_ext = 0.0;
+  p1_ext_factor = 1.0;
+  p2_ext_factor = 1.0;
   // local parameters
   _model_engine = {};
-  _is_initialized = false;
   _heart = {};
+  _is_initialized = false;
   _t = 0.0005;
   _model_comp_from = {};
   _model_comp_to = {};
   _cum_forward_flow = 0.0;
   _cum_backward_flow = 0.0;
+  _flow_counter = 0.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -163,12 +203,16 @@ export class BloodValve {
 
   calc_model() {
     // get the pressures of the connected model components
-    let _p1 = this._model_comp_from.pres;
-    let _p2 = this._model_comp_to.pres;
+    let _p1 = this._model_comp_from.pres + this.p1_ext * this.p1_ext_factor;
+    let _p2 = this._model_comp_to.pres + this.p2_ext * this.p2_ext_factor;
+
+    // reset the external pressures
+    this.p1_ext = 0;
+    this.p2_ext = 0;
 
     // calculate the resistances
     let _r_for_base = this.r_for * this.r_scaling_factor;
-    this.r_for =
+    let _r_for =
       _r_for_base +
       (this.r_for_factor * _r_for_base - _r_for_base) +
       (this.r_ans_factor * _r_for_base - _r_for_base) *
@@ -182,7 +226,7 @@ export class BloodValve {
         this.flow;
 
     let _r_back_base = this.r_back * this.r_scaling_factor;
-    this.r_back =
+    let _r_back =
       _r_back_base +
       (this.r_back_factor * _r_back_base - _r_back_base) +
       (this.r_ans_factor * _r_back_base - _r_back_base) *
@@ -196,12 +240,12 @@ export class BloodValve {
         this.flow;
 
     // check if the resistances are not too small for the current stepsize
-    if (this.r_for < 20.0) {
-      this.r_for = 20.0;
+    if (_r_for < 20.0) {
+      _r_for = 20.0;
     }
 
-    if (this.r_back < 20.0) {
-      this.r_back = 20.0;
+    if (_r_back < 20.0) {
+      _r_back = 20.0;
     }
 
     this.p1 = this.ans_activity_factor;
@@ -211,11 +255,11 @@ export class BloodValve {
       this.flow = 0.0;
     } else if (_p1 > _p2) {
       // forward flow
-      this.flow = (_p1 - _p2) / this.r_for;
+      this.flow = (_p1 - _p2) / _r_for;
       this._cum_forward_flow += this.flow * this._t;
     } else {
       // back flow
-      this.flow = (_p1 - _p2) / this.r_back;
+      this.flow = (_p1 - _p2) / _r_back;
       this._cum_backward_flow += this.flow * this._t;
     }
 

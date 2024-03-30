@@ -25,6 +25,17 @@ export class BloodCapacitance {
       ll: -10000000.0,
     },
     {
+      target: "u_vol_factor",
+      caption: "unstressed volume factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.0,
+    },
+    {
       target: "el_base",
       caption: "baseline elastance (mmHg/ml)",
       type: "number",
@@ -36,6 +47,17 @@ export class BloodCapacitance {
       ll: 1,
     },
     {
+      target: "el_base_factor",
+      caption: "baseline elastance factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.0,
+    },
+    {
       target: "el_k",
       caption: "non-linear elastance (mmHg/l^2)",
       type: "number",
@@ -45,6 +67,17 @@ export class BloodCapacitance {
       rounding: 2,
       ul: 100000000.0,
       ll: 1,
+    },
+    {
+      target: "el_k_factor",
+      caption: "non-linear elastance factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.0,
     },
   ];
 

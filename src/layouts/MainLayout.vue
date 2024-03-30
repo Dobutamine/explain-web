@@ -20,9 +20,8 @@
             <template v-slot:append>
               <q-icon size="xs" name="fa-solid fa-upload" />
             </template>
-          <q-tooltip> {{ modelDescription }} </q-tooltip>
-        </q-file>
-
+            <q-tooltip> {{ modelDescription }} </q-tooltip>
+          </q-file>
         </div>
         <q-btn
           flat
@@ -36,9 +35,6 @@
         >
           <q-tooltip> download model state </q-tooltip></q-btn
         >
-
-
-
         <q-btn
           flat
           round
@@ -63,7 +59,6 @@
         >
           <q-tooltip> restart model </q-tooltip></q-btn
         >
-
         <q-btn
           flat
           round
@@ -87,8 +82,6 @@
           style="width: 90px; font-size: 12px"
           ><q-tooltip> fast forward step size</q-tooltip></q-select
         >
-
-
         <q-btn
           flat
           round
@@ -101,11 +94,8 @@
         >
           <q-tooltip> {{ butDebugCaption }}</q-tooltip></q-btn
         >
-
-    </q-toolbar>
-
-  </q-footer>
-
+      </q-toolbar>
+    </q-footer>
   </q-layout>
 </template>
 

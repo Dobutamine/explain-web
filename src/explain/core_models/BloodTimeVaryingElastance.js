@@ -36,6 +36,17 @@ export class BloodTimeVaryingElastance {
       ll: 1,
     },
     {
+      target: "el_min_factor",
+      caption: "minimal elastance factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.01,
+    },
+    {
       target: "el_max",
       caption: "maximal elastance (mmHg/ml)",
       type: "number",
@@ -47,6 +58,17 @@ export class BloodTimeVaryingElastance {
       ll: 1,
     },
     {
+      target: "el_max_factor",
+      caption: "maximal elastance factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.01,
+    },
+    {
       target: "el_k",
       caption: "non-linear elastance (mmHg/ml^2)",
       type: "number",
@@ -56,6 +78,17 @@ export class BloodTimeVaryingElastance {
       rounding: 2,
       ul: 100000000.0,
       ll: 1,
+    },
+    {
+      target: "el_k_factor",
+      caption: "non-linear elastance factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.01,
     },
   ];
 

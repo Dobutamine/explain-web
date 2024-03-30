@@ -263,6 +263,7 @@ export class Circulation {
 
   change_svr(change_forward, change_backward = -1) {
     if (change_forward > 0.0) {
+      console.log(change_forward);
       this.svr_change = change_forward;
       this._svr_targets.forEach((target) => {
         target.r_for_factor = change_forward;
