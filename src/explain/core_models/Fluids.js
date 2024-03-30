@@ -1,6 +1,35 @@
 export class Fluids {
   static model_type = "Fluids";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "add_volume",
+      caption: "add volume (ml)",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "vol",
+          type: "number",
+          default: 10.0,
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 1000.0,
+          ll: 0.0,
+        },
+        {
+          target: "in_time",
+          type: "number",
+          default: 5.0,
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 1000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";

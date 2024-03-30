@@ -340,6 +340,10 @@ export default {
           param.args.forEach(arg => {
             if (arg.target) {
               arg['value'] = (explain.modelState.models[this.selectedModelName][arg.target] * arg.factor).toFixed(arg.rounding)
+              console.log(arg['value'])
+              if (isNaN(arg['value'])) {
+                arg['value'] = arg.default
+              }
             }
           })
         }
