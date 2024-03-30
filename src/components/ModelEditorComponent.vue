@@ -293,8 +293,12 @@ export default {
             explain.setPropValue(p, prop.value, 0, 0)
           }
           if (prop.type == 'string') {
+            let new_value = prop.value
+            if (prop.value.includes(",")) {
+              new_value = prop.value.split(",")
+            }
             let p = this.selectedModelName + "." + prop.target
-            explain.setPropValue(p, prop.value, 0, 0)
+            explain.setPropValue(p, new_value, 0, 0)
           }
         }
         prop.state_changed = false

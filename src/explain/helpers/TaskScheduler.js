@@ -108,6 +108,18 @@ export default class TaskScheduler {
               }
               break;
 
+            case "object":
+              if (task.it <= 0) {
+                task.v = task.t;
+                task.status = "completed";
+                completed = true;
+                this.tasks_ready = true;
+                // update the property
+                task.m[task.p] = task.v;
+                this._completed_tasks.push(task.id);
+              }
+              break;
+
             case "function":
               if (task.it <= 0) {
                 task.status = "completed";

@@ -1,6 +1,90 @@
 export class Container {
   static model_type = "Container";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: true,
+    },
+    {
+      target: "el_k_factor",
+      caption: "non-linear elastance factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.0,
+    },
+    {
+      target: "contained_components",
+      caption: "contained components",
+      type: "string",
+      optional: false,
+      factor: 1000,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+    {
+      target: "u_vol_factor",
+      caption: "unstressed volume factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.0,
+    },
+    {
+      target: "el_base",
+      caption: "baseline elastance (mmHg/ml)",
+      type: "number",
+      optional: false,
+      factor: 0.001,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 1,
+    },
+    {
+      target: "el_base_factor",
+      caption: "baseline elastance factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.0,
+    },
+    {
+      target: "el_k",
+      caption: "non-linear elastance (mmHg/l^2)",
+      type: "number",
+      optional: false,
+      factor: 0.001,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 1,
+    },
+    {
+      target: "el_k_factor",
+      caption: "non-linear elastance factor",
+      type: "number",
+      optional: true,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.0,
+    },
+  ];
 
   // independent parameters
   name = "";
@@ -9,6 +93,7 @@ export class Container {
   is_enabled = false;
   dependencies = [];
   fixed_composition = false;
+  contained_components = [];
   u_vol = 0.0;
   el_base = 0.0;
   el_k = 0.0;
