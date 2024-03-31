@@ -220,6 +220,7 @@
                     <div v-if="arg.type == 'list'">
                       <q-select
                         v-model="arg.value"
+                        :label="arg.target"
                         :options="arg.choices"
                         color="blue"
                         hide-hint
@@ -236,6 +237,7 @@
                       <q-select
                         v-model="arg.value"
                         :options="arg.choices"
+                        :label="arg.target"
                         multiple
                         color="blue"
                         hide-hint
@@ -421,8 +423,14 @@ export default {
         }
         if (param.type == 'list') {
           param['value'] = explain.modelState.models[this.selectedModelName][param.target]
+          if (param['default']) {
+            param['value'] = param['default']
+          }
           // file the options list
           param['choices'] = []
+          if (param['option_default']){
+            param['choices'] = param['options_default']
+          }
           Object.values(explain.modelState.models).forEach(model => {
             if (param.options.includes(model.model_type)) {
               param["choices"].push(model.name)
@@ -431,8 +439,14 @@ export default {
         }
         if (param.type == 'multiple-list') {
           param['value'] = explain.modelState.models[this.selectedModelName][param.target]
+          if (param['default']) {
+            param['value'] = param['default']
+          }
           // file the options list
           param['choices'] = []
+          if (param['option_default']){
+            param['choices'] = param['options_default']
+          }
           Object.values(explain.modelState.models).forEach(model => {
             if (param.options.includes(model.model_type)) {
               param["choices"].push(model.name)
@@ -448,7 +462,13 @@ export default {
               }
               if (arg.type == 'list') {
                 arg['choices'] = []
+                if (arg['options_default']) {
+                  arg['choices'] = arg['options_default']
+                }
                 arg['value'] = explain.modelState.models[this.selectedModelName][arg.target]
+                if (arg['default']) {
+                  arg['value'] = arg['default']
+                }
                 Object.values(explain.modelState.models).forEach(model => {
                   if (arg.options.includes(model.model_type)) {
                     arg["choices"].push(model.name)
@@ -457,7 +477,13 @@ export default {
               }
               if (arg.type == 'multiple-list') {
                 arg['choices'] = []
+                if (arg['options_default']) {
+                  arg['choices'] = arg['options_default']
+                }
                 arg['value'] = explain.modelState.models[this.selectedModelName][arg.target]
+                if (arg['default']) {
+                  arg['value'] = arg['default']
+                }
                 Object.values(explain.modelState.models).forEach(model => {
                   if (arg.options.includes(model.model_type)) {
                     arg["choices"].push(model.name)
