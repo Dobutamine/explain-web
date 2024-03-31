@@ -21,13 +21,14 @@ export class Container {
     {
       target: "contained_components",
       caption: "contained components",
-      type: "string",
+      type: "multiple-list",
       optional: false,
-      factor: 1000,
-      delta: 0.01,
-      rounding: 2,
-      ul: 100000000.0,
-      ll: -10000000.0,
+      options: [
+        "BloodCapacitance",
+        "GasCapacitance",
+        "BloodTimeVaryingElastance",
+        "Container",
+      ],
     },
     {
       target: "u_vol_factor",

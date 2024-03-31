@@ -122,6 +122,47 @@
                   </div>
               </div>
             </div>
+            <div v-if="field.type == 'list'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+                  {{ field.caption }}
+                  <div class="text-white" :style="{ 'font-size': '10px' }">
+                    <q-select
+                        v-model="field.value"
+                        :options="field.choices"
+                        color="blue"
+                        hide-hint
+                        filled
+                        dense
+                        @update:model-value="changePropState(field, arg)"
+                        stack-label
+                        style="font-size: 14px"
+                        class="q-mb-sm"
+                        squared>
+                    </q-select>
+                  </div>
+              </div>
+            </div>
+            <div v-if="field.type == 'multiple-list'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+                  {{ field.caption }}
+                  <div class="text-white" :style="{ 'font-size': '10px' }">
+                    <q-select
+                        v-model="field.value"
+                        :options="field.choices"
+                        multiple
+                        color="blue"
+                        hide-hint
+                        filled
+                        dense
+                        @update:model-value="changePropState(field, arg)"
+                        stack-label
+                        style="font-size: 14px"
+                        class="q-mb-sm"
+                        squared>
+                    </q-select>
+                  </div>
+              </div>
+            </div>
 
             <div v-if="field.type == 'function'">
                 <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
@@ -175,6 +216,37 @@
                         class="q-ml-md q-mr-md q-mb-sm"
                         squared>
                       </q-input>
+                    </div>
+                    <div v-if="arg.type == 'list'">
+                      <q-select
+                        v-model="arg.value"
+                        :options="arg.choices"
+                        color="blue"
+                        hide-hint
+                        filled
+                        dense
+                        @update:model-value="changePropState(field, arg)"
+                        stack-label
+                        style="font-size: 14px"
+                        class="q-ml-md q-mr-md q-mb-sm"
+                        squared>
+                      </q-select>
+                    </div>
+                    <div v-if="arg.type == 'multiple-list'">
+                      <q-select
+                        v-model="arg.value"
+                        :options="arg.choices"
+                        multiple
+                        color="blue"
+                        hide-hint
+                        filled
+                        dense
+                        @update:model-value="changePropState(field, arg)"
+                        stack-label
+                        style="font-size: 14px"
+                        class="q-ml-md q-mr-md q-mb-sm"
+                        squared>
+                      </q-select>
                     </div>
                 </div>
             </div>
@@ -279,7 +351,11 @@ export default {
             let function_name = this.selectedModelName + "." + prop.target;
             let function_args = []
             prop.args.forEach(arg => {
-              function_args.push(arg.value / arg.factor)
+              if (arg.type == 'number') {
+                function_args.push(arg.value / arg.factor)
+              } else {
+                function_args.push(arg.value)
+              }
             })
             explain.callModelFunction(function_name, function_args)
           }
@@ -294,9 +370,16 @@ export default {
           }
           if (prop.type == 'string') {
             let new_value = prop.value
-            if (prop.value.includes(",")) {
-              new_value = prop.value.split(",")
-            }
+            let p = this.selectedModelName + "." + prop.target
+            explain.setPropValue(p, new_value, 0, 0)
+          }
+          if (prop.type == 'list') {
+            let new_value = prop.value
+            let p = this.selectedModelName + "." + prop.target
+            explain.setPropValue(p, new_value, 0, 0)
+          }
+          if (prop.type == 'multiple-list') {
+            let new_value = prop.value
             let p = this.selectedModelName + "." + prop.target
             explain.setPropValue(p, new_value, 0, 0)
           }
@@ -319,6 +402,7 @@ export default {
       this.collaps_icon ="fa-solid fa-chevron-down"
       this.state_changed = false
       this.selectModel()
+      explain.getModelState()
     },
     selectModel () {
       // copy, don't reference the interfacing items
@@ -335,14 +419,50 @@ export default {
         if (param.type == 'string') {
           param['value'] = explain.modelState.models[this.selectedModelName][param.target]
         }
-
+        if (param.type == 'list') {
+          param['value'] = explain.modelState.models[this.selectedModelName][param.target]
+          // file the options list
+          param['choices'] = []
+          Object.values(explain.modelState.models).forEach(model => {
+            if (param.options.includes(model.model_type)) {
+              param["choices"].push(model.name)
+            }
+          })
+        }
+        if (param.type == 'multiple-list') {
+          param['value'] = explain.modelState.models[this.selectedModelName][param.target]
+          // file the options list
+          param['choices'] = []
+          Object.values(explain.modelState.models).forEach(model => {
+            if (param.options.includes(model.model_type)) {
+              param["choices"].push(model.name)
+            }
+          })
+        }
         if (param.type == 'function') {
           param.args.forEach(arg => {
             if (arg.target) {
               arg['value'] = (explain.modelState.models[this.selectedModelName][arg.target] * arg.factor).toFixed(arg.rounding)
-              console.log(arg['value'])
               if (isNaN(arg['value'])) {
                 arg['value'] = arg.default
+              }
+              if (arg.type == 'list') {
+                arg['choices'] = []
+                arg['value'] = explain.modelState.models[this.selectedModelName][arg.target]
+                Object.values(explain.modelState.models).forEach(model => {
+                  if (arg.options.includes(model.model_type)) {
+                    arg["choices"].push(model.name)
+                  }
+                })
+              }
+              if (arg.type == 'multiple-list') {
+                arg['choices'] = []
+                arg['value'] = explain.modelState.models[this.selectedModelName][arg.target]
+                Object.values(explain.modelState.models).forEach(model => {
+                  if (arg.options.includes(model.model_type)) {
+                    arg["choices"].push(model.name)
+                  }
+                })
               }
             }
           })

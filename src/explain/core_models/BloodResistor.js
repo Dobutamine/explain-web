@@ -85,6 +85,24 @@ export class BloodResistor {
       ul: 100000000.0,
       ll: 0.01,
     },
+    {
+      target: "reconnect",
+      caption: "reconnect resistor",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "comp_from",
+          type: "list",
+          options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+        },
+        {
+          target: "comp_to",
+          type: "list",
+          options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+        },
+      ],
+    },
   ];
 
   // independent parameters

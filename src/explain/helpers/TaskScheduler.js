@@ -189,7 +189,7 @@ export default class TaskScheduler {
       }
     }
     // push the task onto the list
-    //console.log("Added new task: ", new_task);
+    console.log("Added new task: ", new_task);
     this.tasks.push(new_task);
   }
 }
