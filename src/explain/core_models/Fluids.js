@@ -53,6 +53,68 @@ export class Fluids {
         },
       ],
     },
+    {
+      target: "remove_volume",
+      caption: "remove volume (ml)",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "vol",
+          type: "number",
+          default: 10.0,
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 1000.0,
+          ll: 0.0,
+        },
+        {
+          target: "in_time",
+          type: "number",
+          default: 5.0,
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 1000.0,
+          ll: 0.0,
+        },
+        {
+          target: "at_time",
+          type: "number",
+          default: 0.0,
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 1000.0,
+          ll: 0.0,
+        },
+        {
+          target: "site",
+          type: "list",
+          default: "IVCE",
+          options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+          options_default: [],
+        },
+      ],
+    },
+    {
+      target: "set_total_blood_volume",
+      caption: "set new total blood volume (ml)",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "total_blood_volume",
+          type: "number",
+          factor: 1000,
+          delta: 1,
+          rounding: 0,
+          ul: 100000.0,
+          ll: 10.0,
+        },
+      ],
+    },
   ];
   // independent parameters
   name = "";
@@ -61,7 +123,9 @@ export class Fluids {
   is_enabled = false;
   dependencies = [];
   fluid_types = {};
+
   // dependent parameters
+  total_blood_volume = 0.0;
 
   // local parameters
   _model_engine = {};
@@ -89,6 +153,9 @@ export class Fluids {
 
     // set the modeling step size
     this._t = this._model_engine.modeling_stepsize;
+
+    // get the current blood volume
+    this.current_blood_volume = this.get_total_blood_volume();
 
     // set the flag to model is initialized
     this._is_initialized = true;
@@ -145,11 +212,6 @@ export class Fluids {
         this._infusions.push(new_fluid);
       }
       return true;
-    } else {
-      console.log(
-        "Zero or negative volume changes are not allowed. Use the remove_volume method to remove volume!"
-      );
-      return false;
     }
   }
 
@@ -165,57 +227,56 @@ export class Fluids {
       );
       this._infusions.push(new_fluid);
       return true;
-    } else {
-      console.log(
-        "Zero or negative volume changes are not allowed. Use the add_volume method to add volume!"
-      );
-      return false;
     }
   }
 
   set_total_blood_volume(new_blood_volume) {
-    const current_blood_volume = this.get_total_blood_volume(false);
-    new_blood_volume = new_blood_volume;
-
-    for (const model of Object.values(this._model_engine.models)) {
-      if (model.model_type.includes("Blood") && model.is_enabled) {
-        try {
-          const current_fraction = model.vol / current_blood_volume;
+    let current_blood_volume = this.get_total_blood_volume();
+    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+      if (
+        model.model_type === "BloodCapacitance" ||
+        model.model_type === "BloodTimeVaryingElastance"
+      ) {
+        if (model.is_enabled) {
+          // calculate the current fraction of the blood volume in this blood containing capacitance
+          let current_fraction = model.vol / current_blood_volume;
+          // calculate the current uvol/vol fraction
+          let f = 0.0;
+          if (model.vol > 0.0) {
+            f = model.u_vol / model.vol;
+          }
+          // add the same fraction of the desired volume change to the blood containing capacitance
           model.vol +=
             current_fraction * (new_blood_volume - current_blood_volume);
 
+          // change the unstressed volume
+          model.u_vol = model.vol * f;
+
+          // guard for negative volumes
           if (model.vol < 0.0) {
             model.vol = 0.0;
           }
-        } catch {
-          const current_fraction = 0;
         }
       }
     }
+    this.total_blood_volume = this.get_total_blood_volume();
   }
 
-  get_total_blood_volume(output = true) {
-    let total_blood_volume = 0.0;
-
-    for (const model of Object.values(this._model_engine.models)) {
-      if (model.model_type.includes("Blood") && model.is_enabled) {
-        try {
-          total_blood_volume += model.vol;
-        } catch {
-          total_blood_volume += 0.0;
+  get_total_blood_volume() {
+    let total_volume = 0.0;
+    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+      if (
+        model.model_type === "BloodCapacitance" ||
+        model.model_type === "BloodTimeVaryingElastance"
+      ) {
+        if (model.is_enabled) {
+          total_volume += model.vol;
         }
       }
     }
+    this.total_blood_volume = total_volume;
 
-    if (output) {
-      console.log(
-        `Total blood volume = ${total_blood_volume * 1000.0} ml (${
-          (total_blood_volume * 1000.0) / this._model_engine.weight
-        } ml/kg)`
-      );
-    }
-
-    return total_blood_volume;
+    return total_volume;
   }
 }
 
