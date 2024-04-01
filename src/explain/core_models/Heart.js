@@ -6,12 +6,15 @@ export class Heart {
       caption: "is enabled",
       type: "boolean",
       optional: true,
+      relative: false,
     },
     {
       target: "heart_rate_ref",
       caption: "heartrate reference (bpm)",
       type: "number",
+      mode: "abs",
       optional: false,
+      relative: false,
       factor: 1,
       delta: 1,
       rounding: 0,
@@ -23,61 +26,755 @@ export class Heart {
       caption: "override heartrate",
       type: "boolean",
       optional: true,
+      relative: false,
     },
     {
       target: "heart_rate_forced",
       caption: "heartrate override (bpm)",
       type: "number",
       optional: true,
+      relative: false,
       factor: 1,
       delta: 1,
       rounding: 0,
       ul: 300.0,
       ll: 10.0,
     },
+    // ecg timings
     {
-      target: "pq_time",
-      caption: "pq time (ms)",
-      type: "number",
+      target: "set_ecg_timings",
+      caption: "ecg timings",
+      type: "function",
       optional: false,
-      factor: 1000,
-      delta: 1,
-      rounding: 0,
-      ul: 30000.0,
-      ll: 10.0,
+      relative: false,
+      args: [
+        {
+          target: "pq_time",
+          caption: "pq time (ms)",
+          type: "number",
+          factor: 1000,
+          delta: 1,
+          rounding: 0,
+          ul: 10000.0,
+          ll: 1.0,
+        },
+        {
+          target: "qrs_time",
+          caption: "qrs time (ms)",
+          type: "number",
+          factor: 1000,
+          delta: 1,
+          rounding: 0,
+          ul: 10000.0,
+          ll: 1.0,
+        },
+        {
+          target: "qt_time",
+          caption: "qt time (ms)",
+          type: "number",
+          factor: 1000,
+          delta: 1,
+          rounding: 0,
+          ul: 10000.0,
+          ll: 1.0,
+        },
+      ],
+    },
+
+    // av
+    {
+      target: "set_heartvalve_props_rel",
+      caption: "aortic valve properties ",
+      type: "function",
+      optional: false,
+      relative: true,
+      args: [
+        {
+          target: "valve",
+          type: "list",
+          default: "_av",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_av.r_for_factor",
+          caption: "forward resistance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_av.r_back_factor",
+          caption: "backward resistance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_av.r_k_factor",
+          caption: "non linear resistance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_av.no_flow",
+          caption: "no flow allowed",
+          type: "boolean",
+        },
+        {
+          target: "_av.no_back_flow",
+          caption: "no backflow allowed",
+          type: "boolean",
+        },
+      ],
     },
     {
-      target: "qrs_time",
-      caption: "qrs time (ms)",
-      type: "number",
+      target: "set_heartvalve_props_abs",
+      caption: "aortic valve properties ",
+      type: "function",
       optional: false,
-      factor: 1000,
-      delta: 1,
-      rounding: 0,
-      ul: 30000.0,
-      ll: 10.0,
+      relative: false,
+      args: [
+        {
+          target: "valve",
+          type: "list",
+          default: "_av",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_av.r_for",
+          caption: "forward resistance (mmHg*sec/ml)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_av.r_back",
+          caption: "backward resistance (mmHg*sec/ml)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_av.r_k",
+          caption: "non linear resistance (sec/l)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: -10000000.0,
+        },
+        {
+          target: "_av.no_flow",
+          caption: "no flow allowed",
+          type: "boolean",
+        },
+        {
+          target: "_av.no_back_flow",
+          caption: "no backflow allowed",
+          type: "boolean",
+        },
+      ],
+    },
+
+    // pv
+    {
+      target: "set_heartvalve_props_rel",
+      caption: "pulmonary valve properties ",
+      type: "function",
+      optional: false,
+      relative: true,
+      args: [
+        {
+          target: "valve",
+          type: "list",
+          default: "_pv",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_pv.r_for_factor",
+          caption: "forward resistance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_pv.r_back_factor",
+          caption: "backward resistance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_pv.r_k_factor",
+          caption: "non linear resistance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_pv.no_flow",
+          caption: "no flow allowed",
+          type: "boolean",
+        },
+        {
+          target: "_pv.no_back_flow",
+          caption: "no backflow allowed",
+          type: "boolean",
+        },
+      ],
     },
     {
-      target: "qt_time",
-      caption: "qt time (ms)",
-      type: "number",
+      target: "set_heartvalve_props_abs",
+      caption: "pulmonary valve properties ",
+      type: "function",
       optional: false,
-      factor: 1000,
-      delta: 1,
-      rounding: 0,
-      ul: 30000.0,
-      ll: 10.0,
+      relative: false,
+      args: [
+        {
+          target: "valve",
+          type: "list",
+          default: "_pv",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_pv.r_for",
+          caption: "forward resistance (mmHg*sec/ml)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_pv.r_back",
+          caption: "backward resistance (mmHg*sec/ml)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_pv.r_k",
+          caption: "non linear resistance (sec/l)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: -10000000.0,
+        },
+        {
+          target: "_pv.no_flow",
+          caption: "no flow allowed",
+          type: "boolean",
+        },
+        {
+          target: "_pv.no_back_flow",
+          caption: "no backflow allowed",
+          type: "boolean",
+        },
+      ],
+    },
+
+    // mv
+    {
+      target: "set_heartvalve_props_rel",
+      caption: "mitral valve properties ",
+      type: "function",
+      optional: false,
+      relative: true,
+      args: [
+        {
+          target: "valve",
+          type: "list",
+          default: "_mv",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_mv.r_for_factor",
+          caption: "forward resistance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_mv.r_back_factor",
+          caption: "backward resistance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_mv.r_k_factor",
+          caption: "non linear resistance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_mv.no_flow",
+          caption: "no flow allowed",
+          type: "boolean",
+        },
+        {
+          target: "_mv.no_back_flow",
+          caption: "no backflow allowed",
+          type: "boolean",
+        },
+      ],
     },
     {
-      target: "_av.r_for",
-      caption: "aortic valve resistance",
-      type: "number",
+      target: "set_heartvalve_props_abs",
+      caption: "mitral valve properties ",
+      type: "function",
       optional: false,
-      factor: 1,
-      delta: 1,
-      rounding: 0,
-      ul: 100000000.0,
-      ll: 10.0,
+      relative: false,
+      args: [
+        {
+          target: "valve",
+          type: "list",
+          default: "_mv",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_mv.r_for",
+          caption: "forward resistance (mmHg*sec/ml)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_mv.r_back",
+          caption: "backward resistance (mmHg*sec/ml)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_mv.r_k",
+          caption: "non linear resistance (sec/l)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: -10000000.0,
+        },
+        {
+          target: "_mv.no_flow",
+          caption: "no flow allowed",
+          type: "boolean",
+        },
+        {
+          target: "_mv.no_back_flow",
+          caption: "no backflow allowed",
+          type: "boolean",
+        },
+      ],
+    },
+
+    // tv
+    {
+      target: "set_heartvalve_props_rel",
+      caption: "tricuspid valve properties ",
+      type: "function",
+      optional: false,
+      relative: true,
+      args: [
+        {
+          target: "valve",
+          type: "list",
+          default: "_tv",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_tv.r_for_factor",
+          caption: "forward resistance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_tv.r_back_factor",
+          caption: "backward resistance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_tv.r_k_factor",
+          caption: "non linear resistance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_tv.no_flow",
+          caption: "no flow allowed",
+          type: "boolean",
+        },
+        {
+          target: "_tv.no_back_flow",
+          caption: "no backflow allowed",
+          type: "boolean",
+        },
+      ],
+    },
+    {
+      target: "set_heartvalve_props_abs",
+      caption: "tricuspid valve properties ",
+      type: "function",
+      optional: false,
+      relative: false,
+      args: [
+        {
+          target: "valve",
+          type: "list",
+          default: "_tv",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_tv.r_for",
+          caption: "forward resistance (mmHg*sec/ml)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_tv.r_back",
+          caption: "backward resistance (mmHg*sec/ml)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_tv.r_k",
+          caption: "non linear resistance (sec/l)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: -10000000.0,
+        },
+        {
+          target: "_tv.no_flow",
+          caption: "no flow allowed",
+          type: "boolean",
+        },
+        {
+          target: "_tv.no_back_flow",
+          caption: "no backflow allowed",
+          type: "boolean",
+        },
+      ],
+    },
+
+    // lv
+    {
+      target: "set_heartchamber_props_rel",
+      caption: "left ventricle properties ",
+      type: "function",
+      optional: false,
+      relative: true,
+      args: [
+        {
+          target: "chamber",
+          type: "list",
+          default: "_lv",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_lv.el_min_factor",
+          caption: "stiffness factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_lv.el_max_factor",
+          caption: "contractility factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_lv.el_k_factor",
+          caption: "non linear elasance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_lv.u_vol_factor",
+          caption: "unstressed volume factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+    {
+      target: "set_heartchamber_props_abs",
+      caption: "left ventricle properties ",
+      type: "function",
+      optional: false,
+      relative: false,
+      args: [
+        {
+          target: "chamber",
+          type: "list",
+          default: "_lv",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_lv.el_min",
+          caption: "minimal elastance (mmHg/l)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: 1,
+        },
+        {
+          target: "_lv.el_max",
+          caption: "maximal elastance (mmHg/l)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: 1,
+        },
+        {
+          target: "_lv.el_k",
+          caption: "non-linear elastance (mmHg/l^2)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: 1,
+        },
+        {
+          target: "_lv.u_vol",
+          caption: "unstressed volume (ml)",
+          type: "number",
+          factor: 1000,
+          delta: 0.01,
+          rounding: 2,
+          ul: 100000000.0,
+          ll: -10000000.0,
+        },
+      ],
+    },
+
+    // lv
+    {
+      target: "set_heartchamber_props_rel",
+      caption: "right ventricle properties ",
+      type: "function",
+      optional: false,
+      relative: true,
+      args: [
+        {
+          target: "chamber",
+          type: "list",
+          default: "_rv",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_rv.el_min_factor",
+          caption: "stiffness factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_rv.el_max_factor",
+          caption: "contractility factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_rv.el_k_factor",
+          caption: "non linear elasance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_rv.u_vol_factor",
+          caption: "unstressed volume factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+    {
+      target: "set_heartchamber_props_abs",
+      caption: "right ventricle properties ",
+      type: "function",
+      optional: false,
+      relative: false,
+      args: [
+        {
+          target: "chamber",
+          type: "list",
+          default: "_rv",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_rv.el_min",
+          caption: "minimal elastance (mmHg/l)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: 1,
+        },
+        {
+          target: "_rv.el_max",
+          caption: "maximal elastance (mmHg/l)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: 1,
+        },
+        {
+          target: "_rv.el_k",
+          caption: "non-linear elastance (mmHg/l^2)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: 1,
+        },
+        {
+          target: "_rv.u_vol",
+          caption: "unstressed volume (ml)",
+          type: "number",
+          factor: 1000,
+          delta: 0.01,
+          rounding: 2,
+          ul: 100000000.0,
+          ll: -10000000.0,
+        },
+      ],
     },
   ];
 
@@ -112,39 +809,6 @@ export class Heart {
   ans_activity_factor = 1.0;
   ncc_ventricular = 0.0;
   ncc_atrial = 0.0;
-
-  left_heart_cont_change = 1.0;
-  right_heart_cont_change = 1.0;
-  left_heart_relax_change = 1.0;
-  right_heart_relax_change = 1.0;
-
-  av_r_for = 0.0;
-  av_r_back = 0.0;
-  av_r_for_factor = 0.0;
-  av_r_back_factor = 0.0;
-  av_no_flow = false;
-  av_no_back_flow = false;
-
-  pv_r_for = 0.0;
-  pv_r_back = 0.0;
-  pv_r_for_factor = 0.0;
-  pv_r_back_factor = 0.0;
-  pv_no_flow = false;
-  pv_no_back_flow = false;
-
-  mv_r_for = 0.0;
-  mv_r_back = 0.0;
-  mv_r_for_factor = 0.0;
-  mv_r_back_factor = 0.0;
-  mv_no_flow = false;
-  mv_no_back_flow = false;
-
-  tv_r_for = 0.0;
-  tv_r_back = 0.0;
-  tv_r_for_factor = 0.0;
-  tv_r_back_factor = 0.0;
-  tv_no_flow = false;
-  tv_no_back_flow = false;
 
   // dependent parameters
   heart_rate = 110.0;
@@ -356,8 +1020,56 @@ export class Heart {
     }
   }
 
-  change_left_heart_contractility(change) {}
-  change_left_heart_relaxation(change) {}
-  change_right_heart_contractility(change) {}
-  change_right_heart_relaxation(change) {}
+  set_ecg_timings(pq_time, qrs_time, qt_time) {
+    this.pq_time = pq_time;
+    this.qrs_time = qrs_time;
+    this.qt_time = qt_time;
+  }
+
+  set_heartchamber_props_abs(chamber, el_min, el_max, u_vol, el_k) {
+    let t = this[chamber];
+    t.el_min = el_min;
+    t.el_max = el_max;
+    t.u_vol = u_vol;
+    t.el_k = el_k;
+  }
+
+  set_heartchamber_props_rel(
+    chamber,
+    el_min_factor,
+    el_max_factor,
+    u_vol_factor,
+    el_k_factor
+  ) {
+    let t = this[chamber];
+    t.el_min_factor = el_min_factor;
+    t.el_max_factor = el_max_factor;
+    t.u_vol_factor = u_vol_factor;
+    t.el_k_factor = el_k_factor;
+  }
+
+  set_heartvalve_props_abs(valve, r_for, r_back, r_k, no_flow, no_back_flow) {
+    let t = this[valve];
+    t.r_for = r_for;
+    t.r_back = r_back;
+    t.r_k = r_k;
+    t.no_flow = no_flow;
+    t.no_back_flow = no_back_flow;
+  }
+
+  set_heartvalve_props_rel(
+    valve,
+    r_for_factor,
+    r_back_factor,
+    r_k_factor,
+    no_flow,
+    no_back_flow
+  ) {
+    let t = this[valve];
+    t.r_for_factor = r_for_factor;
+    t.r_back_factor = r_back_factor;
+    t.r_k_factor = r_k_factor;
+    t.no_flow = no_flow;
+    t.no_back_flow = no_back_flow;
+  }
 }

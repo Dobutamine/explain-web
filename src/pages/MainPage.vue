@@ -336,7 +336,7 @@ export default defineComponent({
       ventilator_alive: true,
       heart_alive: false,
       xy_alive: true,
-      screen_offset: 10.0,
+      screen_offset: 135.0,
       screen_height: 100.0,
       respiration: {
         vitals_numerics: {

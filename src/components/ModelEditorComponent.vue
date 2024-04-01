@@ -23,7 +23,7 @@
         />
         <q-btn
           v-if="selectedModelName"
-          class="col-1 q-ma-sm"
+          class="col-1 q-ma-xs q-mt-sm"
           color="grey-9"
           size="xs"
           dense
@@ -33,7 +33,7 @@
         ></q-btn>
         <q-btn
           v-if="selectedModelName && isEnabled"
-          class="col-1 q-ma-sm"
+          class="col-1 q-ma-xs q-mt-sm"
           :color="optionals_color"
           size="xs"
           dense
@@ -42,8 +42,18 @@
           style="font-size: 8px"
         ><q-tooltip>{{ optionals_text }}</q-tooltip></q-btn>
         <q-btn
+          v-if="selectedModelName && isEnabled"
+          class="col-1 q-ma-xs q-mt-sm"
+          :color="relatives_color"
+          size="xs"
+          dense
+          icon="fa-solid fa-calculator"
+          @click="showRelatives"
+          style="font-size: 8px"
+        ><q-tooltip>{{ relatives_text }}</q-tooltip></q-btn>
+        <q-btn
           v-if="selectedModelName"
-          class="col-1 q-ma-sm"
+          class="col-1 q-ma-xs q-mt-sm"
           color="grey-9"
           size="xs"
           dense
@@ -57,7 +67,7 @@
       <!-- non optionals -->
       <div v-if="redraw > 0.0" class="q-ma-sm q-mb-md">
         <div v-for="(field, index) in selectedModelProps" :key="index">
-          <div v-if="field.optional == false || show_optionals == true">
+          <div v-if="(field.optional == false || show_optionals == true) && field.relative == show_relatives">
             <div v-if="field.type == 'number'">
                 <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
                   {{ field.caption }}
@@ -169,12 +179,13 @@
                   {{ field.caption }}
                 </div>
                 <div v-for="(arg, index_arg) in field.args" :key="index_arg">
-                    <div class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '10px' }">
+                    <!-- <div class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '10px' }">
                         {{ arg.caption }}
-                    </div>
-                    <div v-if="arg.type == 'number'">
+                    </div> -->
+                    <div v-if="arg.type == 'number' && !arg.hidden">
                       <q-input
                         v-model.number="arg.value"
+                        :label="arg.caption"
                         type="number"
                         :max="arg.ul"
                         :min="arg.ll"
@@ -190,22 +201,24 @@
                         squared>
                       </q-input>
                     </div>
-                    <div v-if="arg.type == 'boolean'" class="col-1">
+                    <div v-if="arg.type == 'boolean' && !arg.hidden" class="q-ml-sm col-1" >
                       <q-toggle
                           v-model="arg.value"
+                          :label="arg.caption"
                           color="primary"
-                          size="sm"
+                          size="xs"
                           hide-hint
                           filled
                           dense
                           @update:model-value="changePropState(field, arg)"
-                          style="font-size: 14px"
+                          style="font-size: 10px"
                           class="q-ml-md q-mt-xs q-mb-sm">
                         </q-toggle>
                     </div>
-                    <div v-if="arg.type == 'string'">
+                    <div v-if="arg.type == 'string' && !arg.hidden">
                       <q-input
                         v-model="arg.value"
+                        :label="arg.caption"
                         color="blue"
                         hide-hint
                         filled
@@ -217,7 +230,7 @@
                         squared>
                       </q-input>
                     </div>
-                    <div v-if="arg.type == 'list'">
+                    <div v-if="arg.type == 'list' && !arg.hidden">
                       <q-select
                         v-model="arg.value"
                         :label="arg.target"
@@ -233,7 +246,7 @@
                         squared>
                       </q-select>
                     </div>
-                    <div v-if="arg.type == 'multiple-list'">
+                    <div v-if="arg.type == 'multiple-list' && !arg.hidden">
                       <q-select
                         v-model="arg.value"
                         :options="arg.choices"
@@ -305,9 +318,13 @@ export default {
       redraw: 1,
       selectedModelName: "",
       show_optionals: false,
+      show_relatives: false,
       optionals_caption: "SHOW ADVANCED",
       optionals_color: "grey-9",
       optionals_text: "show advanced properties",
+      relatives_caption: "SHOW RELATIVES",
+      relatives_color: "grey-9",
+      relatives_text: "show relative properties",
       modelNames: [],
       timeOptions: [1, 5, 10, 30, 60, 120, 240, 360],
       changeInTime: 5,
@@ -332,6 +349,19 @@ export default {
       param.state_changed = true
       this.redraw += 1
 
+    },
+    showRelatives() {
+      if (this.show_relatives == true) {
+        this.show_relatives = false
+        this.relatives_caption = "SHOW RELATIVES"
+        this.relatives_text ="show relative properties"
+        this.relatives_color = "grey-9"
+      } else {
+        this.show_relatives = true
+        this.relatives_caption = "HIDE RELATIVES"
+        this.relatives_text ="hide relative properties"
+        this.relatives_color = "negative"
+      }
     },
     showOptionals(param) {
       if (this.show_optionals == true) {
@@ -412,6 +442,7 @@ export default {
       // add a flag to the property which can be set when the property needs to be updated
       this.selectedModelProps.forEach(param => {
         param['state_changed'] = false
+
         // get the current value
         let f = param.target.split('.')
         if (f.length == 1) {
@@ -420,12 +451,17 @@ export default {
         if (f.length == 2) {
             param['value'] = explain.modelState.models[this.selectedModelName][f[0]][f[1]]
         }
+        if (f.length == 3) {
+            param['value'] = explain.modelState.models[this.selectedModelName][f[0]][f[1]][f[2]]
+        }
 
+        // round the number
         if (param.type == 'number') {
           param['value'] = (param['value'] * param.factor).toFixed(param.rounding)
         }
 
         if (param.type == 'list') {
+          // if there's a default number then use it
           if (param['default']) {
             param['value'] = param['default']
           }
@@ -456,11 +492,27 @@ export default {
           })
         }
 
-
         if (param.type == 'function') {
           param.args.forEach(arg => {
+            if (!arg['hidden']) {
+              arg['hidden'] = false
+            }
+            // get the current value
+            let f = arg.target.split('.')
+            if (f.length == 1) {
+              arg['value'] = explain.modelState.models[this.selectedModelName][f[0]]
+            }
+            if (f.length == 2) {
+              arg['value'] = explain.modelState.models[this.selectedModelName][f[0]][f[1]]
+            }
+            if (f.length == 3) {
+              arg['value'] = explain.modelState.models[this.selectedModelName][f[0]][f[1]][f[2]]
+            }
+
             if (arg.target) {
-              arg['value'] = (explain.modelState.models[this.selectedModelName][arg.target] * arg.factor).toFixed(arg.rounding)
+              if (arg.type == 'number') {
+                arg['value'] = (arg['value'] * arg.factor).toFixed(arg.rounding)
+              }
               if (isNaN(arg['value'])) {
                 arg['value'] = arg.default
               }
