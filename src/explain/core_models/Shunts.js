@@ -42,6 +42,7 @@ export class Shunts {
       caption: "foramen ovale backflow resistance factor",
       type: "number",
       optional: true,
+      relative: false,
       factor: 1,
       delta: 0.1,
       rounding: 1,
@@ -55,10 +56,22 @@ export class Shunts {
       optional: false,
     },
     {
+      target: "ips_res",
+      caption: "intrapulmonary shunt resistance (mmHg*sec/ml)",
+      type: "number",
+      optional: false,
+      factor: 0.001,
+      delta: 0.001,
+      rounding: 3,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+    {
       target: "ips_res_factor",
       caption: "intrapulmonary shunt resistance factor",
       type: "number",
       optional: false,
+      relative: true,
       factor: 1,
       delta: 0.1,
       rounding: 1,
@@ -87,6 +100,7 @@ export class Shunts {
       caption: "vsd backflow resistance factor",
       type: "number",
       optional: true,
+      relative: false,
       factor: 1,
       delta: 0.1,
       rounding: 1,
@@ -131,6 +145,7 @@ export class Shunts {
   ips_enabled = true;
   ips = "IPS";
   ips_res = 30719;
+  ips_res_factor = 1.0;
   ips_r_k = 1000;
   ips_res_backflow_factor = 1.0;
 
@@ -256,9 +271,10 @@ export class Shunts {
     }
 
     if (this.ips_enabled) {
+      this._ips_r_for = this.ips_res;
+      this._ips.r_back = this.ips_res;
       this._ips.r_for_factor = this.ips_res_factor;
-      this._ips.r_back_factor =
-        this.ips_res_factor * this.ips_res_backflow_factor;
+      this._ips.r_back_factor = this.ips_res_backflow_factor;
       this._ips.r_k = this.ips_r_k;
     }
 
@@ -362,7 +378,7 @@ export class Shunts {
     this._ips.is_enabled = this.ips_enabled;
     this._ips.no_flow = false;
     this._ips.no_back_flow = false;
-    this._ips.r_ipsr = this.ips_res;
+    this._ips.r_for = this.ips_res * this.ips_res_factor;
     this._ips.r_back = this.ips_res * this.ips_res_backflow_factor;
     this._ips.r_k = this.ips_r_k;
     // add the shunt to the list

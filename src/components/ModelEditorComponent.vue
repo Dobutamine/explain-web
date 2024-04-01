@@ -442,6 +442,9 @@ export default {
       // add a flag to the property which can be set when the property needs to be updated
       this.selectedModelProps.forEach(param => {
         param['state_changed'] = false
+        if (!param["relative"]) {
+          param["relative"] = false
+        }
 
         // get the current value
         let f = param.target.split('.')
