@@ -68,6 +68,17 @@ export class Heart {
       ul: 30000.0,
       ll: 10.0,
     },
+    {
+      target: "_av.r_for",
+      caption: "aortic valve resistance",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 10.0,
+    },
   ];
 
   // independent parameters
@@ -101,6 +112,39 @@ export class Heart {
   ans_activity_factor = 1.0;
   ncc_ventricular = 0.0;
   ncc_atrial = 0.0;
+
+  left_heart_cont_change = 1.0;
+  right_heart_cont_change = 1.0;
+  left_heart_relax_change = 1.0;
+  right_heart_relax_change = 1.0;
+
+  av_r_for = 0.0;
+  av_r_back = 0.0;
+  av_r_for_factor = 0.0;
+  av_r_back_factor = 0.0;
+  av_no_flow = false;
+  av_no_back_flow = false;
+
+  pv_r_for = 0.0;
+  pv_r_back = 0.0;
+  pv_r_for_factor = 0.0;
+  pv_r_back_factor = 0.0;
+  pv_no_flow = false;
+  pv_no_back_flow = false;
+
+  mv_r_for = 0.0;
+  mv_r_back = 0.0;
+  mv_r_for_factor = 0.0;
+  mv_r_back_factor = 0.0;
+  mv_no_flow = false;
+  mv_no_back_flow = false;
+
+  tv_r_for = 0.0;
+  tv_r_back = 0.0;
+  tv_r_for_factor = 0.0;
+  tv_r_back_factor = 0.0;
+  tv_no_flow = false;
+  tv_no_back_flow = false;
 
   // dependent parameters
   heart_rate = 110.0;
@@ -311,4 +355,9 @@ export class Heart {
       return this.qt_time * 2.449; // (sqrt(6))
     }
   }
+
+  change_left_heart_contractility(change) {}
+  change_left_heart_relaxation(change) {}
+  change_right_heart_contractility(change) {}
+  change_right_heart_relaxation(change) {}
 }

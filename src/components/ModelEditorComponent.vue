@@ -412,17 +412,20 @@ export default {
       // add a flag to the property which can be set when the property needs to be updated
       this.selectedModelProps.forEach(param => {
         param['state_changed'] = false
+        // get the current value
+        let f = param.target.split('.')
+        if (f.length == 1) {
+            param['value'] = explain.modelState.models[this.selectedModelName][f[0]]
+        }
+        if (f.length == 2) {
+            param['value'] = explain.modelState.models[this.selectedModelName][f[0]][f[1]]
+        }
+
         if (param.type == 'number') {
-          param['value'] = (explain.modelState.models[this.selectedModelName][param.target] * param.factor).toFixed(param.rounding)
+          param['value'] = (param['value'] * param.factor).toFixed(param.rounding)
         }
-        if (param.type == 'boolean') {
-          param['value'] = explain.modelState.models[this.selectedModelName][param.target]
-        }
-        if (param.type == 'string') {
-          param['value'] = explain.modelState.models[this.selectedModelName][param.target]
-        }
+
         if (param.type == 'list') {
-          param['value'] = explain.modelState.models[this.selectedModelName][param.target]
           if (param['default']) {
             param['value'] = param['default']
           }
@@ -438,7 +441,6 @@ export default {
           })
         }
         if (param.type == 'multiple-list') {
-          param['value'] = explain.modelState.models[this.selectedModelName][param.target]
           if (param['default']) {
             param['value'] = param['default']
           }
@@ -453,6 +455,8 @@ export default {
             }
           })
         }
+
+
         if (param.type == 'function') {
           param.args.forEach(arg => {
             if (arg.target) {

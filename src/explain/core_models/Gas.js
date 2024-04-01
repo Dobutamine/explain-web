@@ -2,7 +2,76 @@ import { set_gas_composition } from "../helpers/GasComposition";
 
 export class Gas {
   static model_type = "Gas";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "set_new_atmospheric_pressure",
+      caption: "atmospheric pressure (mmHg)",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "pres_atm",
+          type: "number",
+          default: 760.0,
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 10000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+    {
+      target: "set_new_temperature",
+      caption: "set gas temperature (dgs C)",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "new_temp",
+          type: "number",
+          default: 37.0,
+          factor: 1,
+          delta: 1,
+          rounding: 1,
+          ul: 100000.0,
+          ll: 0.0,
+        },
+        {
+          target: "site",
+          type: "list",
+          default: "MOUTH",
+          options: ["GasCapacitance"],
+          options_default: [],
+        },
+      ],
+    },
+    {
+      target: "set_new_humidity",
+      caption: "set gas humidity",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "new_humidity",
+          type: "number",
+          default: 0.5,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 1.0,
+          ll: 0.0,
+        },
+        {
+          target: "site",
+          type: "list",
+          default: "MOUTH",
+          options: ["GasCapacitance"],
+          options_default: [],
+        },
+      ],
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";
@@ -80,6 +149,13 @@ export class Gas {
     return total_volume;
   }
 
+  set_new_atmospheric_pressure(new_p_atm) {
+    if (new_p_atm > 0.0) {
+      this.pres_atm = new_p_atm;
+      this.set_atmospheric_pressure();
+    }
+  }
+
   set_atmospheric_pressure() {
     for (let [model_name, model] of Object.entries(this._model_engine.models)) {
       if (model.model_type === "GasCapacitance") {
@@ -88,10 +164,27 @@ export class Gas {
     }
   }
 
+  set_new_temperature(new_temp, site) {
+    if (new_temp >= 0.0 && new_temp <= 100.0) {
+      if (this._model_engine.models[site].model_type == "GasCapacitance") {
+        this._model_engine.models[site].temp = new_temp;
+        this._model_engine.models[site].target_temp = new_temp;
+      }
+    }
+  }
+
   set_temperatures() {
     for (let [model_name, temp] of Object.entries(this.temp_settings)) {
       this._model_engine.models[model_name].temp = temp;
       this._model_engine.models[model_name].target_temp = temp;
+    }
+  }
+
+  set_new_humidity(new_humdity, site) {
+    if (new_humdity >= 0.0 && new_humdity <= 1.0) {
+      if (this._model_engine.models[site].model_type == "GasCapacitance") {
+        this._model_engine.models[site].humidity = new_humdity;
+      }
     }
   }
 
