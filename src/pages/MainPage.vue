@@ -131,6 +131,11 @@
                 <q-tooltip>mechanical ventilator</q-tooltip>
             </q-tab>
 
+            <q-tab name="diagram">
+                <q-icon name="fa-solid fa-diagram-project" size="xs"></q-icon>
+                <q-tooltip>diagram</q-tooltip>
+            </q-tab>
+
 
 
           </q-tabs>
@@ -192,6 +197,21 @@
                   width: '5px',
                   opacity: 0.5 }">
                 <XYChartComponent :alive="xy_alive" title="XY Graph" :presets={}></XYChartComponent>
+              </q-scroll-area>
+            </q-tab-panel>
+
+            <q-tab-panel name="diagram">
+              <q-scroll-area
+                class="q-pa-xs"
+                dark
+                :style="screen_height"
+                :vertical-bar-style="{
+                  right: '5px',
+                  borderRadius: '5px',
+                  background: 'grey-10',
+                  width: '5px',
+                  opacity: 0.5 }">
+                <DiagramComponent :alive="diagram_alive"></DiagramComponent>
               </q-scroll-area>
             </q-tab-panel>
 
@@ -309,6 +329,7 @@ import CirculatorySystemComponent from 'src/components/CirculatorySystemComponen
 import RespiratorySystemComponent from 'src/components/RespiratorySystemComponent.vue';
 import HeartComponent from 'src/components/HeartComponent.vue';
 import ShuntSystemComponent from 'src/components/ShuntSystemComponent.vue'
+import DiagramComponent from 'src/components/DiagramComponent.vue';
 
 import { explain } from 'src/boot/explain';
 
@@ -324,18 +345,20 @@ export default defineComponent({
     CirculatorySystemComponent,
     RespiratorySystemComponent,
     HeartComponent,
-    ShuntSystemComponent
+    ShuntSystemComponent,
+    DiagramComponent
   },
   data() {
     return {
       tab_left: "model_editor",
-      tab_center: "time_chart",
+      tab_center: "diagram",
       tab_right: "numerics",
       no_of_modeleditor: 1,
       chart_alive: true,
       ventilator_alive: true,
       heart_alive: false,
       xy_alive: true,
+      diagram_alive: true,
       screen_offset: 135.0,
       screen_height: 100.0,
       respiration: {
@@ -507,25 +530,37 @@ export default defineComponent({
           this.heart_alive = false
           this.chart_alive = false
           this.xy_alive = false
+          this.diagram_alive = false
           break;
         case "heart":
           this.ventilator_alive = false
           this.heart_alive = true
           this.chart_alive = false
           this.xy_alive = false
+          this.diagram_alive = false
           break;
         case "time_chart":
           this.ventilator_alive = false
           this.heart_alive = false
           this.chart_alive = true
           this.xy_alive = false
+          this.diagram_alive = false
           break;
         case "xy_chart":
           this.ventilator_alive = false
           this.heart_alive = false
           this.chart_alive = false
           this.xy_alive = true
+          this.diagram_alive = false
           break;
+        case "diagram":
+        this.ventilator_alive = false
+          this.heart_alive = false
+          this.chart_alive = false
+          this.xy_alive = false
+          this.diagram_alive = true
+          break;
+
 
       }
     },

@@ -17,7 +17,7 @@
     "@tensorflow/tfjs": "^4.17.0",
     "chart.js": "^4.4.1",
     "pinia": "^2.0.11",
-    "pixi.js": "^7.3.3",
+    "pixi.js": "7.4",
     "quasar": "^2.8.0",
     "simple-statistics": "^7.8.3",
     "vue": "^3.2.29",
