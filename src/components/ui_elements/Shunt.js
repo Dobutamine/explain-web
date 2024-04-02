@@ -62,15 +62,13 @@ export default class Shunt {
     this.edit_comp_event = new CustomEvent("edit_comp", { detail: this.key });
 
     this.drawPath();
-
     this.sprite = PIXI.Sprite.from(this.compPicto);
+    this.sprite["name_sprite"] = key;
     this.sprite.anchor = { x: 0.5, y: 0.5 };
     this.sprite.x = this.dbcFrom.sprite.x;
     this.sprite.y = this.dbcFrom.sprite.y;
     this.sprite.scale.set(0.035, 0.07);
-    this.sprite.interactive = true;
-    this.sprite.on("mouseup", (e) => this.onDragEnd(e));
-    this.sprite.on("touchend", (e) => this.onDragEnd(e));
+    this.sprite.eventMode = "none";
     this.sprite.tint = this.spriteColor;
     this.sprite.zIndex = 6;
 
@@ -83,9 +81,6 @@ export default class Shunt {
     this.dbcFrom.connectors[this.key] = this;
     this.dbcTo.connectors[this.key] = this;
   }
-  onDragEnd(e) {
-    document.dispatchEvent(this.edit_comp_event);
-  }
   drawPath() {
     if (this.path) {
       this.path.clear();
@@ -93,6 +88,7 @@ export default class Shunt {
     }
 
     this.path = new PIXI.Graphics();
+    this.path["name_path"] = this.key;
     this.path.zIndex = 1;
     this.path.cacheAsBitmap = true;
 
@@ -108,10 +104,7 @@ export default class Shunt {
     this.path.lineStyle(this.pathWidth, this.pathColor, 1);
     this.path.moveTo(this.line.x1, this.line.y1);
     this.path.lineTo(this.line.x2, this.line.y2);
-    this.path.interactive = true;
-
-    this.path.on("mouseup", (e) => this.onDragEnd(e));
-    this.path.on("touchend", (e) => this.onDragEnd(e));
+    this.path.eventMode = "none";
     this.pixiApp.stage.addChild(this.path);
   }
   setEditingMode(newMode) {}
@@ -126,7 +119,7 @@ export default class Shunt {
     let direction = 0;
 
     this.models.forEach((model) => {
-      flow += data[model + ".Flow"];
+      flow += data[model + ".flow"];
     });
 
     if (isNaN(flow)) {

@@ -59,15 +59,8 @@ export default class GasCompartment {
 
     // this is a blood compartment sprite which uses
     this.sprite = PIXI.Sprite.from(this.compPicto);
-    this.sprite.interactive = true;
-    this.sprite.on("mousedown", (e) => this.onDragStart(e));
-    this.sprite.on("touchstart", (e) => this.onDragStart(e));
-    this.sprite.on("mouseupoutside", (e) => this.onDragEnd(e));
-    this.sprite.on("touchendoutside", (e) => this.onDragEnd(e));
-    this.sprite.on("mouseup", (e) => this.onDragEnd(e));
-    this.sprite.on("touchend", (e) => this.onDragEnd(e));
-    this.sprite.on("mousemove", (e) => this.onDragMove(e));
-    this.sprite.on("touchmove", (e) => this.onDragMove(e));
+    this.sprite["name_sprite"] = key;
+    this.sprite.eventMode = "none";
     this.sprite.scale.set(
       this.volume * this.layout.scale.x,
       this.volume * this.layout.scale.y
@@ -107,6 +100,7 @@ export default class GasCompartment {
       strokeThickness: 0,
     });
     this.text = new PIXI.Text(this.label, this.textStyle);
+    this.text["name_text"] = key;
     this.text.anchor = { x: 0.5, y: 0.5 };
     this.text.x = this.sprite.x + this.layout.text.x;
     this.text.y = this.sprite.y + this.layout.text.y;
@@ -158,88 +152,6 @@ export default class GasCompartment {
     }
 
     this.sprite.tint = this.calculateColor(this.to2);
-  }
-  onDragStart(e) {
-    this.interactionData = e.data;
-    this.sprite.alpha = 0.5;
-    this.text.alpha = 0.5;
-  }
-  onDragMove(e) {
-    switch (this.editingMode) {
-      case 1: // moving
-        if (this.interactionData) {
-          this.sprite.x = this.interactionData.global.x;
-          this.sprite.y = this.interactionData.global.y;
-          this.text.x = this.sprite.x + this.layout.text.x;
-          this.text.y = this.sprite.y + this.layout.text.y;
-          this.layout.pos.x = this.sprite.x / this.xCenter;
-          this.layout.pos.y = this.sprite.y / this.yCenter;
-          this.calculateOnCircle(this.sprite.x, this.sprite.y);
-          // redraw the connector
-          this.redrawConnectors();
-        }
-        break;
-      case 2: // rotating
-        if (this.interactionData) {
-          if (this.interactionData.global.x > this.prevX) {
-            this.layout.rotation += 0.01;
-          } else {
-            this.layout.rotation -= 0.01;
-          }
-          this.sprite.rotation = this.layout.rotation;
-          this.text.rotation = this.layout.rotation;
-          this.prevX = this.interactionData.global.x;
-        }
-        break;
-      case 3: // morphing
-        if (this.interactionData) {
-          if (this.interactionData.global.x > this.prevX) {
-            this.layout.scale.x += 0.01;
-            this.layout.scale.y -= 0.01;
-          } else {
-            this.layout.scale.x -= 0.01;
-            this.layout.scale.y += 0.01;
-          }
-          this.sprite.scale.set(
-            this.volume * this.layout.scale.x,
-            this.volume * this.layout.scale.y
-          );
-          let scaleFont = this.volume * this.layout.text.size;
-          if (scaleFont > 1.1) {
-            scaleFont = 1.1;
-          }
-          this.text.scale.set(scaleFont, scaleFont);
-          this.prevX = this.interactionData.global.x;
-        }
-        break;
-      case 4: // resizing
-        if (this.interactionData) {
-          if (this.interactionData.global.x > this.prevX) {
-            this.layout.scale.x += 0.01;
-            this.layout.scale.y += 0.01;
-          } else {
-            this.layout.scale.x -= 0.01;
-            this.layout.scale.y -= 0.01;
-          }
-          this.sprite.scale.set(
-            this.volume * this.layout.scale.x,
-            this.volume * this.layout.scale.y
-          );
-          let scaleFont = this.volume * this.layout.text.size;
-          if (scaleFont > 1.1) {
-            scaleFont = 1.1;
-          }
-          this.text.scale.set(scaleFont, scaleFont);
-          this.prevX = this.interactionData.global.x;
-        }
-        break;
-    }
-  }
-  onDragEnd(e) {
-    this.interactionData = null;
-    this.sprite.alpha = 1;
-    this.text.alpha = 1;
-    document.dispatchEvent(this.edit_comp_event);
   }
   redrawConnectors() {
     Object.values(this.connectors).forEach((connector) => connector.drawPath());

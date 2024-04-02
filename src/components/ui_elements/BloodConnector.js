@@ -61,22 +61,19 @@ export default class BloodConnector {
       this.compPicto = "blood.png";
     }
 
-    this.edit_comp_event = new CustomEvent("edit_comp", { detail: this.key });
-
     this.drawPath();
-
     this.sprite = PIXI.Sprite.from(this.compPicto);
+    this.sprite["name_sprite"] = key;
     this.sprite.anchor = { x: 0.5, y: 0.5 };
     this.sprite.x = this.dbcFrom.sprite.x;
     this.sprite.y = this.dbcFrom.sprite.y;
     this.sprite.scale.set(0.035, 0.07);
-    this.sprite.interactive = true;
-    this.sprite.on("mouseup", (e) => this.onDragEnd(e));
-    this.sprite.on("touchend", (e) => this.onDragEnd(e));
+    this.sprite.eventMode = "none";
     this.sprite.tint = this.spriteColor;
     this.sprite.zIndex = 6;
 
     this.pixiApp.stage.addChild(this.sprite);
+    this.sprite.eventMode = "none";
 
     this.registerConnectorWithDbc();
   }
@@ -86,9 +83,6 @@ export default class BloodConnector {
     this.dbcTo.connectors[this.key] = this;
   }
   setEditingMode(newMode) {}
-  onDragEnd(e) {
-    document.dispatchEvent(this.edit_comp_event);
-  }
   drawPath() {
     if (this.path) {
       this.path.clear();
@@ -191,9 +185,7 @@ export default class BloodConnector {
         this.angleCorrection = Math.PI * 2.0;
       }
     }
-    this.path.interactive = true;
-    this.path.on("mouseup", (e) => this.onDragEnd(e));
-    this.path.on("touchend", (e) => this.onDragEnd(e));
+    this.path.eventMode = "none";
     this.pixiApp.stage.addChild(this.path);
   }
   update(data) {
@@ -206,7 +198,7 @@ export default class BloodConnector {
     let direction = 0;
 
     this.models.forEach((model) => {
-      flow += data[model + ".Flow"];
+      flow += data[model + ".flow"];
     });
 
     if (isNaN(flow)) {

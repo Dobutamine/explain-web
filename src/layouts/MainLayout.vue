@@ -172,6 +172,7 @@ export default defineComponent({
         this.butColor = "negative";
         this.butIcon = "fa-solid fa-stop";
         this.butCaption = "STOP";
+        this.$bus.emit("rt_start")
       } else {
         explain.stop();
         this.playArmed = false;
@@ -180,6 +181,7 @@ export default defineComponent({
         this.butCaption = "PLAY";
         // get the model state
         explain.getModelState()
+        this.$bus.emit("rt_stop")
       }
     },
     reload() {

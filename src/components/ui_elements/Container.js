@@ -56,15 +56,8 @@ export default class Container {
 
     // this is a blood compartment sprite which uses
     this.sprite = PIXI.Sprite.from(this.compPicto);
-    this.sprite.interactive = true;
-    this.sprite.on("mousedown", (e) => this.onDragStart(e));
-    this.sprite.on("touchstart", (e) => this.onDragStart(e));
-    this.sprite.on("mouseupoutside", (e) => this.onDragEnd(e));
-    this.sprite.on("touchendoutside", (e) => this.onDragEnd(e));
-    this.sprite.on("mouseup", (e) => this.onDragEnd(e));
-    this.sprite.on("touchend", (e) => this.onDragEnd(e));
-    this.sprite.on("mousemove", (e) => this.onDragMove(e));
-    this.sprite.on("touchmove", (e) => this.onDragMove(e));
+    this.sprite["name_sprite"] = key;
+    this.sprite.eventMode = "none";
     this.sprite.scale.set(
       this.volume * this.layout.scale.x,
       this.volume * this.layout.scale.y
@@ -104,6 +97,7 @@ export default class Container {
       strokeThickness: 0,
     });
     this.text = new PIXI.Text(this.label, this.textStyle);
+    this.text["name_text"] = key;
     this.text.anchor = { x: 0.5, y: 0.5 };
     this.text.x = this.sprite.x + this.layout.text.x;
     this.text.y = this.sprite.y + this.layout.text.y;

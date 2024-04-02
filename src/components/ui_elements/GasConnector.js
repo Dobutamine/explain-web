@@ -66,13 +66,12 @@ export default class GasConnector {
     this.drawPath();
 
     this.sprite = PIXI.Sprite.from(this.compPicto);
+    this.sprite["name_sprite"] = key;
     this.sprite.anchor = { x: 0.5, y: 0.5 };
     this.sprite.x = this.dbcFrom.sprite.x;
     this.sprite.y = this.dbcFrom.sprite.y;
     this.sprite.scale.set(0.025, 0.07);
-    this.sprite.interactive = true;
-    this.sprite.on("mouseup", (e) => this.onDragEnd(e));
-    this.sprite.on("touchend", (e) => this.onDragEnd(e));
+    this.sprite.eventMode = "none";
     this.sprite.tint = this.spriteColor;
     this.sprite.zIndex = 6;
 
@@ -86,15 +85,13 @@ export default class GasConnector {
     this.dbcTo.connectors[this.key] = this;
   }
   setEditingMode(newMode) {}
-  onDragEnd(e) {
-    document.dispatchEvent(this.edit_comp_event);
-  }
   drawPath() {
     if (this.path) {
       this.path.clear();
       this.pixiApp.stage.removeChild(this.path);
     }
     this.path = new PIXI.Graphics();
+    this.path["name_path"] = key;
     this.path.zIndex = 1;
     this.path.cacheAsBitmap = true;
 

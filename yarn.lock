@@ -2,20 +2,6 @@
 # yarn lockfile v1
 
 
-"@arction/eventer@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@arction/eventer/-/eventer-1.0.2.tgz#33b1673268547780a30d5d81001b4f10c1adab02"
-  integrity sha512-pn43bapEuf+V//UrAod6J0BuC64XdNIYmaCH/kMjhyVcOh8QGVflcLq30NP4qNhLvCXd5JFdo5ZLwq3qg6HkmQ==
-
-"@arction/lcjs@^5.0.7":
-  version "5.0.7"
-  resolved "https://registry.yarnpkg.com/@arction/lcjs/-/lcjs-5.0.7.tgz#57248ce868ffe97000be43323d2d5bc10dc5ca54"
-  integrity sha512-hummJCB5qvUWlzXQI8kbkrVC/3BhsvWtFvYDRRhD1e5GD7/P4s+ZXn551YUXddim0qAsgi8En/lqa78rz9GuGQ==
-  dependencies:
-    "@arction/eventer" "^1.0.2"
-    earcut "^2.2.2"
-    immutable "^4.0.0"
-
 "@babel/parser@^7.23.6":
   version "7.23.6"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.23.6.tgz#ba1c9e512bda72a47e285ae42aff9d2a635a9e3b"
@@ -1465,7 +1451,7 @@ dot-prop@6.0.1, dot-prop@^6.0.1:
   dependencies:
     is-obj "^2.0.0"
 
-earcut@^2.2.2, earcut@^2.2.4:
+earcut@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/earcut/-/earcut-2.2.4.tgz#6d02fd4d68160c114825d06890a92ecaae60343a"
   integrity sha512-/pjZsA1b4RPHbeWZQn66SWS8nZZWLQQ23oE3Eam7aroEFGEvwKAsJfZ9ytiEMycfzXWpca4FA9QIOehf7PocBQ==
