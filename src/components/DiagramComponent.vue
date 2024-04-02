@@ -1,21 +1,20 @@
 <template>
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
-    <!-- <div class="row justify-center">
+    <div class="row justify-center">
+      <q-select class="q-pa-xs q-mr-sm q-ml-sm col text-overline" v-model="selected_diagram" square
+        label="selected model diagram" hide-hint :options="diagram_options" dense dark stack-label
+        @update:model-value="loadDiagram" />
+    </div>
 
-      <q-btn-toggle color="grey-10" class="q-ma-sm" toggle-color="primary" size="xs" v-model="editingSelection"
-        @click="changeEditingMode" :options="[
-        { label: 'selecting', value: 0 },
-        { label: 'moving', value: 1 },
-        { label: 'rotating', value: 2 },
-        { label: 'morphing', value: 3 },
-        { label: 'sizing', value: 4 },
-      ]" />
-    </div> -->
-    <q-btn @click="togglePda">pda</q-btn>
-    <q-btn @click="toggleFo">fo</q-btn>
+
     <div class="stage" :style="{ display: display }">
       <canvas id="stage"></canvas>
     </div>
+    <div class="row justify-center">
+      <q-option-group v-model="selected_shunts" :options="shunt_options" color="primary" inline size="xs" dense
+        class="text-overline" type="checkbox" @update:model-value="toggleShunts"></q-option-group>
+    </div>
+
   </q-card>
 </template>
 <script>
@@ -38,1019 +37,93 @@ export default {
       display: "block",
       ticker: null,
       pixiApp: null,
-      diagram: {
-        settings: {
-          backgroundColor: 3355443,
-          editingMode: 1,
-          scaling: 0.3,
-          grid: false,
-          gridSize: 10,
-          snapToGrid: true,
-          skeleton: true,
-          skeletonColor: 4473924,
-          pathColor: 4473924,
-          radius: 0.6,
-          componentTypes: [
-            "BloodCompartment",
-            "BloodConnector",
-            "GasCompartment",
-            "GasConnector",
-            "Container",
-            "GasExchanger",
-            "Shunt"
-          ]
-        },
-        components: {
-          "LV": {
-            "enabled": true,
-            "label": "LV",
-            "models": [
-              "LV"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "arc",
-                "x": 1,
-                "y": 1,
-                "dgs": 330
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "LA": {
-            "enabled": true,
-            "label": "LA",
-            "models": [
-              "LA"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "arc",
-                "x": 1,
-                "y": 0,
-                "dgs": 317
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "RA": {
-            "enabled": true,
-            "label": "RA",
-            "models": [
-              "RA"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "arc",
-                "x": 1,
-                "y": 1,
-                "dgs": 210
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "RV": {
-            "enabled": true,
-            "label": "RV",
-            "models": [
-              "RV"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "arc",
-                "x": 0.42652188455657486,
-                "y": 0.7404115698267074,
-                "dgs": 223
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "PA": {
-            "enabled": true,
-            "label": "PA",
-            "models": [
-              "PA"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "arc",
-                "x": 0,
-                "y": 0,
-                "dgs": 243
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "LL": {
-            "enabled": true,
-            "label": "LL",
-            "models": [
-              "LL"
-            ],
-            "compType": "BloodCompartment",
-            "compPicto": "container.png",
-            "layout": {
-              "pos": {
-                "type": "arc",
-                "x": 1.0,
-                "y": 0.2,
-                "dgs": 270
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "RL": {
-            "enabled": true,
-            "label": "RL",
-            "models": [
-              "RL"
-            ],
-            "compType": "BloodCompartment",
-            "compPicto": "container.png",
-            "layout": {
-              "pos": {
-                "type": "rel",
-                "x": 1.0,
-                "y": 0.38,
-                "dgs": 284.85
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "PV": {
-            "enabled": true,
-            "label": "PV",
-            "models": [
-              "PV"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "arc",
-                "x": 0,
-                "y": 0,
-                "dgs": 297
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "PA_LL": {
-            "enabled": true,
-            "label": "PA_LL",
-            "models": [
-              "PA_LL"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "PA",
-            "dbcTo": "LL"
-          },
-          "PA_RL": {
-            "enabled": true,
-            "label": "PA_RL",
-            "models": [
-              "PA_RL"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "PA",
-            "dbcTo": "RL"
-          },
-          "LL_PV": {
-            "enabled": true,
-            "label": "LL_PV",
-            "models": [
-              "LL_PV"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "LL",
-            "dbcTo": "PV"
-          },
-          "PV_LA": {
-            "enabled": true,
-            "label": "PV_LA",
-            "models": [
-              "PV_LA"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "PV",
-            "dbcTo": "LA"
-          },
-          "RV_PA": {
-            "enabled": true,
-            "label": "RV_PA",
-            "models": [
-              "RV_PA"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "RV",
-            "dbcTo": "PA"
-          },
-          "RL_PV": {
-            "enabled": true,
-            "label": "RL_PV",
-            "models": [
-              "RL_PV"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "RL",
-            "dbcTo": "PV"
-          },
-          "RA_RV": {
-            "enabled": true,
-            "label": "RA_RV",
-            "models": [
-              "RA_RV"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "RA",
-            "dbcTo": "RV"
-          },
-          "LA_LV": {
-            "enabled": true,
-            "label": "LA_LV",
-            "models": [
-              "LA_LV"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "LA",
-            "dbcTo": "LV"
-          },
-          "AA": {
-            "enabled": true,
-            "label": "AA",
-            "models": [
-              "AA"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "arc",
-                "x": 1.5910052049446972,
-                "y": 1.1849788549121665,
-                "dgs": 350
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "AAR": {
-            "enabled": true,
-            "label": "AAR",
-            "models": [
-              "AAR"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "arc",
-                "x": 1.5387117761873779,
-                "y": 1.3783208631533288,
-                "dgs": 10
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "COR": {
-            "enabled": true,
-            "label": "COR",
-            "models": [
-              "COR"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "rel",
-                "x": 1,
-                "y": 0.85,
-                "dgs": 350
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "AD": {
-            "enabled": true,
-            "label": "AD",
-            "models": [
-              "AD"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "arc",
-                "x": 1.4534198113207546,
-                "y": 1.5342523313814789,
-                "dgs": 30
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "RLB": {
-            "enabled": true,
-            "label": "RLB",
-            "models": [
-              "RLB"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "arc",
-                "x": 1.02,
-                "y": 1.79,
-                "dgs": 90
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "IVCE": {
-            "enabled": true,
-            "label": "IVCE",
-            "models": [
-              "IVCE"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "arc",
-                "x": 0.6565908137583892,
-                "y": 1.672329418344519,
-                "dgs": 150
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "IVCI": {
-            "enabled": true,
-            "label": "IVCI",
-            "models": [
-              "IVCI"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "arc",
-                "x": 0.44486682046979864,
-                "y": 1.2985994593586874,
-                "dgs": 190
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "SVC": {
-            "enabled": true,
-            "label": "SVC",
-            "models": [
-              "SVC"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "rel",
-                "x": 0.6523056278464542,
-                "y": 0.8,
-                "dgs": 0
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "INT": {
-            "enabled": true,
-            "label": "INT",
-            "models": [
-              "INT"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "rel",
-                "x": 1,
-                "y": 1.51,
-                "dgs": 0
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "KID": {
-            "enabled": true,
-            "label": "KID",
-            "models": [
-              "KID"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "rel",
-                "x": 0.9967491610738254,
-                "y": 1.6601067300521999,
-                "dgs": 0
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "LS": {
-            "enabled": true,
-            "label": "LS",
-            "models": [
-              "LS"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "rel",
-                "x": 1,
-                "y": 1.35,
-                "dgs": 1.06
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "BR": {
-            "enabled": true,
-            "label": "BR",
-            "models": [
-              "BR"
-            ],
-            "compType": "BloodCompartment",
-            "compPicto": "container.png",
-            "layout": {
-              "pos": {
-                "type": "rel",
-                "x": 1,
-                "y": 0.98,
-                "dgs": 0
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "RUB": {
-            "enabled": true,
-            "label": "RUB",
-            "models": [
-              "RUB"
-            ],
-            "compType": "BloodCompartment",
-            "layout": {
-              "pos": {
-                "type": "rel",
-                "x": 1,
-                "y": 1.14,
-                "dgs": 0
-              },
-              "morph": {
-                "x": 1,
-                "y": 1
-              },
-              "scale": {
-                "x": 1,
-                "y": 1
-              },
-              "rotation": 0,
-              "text": {
-                "x": 0,
-                "y": 0,
-                "size": 10
-              }
-            }
-          },
-          "AD_RLB": {
-            "enabled": true,
-            "label": "AD_RLB",
-            "models": [
-              "AD_RLB"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "AD",
-            "dbcTo": "RLB"
-          },
-          "AD_KID": {
-            "enabled": true,
-            "label": "AD_KID",
-            "models": [
-              "AD_KID"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "AD",
-            "dbcTo": "KID"
-          },
-          "AD_INT": {
-            "enabled": true,
-            "label": "AD_INT",
-            "models": [
-              "AD_INT"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "AD",
-            "dbcTo": "INT"
-          },
-          "AD_LS": {
-            "enabled": true,
-            "label": "AD_LS",
-            "models": [
-              "AD_LS"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "AD",
-            "dbcTo": "LS"
-          },
-          "LS_IVCE": {
-            "enabled": true,
-            "label": "LS_IVCE",
-            "models": [
-              "LS_IVCE"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "LS",
-            "dbcTo": "IVCE"
-          },
-          "INT_IVCE": {
-            "enabled": true,
-            "label": "INT_IVCE",
-            "models": [
-              "INT_IVCE"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "INT",
-            "dbcTo": "IVCE"
-          },
-          "KID_IVCE": {
-            "enabled": true,
-            "label": "KID_IVCE",
-            "models": [
-              "KID_IVCE"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "KID",
-            "dbcTo": "IVCE"
-          },
-          "RLB_IVCE": {
-            "enabled": true,
-            "label": "RLB_IVCE",
-            "models": [
-              "RLB_IVCE"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "RLB",
-            "dbcTo": "IVCE"
-          },
-          "IVCE_IVCI": {
-            "enabled": true,
-            "label": "IVCE_IVCE",
-            "models": [
-              "IVCE_IVCI"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "IVCE",
-            "dbcTo": "IVCI"
-          },
-          "IVCI_RA": {
-            "enabled": true,
-            "label": "IVCI_RA",
-            "models": [
-              "IVCI_RA"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "IVCI",
-            "dbcTo": "RA"
-          },
-          "SVC_RA": {
-            "enabled": true,
-            "label": "SVC_RA",
-            "models": [
-              "SVC_RA"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "SVC",
-            "dbcTo": "RA"
-          },
-          "BR_SVC": {
-            "enabled": true,
-            "label": "BR_SVC",
-            "models": [
-              "BR_SVC"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "BR",
-            "dbcTo": "SVC"
-          },
-          "RUB_SVC": {
-            "enabled": true,
-            "label": "RUB_SVC",
-            "models": [
-              "RUB_SVC"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "RUB",
-            "dbcTo": "SVC"
-          },
-          "AAR_RUB": {
-            "enabled": true,
-            "label": "AAR_RUB",
-            "models": [
-              "AAR_RUB"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "AAR",
-            "dbcTo": "RUB"
-          },
-          "AAR_BR": {
-            "enabled": true,
-            "label": "AAR_BR",
-            "models": [
-              "AAR_BR"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "AAR",
-            "dbcTo": "BR"
-          },
-          "LV_AA": {
-            "enabled": true,
-            "label": "LV_AA",
-            "models": [
-              "LV_AA"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "LV",
-            "dbcTo": "AA"
-          },
-          "AA_AAR": {
-            "enabled": true,
-            "label": "AA_AAR",
-            "models": [
-              "AA_AAR"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "AA",
-            "dbcTo": "AAR"
-          },
-          "AAR_AD": {
-            "enabled": true,
-            "label": "AAR_AD",
-            "models": [
-              "AAR_AD"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "AAR",
-            "dbcTo": "AD"
-          },
-          "AA_COR": {
-            "enabled": true,
-            "label": "AA_COR",
-            "models": [
-              "AA_COR"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "AA",
-            "dbcTo": "COR"
-          },
-          "COR_RA": {
-            "enabled": true,
-            "label": "COR_RA",
-            "models": [
-              "COR_RA"
-            ],
-            "compType": "BloodConnector",
-            "dbcFrom": "COR",
-            "dbcTo": "RA"
-          },
-          "IPS": {
-            "enabled": true,
-            "label": "IPS",
-            "models": [
-              "IPS"
-            ],
-            "compType": "Shunt",
-            "dbcFrom": "PA",
-            "dbcTo": "PV"
-          },
-          "DA_OUT": {
-            "enabled": true,
-            "label": "DA",
-            "models": [
-              "DA_OUT"
-            ],
-            "compType": "Shunt",
-            "dbcFrom": "AAR",
-            "dbcTo": "PA"
-          },
-          "FO": {
-            "enabled": true,
-            "label": "FO",
-            "models": [
-              "FO"
-            ],
-            "compType": "Shunt",
-            "dbcFrom": "RA",
-            "dbcTo": "LA"
-          },
-          "VSD": {
-            "enabled": true,
-            "label": "VSD",
-            "models": [
-              "VSD"
-            ],
-            "compType": "Shunt",
-            "dbcFrom": "LV",
-            "dbcTo": "RV"
-          },
-        }
-      },
+      diagram: {},
       diagramComponents: {},
       gridVertical: null,
       gridHorizontal: null,
       skeletonGraphics: null,
-      rt_running: false
+      rt_running: false,
+      selected_diagram: 'default',
+      diagram_options: ['default', 'ecmo'],
+      selected_shunts: ['pda', 'fo', 'ips'],
+      shunt_options: [{
+        label: 'ductus arteriosus',
+        value: 'pda'
+      },
+      {
+        label: 'foramen ovale',
+        value: 'fo'
+      },
+      {
+        label: 'ventricular septal defect',
+        value: 'vsd'
+      },
+      {
+        label: 'intrapulmonary shunt',
+        value: 'ips'
+      }
+      ]
 
     };
   },
   methods: {
-    removeDiagramComponent(comp_name) {
-      const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == comp_name);
-      const index_text = this.pixiApp.stage.children.findIndex((obj) => obj.name_text == comp_name);
-      const index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == comp_name);
-
-      if (index_sprite > 0) {
-        this.pixiApp.stage.removeChild(this.pixiApp.stage.children[index_sprite])
-      }
-      if (index_text > 0) {
-        this.pixiApp.stage.removeChild(this.pixiApp.stage.children[index_text])
-      }
-      if (index_path > 0) {
-        this.pixiApp.stage.removeChild(this.pixiApp.stage.children[index_path])
-      }
+    toggleShunts() {
+      console.log(this.selected_shunts)
     },
-    addDiagramComponent(comp_name) {
-      const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == comp_name);
-      const index_text = this.pixiApp.stage.children.findIndex((obj) => obj.name_text == comp_name);
-      const index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == comp_name);
-      if (index_sprite < 0 && index_text < 0 && index_path < 0) {
-        let component = {}
-        component[comp_name] = this.diagram.components[comp_name]
-        this.drawComponents(component)
-      }
+    loadDiagram(filename = "default") {
+      let fn = "/diagrams/" + filename + ".json"
+      fetch(new URL(fn, import.meta.url))
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(
+              "Uh oh! could not get the baseline_neonate from the server!"
+            );
+          }
+          return response.json();
+        })
+        .then((jsonData) => {
+          this.diagram = { ...jsonData }
+          this.initDiagram()
+        })
+        .catch((error) => {
+          console.error("Error: ", error);
+        });
+    },
+    toggleLumping() {
+      const comp_to_remove = ["AAR_BR", "AAR_RUB", "BR_SVC", "RUB_SVC", "SVC_RA", "AD_INT", "AD_KID", "AD_RLB", "AD_LS", "LS_IVCE", "KID_IVCE", "RLB_IVCE", "INT_IVCE", "IVCE_IVCI", "IVCI_RA", "RUB", "BR", "RLB", "KID", "LS", "INT", "IVCE", "IVCI", "SVC"]
+      comp_to_remove.forEach(c => {
+        console.log(c)
+        let index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == c);
+        let index_text = this.pixiApp.stage.children.findIndex((obj) => obj.name_text == c);
+        let index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == c);
+        if (index_sprite >= 0) {
+          console.log("removing: ", c)
+          this.removeDiagramComponent(c)
+        }
+        if (index_text >= 0) {
+          console.log("removing: ", c)
+          this.removeDiagramComponent(c)
+        }
+        if (index_path >= 0) {
+          console.log("removing: ", c)
+          this.removeDiagramComponent(c)
+        }
+      })
+
+      const comps_to_show = ["UB", "LB", "AAR_UB", "AD_LB"]
+      comps_to_show.forEach(c => {
+        let index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == c);
+        let index_text = this.pixiApp.stage.children.findIndex((obj) => obj.name_text == c);
+        let index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == c);
+        if (index_sprite < 0 && index_text < 0 && index_path < 0) {
+          this.addDiagramComponent(c)
+        }
+      })
+
 
     },
+    toggleLumpingUpperBody() { },
+    toggleLumpingLowerBody() { },
     togglePda() {
       const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == "DA_OUT");
       const index_text = this.pixiApp.stage.children.findIndex((obj) => obj.name_text == "DA_OUT");
@@ -1060,7 +133,6 @@ export default {
       } else {
         this.removeDiagramComponent("DA_OUT")
       }
-
     },
     toggleFo() {
       const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == "FO");
@@ -1170,6 +242,32 @@ export default {
           this.pixiApp.stage.removeChild(this.gridHorizontal);
         }
       }
+    },
+    removeDiagramComponent(comp_name) {
+      const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == comp_name);
+      const index_text = this.pixiApp.stage.children.findIndex((obj) => obj.name_text == comp_name);
+      const index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == comp_name);
+
+      if (index_sprite > 0) {
+        this.pixiApp.stage.removeChild(this.pixiApp.stage.children[index_sprite])
+      }
+      if (index_text > 0) {
+        this.pixiApp.stage.removeChild(this.pixiApp.stage.children[index_text])
+      }
+      if (index_path > 0) {
+        this.pixiApp.stage.removeChild(this.pixiApp.stage.children[index_path])
+      }
+    },
+    addDiagramComponent(comp_name) {
+      const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == comp_name);
+      const index_text = this.pixiApp.stage.children.findIndex((obj) => obj.name_text == comp_name);
+      const index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == comp_name);
+      if (index_sprite < 0 && index_text < 0 && index_path < 0) {
+        let component = {}
+        component[comp_name] = this.diagram.components[comp_name]
+        this.drawComponents(component)
+      }
+
     },
     drawComponents(component_list) {
       // get the layout properties
@@ -1337,8 +435,9 @@ export default {
 
   },
   mounted() {
+    this.loadDiagram()
     //this.$bus.on("state", this.processModelState)
-    this.initDiagram()
+
 
     this.$bus.on('rt_start', () => this.rt_running = true)
     this.$bus.on('rt_stop', () => this.rt_running = false)

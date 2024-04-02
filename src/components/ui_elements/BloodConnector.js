@@ -89,6 +89,7 @@ export default class BloodConnector {
       this.pixiApp.stage.removeChild(this.path);
     }
     this.path = new PIXI.Graphics();
+    this.path["name_path"] = this.key;
     this.path.zIndex = 1;
     this.path.cacheAsBitmap = true;
 

@@ -1,99 +1,40 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header
-      class="bg-indigo-10 text-white headerCustomStyle"
-      height-hint="68"
-    >
-  </q-header>
+    <q-header class="bg-indigo-10 text-white headerCustomStyle" height-hint="68">
+    </q-header>
 
-  <q-page-container>
+    <q-page-container>
       <router-view />
     </q-page-container>
 
-  <q-footer class="bg-grey-8 text-white footerCustomStyle">
-    <q-toolbar>
-      <q-toolbar-title class="text-overline">
+    <q-footer class="bg-grey-8 text-white footerCustomStyle">
+      <q-toolbar>
+        <q-toolbar-title class="text-overline">
           <div>{{ statusMessage }}</div>
         </q-toolbar-title>
         <div class="q-mr-sm text-overline">
-          <q-file  class="text-overline text-bold"  v-model="model_file" :display-value="modelName"  @update:model-value="upload">
+          <q-file class="text-overline text-bold" v-model="model_file" :display-value="modelName"
+            @update:model-value="upload">
             <template v-slot:append>
               <q-icon size="xs" name="fa-solid fa-upload" />
             </template>
             <q-tooltip> {{ modelDescription }} </q-tooltip>
           </q-file>
         </div>
-        <q-btn
-          flat
-          round
-          dense
-          size="sm"
-          icon="fa-solid fa-download"
-          color="white"
-          class="q-mr-lg"
-          @click="save_state"
-        >
-          <q-tooltip> download model state </q-tooltip></q-btn
-        >
-        <q-btn
-          flat
-          round
-          dense
-          size="sm"
-          :icon="butIcon"
-          :color="butColor"
-          class="q-mr-sm"
-          @click="togglePlay"
-        >
-          <q-tooltip> start/stop model </q-tooltip></q-btn
-        >
-        <q-btn
-          flat
-          round
-          dense
-          size="sm"
-          icon="fa-solid fa-rotate-right"
-          color="white"
-          class="q-mr-sm"
-          @click="reload"
-        >
-          <q-tooltip> restart model </q-tooltip></q-btn
-        >
-        <q-btn
-          flat
-          round
-          dense
-          :icon="butCalcIcon"
-          size="sm"
-          @click="calculate"
-          :color="butCalcColor"
-          class="q-mr-sm"
-        >
-          <q-tooltip> fast forward model</q-tooltip></q-btn
-        >
-        <q-select
-          class="q-ml-md q-mr-md"
-          label-color="white"
-          v-model="selectedDuration"
-          :options="durations"
-          hide-bottom-space
-          dense
-          label="step (sec.)"
-          style="width: 90px; font-size: 12px"
-          ><q-tooltip> fast forward step size</q-tooltip></q-select
-        >
-        <q-btn
-          flat
-          round
-          dense
-          :icon="butDebugIcon"
-          size="sm"
-          @click="toggleDebug"
-          :color="butDebugColor"
-          class="q-mr-sm"
-        >
-          <q-tooltip> {{ butDebugCaption }}</q-tooltip></q-btn
-        >
+        <q-btn flat round dense size="sm" icon="fa-solid fa-download" color="white" class="q-mr-lg" @click="save_state">
+          <q-tooltip> download model state </q-tooltip></q-btn>
+        <q-btn flat round dense size="sm" :icon="butIcon" :color="butColor" class="q-mr-sm" @click="togglePlay">
+          <q-tooltip> start/stop model </q-tooltip></q-btn>
+        <q-btn flat round dense size="sm" icon="fa-solid fa-rotate-right" color="white" class="q-mr-sm" @click="reload">
+          <q-tooltip> restart model </q-tooltip></q-btn>
+        <q-btn flat round dense :icon="butCalcIcon" size="sm" @click="calculate" :color="butCalcColor" class="q-mr-sm">
+          <q-tooltip> fast forward model</q-tooltip></q-btn>
+        <q-select class="q-ml-md q-mr-md" label-color="white" v-model="selectedDuration" :options="durations"
+          hide-bottom-space dense label="step (sec.)" style="width: 90px; font-size: 12px"><q-tooltip> fast forward step
+            size</q-tooltip></q-select>
+        <q-btn flat round dense :icon="butDebugIcon" size="sm" @click="toggleDebug" :color="butDebugColor"
+          class="q-mr-sm">
+          <q-tooltip> {{ butDebugCaption }}</q-tooltip></q-btn>
       </q-toolbar>
     </q-footer>
   </q-layout>
@@ -106,7 +47,7 @@ import { explain } from 'src/boot/explain';
 export default defineComponent({
   name: 'MainLayout',
 
-  setup () {
+  setup() {
   },
   data() {
     return {
@@ -145,8 +86,6 @@ export default defineComponent({
 
       // Read the file as Text or as needed
       reader.readAsText(this.model_file);
-
-
     },
     save_state() {
       explain.saveModelState()
@@ -259,35 +198,35 @@ export default defineComponent({
   mounted() {
     try {
       document.removeEventListener("status", this.statusUpdate);
-    } catch {}
+    } catch { }
     document.addEventListener("status", this.statusUpdate);
     try {
       document.removeEventListener("state", this.stateUpdate);
-    } catch {}
+    } catch { }
     document.addEventListener("state", this.stateUpdate);
     try {
       document.removeEventListener("info", this.infoUpdate);
-    } catch {}
+    } catch { }
     document.addEventListener("info", this.infoUpdate);
     try {
       document.removeEventListener("info", this.errorUpdate);
-    } catch {}
+    } catch { }
     document.addEventListener("info", this.errorUpdate);
     try {
       document.removeEventListener("info", this.stateUpdate);
-    } catch {}
+    } catch { }
     document.addEventListener("info", this.stateUpdate);
     try {
       document.removeEventListener("rts", this.dataSlowUpdate);
-    } catch {}
+    } catch { }
     document.addEventListener("rts", this.dataSlowUpdate);
     try {
       document.removeEventListener("rtf", this.dataFastUpdate);
-    } catch {}
+    } catch { }
     document.addEventListener("rtf", this.dataFastUpdate);
     try {
       document.removeEventListener("data", this.dataUpdate);
-    } catch {}
+    } catch { }
     document.addEventListener("data", this.dataUpdate);
 
 
@@ -300,6 +239,7 @@ export default defineComponent({
   display: flex;
   align-items: center !important;
 }
+
 .footerCustomStyle {
   height: 30px !important;
   display: flex;
