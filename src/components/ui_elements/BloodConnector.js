@@ -68,6 +68,7 @@ export default class BloodConnector {
     this.dbcTo = dbcTo;
     this.compPicto = picto;
     this.global_scaling = scaling;
+    this.pathWidth = this.pathWidth * this.global_scaling;
 
     if (!this.compPicto) {
       this.compPicto = "blood.png";
@@ -79,7 +80,10 @@ export default class BloodConnector {
     this.sprite.anchor = { x: 0.5, y: 0.5 };
     this.sprite.x = this.dbcFrom.sprite.x;
     this.sprite.y = this.dbcFrom.sprite.y;
-    this.sprite.scale.set(0.035, 0.07);
+    this.sprite.scale.set(
+      0.035 * this.dbcFrom.global_scaling,
+      0.07 * this.dbcFrom.global_scaling
+    );
     this.sprite.eventMode = "none";
     this.sprite.tint = this.spriteColor;
     this.sprite.zIndex = 6;

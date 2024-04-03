@@ -93,8 +93,14 @@ export default class Container {
             this.radius;
         break;
       case "rel":
-        this.sprite.x = this.layout.pos.x * this.xCenter + this.xOffset;
-        this.sprite.y = this.layout.pos.y * this.yCenter + this.yOffset;
+        this.sprite.x =
+          this.xCenter +
+          this.xOffset +
+          this.layout.pos.x * (this.xCenter * radius);
+        this.sprite.y =
+          this.yCenter +
+          this.yOffset +
+          this.layout.pos.y * (this.xCenter * radius);
         break;
     }
 

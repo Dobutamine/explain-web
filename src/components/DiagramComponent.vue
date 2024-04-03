@@ -168,7 +168,7 @@ export default {
         const yCenter = (this.pixiApp.renderer.height / 4) + this.diagram.settings.yOffset
         this.skeletonGraphics.beginFill(color);
         this.skeletonGraphics.lineStyle(1, color, 1);
-        this.skeletonGraphics.drawCircle(xCenter, yCenter, xCenter * radius);
+        this.skeletonGraphics.drawCircle(xCenter, yCenter, (xCenter - this.diagram.settings.xOffset) * radius);
         this.skeletonGraphics.endFill();
         this.pixiApp.stage.addChild(this.skeletonGraphics);
       }
