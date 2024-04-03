@@ -9,11 +9,14 @@ export default class BloodPump {
   layout = null;
   xCenter = 0;
   yCenter = 0;
+  xOffset = 0;
+  yOffset = 0;
   radius = 0;
   angle = 0;
   rotation = 0;
   rotationFlow = 0;
   distanceToCenter = 0;
+  global_scaling = 1.0;
 
   sprite = {};
   text = {};
@@ -38,8 +41,11 @@ export default class BloodPump {
     layout,
     xCenter,
     yCenter,
+    xOffset,
+    yOffset,
     radius,
-    picto
+    picto,
+    scaling
   ) {
     // store the parameters
     this.pixiApp = pixiApp;
@@ -49,8 +55,11 @@ export default class BloodPump {
     this.layout = layout;
     this.xCenter = xCenter;
     this.yCenter = yCenter;
+    this.xOffset = xOffset;
+    this.yOffset = yOffset;
     this.radius = radius;
     this.compPicto = picto;
+    this.global_scaling = scaling;
 
     if (!this.compPicto) {
       this.compPicto = "container.png";
@@ -63,8 +72,8 @@ export default class BloodPump {
     this.sprite["name_sprite"] = key;
     this.sprite.eventMode = "none";
     this.sprite.scale.set(
-      this.volume * this.layout.scale.x,
-      this.volume * this.layout.scale.y
+      this.volume * this.layout.scale.x * this.global_scaling,
+      this.volume * this.layout.scale.y * this.global_scaling
     );
     this.sprite.anchor = { x: 0.5, y: 0.5 };
     this.sprite.tint = "0x151a7b";
@@ -76,18 +85,20 @@ export default class BloodPump {
       case "arc":
         this.sprite.x =
           this.xCenter +
+          this.xOffset +
           Math.cos(this.layout.pos.dgs * 0.0174533) *
             this.xCenter *
             this.radius;
         this.sprite.y =
           this.yCenter +
+          this.yOffset +
           Math.sin(this.layout.pos.dgs * 0.0174533) *
             this.xCenter *
             this.radius;
         break;
       case "rel":
-        this.sprite.x = this.layout.pos.x * this.xCenter;
-        this.sprite.y = this.layout.pos.y * this.yCenter;
+        this.sprite.x = this.layout.pos.x * this.xCenter + this.xOffset;
+        this.sprite.y = this.layout.pos.y * this.yCenter + this.yOffset;
         break;
     }
 
@@ -139,17 +150,17 @@ export default class BloodPump {
     }
 
     if (isNaN(volume)) {
-      this.volume = 0.15 / this.layout.scale.x;
+      this.volume = (0.15 / this.layout.scale.x) * this.global_scaling;
     } else {
       this.volume = this.calculateRadius(volume);
     }
 
     this.sprite.scale.set(
-      this.volume * this.layout.scale.x,
-      this.volume * this.layout.scale.y
+      this.volume * this.layout.scale.x * this.global_scaling,
+      this.volume * this.layout.scale.y * this.global_scaling
     );
 
-    let scaleFont = this.volume * this.layout.text.size;
+    let scaleFont = this.volume * this.layout.text.size * this.global_scaling;
     if (scaleFont > 1.1) {
       scaleFont = 1.1;
     }

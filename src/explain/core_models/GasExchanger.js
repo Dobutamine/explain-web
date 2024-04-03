@@ -74,8 +74,8 @@ export class GasExchanger {
   // dependent parameters
   _blood = {};
   _gas = {};
-  _flux_o2 = 0;
-  _flux_co2 = 0;
+  flux_o2 = 0;
+  flux_co2 = 0;
 
   // local parameters
   _model_engine = {};
@@ -142,7 +142,7 @@ export class GasExchanger {
     let pco2_gas = this._gas.pco2;
 
     // calculate the O2 flux from the blood to the gas compartment
-    this._flux_o2 =
+    this.flux_o2 =
       (po2_blood - po2_gas) *
       this.dif_o2 *
       this.dif_o2_factor *
@@ -151,18 +151,18 @@ export class GasExchanger {
 
     // calculate the new O2 concentrations of the gas and blood compartments
     let new_to2_blood =
-      (to2_blood * this._blood.vol - this._flux_o2) / this._blood.vol;
+      (to2_blood * this._blood.vol - this.flux_o2) / this._blood.vol;
     if (new_to2_blood < 0) {
       new_to2_blood = 0;
     }
 
-    let new_co2_gas = (co2_gas * this._gas.vol + this._flux_o2) / this._gas.vol;
+    let new_co2_gas = (co2_gas * this._gas.vol + this.flux_o2) / this._gas.vol;
     if (new_co2_gas < 0) {
       new_co2_gas = 0;
     }
 
     // calculate the CO2 flux from the blood to the gas compartment
-    this._flux_co2 =
+    this.flux_co2 =
       (pco2_blood - pco2_gas) *
       this.dif_co2 *
       this.dif_co2_factor *
@@ -171,13 +171,13 @@ export class GasExchanger {
 
     // calculate the new CO2 concentrations of the gas and blood compartments
     let new_tco2_blood =
-      (tco2_blood * this._blood.vol - this._flux_co2) / this._blood.vol;
+      (tco2_blood * this._blood.vol - this.flux_co2) / this._blood.vol;
     if (new_tco2_blood < 0) {
       new_tco2_blood = 0;
     }
 
     let new_cco2_gas =
-      (cco2_gas * this._gas.vol + this._flux_co2) / this._gas.vol;
+      (cco2_gas * this._gas.vol + this.flux_co2) / this._gas.vol;
     if (new_cco2_gas < 0) {
       new_cco2_gas = 0;
     }

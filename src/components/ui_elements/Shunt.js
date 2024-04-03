@@ -9,6 +9,7 @@ export default class Shunt {
   dbcFrom = {};
   dbcTo = {};
   layout = {};
+  global_scaling = 1.0;
 
   sprite = {};
   spriteColor = 0xffffff;
@@ -45,7 +46,17 @@ export default class Shunt {
 
   edit_comp_event = null;
 
-  constructor(pixiApp, key, label, models, dbcFrom, dbcTo, layout, picto) {
+  constructor(
+    pixiApp,
+    key,
+    label,
+    models,
+    dbcFrom,
+    dbcTo,
+    layout,
+    picto,
+    scaling
+  ) {
     this.pixiApp = pixiApp;
     this.key = key;
     this.label = label;
@@ -54,6 +65,7 @@ export default class Shunt {
     this.dbcTo = dbcTo;
     this.layout = layout;
     this.compPicto = picto;
+    this.global_scaling = scaling;
 
     if (!this.compPicto) {
       this.compPicto = "blood.png";
@@ -111,8 +123,8 @@ export default class Shunt {
   update(data) {
     let noData = false;
 
-    this.xCenter = this.dbcFrom.xCenter;
-    this.yCenter = this.dbcFrom.yCenter;
+    this.xCenter = this.dbcFrom.xCenter + this.dbcFrom.xOffset;
+    this.yCenter = this.dbcFrom.yCenter + this.dbcFrom.yOffset;
 
     // get the speed
     let flow = 0;

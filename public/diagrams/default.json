@@ -5,7 +5,7 @@
     "type": "explain_diagram",
     "backgroundColor": 3355443,
     "editingMode": 1,
-    "scaling": 0.3,
+    "scaling": 1.0,
     "grid": false,
     "gridSize": 10,
     "snapToGrid": true,
@@ -13,17 +13,75 @@
     "skeletonColor": 4473924,
     "pathColor": 4473924,
     "radius": 0.6,
-    "componentTypes": [
-      "BloodCompartment",
-      "BloodConnector",
-      "GasCompartment",
-      "GasConnector",
-      "Container",
-      "GasExchanger",
-      "Shunt"
-    ]
+    "xOffset": 0.0,
+    "yOffset": 0.0,
+    "shuntOptionsVisible": true
   },
   "components": {
+    "ALL": {
+      "enabled": true,
+      "label": "",
+      "models": [
+        "ALL"
+      ],
+      "compType": "GasCompartment",
+      "compPicto": "gas_container.png",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 1.0,
+          "y": 0.29,
+          "dgs": 270
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "level": 1,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "ALR": {
+      "enabled": true,
+      "label": "",
+      "models": [
+        "ALR"
+      ],
+      "compType": "GasCompartment",
+      "compPicto": "gas_container.png",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 1.0,
+          "y": 0.38,
+          "dgs": 270
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "level": 1,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
     "LV": {
       "enabled": true,
       "label": "LV",
@@ -947,7 +1005,7 @@
       "dbcFrom": "PA",
       "dbcTo": "PV"
     },
-    "DA_OUT": {
+    "DA": {
       "enabled": true,
       "label": "DA",
       "models": [
@@ -968,7 +1026,7 @@
       "dbcTo": "LA"
     },
     "VSD": {
-      "enabled": true,
+      "enabled": false,
       "label": "VSD",
       "models": [
         "VSD"
@@ -976,6 +1034,72 @@
       "compType": "Shunt",
       "dbcFrom": "LV",
       "dbcTo": "RV"
+    },
+    "GASEX_LL": {
+      "enabled": true,
+      "label": "O2",
+      "models": [
+        "GASEX_LL"
+      ],
+      "compType": "GasExchanger",
+      "compPicto": "exchange.png",
+      "gas": "o2",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 1,
+          "y": 0.14,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.15,
+          "y": 0.15
+        },
+        "rotation": 0,
+        "level": 7,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 6
+        }
+      }
+    },
+    "GASEX_RL": {
+      "enabled": true,
+      "label": "O2",
+      "models": [
+        "GASEX_RL"
+      ],
+      "compType": "GasExchanger",
+      "compPicto": "exchange.png",
+      "gas": "o2",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 1,
+          "y": 0.44,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.15,
+          "y": 0.15
+        },
+        "rotation": 0,
+        "level": 7,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 6
+        }
+      }
     }
   }
 }

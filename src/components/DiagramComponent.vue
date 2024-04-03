@@ -2,15 +2,15 @@
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
     <div class="row justify-center">
       <q-select class="q-pa-xs q-mr-sm q-ml-sm col text-overline" v-model="selected_diagram" square
-        label="selected model diagram" hide-hint :options="diagram_options" dense dark stack-label
+        label="selected animated model diagram" hide-hint :options="diagram_options" dense dark stack-label
         @update:model-value="loadDiagram" />
     </div>
-
 
     <div class="stage" :style="{ display: display }">
       <canvas id="stage"></canvas>
     </div>
-    <div class="row justify-center">
+
+    <div v-if="shuntOptionsVisible" class="row justify-center">
       <q-option-group v-model="selected_shunts" :options="shunt_options" color="primary" inline size="xs" dense
         class="text-overline" type="checkbox" @update:model-value="toggleShunts"></q-option-group>
     </div>
@@ -21,7 +21,10 @@
 import { explain } from "../boot/explain";
 import { PIXI } from "../boot/pixi";
 import BloodCompartment from "./ui_elements/BloodCompartment";
+import GasCompartment from "./ui_elements/GasCompartment";
 import BloodConnector from "./ui_elements/BloodConnector";
+import GasConnector from "./ui_elements/GasConnector";
+import GasExchanger from "./ui_elements/GasExchanger";
 import Shunt from "./ui_elements/Shunt";
 
 let canvas = null;
@@ -42,33 +45,56 @@ export default {
       gridVertical: null,
       gridHorizontal: null,
       skeletonGraphics: null,
+      shortTimer: null,
       rt_running: false,
       selected_diagram: 'default',
       diagram_options: ['default', 'ecmo'],
-      selected_shunts: ['pda', 'fo', 'ips'],
+      selected_shunts: [],
       shunt_options: [{
         label: 'ductus arteriosus',
-        value: 'pda'
+        value: 'DA'
       },
       {
         label: 'foramen ovale',
-        value: 'fo'
+        value: 'FO'
       },
       {
         label: 'ventricular septal defect',
-        value: 'vsd'
+        value: 'VSD'
       },
       {
         label: 'intrapulmonary shunt',
-        value: 'ips'
+        value: 'IPS'
       }
-      ]
+      ],
+      shuntOptionsVisible: true
 
     };
   },
   methods: {
     toggleShunts() {
-      console.log(this.selected_shunts)
+      this.shunt_options.forEach((shunt_option) => {
+        this.showOrHideShunt(this.selected_shunts.includes(shunt_option.value), shunt_option.value)
+      })
+
+    },
+    showOrHideShunt(state, shunt) {
+      if (state) {
+        // show the shunt if not already shown
+        const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == shunt);
+        if (index_sprite < 0) {
+          // not shown already so add it
+          this.addDiagramComponent(shunt)
+        }
+      } else {
+        // hide the shunt
+        const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == shunt);
+        if (index_sprite > 0) {
+          // it is present so hide it
+          this.removeDiagramComponent(shunt)
+        }
+      }
+
     },
     loadDiagram(filename = "default") {
       let fn = "/diagrams/" + filename + ".json"
@@ -88,62 +114,6 @@ export default {
         .catch((error) => {
           console.error("Error: ", error);
         });
-    },
-    toggleLumping() {
-      const comp_to_remove = ["AAR_BR", "AAR_RUB", "BR_SVC", "RUB_SVC", "SVC_RA", "AD_INT", "AD_KID", "AD_RLB", "AD_LS", "LS_IVCE", "KID_IVCE", "RLB_IVCE", "INT_IVCE", "IVCE_IVCI", "IVCI_RA", "RUB", "BR", "RLB", "KID", "LS", "INT", "IVCE", "IVCI", "SVC"]
-      comp_to_remove.forEach(c => {
-        console.log(c)
-        let index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == c);
-        let index_text = this.pixiApp.stage.children.findIndex((obj) => obj.name_text == c);
-        let index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == c);
-        if (index_sprite >= 0) {
-          console.log("removing: ", c)
-          this.removeDiagramComponent(c)
-        }
-        if (index_text >= 0) {
-          console.log("removing: ", c)
-          this.removeDiagramComponent(c)
-        }
-        if (index_path >= 0) {
-          console.log("removing: ", c)
-          this.removeDiagramComponent(c)
-        }
-      })
-
-      const comps_to_show = ["UB", "LB", "AAR_UB", "AD_LB"]
-      comps_to_show.forEach(c => {
-        let index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == c);
-        let index_text = this.pixiApp.stage.children.findIndex((obj) => obj.name_text == c);
-        let index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == c);
-        if (index_sprite < 0 && index_text < 0 && index_path < 0) {
-          this.addDiagramComponent(c)
-        }
-      })
-
-
-    },
-    toggleLumpingUpperBody() { },
-    toggleLumpingLowerBody() { },
-    togglePda() {
-      const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == "DA_OUT");
-      const index_text = this.pixiApp.stage.children.findIndex((obj) => obj.name_text == "DA_OUT");
-      const index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == "DA_OUT");
-      if (index_sprite < 0 && index_text < 0 && index_path < 0) {
-        this.addDiagramComponent("DA_OUT")
-      } else {
-        this.removeDiagramComponent("DA_OUT")
-      }
-    },
-    toggleFo() {
-      const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == "FO");
-      const index_text = this.pixiApp.stage.children.findIndex((obj) => obj.name_text == "FO");
-      const index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == "FO");
-      if (index_sprite < 0 && index_text < 0 && index_path < 0) {
-        this.addDiagramComponent("FO")
-      } else {
-        this.removeDiagramComponent("FO")
-      }
-
     },
     changeEditingMode(e) {
       Object.values(this.diagramComponents).forEach((comp) => {
@@ -176,7 +146,6 @@ export default {
 
       // build the diagram
       this.buildDiagram();
-
     },
     clearDiagram() {
       this.pixiApp.stage.removeChildren();
@@ -195,8 +164,8 @@ export default {
         this.skeletonGraphics = new PIXI.Graphics();
 
         // get center stage
-        const xCenter = this.pixiApp.renderer.width / 4;
-        const yCenter = this.pixiApp.renderer.height / 4;
+        const xCenter = (this.pixiApp.renderer.width / 4) + this.diagram.settings.xOffset
+        const yCenter = (this.pixiApp.renderer.height / 4) + this.diagram.settings.yOffset
         this.skeletonGraphics.beginFill(color);
         this.skeletonGraphics.lineStyle(1, color, 1);
         this.skeletonGraphics.drawCircle(xCenter, yCenter, xCenter * radius);
@@ -257,6 +226,8 @@ export default {
       if (index_path > 0) {
         this.pixiApp.stage.removeChild(this.pixiApp.stage.children[index_path])
       }
+
+      this.diagram.components[comp_name].enabled = false
     },
     addDiagramComponent(comp_name) {
       const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == comp_name);
@@ -264,6 +235,7 @@ export default {
       const index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == comp_name);
       if (index_sprite < 0 && index_text < 0 && index_path < 0) {
         let component = {}
+        this.diagram.components[comp_name].enabled = true
         component[comp_name] = this.diagram.components[comp_name]
         this.drawComponents(component)
       }
@@ -271,11 +243,15 @@ export default {
     },
     drawComponents(component_list) {
       // get the layout properties
-      const xCenter = this.pixiApp.renderer.width / 4;
-      const yCenter = this.pixiApp.renderer.height / 4;
+      const xCenter = (this.pixiApp.renderer.width / 4)
+      const yCenter = (this.pixiApp.renderer.height / 4)
+      const xOffset = this.diagram.settings.xOffset
+      const yOffset = this.diagram.settings.yOffset
       const radius = this.diagram.settings.radius;
+      let global_scaling = this.diagram.settings.scaling;
       // render the blood compartments
       Object.entries(component_list).forEach(([key, component]) => {
+        // inject the offsets
         if (component.enabled) {
           switch (component.compType) {
             case "Oxygenator":
@@ -287,8 +263,11 @@ export default {
                 component.layout,
                 xCenter,
                 yCenter,
+                xOffset,
+                yOffset,
                 radius,
-                component.compPicto
+                component.compPicto,
+                global_scaling
               );
               break;
             case "BloodPump":
@@ -300,8 +279,11 @@ export default {
                 component.layout,
                 xCenter,
                 yCenter,
+                xOffset,
+                yOffset,
                 radius,
-                component.compPicto
+                component.compPicto,
+                global_scaling
               );
               break;
             case "BloodCompartment":
@@ -313,12 +295,18 @@ export default {
                 component.layout,
                 xCenter,
                 yCenter,
+                xOffset,
+                yOffset,
                 radius,
-                component.compPicto
+                component.compPicto,
+                global_scaling
               );
-              let vol = key + ".vol"
-              let to2 = key + ".aboxy.to2"
-              explain.watchModelProps([vol, to2])
+              let watched_models_bc = []
+              component.models.forEach(m => {
+                watched_models_bc.push(m + ".vol")
+                watched_models_bc.push(m + ".aboxy.to2")
+              })
+              explain.watchModelProps(watched_models_bc)
               break;
             case "GasCompartment":
               this.diagramComponents[key] = new GasCompartment(
@@ -329,12 +317,18 @@ export default {
                 component.layout,
                 xCenter,
                 yCenter,
+                xOffset,
+                yOffset,
                 radius,
-                component.compPicto
+                component.compPicto,
+                global_scaling
               );
-              let vol_gas = key + ".vol"
-              let to2_gas = key + ".to2"
-              explain.watchModelProps([vol_gas, to2_gas])
+              let watched_models_gc = []
+              component.models.forEach(m => {
+                watched_models_gc.push(m + ".vol")
+                watched_models_gc.push(m + ".po2")
+              })
+              explain.watchModelProps(watched_models_gc)
               break;
             case "BloodConnector":
               this.diagramComponents[key] = new BloodConnector(
@@ -345,10 +339,14 @@ export default {
                 this.diagramComponents[component.dbcFrom],
                 this.diagramComponents[component.dbcTo],
                 {},
-                component.compPicto
+                component.compPicto,
+                global_scaling
               );
-              let flow = key + ".flow"
-              explain.watchModelProps([flow])
+              let watched_models_bcon = []
+              component.models.forEach(m => {
+                watched_models_bcon.push(m + ".flow")
+              })
+              explain.watchModelProps(watched_models_bcon)
               break;
             case "Shunt":
               this.diagramComponents[key] = new Shunt(
@@ -359,10 +357,14 @@ export default {
                 this.diagramComponents[component.dbcFrom],
                 this.diagramComponents[component.dbcTo],
                 {},
-                component.compPicto
+                component.compPicto,
+                global_scaling
               );
-              let flow_shunt = key + ".flow"
-              explain.watchModelProps([flow_shunt])
+              let watched_models_shunt = []
+              component.models.forEach(m => {
+                watched_models_shunt.push(m + ".flow")
+              })
+              explain.watchModelProps(watched_models_shunt)
               break;
             case "Container":
               this.diagramComponents[key] = new Container(
@@ -373,9 +375,17 @@ export default {
                 component.layout,
                 xCenter,
                 yCenter,
+                xOffset,
+                yOffset,
                 radius,
-                component.compPicto
+                component.compPicto,
+                global_scaling
               );
+              let watched_models_cont = []
+              component.models.forEach(m => {
+                watched_models_cont.push(m + ".vol")
+              })
+              explain.watchModelProps(watched_models_cont)
               break;
             case "GasConnector":
               this.diagramComponents[key] = new GasConnector(
@@ -386,8 +396,14 @@ export default {
                 this.diagramComponents[component.dbcFrom],
                 this.diagramComponents[component.dbcTo],
                 {},
-                component.compPicto
+                component.compPicto,
+                global_scaling
               );
+              let watched_models_gascon = []
+              component.models.forEach(m => {
+                watched_models_gascon.push(m + ".flow")
+              })
+              explain.watchModelProps(watched_models_gascon)
               break;
             case "GasExchanger":
               this.diagramComponents[key] = new GasExchanger(
@@ -399,36 +415,79 @@ export default {
                 component.layout,
                 xCenter,
                 yCenter,
+                xOffset,
+                yOffset,
                 radius,
-                component.compPicto
+                component.compPicto,
+                global_scaling
               );
+              let watched_models_gasex = []
+              component.models.forEach(m => {
+                watched_models_gasex.push(m + ".flux_" + component.gas)
+              })
+              explain.watchModelProps(watched_models_gasex)
               break;
           }
         }
       });
     },
+    processStateChanged() {
+      if (!this.rt_running) {
+        if (this.alive) {
+          Object.values(this.diagramComponents).forEach((sprite) => {
+            if (explain.modelData.length > 0) {
+              sprite.update(explain.modelData[explain.modelData.length - 1]);
+            }
+          });
+        }
+      }
+
+    },
     buildDiagram() {
       // first clear all children from the stage
-      this.clearDiagram()
+      this.pixiApp.stage.removeChildren();
       // draw the skeleton graphics
       this.drawSkeletonGraphics()
       // draw the grid
       this.drawGrid()
       // draw the components
       this.drawComponents(this.diagram.components)
-      // add a ticker
-      if (!this.ticker) {
-        this.ticker = this.pixiApp.ticker.add((delta) => {
-          if (this.rt_running && this.alive) {
-            Object.values(this.diagramComponents).forEach((sprite) => {
-              if (explain.modelData.length > 0) {
-                sprite.update(explain.modelData[0]);
-              }
-            });
-          }
-        });
+      // first remove the old ticker
+      if (this.ticker) {
+        this.pixiApp.ticker.remove(this.ticker)
       }
+      // add a new ticker
+      this.ticker = this.pixiApp.ticker.add((delta) => {
+        if (this.rt_running && this.alive) {
+          Object.values(this.diagramComponents).forEach((sprite) => {
+            if (explain.modelData.length > 0) {
+              sprite.update(explain.modelData[0]);
+            }
+          });
+        }
+      });
 
+      // get the shunt options state of the diagram
+      this.shuntOptionsVisible = this.diagram.settings.shuntOptionsVisible
+
+      // get the current shunts state
+      this.selected_shunts = []
+      if (this.shuntOptionsVisible) {
+        try {
+          if (this.diagram.components['DA'].enabled) {
+            this.selected_shunts.push('DA')
+          }
+          if (this.diagram.components['FO'].enabled) {
+            this.selected_shunts.push('FO')
+          }
+          if (this.diagram.components['VSD'].enabled) {
+            this.selected_shunts.push('VSD')
+          }
+          if (this.diagram.components['IPS'].enabled) {
+            this.selected_shunts.push('IPS')
+          }
+        } catch { }
+      }
     }
   },
   beforeUnmount() {
@@ -436,9 +495,7 @@ export default {
   },
   mounted() {
     this.loadDiagram()
-    //this.$bus.on("state", this.processModelState)
-
-
+    this.$bus.on("state", this.processStateChanged)
     this.$bus.on('rt_start', () => this.rt_running = true)
     this.$bus.on('rt_stop', () => this.rt_running = false)
 

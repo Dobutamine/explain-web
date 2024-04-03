@@ -9,8 +9,11 @@ export default class GasExchanger {
   layout = null;
   xCenter = 0;
   yCenter = 0;
+  xOffset = 0;
+  yOffset = 0;
   radius = 0;
   rotation = 0;
+  global_scaling = 1.0;
 
   sprite = {};
   text = {};
@@ -36,20 +39,26 @@ export default class GasExchanger {
     layout,
     xCenter,
     yCenter,
+    xOffset,
+    yOffset,
     radius,
-    picto
+    picto,
+    scaling
   ) {
     // store the parameters
     this.pixiApp = pixiApp;
     this.key = key;
     this.label = label;
     this.models = models;
-    this.gas = ".Flux" + gas;
+    this.gas = ".flux_" + gas;
     this.layout = layout;
     this.xCenter = xCenter;
     this.yCenter = yCenter;
+    this.xOffset = xOffset;
+    this.yOffset = yOffset;
     this.radius = radius;
     this.compPicto = picto;
+    this.global_scaling = scaling;
 
     if (!this.compPicto) {
       this.compPicto = "exchange.png";
@@ -61,28 +70,33 @@ export default class GasExchanger {
     this.sprite = PIXI.Sprite.from(this.compPicto);
     this.sprite["name_sprite"] = key;
     this.sprite.eventMode = "none";
-    this.sprite.scale.set(this.layout.scale.x, this.layout.scale.y);
+    this.sprite.scale.set(
+      this.layout.scale.x * this.global_scaling,
+      this.layout.scale.y * this.global_scaling
+    );
     this.sprite.anchor = { x: 0.5, y: 0.5 };
     this.sprite.tint = "0xbbbbbb";
-    this.sprite.zIndex = 4;
+    this.sprite.zIndex = this.layout.level;
 
     // place the sprite on the stage
     switch (this.layout.pos.type) {
       case "arc":
         this.sprite.x =
           this.xCenter +
+          this.xOffset +
           Math.cos(this.layout.pos.dgs * 0.0174533) *
             this.xCenter *
             this.radius;
         this.sprite.y =
           this.yCenter +
+          this.yOffset +
           Math.sin(this.layout.pos.dgs * 0.0174533) *
             this.xCenter *
             this.radius;
         break;
       case "rel":
-        this.sprite.x = this.layout.pos.x * this.xCenter;
-        this.sprite.y = this.layout.pos.y * this.yCenter;
+        this.sprite.x = this.layout.pos.x * this.xCenter + this.xOffset;
+        this.sprite.y = this.layout.pos.y * this.yCenter + this.yOffset;
         break;
     }
 
@@ -91,7 +105,7 @@ export default class GasExchanger {
     //define the caption style and text object and add it to the stage
     this.textStyle = new PIXI.TextStyle({
       fill: "white",
-      fontSize: this.layout.text.size,
+      fontSize: this.layout.text.size * this.global_scaling,
       fontFamily: "Arial",
       strokeThickness: 0,
     });
