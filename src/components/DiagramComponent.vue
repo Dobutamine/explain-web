@@ -121,6 +121,10 @@ export default {
       });
     },
     initDiagram() {
+      // first clear all children from the stage
+      if (this.pixiApp) {
+        this.pixiApp = null
+      }
       // get the reference to the canvas
       canvas = document.getElementById("stage");
       // set the resolution of the pix application
@@ -143,9 +147,6 @@ export default {
       });
       // allow sortable children
       this.pixiApp.stage.sortableChildren = true;
-
-      // build the diagram
-      this.buildDiagram();
     },
     clearDiagram() {
       this.pixiApp.stage.removeChildren();
@@ -444,29 +445,32 @@ export default {
       }
 
     },
+    tickerFunction() {
+      if (this.rt_running && this.alive) {
+        Object.values(this.diagramComponents).forEach((sprite) => {
+          if (explain.modelData.length > 0) {
+            sprite.update(explain.modelData[0]);
+          }
+        });
+      }
+    },
     buildDiagram() {
-      // first clear all children from the stage
       this.pixiApp.stage.removeChildren();
       // draw the skeleton graphics
       this.drawSkeletonGraphics()
       // draw the grid
       this.drawGrid()
-      // draw the components
+      // draw the components after resetting them
+      if (this.diagramComponents) {
+        this.diagramComponents = {}
+      }
       this.drawComponents(this.diagram.components)
       // first remove the old ticker
       if (this.ticker) {
-        this.pixiApp.ticker.remove(this.ticker)
+        this.pixiApp.ticker.remove(this.tickerFunction)
       }
-      // add a new ticker
-      this.ticker = this.pixiApp.ticker.add((delta) => {
-        if (this.rt_running && this.alive) {
-          Object.values(this.diagramComponents).forEach((sprite) => {
-            if (explain.modelData.length > 0) {
-              sprite.update(explain.modelData[0]);
-            }
-          });
-        }
-      });
+      // add the new ticker function and start it
+      this.ticker = this.pixiApp.ticker.add(this.tickerFunction);
 
       // get the shunt options state of the diagram
       this.shuntOptionsVisible = this.diagram.settings.shuntOptionsVisible
@@ -497,10 +501,9 @@ export default {
   mounted() {
     this.loadDiagram()
     this.$bus.on("state", this.processStateChanged)
+    this.$bus.on('reset', () => setTimeout(this.buildDiagram, 500))
     this.$bus.on('rt_start', () => this.rt_running = true)
     this.$bus.on('rt_stop', () => this.rt_running = false)
-
-
   },
 };
 

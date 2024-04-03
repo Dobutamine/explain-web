@@ -57,7 +57,7 @@ export default class Model {
     });
 
     // get the baseline neonate
-    this.modelDefinition = this.loadBaselineNeonate();
+    this.modelDefinition = this.loadBakedInModelDefinition("baseline_neonate");
   }
   testAcidBase() {
     this.sendMessageToModelEngine({
@@ -234,8 +234,9 @@ export default class Model {
     URL.revokeObjectURL(url); // Clean up the URL object
   }
 
-  loadBaselineNeonate() {
-    fetch(new URL("./definitions/baseline_neonate.json", import.meta.url))
+  loadBakedInModelDefinition(definition_name) {
+    let fn = "/model_definitions/" + definition_name + ".json";
+    fetch(new URL(fn, import.meta.url))
       .then((response) => {
         if (!response.ok) {
           throw new Error(

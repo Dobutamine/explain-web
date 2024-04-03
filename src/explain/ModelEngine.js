@@ -68,11 +68,21 @@ onmessage = (e) => {
       model_initialized = process_model_definition(
         JSON.parse(e.data.payload[0])
       );
+      sendMessage({
+        type: "info",
+        message: "model ready",
+        payload: [],
+      });
       break;
     case "restart_definition":
       model_initialized = process_model_definition(
         JSON.parse(e.data.payload[0])
       );
+      sendMessage({
+        type: "info",
+        message: "model ready",
+        payload: [],
+      });
       break;
     case "start":
       start();
