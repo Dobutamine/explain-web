@@ -126,7 +126,6 @@ export default class Shunt {
       angle -= angle - Math.PI * 2;
     }
     this.text.rotation = angle;
-    console.log(angle, this.key);
     this.pixiApp.stage.addChild(this.text);
   }
   registerConnectorWithDbc() {

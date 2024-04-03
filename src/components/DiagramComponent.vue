@@ -48,7 +48,7 @@ export default {
       shortTimer: null,
       rt_running: false,
       selected_diagram: 'default',
-      diagram_options: ['default', 'ecmo'],
+      diagram_options: ['default'],
       selected_shunts: [],
       shunt_options: [{
         label: 'ductus arteriosus',
