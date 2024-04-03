@@ -2212,10 +2212,7 @@
           "model_type": "BloodResistor",
           "category": "blood_connectors",
           "is_enabled": false,
-          "dependencies": [
-              "LA",
-              "RA"
-          ],
+          "dependencies": [],
           "no_flow": true,
           "no_back_flow": false,
           "comp_from": "RA",

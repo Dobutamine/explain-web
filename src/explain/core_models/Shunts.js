@@ -254,8 +254,8 @@ export class Shunts {
         this.fo_length,
         this.viscosity
       );
-      this._fo.r_for = this.fo_res;
-      this._fo.r_back = this.fo_res * this.fo_res_backflow_factor;
+      this._fo.r_for = this.fo_res; // RA -> LA
+      this._fo.r_back = this.fo_res * this.fo_res_backflow_factor; // LA -> RA
       this._fo.r_k = this.fo_r_k;
     }
 
