@@ -16,6 +16,9 @@ export default class BloodConnector {
   spriteColor = 0xffffff;
   angleCorrection = 0;
 
+  text = {};
+  textStyle = {};
+
   path = null;
   pathColor = 0x555555;
   pathWidth = 5;

@@ -487,7 +487,6 @@ export default defineComponent({
       }
     },
     updateWatchlist() {
-      console.log('reset')
       Object.keys(this.numerics).forEach(numeric => {
         this.numerics[numeric].parameters.forEach((p) => {
           explain.watchModelPropsSlow([...p.props])

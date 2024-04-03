@@ -91,6 +91,43 @@ export default class Shunt {
     this.pixiApp.stage.addChild(this.sprite);
 
     this.registerConnectorWithDbc();
+
+    //define the caption style and text object and add it to the stage
+    this.textStyle = new PIXI.TextStyle({
+      fill: "white",
+      fontSize: 10.0,
+      fontFamily: "Arial",
+      strokeThickness: 0,
+    });
+
+    this.text = new PIXI.Text(this.label, this.textStyle);
+    this.text["name_text"] = key;
+    this.text.anchor = { x: 0.5, y: 0.5 };
+    this.text.x = this.sprite.x;
+    this.text.y = this.sprite.y;
+    this.text.rotation = 0;
+    this.text.zIndex = 7;
+
+    const x2 = this.dbcTo.sprite.x;
+    const y2 = this.dbcTo.sprite.y;
+
+    let xc = this.line.x2 - this.line.x1;
+    let yc = this.line.y2 - this.line.y1;
+    this.text.x = this.line.x1 + xc / 3.0;
+    this.text.y = this.line.y1 + yc / 3.0;
+
+    let angle = 0;
+    angle =
+      Math.atan2(this.sprite.y - y2, this.sprite.x - x2) -
+      0.785 * 2 +
+      90 * 0.0174533;
+
+    if (Math.abs(angle) > Math.PI / 2.0) {
+      angle -= angle - Math.PI * 2;
+    }
+    this.text.rotation = angle;
+    console.log(angle, this.key);
+    this.pixiApp.stage.addChild(this.text);
   }
   registerConnectorWithDbc() {
     // register with the dbc
@@ -183,8 +220,6 @@ export default class Shunt {
     if (remapT < 0) {
       this.spritePosition = 1;
     }
-
-    //angle = this.spritePosition + Math.PI * 2;
 
     this.sprite.rotation = angle + direction;
 
