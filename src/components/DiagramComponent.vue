@@ -214,15 +214,16 @@ export default {
     },
     removeDiagramComponent(comp_name) {
       const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == comp_name);
-      const index_text = this.pixiApp.stage.children.findIndex((obj) => obj.name_text == comp_name);
-      const index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == comp_name);
-
       if (index_sprite > 0) {
         this.pixiApp.stage.removeChild(this.pixiApp.stage.children[index_sprite])
       }
+
+      const index_text = this.pixiApp.stage.children.findIndex((obj) => obj.name_text == comp_name);
       if (index_text > 0) {
         this.pixiApp.stage.removeChild(this.pixiApp.stage.children[index_text])
       }
+
+      const index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == comp_name);
       if (index_path > 0) {
         this.pixiApp.stage.removeChild(this.pixiApp.stage.children[index_path])
       }

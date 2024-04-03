@@ -101,7 +101,7 @@ export default class Shunt {
     });
 
     this.text = new PIXI.Text(this.label, this.textStyle);
-    this.text["name_text"] = key;
+    this.text["name_text"] = this.key;
     this.text.anchor = { x: 0.5, y: 0.5 };
     this.text.x = this.sprite.x;
     this.text.y = this.sprite.y;
