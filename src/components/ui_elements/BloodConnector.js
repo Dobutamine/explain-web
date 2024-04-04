@@ -190,6 +190,7 @@ export default class BloodConnector {
         angle2 = -angle2;
       }
       this.line.to = angle2 * 0.0174533;
+
       this.path.lineStyle(this.pathWidth, this.pathColor, 1);
       this.path.arc(
         this.line.xCenter,

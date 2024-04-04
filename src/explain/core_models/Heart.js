@@ -87,7 +87,7 @@ export class Heart {
       caption: "aortic valve properties ",
       type: "function",
       optional: false,
-      relative: true,
+      relative: false,
       args: [
         {
           target: "valve",
@@ -143,7 +143,7 @@ export class Heart {
       target: "set_heartvalve_props_abs",
       caption: "aortic valve properties ",
       type: "function",
-      optional: false,
+      optional: true,
       relative: false,
       args: [
         {
@@ -203,7 +203,7 @@ export class Heart {
       caption: "pulmonary valve properties ",
       type: "function",
       optional: false,
-      relative: true,
+      relative: false,
       args: [
         {
           target: "valve",
@@ -259,7 +259,7 @@ export class Heart {
       target: "set_heartvalve_props_abs",
       caption: "pulmonary valve properties ",
       type: "function",
-      optional: false,
+      optional: true,
       relative: false,
       args: [
         {
@@ -319,7 +319,7 @@ export class Heart {
       caption: "mitral valve properties ",
       type: "function",
       optional: false,
-      relative: true,
+      relative: false,
       args: [
         {
           target: "valve",
@@ -375,7 +375,7 @@ export class Heart {
       target: "set_heartvalve_props_abs",
       caption: "mitral valve properties ",
       type: "function",
-      optional: false,
+      optional: true,
       relative: false,
       args: [
         {
@@ -435,7 +435,7 @@ export class Heart {
       caption: "tricuspid valve properties ",
       type: "function",
       optional: false,
-      relative: true,
+      relative: false,
       args: [
         {
           target: "valve",
@@ -491,7 +491,7 @@ export class Heart {
       target: "set_heartvalve_props_abs",
       caption: "tricuspid valve properties ",
       type: "function",
-      optional: false,
+      optional: true,
       relative: false,
       args: [
         {
@@ -551,7 +551,7 @@ export class Heart {
       caption: "left ventricle properties ",
       type: "function",
       optional: false,
-      relative: true,
+      relative: false,
       args: [
         {
           target: "chamber",
@@ -607,7 +607,7 @@ export class Heart {
       target: "set_heartchamber_props_abs",
       caption: "left ventricle properties ",
       type: "function",
-      optional: false,
+      optional: true,
       relative: false,
       args: [
         {
@@ -661,13 +661,12 @@ export class Heart {
       ],
     },
 
-    // lv
     {
       target: "set_heartchamber_props_rel",
       caption: "right ventricle properties ",
       type: "function",
       optional: false,
-      relative: true,
+      relative: false,
       args: [
         {
           target: "chamber",
@@ -723,7 +722,7 @@ export class Heart {
       target: "set_heartchamber_props_abs",
       caption: "right ventricle properties ",
       type: "function",
-      optional: false,
+      optional: true,
       relative: false,
       args: [
         {
@@ -766,6 +765,236 @@ export class Heart {
         },
         {
           target: "_rv.u_vol",
+          caption: "unstressed volume (ml)",
+          type: "number",
+          factor: 1000,
+          delta: 0.01,
+          rounding: 2,
+          ul: 100000000.0,
+          ll: -10000000.0,
+        },
+      ],
+    },
+
+    {
+      target: "set_heartchamber_props_rel",
+      caption: "left atrial properties ",
+      type: "function",
+      optional: false,
+      relative: false,
+      args: [
+        {
+          target: "chamber",
+          type: "list",
+          default: "_la",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_la.el_min_factor",
+          caption: "stiffness factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_la.el_max_factor",
+          caption: "contractility factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_la.el_k_factor",
+          caption: "non linear elasance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_la.u_vol_factor",
+          caption: "unstressed volume factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+    {
+      target: "set_heartchamber_props_abs",
+      caption: "left atrial properties ",
+      type: "function",
+      optional: true,
+      relative: false,
+      args: [
+        {
+          target: "chamber",
+          type: "list",
+          default: "_la",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_la.el_min",
+          caption: "minimal elastance (mmHg/l)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: 1,
+        },
+        {
+          target: "_la.el_max",
+          caption: "maximal elastance (mmHg/l)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: 1,
+        },
+        {
+          target: "_la.el_k",
+          caption: "non-linear elastance (mmHg/l^2)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: 1,
+        },
+        {
+          target: "_la.u_vol",
+          caption: "unstressed volume (ml)",
+          type: "number",
+          factor: 1000,
+          delta: 0.01,
+          rounding: 2,
+          ul: 100000000.0,
+          ll: -10000000.0,
+        },
+      ],
+    },
+
+    {
+      target: "set_heartchamber_props_rel",
+      caption: "right atrial properties ",
+      type: "function",
+      optional: false,
+      relative: false,
+      args: [
+        {
+          target: "chamber",
+          type: "list",
+          default: "_ra",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_ra.el_min_factor",
+          caption: "stiffness factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_ra.el_max_factor",
+          caption: "contractility factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_ra.el_k_factor",
+          caption: "non linear elasance factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "_ra.u_vol_factor",
+          caption: "unstressed volume factor",
+          type: "number",
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1000000000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+    {
+      target: "set_heartchamber_props_abs",
+      caption: "right atrial properties ",
+      type: "function",
+      optional: true,
+      relative: false,
+      args: [
+        {
+          target: "chamber",
+          type: "list",
+          default: "_ra",
+          options: [],
+          options_default: [],
+          hidden: true,
+        },
+        {
+          target: "_ra.el_min",
+          caption: "minimal elastance (mmHg/l)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: 1,
+        },
+        {
+          target: "_ra.el_max",
+          caption: "maximal elastance (mmHg/l)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: 1,
+        },
+        {
+          target: "_ra.el_k",
+          caption: "non-linear elastance (mmHg/l^2)",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 100000000.0,
+          ll: 1,
+        },
+        {
+          target: "_ra.u_vol",
           caption: "unstressed volume (ml)",
           type: "number",
           factor: 1000,

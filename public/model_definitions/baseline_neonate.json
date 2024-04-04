@@ -1892,38 +1892,32 @@
           "r_k": 0,
           "diffusion_enabled": false
       },
-      "AAR_RUB": {
-          "name": "AAR_RUB",
+      "AA_RUB": {
+          "name": "AA_RUB",
           "description": "aortic arch to upper body",
           "model_type": "BloodResistor",
           "category": "blood_connectors",
           "is_enabled": true,
-          "dependencies": [
-              "AAR",
-              "RUB"
-          ],
+          "dependencies": [],
           "no_flow": false,
           "no_back_flow": false,
-          "comp_from": "AAR",
+          "comp_from": "AA",
           "comp_to": "RUB",
           "r_for": 24575.45839210155,
           "r_back": 24575.45839210155,
           "r_k": 0,
           "diffusion_enabled": false
       },
-      "AAR_BR": {
-          "name": "AAR_BR",
+      "AA_BR": {
+          "name": "AA_BR",
           "description": "aortic arch to brain",
           "model_type": "BloodResistor",
           "category": "blood_connectors",
           "is_enabled": true,
-          "dependencies": [
-              "AAR",
-              "BR"
-          ],
+          "dependencies": [],
           "no_flow": false,
           "no_back_flow": false,
-          "comp_from": "AAR",
+          "comp_from": "AA",
           "comp_to": "BR",
           "r_for": 6702.397743300424,
           "r_back": 6702.397743300424,
@@ -2260,16 +2254,15 @@
           "model_type": "BloodResistor",
           "category": "blood_connectors",
           "is_enabled": false,
-          "dependencies": [
-              "LV",
-              "RV"
-          ],
+          "dependencies": [],
           "no_flow": true,
           "no_back_flow": false,
           "comp_from": "LV",
           "comp_to": "RV",
           "r_for": 1000.0,
           "r_back": 1000.0,
+          "r_for_factor": 1.0,
+          "r_back_factor": 1.0,
           "r_k": 0,
           "diffusion_enabled": true
       },
@@ -2885,7 +2878,7 @@
               "AD_INT",
               "AD_KID",
               "AD_LS",
-              "AAR_RUB",
+              "AA_RUB",
               "AD_RLB"
           ],
           "pvr_targets": [
@@ -2936,8 +2929,8 @@
         "fo_res_backflow_factor": 10.0,
         "fo_r_k": 1000,
         "vsd": "VSD",
-        "vsd_enabled": false,
-        "vsd_diameter": 2.0,
+        "vsd_enabled": true,
+        "vsd_diameter": 0.0,
         "vsd_length": 2.0,
         "vsd_res_backflow_factor": 1.0,
         "vsd_r_k": 1000,
@@ -3003,24 +2996,7 @@
           "model_type": "Ans",
           "category": "general_models",
           "is_enabled": true,
-          "dependencies": [
-              "AA",
-              "LV",
-              "RV",
-              "LA",
-              "RA",
-              "IVCE",
-              "SVC",
-              "AD_INT",
-              "AD_KID",
-              "AD_LS",
-              "AAR_RUB",
-              "AD_RLB",
-              "PA_LL",
-              "PA_RL",
-              "Breathing",
-              "Heart"
-          ],
+          "dependencies": [],
           "baroreceptor_location": "AAR",
           "chemoreceptor_location": "AAR",
           "min_map": 25.63,
@@ -3115,7 +3091,7 @@
               "AD_INT",
               "AD_KID",
               "AD_LS",
-              "AAR_RUB",
+              "AA_RUB",
               "AD_RLB"
           ],
           "svr_factor": 1.0,

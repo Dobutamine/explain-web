@@ -302,7 +302,7 @@ export default defineComponent({
         },
         vent_numerics: {
           title: "VENTILATOR",
-          collapsed: false,
+          collapsed: true,
           parameters: [
             { label: "Pip", unit: "cmh2o", factor: 1.0, rounding: 0, props: ["Ventilator.pip_cmh2o"] },
             { label: "Peep", unit: "cmh2o", factor: 1.0, rounding: 0, props: ["Ventilator.peep_cmh2o"] },
@@ -324,7 +324,7 @@ export default defineComponent({
           collapsed: false,
           parameters: [
             { label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"] },
-            { label: "Abp", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AA.pres_max", "AA.pres_min"] },
+            { label: "Abp", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AD.pres_max", "AD.pres_min"] },
             { label: "Resp rate", unit: "/min", factor: 1.0, rounding: 0, props: ["Breathing.resp_rate"] },
             { label: "SpO2(pre)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_pre"] },
             { label: "SpO2(post)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_post"] },
@@ -371,7 +371,7 @@ export default defineComponent({
         },
         vent_numerics: {
           title: "VENTILATOR",
-          collapsed: false,
+          collapsed: true,
           parameters: [
             { label: "Pip", unit: "cmh2o", factor: 1.0, rounding: 0, props: ["Ventilator.pip_cmh2o"] },
             { label: "Peep", unit: "cmh2o", factor: 1.0, rounding: 0, props: ["Ventilator.peep_cmh2o"] },

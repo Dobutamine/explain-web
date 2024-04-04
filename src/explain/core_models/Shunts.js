@@ -22,7 +22,7 @@ export class Shunts {
     },
     {
       target: "fo_enabled",
-      caption: "formane ovale enabled",
+      caption: "foramen ovale enabled",
       type: "boolean",
       optional: false,
     },
@@ -41,7 +41,7 @@ export class Shunts {
       target: "fo_res_backflow_factor",
       caption: "foramen ovale backflow resistance factor",
       type: "number",
-      optional: true,
+      optional: false,
       relative: false,
       factor: 1,
       delta: 0.1,
@@ -57,21 +57,21 @@ export class Shunts {
     },
     {
       target: "ips_res",
-      caption: "intrapulmonary shunt resistance (mmHg*sec/ml)",
+      caption: "intrapulmonary shunt resistance (mmHg*sec/l)",
       type: "number",
-      optional: false,
-      factor: 0.001,
-      delta: 0.001,
-      rounding: 3,
+      optional: true,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
       ul: 100000000.0,
-      ll: -10000000.0,
+      ll: 1.0,
     },
     {
       target: "ips_res_factor",
       caption: "intrapulmonary shunt resistance factor",
       type: "number",
       optional: false,
-      relative: true,
+      relative: false,
       factor: 1,
       delta: 0.1,
       rounding: 1,
@@ -99,12 +99,12 @@ export class Shunts {
       target: "vsd_res_backflow_factor",
       caption: "vsd backflow resistance factor",
       type: "number",
-      optional: true,
+      optional: false,
       relative: false,
       factor: 1,
       delta: 0.1,
       rounding: 1,
-      ul: 1000.0,
+      ul: 100000000.0,
       ll: 0.1,
     },
   ];
@@ -227,8 +227,17 @@ export class Shunts {
     // set the enabled flows
     this._da_in.no_flow = !this.da_enabled;
     this._da_out.no_flow = !this.da_enabled;
+    this._da_in.is_enabled = this.da_enabled;
+    this._da_out.is_enabled = this.da_enabled;
+    this._da.is_enabled = this.da_enabled;
+
+    this._ips.is_enabled = this.ips_enabled;
     this._ips.no_flow = !this.ips_enabled;
+
+    this._vsd.is_enabled = this.vsd_enabled;
     this._vsd.no_flow = !this.vsd_enabled;
+
+    this._fo.is_enabled = this.fo_enabled;
     this._fo.no_flow = !this.fo_enabled;
 
     // set the shunts properties

@@ -13,9 +13,9 @@ export class Metabolism {
       type: "number",
       optional: false,
       factor: 1,
-      delta: 1,
-      rounding: 1,
-      ul: 300.0,
+      delta: 0.01,
+      rounding: 2,
+      ul: 300000.0,
       ll: 0.0,
     },
     {

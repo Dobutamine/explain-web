@@ -925,24 +925,24 @@
       "dbcFrom": "RUB",
       "dbcTo": "SVC"
     },
-    "AAR_RUB": {
+    "AA_RUB": {
       "enabled": true,
-      "label": "AAR_RUB",
+      "label": "AA_RUB",
       "models": [
-        "AAR_RUB"
+        "AA_RUB"
       ],
       "compType": "BloodConnector",
-      "dbcFrom": "AAR",
+      "dbcFrom": "AA",
       "dbcTo": "RUB"
     },
-    "AAR_BR": {
+    "AA_BR": {
       "enabled": true,
-      "label": "AAR_BR",
+      "label": "AA_BR",
       "models": [
-        "AAR_BR"
+        "AA_BR"
       ],
       "compType": "BloodConnector",
-      "dbcFrom": "AAR",
+      "dbcFrom": "AA",
       "dbcTo": "BR"
     },
     "LV_AA": {
@@ -1026,7 +1026,7 @@
       "dbcTo": "LA"
     },
     "VSD": {
-      "enabled": false,
+      "enabled": true,
       "label": "VSD",
       "models": [
         "VSD"
