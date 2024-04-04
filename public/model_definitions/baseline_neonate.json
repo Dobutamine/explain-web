@@ -540,9 +540,9 @@
           "category": "arteries",
           "is_enabled": true,
           "dependencies": [],
-          "vol": 0.007052329315412448,
-          "u_vol": 0.002245854627813109,
-          "el_base": 4980.253878702398,
+          "vol": 0.007,
+          "u_vol": 0.0022,
+          "el_base": 7500,
           "el_k": 0.0,
           "solutes": {
               "na": 138.0,
