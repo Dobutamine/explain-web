@@ -5,7 +5,7 @@ export class BloodResistor {
       target: "is_enabled",
       caption: "is enabled",
       type: "boolean",
-      optional: false,
+      optional: true,
     },
     {
       target: "no_flow",
@@ -20,22 +20,28 @@ export class BloodResistor {
       optional: false,
     },
     {
+      target: "diffusion_enabled",
+      caption: "diffusion allowed",
+      type: "boolean",
+      optional: true,
+    },
+    {
       target: "r_for",
-      caption: "forward flow resistance (mmHg*sec/ml)",
+      caption: "forward flow resistance (mmHg*sec/l)",
       type: "number",
-      optional: false,
-      factor: 0.001,
-      delta: 0.001,
-      rounding: 3,
+      optional: true,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
       ul: 100000000.0,
-      ll: -10000000.0,
+      ll: 10.0,
     },
     {
       target: "r_for_factor",
       caption: "forward flow resistance factor",
       type: "number",
       optional: false,
-      relative: true,
+      relative: false,
       factor: 1,
       delta: 0.01,
       rounding: 2,
@@ -44,21 +50,21 @@ export class BloodResistor {
     },
     {
       target: "r_back",
-      caption: "forward flow resistance (mmHg*sec/ml)",
+      caption: "forward flow resistance (mmHg*sec/l)",
       type: "number",
-      optional: false,
-      factor: 0.001,
-      delta: 0.001,
-      rounding: 3,
+      optional: true,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
       ul: 100000000.0,
-      ll: -10000000.0,
+      ll: 10.0,
     },
     {
       target: "r_back_factor",
       caption: "backward flow resistance factor",
       type: "number",
       optional: false,
-      relative: true,
+      relative: false,
       factor: 1,
       delta: 0.01,
       rounding: 2,
@@ -67,12 +73,12 @@ export class BloodResistor {
     },
     {
       target: "r_k",
-      caption: "non-linear resistance (sec/ml)",
+      caption: "non-linear resistance (sec/l)",
       type: "number",
-      optional: false,
-      factor: 0.001,
-      delta: 0.001,
-      rounding: 3,
+      optional: true,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
       ul: 100000000.0,
       ll: -10000000.0,
     },
@@ -81,9 +87,57 @@ export class BloodResistor {
       caption: "non-linear resistance factor",
       type: "number",
       optional: false,
-      relative: true,
+      relative: false,
       factor: 1,
       delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.01,
+    },
+    {
+      target: "dif_o2",
+      caption: "o2 diffusion coefficient",
+      type: "number",
+      optional: true,
+      relative: false,
+      factor: 1,
+      delta: 0.001,
+      rounding: 3,
+      ul: 100000000000000.0,
+      ll: 0.0,
+    },
+    {
+      target: "dif_o2_factor",
+      caption: "o2 diffusion coefficient factor",
+      type: "number",
+      optional: true,
+      relative: false,
+      factor: 1,
+      delta: 0.1,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.01,
+    },
+    {
+      target: "dif_co2",
+      caption: "co2 diffusion coefficient ",
+      type: "number",
+      optional: true,
+      relative: false,
+      factor: 1,
+      delta: 0.001,
+      rounding: 3,
+      ul: 100000000000000.0,
+      ll: 0.0,
+    },
+    {
+      target: "dif_co2_factor",
+      caption: "co2 diffusion coefficient factor",
+      type: "number",
+      optional: true,
+      relative: false,
+      factor: 1,
+      delta: 0.1,
       rounding: 2,
       ul: 100000000.0,
       ll: 0.01,
@@ -125,6 +179,14 @@ export class BloodResistor {
   r_k = 0.0;
   r_k_factor = 1.0;
 
+  diffusion_enabled = false;
+  dif_o2 = 0.001;
+  dif_o2_factor = 1.0;
+  dif_o2_scaling_factor = 1.0;
+  dif_co2 = 0.001;
+  dif_co2_factor = 1.0;
+  dif_co2_scaling_factor = 1.0;
+
   r_mob_factor = 1.0;
   r_ans_factor = 1.0;
   r_drug_factor = 1.0;
@@ -138,6 +200,8 @@ export class BloodResistor {
   flow_lmin = 0.0;
   flow_forward_lmin = 0.0;
   flow_backward_lmin = 0.0;
+  flux_o2 = 0;
+  flux_co2 = 0;
 
   p1 = 0.0;
   p2 = 0.0;
@@ -155,6 +219,9 @@ export class BloodResistor {
   _cum_forward_flow = 0.0;
   _cum_backward_flow = 0.0;
   _flow_counter = 0.0;
+
+  test1 = 0.0;
+  test2 = 0.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -284,6 +351,12 @@ export class BloodResistor {
       this._cum_backward_flow += this.flow * this._t;
     }
 
+    // calculate the diffusion only when the two have birectional connection
+    if (!this.no_flow && !this.no_back_flow && this.diffusion_enabled) {
+      this.diffusion(_r_for, _r_back);
+    }
+
+    // analyze the data
     this.analyze();
 
     let vol_not_removed = 0.0;
@@ -313,6 +386,76 @@ export class BloodResistor {
       );
       return;
     }
+  }
+
+  diffusion(_r_for, _r_back) {
+    // we need to po2 and pco2 so we need to calculate the blood composition
+    // get the partial pressures and gas concentrations from the components
+
+    let to2_comp_blood1 = this._model_comp_from.aboxy.to2;
+    let tco2_comp_blood1 = this._model_comp_from.aboxy.tco2;
+
+    let to2_comp_blood2 = this._model_comp_to.aboxy.to2;
+    let tco2_comp_blood2 = this._model_comp_to.aboxy.tco2;
+
+    // calculate the O2 and CO2 flux
+    this.flux_o2 =
+      (to2_comp_blood1 - to2_comp_blood2) *
+      this.dif_o2 *
+      this.dif_o2_factor *
+      this.dif_o2_scaling_factor *
+      this._t;
+    this.flux_co2 =
+      (tco2_comp_blood1 - tco2_comp_blood2) *
+      this.dif_co2 *
+      this.dif_co2_factor *
+      this.dif_co2_scaling_factor *
+      this._t;
+
+    // incorporate the resistances which are a surrogate of the contact area, so high resistance is less diffusion
+    if (this.flow >= 0.0) {
+      this.flux_o2 = this.flux_o2 / _r_for;
+      this.flux_co2 = this.flux_co2 / _r_for;
+    } else {
+      this.flux_o2 = this.flux_o2 / _r_back;
+      this.flux_co2 = this.flux_co2 / _r_back;
+    }
+
+    // calculate the new O2 and CO2 concentrations
+    let new_to2_comp_blood1 =
+      (to2_comp_blood1 * this._model_comp_from.vol - this.flux_o2) /
+      this._model_comp_from.vol;
+    if (new_to2_comp_blood1 < 0) {
+      new_to2_comp_blood1 = 0;
+    }
+
+    let new_to2_comp_blood2 =
+      (to2_comp_blood2 * this._model_comp_to.vol + this.flux_o2) /
+      this._model_comp_to.vol;
+    if (new_to2_comp_blood2 < 0) {
+      new_to2_comp_blood2 = 0;
+    }
+
+    let new_tco2_comp_blood1 =
+      (tco2_comp_blood1 * this._model_comp_from.vol - this.flux_co2) /
+      this._model_comp_from.vol;
+    if (new_tco2_comp_blood1 < 0) {
+      new_tco2_comp_blood1 = 0;
+    }
+
+    let new_tco2_comp_blood2 =
+      (tco2_comp_blood2 * this._model_comp_to.vol + this.flux_co2) /
+      this._model_comp_to.vol;
+    if (new_tco2_comp_blood2 < 0) {
+      new_tco2_comp_blood2 = 0;
+    }
+
+    // set the new concentrations
+    this._model_comp_from.aboxy.to2 = new_to2_comp_blood1;
+    this._model_comp_from.aboxy.tco2 = new_tco2_comp_blood1;
+
+    this._model_comp_to.aboxy.to2 = new_to2_comp_blood2;
+    this._model_comp_to.aboxy.tco2 = new_tco2_comp_blood2;
   }
 
   analyze() {

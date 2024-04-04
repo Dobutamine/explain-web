@@ -23,7 +23,7 @@ export class Circulation {
       caption: "systemic arterial elastance factor",
       type: "function",
       optional: false,
-      relative: true,
+      relative: false,
       args: [
         {
           target: "systartcomp_change",
@@ -41,7 +41,7 @@ export class Circulation {
       caption: "systemic arteries outflow resistance factor",
       type: "function",
       optional: false,
-      relative: true,
+      relative: false,
       args: [
         {
           target: "svr_change",
@@ -59,7 +59,7 @@ export class Circulation {
       caption: "pulmonary arterial elastance factor",
       type: "function",
       optional: false,
-      relative: true,
+      relative: false,
       args: [
         {
           target: "pulmartcomp_change",
@@ -77,7 +77,7 @@ export class Circulation {
       caption: "pulmonary artery resistance factor",
       type: "function",
       optional: false,
-      relative: true,
+      relative: false,
       args: [
         {
           target: "pvr_change",
@@ -95,7 +95,7 @@ export class Circulation {
       caption: "venous pool factor",
       type: "function",
       optional: false,
-      relative: true,
+      relative: false,
       args: [
         {
           target: "venpool_change",

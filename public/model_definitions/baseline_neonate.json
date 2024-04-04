@@ -1754,7 +1754,8 @@
           "comp_to": "AAR",
           "r_for": 55.85331452750353,
           "r_back": 55.85331452750353,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "AA_COR": {
           "name": "AA_COR",
@@ -1772,7 +1773,8 @@
           "comp_to": "COR",
           "r_for": 335119.88716502115,
           "r_back": 335119.88716502115,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "COR_RA": {
           "name": "COR_RA",
@@ -1788,9 +1790,12 @@
           "no_back_flow": false,
           "comp_from": "COR",
           "comp_to": "RA",
-          "r_for": 83779.97179125529,
-          "r_back": 83779.97179125529,
-          "r_k": 0
+          "r_for": 83779,
+          "r_back": 837790,
+          "r_for_factor": 1.0,
+          "r_back_factor": 1.0,
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "AAR_AD": {
           "name": "AAR_AD",
@@ -1808,7 +1813,8 @@
           "comp_to": "AD",
           "r_for": 55.85331452750353,
           "r_back": 55.85331452750353,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "AD_RLB": {
           "name": "AD_RLB",
@@ -1826,7 +1832,8 @@
           "comp_to": "RLB",
           "r_for": 8827.057827926657,
           "r_back": 8827.057827926657,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "AD_LS": {
           "name": "AD_LS",
@@ -1844,7 +1851,8 @@
           "comp_to": "LS",
           "r_for": 20946.11001410437,
           "r_back": 20946.11001410437,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "AD_KID": {
           "name": "AD_KID",
@@ -1862,7 +1870,8 @@
           "comp_to": "KID",
           "r_for": 19731.858956276446,
           "r_back": 19731.858956276446,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "AD_INT": {
           "name": "AD_INT",
@@ -1880,7 +1889,8 @@
           "comp_to": "INT",
           "r_for": 11567.22143864598,
           "r_back": 11567.22143864598,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "AAR_RUB": {
           "name": "AAR_RUB",
@@ -1898,7 +1908,8 @@
           "comp_to": "RUB",
           "r_for": 24575.45839210155,
           "r_back": 24575.45839210155,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "AAR_BR": {
           "name": "AAR_BR",
@@ -1916,7 +1927,8 @@
           "comp_to": "BR",
           "r_for": 6702.397743300424,
           "r_back": 6702.397743300424,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "RUB_SVC": {
           "name": "RUB_SVC",
@@ -1929,12 +1941,13 @@
               "SVC"
           ],
           "no_flow": false,
-          "no_back_flow": false,
+          "no_back_flow": true,
           "comp_from": "RUB",
           "comp_to": "SVC",
           "r_for": 10053.596614950635,
           "r_back": 10053.596614950635,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "BR_SVC": {
           "name": "BR_SVC",
@@ -1947,12 +1960,13 @@
               "SVC"
           ],
           "no_flow": false,
-          "no_back_flow": false,
+          "no_back_flow": true,
           "comp_from": "BR",
           "comp_to": "SVC",
           "r_for": 8936.530324400564,
           "r_back": 8936.530324400564,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "RLB_IVCE": {
           "name": "RLB_IVCE",
@@ -1965,12 +1979,13 @@
               "IVCE"
           ],
           "no_flow": false,
-          "no_back_flow": false,
+          "no_back_flow": true,
           "comp_from": "RLB",
           "comp_to": "IVCE",
           "r_for": 13240.586741889987,
           "r_back": 13240.586741889987,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "LS_IVCE": {
           "name": "LS_IVCE",
@@ -1983,12 +1998,13 @@
               "IVCE"
           ],
           "no_flow": false,
-          "no_back_flow": false,
+          "no_back_flow": true,
           "comp_from": "LS",
           "comp_to": "IVCE",
           "r_for": 31413.021156558534,
           "r_back": 31413.021156558534,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "KID_IVCE": {
           "name": "KID_IVCE",
@@ -2001,12 +2017,13 @@
               "IVCE"
           ],
           "no_flow": false,
-          "no_back_flow": false,
+          "no_back_flow": true,
           "comp_from": "KID",
           "comp_to": "IVCE",
           "r_for": 29598.90550070522,
           "r_back": 29598.90550070522,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "INT_IVCE": {
           "name": "INT_IVCE",
@@ -2019,12 +2036,13 @@
               "IVCE"
           ],
           "no_flow": false,
-          "no_back_flow": false,
+          "no_back_flow": true,
           "comp_from": "INT",
           "comp_to": "IVCE",
           "r_for": 17350.273624823694,
           "r_back": 17350.273624823694,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "IVCE_IVCI": {
           "name": "IVCE_IVCI",
@@ -2037,12 +2055,13 @@
               "IVCI"
           ],
           "no_flow": false,
-          "no_back_flow": false,
+          "no_back_flow": true,
           "comp_from": "IVCE",
           "comp_to": "IVCI",
           "r_for": 13.963328631875882,
           "r_back": 13.963328631875882,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "IVCI_RA": {
           "name": "IVCI_RA",
@@ -2060,7 +2079,8 @@
           "comp_to": "RA",
           "r_for": 139.63328631875882,
           "r_back": 698.1664315937941,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "SVC_RA": {
           "name": "SVC_RA",
@@ -2078,7 +2098,8 @@
           "comp_to": "RA",
           "r_for": 167.55994358251058,
           "r_back": 837.799717912553,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "PA_LL": {
           "name": "PA_LL",
@@ -2096,7 +2117,8 @@
           "comp_to": "LL",
           "r_for": 2457.5458392101555,
           "r_back": 2457.5458392101555,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "PA_RL": {
           "name": "PA_RL",
@@ -2114,7 +2136,8 @@
           "comp_to": "RL",
           "r_for": 2457.5458392101555,
           "r_back": 2457.5458392101555,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "LL_PV": {
           "name": "LL_PV",
@@ -2127,12 +2150,13 @@
               "PV"
           ],
           "no_flow": false,
-          "no_back_flow": false,
+          "no_back_flow": true,
           "comp_from": "LL",
           "comp_to": "PV",
           "r_for": 2010.719322990127,
           "r_back": 2010.719322990127,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "RL_PV": {
           "name": "RL_PV",
@@ -2145,12 +2169,13 @@
               "PV"
           ],
           "no_flow": false,
-          "no_back_flow": false,
+          "no_back_flow": true,
           "comp_from": "RL",
           "comp_to": "PV",
           "r_for": 2010.719322990127,
           "r_back": 2010.719322990127,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "PV_LA": {
           "name": "PV_LA",
@@ -2166,9 +2191,12 @@
           "no_back_flow": false,
           "comp_from": "PV",
           "comp_to": "LA",
-          "r_for": 335.11988716502117,
-          "r_back": 335.11988716502117,
-          "r_k": 0
+          "r_for": 335,
+          "r_back": 3350,
+          "r_for_factor": 1.0,
+          "r_back_factor": 1.0,
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "DA_IN": {
           "name": "DA_IN",
@@ -2186,7 +2214,8 @@
           "comp_to": "DA",
           "r_for": 1000.0,
           "r_back": 1000.0,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "DA_OUT": {
           "name": "DA_OUT",
@@ -2204,7 +2233,8 @@
           "comp_to": "PA",
           "r_for": 1000.0,
           "r_back": 1000.0,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "FO": {
           "name": "FO",
@@ -2218,8 +2248,11 @@
           "comp_from": "RA",
           "comp_to": "LA",
           "r_for": 1000.0,
-          "r_back": 1000.0,
-          "r_k": 0
+          "r_back": 10000.0,
+          "r_for_factor": 1.0,
+          "r_back_factor": 1.0,
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "VSD": {
           "name": "VSD",
@@ -2237,7 +2270,8 @@
           "comp_to": "RV",
           "r_for": 1000.0,
           "r_back": 1000.0,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "TRUNCUS_ART": {
           "name": "TRUNCUS_ART",
@@ -2255,7 +2289,8 @@
           "comp_to": "PA",
           "r_for": 25.0,
           "r_back": 25.0,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "IPS": {
           "name": "IPS",
@@ -2268,12 +2303,13 @@
               "PV"
           ],
           "no_flow": false,
-          "no_back_flow": false,
+          "no_back_flow": true,
           "comp_from": "PA",
           "comp_to": "PV",
           "r_for": 30719.0,
           "r_back": 30719.0,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "ECLS_DR": {
           "name": "ECLS_DR",
@@ -2288,7 +2324,8 @@
           "comp_to": "ECLS_TUBIN",
           "r_for": 1000.0,
           "r_back": 1000.0,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "ECLS_TUBIN_PUMP": {
           "name": "ECLS_TUBIN_PUMP",
@@ -2303,7 +2340,9 @@
           "comp_to": "ECLS_PUMP",
           "r_for": 1000.0,
           "r_back": 1000.0,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
+
       },
       "ECLS_PUMP_OXY": {
           "name": "ECLS_PUMP_OXY",
@@ -2318,7 +2357,8 @@
           "comp_to": "ECLS_OXY",
           "r_for": 1000.0,
           "r_back": 1000.0,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "ECLS_OXY_TUBOUT": {
           "name": "ECLS_OXY_TUBOUT",
@@ -2333,7 +2373,8 @@
           "comp_to": "ECLS_TUBOUT",
           "r_for": 1000.0,
           "r_back": 1000.0,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "ECLS_RE": {
           "name": "ECLS_RE",
@@ -2348,7 +2389,8 @@
           "comp_to": "AD",
           "r_for": 1000.0,
           "r_back": 1000.0,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "PC": {
           "name": "PC",
@@ -2609,7 +2651,8 @@
           "comp_to": "DS",
           "r_for": 18.61777150916784,
           "r_back": 18.61777150916784,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "DS_ALL": {
           "name": "DS_ALL",
@@ -2627,7 +2670,8 @@
           "comp_to": "ALL",
           "r_for": 41.889985895627646,
           "r_back": 41.889985895627646,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "DS_ALR": {
           "name": "DS_ALR",
@@ -2645,7 +2689,8 @@
           "comp_to": "ALR",
           "r_for": 41.889985895627646,
           "r_back": 41.889985895627646,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "ECLS_GASIN_OXY": {
           "name": "ECLS_GASIN_OXY",
@@ -2660,7 +2705,8 @@
           "comp_to": "ECLS_GASOXY",
           "r_for": 41.889985895627646,
           "r_back": 41.889985895627646,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "ECLS_OXY_GASOUT": {
           "name": "ECLS_OXY_GASOUT",
@@ -2675,7 +2721,8 @@
           "comp_to": "ECLS_GASOUT",
           "r_for": 41.889985895627646,
           "r_back": 41.889985895627646,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "VENT_INSP_VALVE": {
           "name": "VENT_INSP_VALVE",
@@ -2690,7 +2737,8 @@
           "comp_to": "VENT_GASCIRCUIT",
           "r_for": 41.889985895627646,
           "r_back": 41.889985895627646,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "VENT_ETTUBE": {
           "name": "VENT_ETTUBE",
@@ -2705,7 +2753,8 @@
           "comp_to": "DS",
           "r_for": 41.889985895627646,
           "r_back": 41.889985895627646,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": true
       },
       "VENT_EXP_VALVE": {
           "name": "VENT_EXP_VALVE",
@@ -2720,7 +2769,8 @@
           "comp_to": "VENT_GASOUT",
           "r_for": 41.889985895627646,
           "r_back": 41.889985895627646,
-          "r_k": 0
+          "r_k": 0,
+          "diffusion_enabled": false
       },
       "GASEX_LL": {
           "name": "GASEX_LL",

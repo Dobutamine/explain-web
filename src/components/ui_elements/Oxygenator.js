@@ -204,10 +204,10 @@ export default class Oxygenator {
     if (isNaN(to2)) {
       return 0x666666;
     }
-    if (to2 > 7.2) {
-      to2 = 7.2;
+    if (to2 > 6.95) {
+      to2 = 6.95;
     }
-    let remap = this.remap(to2, 0, 7.2, -10, 1);
+    let remap = this.remap(to2, 0, 6.95, -10, 1);
     if (remap < 0) remap = 0;
     const red = (remap * 210).toFixed(0);
     const green = (remap * 80).toFixed(0);

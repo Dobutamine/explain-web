@@ -11,9 +11,9 @@
         <q-btn v-if="selectedModelName && isEnabled" class="col-1 q-ma-xs q-mt-sm" :color="optionals_color" size="xs"
           dense icon="fa-solid fa-bars" @click="showOptionals" style="font-size: 8px"><q-tooltip>{{ optionals_text
             }}</q-tooltip></q-btn>
-        <q-btn v-if="selectedModelName && isEnabled" class="col-1 q-ma-xs q-mt-sm" :color="relatives_color" size="xs"
+        <!-- <q-btn v-if="selectedModelName && isEnabled" class="col-1 q-ma-xs q-mt-sm" :color="relatives_color" size="xs"
           dense icon="fa-solid fa-calculator" @click="showRelatives" style="font-size: 8px"><q-tooltip>{{ relatives_text
-            }}</q-tooltip></q-btn>
+            }}</q-tooltip></q-btn> -->
         <q-btn v-if="selectedModelName" class="col-1 q-ma-xs q-mt-sm" color="grey-9" size="xs" dense
           icon="fa-solid fa-xmark" @click="cancel" style="font-size: 8px"><q-tooltip>clear model
             editor</q-tooltip></q-btn>

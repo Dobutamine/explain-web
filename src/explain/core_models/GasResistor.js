@@ -20,22 +20,28 @@ export class GasResistor {
       optional: false,
     },
     {
+      target: "diffusion_enabled",
+      caption: "diffusion allowed",
+      type: "boolean",
+      optional: true,
+    },
+    {
       target: "r_for",
-      caption: "forward flow resistance (mmHg*sec/ml)",
+      caption: "forward flow resistance (mmHg*sec/l)",
       type: "number",
-      optional: false,
-      factor: 0.001,
-      delta: 0.001,
-      rounding: 3,
+      optional: true,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
       ul: 100000000.0,
-      ll: -10000000.0,
+      ll: 10.0,
     },
     {
       target: "r_for_factor",
       caption: "forward flow resistance factor",
       type: "number",
       optional: false,
-      relative: true,
+      relative: false,
       factor: 1,
       delta: 0.01,
       rounding: 2,
@@ -44,21 +50,21 @@ export class GasResistor {
     },
     {
       target: "r_back",
-      caption: "forward flow resistance (mmHg*sec/ml)",
+      caption: "forward flow resistance (mmHg*sec/l)",
       type: "number",
-      optional: false,
-      factor: 0.001,
-      delta: 0.001,
-      rounding: 3,
+      optional: true,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
       ul: 100000000.0,
-      ll: -10000000.0,
+      ll: 10.0,
     },
     {
       target: "r_back_factor",
       caption: "backward flow resistance factor",
       type: "number",
       optional: false,
-      relative: true,
+      relative: false,
       factor: 1,
       delta: 0.01,
       rounding: 2,
@@ -67,12 +73,12 @@ export class GasResistor {
     },
     {
       target: "r_k",
-      caption: "non-linear resistance (sec/ml)",
+      caption: "non-linear resistance (sec/l)",
       type: "number",
-      optional: false,
-      factor: 0.001,
-      delta: 0.001,
-      rounding: 3,
+      optional: true,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
       ul: 100000000.0,
       ll: -10000000.0,
     },
@@ -81,9 +87,57 @@ export class GasResistor {
       caption: "non-linear resistance factor",
       type: "number",
       optional: false,
-      relative: true,
+      relative: false,
       factor: 1,
       delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.01,
+    },
+    {
+      target: "dif_o2",
+      caption: "o2 diffusion coefficient",
+      type: "number",
+      optional: true,
+      relative: false,
+      factor: 1,
+      delta: 0.001,
+      rounding: 3,
+      ul: 100000000000000.0,
+      ll: 0.0,
+    },
+    {
+      target: "dif_o2_factor",
+      caption: "o2 diffusion coefficient factor",
+      type: "number",
+      optional: true,
+      relative: false,
+      factor: 1,
+      delta: 0.1,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 0.01,
+    },
+    {
+      target: "dif_co2",
+      caption: "co2 diffusion coefficient ",
+      type: "number",
+      optional: true,
+      relative: false,
+      factor: 1,
+      delta: 0.001,
+      rounding: 3,
+      ul: 100000000000000.0,
+      ll: 0.0,
+    },
+    {
+      target: "dif_co2_factor",
+      caption: "co2 diffusion coefficient factor",
+      type: "number",
+      optional: true,
+      relative: false,
+      factor: 1,
+      delta: 0.1,
       rounding: 2,
       ul: 100000000.0,
       ll: 0.01,
@@ -132,11 +186,21 @@ export class GasResistor {
   act_factor = 0.0;
   ans_activity_factor = 0.0;
 
+  diffusion_enabled = true;
+  dif_o2 = 0.001;
+  dif_o2_factor = 1.0;
+  dif_o2_scaling_factor = 1.0;
+  dif_co2 = 0.001;
+  dif_co2_factor = 1.0;
+  dif_co2_scaling_factor = 1.0;
+
   // dependent parameters
   flow = 0.0;
   flow_lmin = 0.0;
   flow_forward_lmin = 0.0;
   flow_backward_lmin = 0.0;
+  flux_o2 = 0.0;
+  flux_co2 = 0.0;
 
   p1 = 0.0;
   p2 = 0.0;
@@ -275,6 +339,12 @@ export class GasResistor {
       this._cum_backward_flow += this.flow * this._t;
     }
 
+    // calculate the diffusion only when the two have birectional connection
+    if (!this.no_flow && !this.no_back_flow && this.diffusion_enabled) {
+      this.diffusion(_r_for, _r_back);
+    }
+
+    // analyze the data
     this.analyze();
 
     let vol_not_removed = 0.0;
@@ -304,6 +374,75 @@ export class GasResistor {
       );
       return;
     }
+  }
+  diffusion(_r_for, _r_back) {
+    // we need to po2 and pco2 so we need to calculate the blood composition
+    // get the partial pressures and gas concentrations from the components
+
+    let co2_comp_blood1 = this._model_comp_from.co2;
+    let cco2_comp_blood1 = this._model_comp_from.cco2;
+
+    let co2_comp_blood2 = this._model_comp_to.co2;
+    let cco2_comp_blood2 = this._model_comp_to.cco2;
+
+    // calculate the O2 and CO2 flux
+    this.flux_o2 =
+      (co2_comp_blood1 - co2_comp_blood2) *
+      this.dif_o2 *
+      this.dif_o2_factor *
+      this.dif_o2_scaling_factor *
+      this._t;
+    this.flux_co2 =
+      (cco2_comp_blood1 - cco2_comp_blood2) *
+      this.dif_co2 *
+      this.dif_co2_factor *
+      this.dif_co2_scaling_factor *
+      this._t;
+
+    // incorporate the resistances which are a surrogate of the contact area, so high resistance is less diffusion
+    if (this.flow >= 0.0) {
+      this.flux_o2 = this.flux_o2 / _r_for;
+      this.flux_co2 = this.flux_co2 / _r_for;
+    } else {
+      this.flux_o2 = this.flux_o2 / _r_back;
+      this.flux_co2 = this.flux_co2 / _r_back;
+    }
+
+    // calculate the new O2 and CO2 concentrations
+    let new_co2_comp_blood1 =
+      (co2_comp_blood1 * this._model_comp_from.vol - this.flux_o2) /
+      this._model_comp_from.vol;
+    if (new_co2_comp_blood1 < 0) {
+      new_co2_comp_blood1 = 0;
+    }
+
+    let new_co2_comp_blood2 =
+      (co2_comp_blood2 * this._model_comp_to.vol + this.flux_o2) /
+      this._model_comp_to.vol;
+    if (new_co2_comp_blood2 < 0) {
+      new_co2_comp_blood2 = 0;
+    }
+
+    let new_cco2_comp_blood1 =
+      (cco2_comp_blood1 * this._model_comp_from.vol - this.flux_co2) /
+      this._model_comp_from.vol;
+    if (new_cco2_comp_blood1 < 0) {
+      new_cco2_comp_blood1 = 0;
+    }
+
+    let new_cco2_comp_blood2 =
+      (cco2_comp_blood2 * this._model_comp_to.vol + this.flux_co2) /
+      this._model_comp_to.vol;
+    if (new_cco2_comp_blood2 < 0) {
+      new_cco2_comp_blood2 = 0;
+    }
+
+    // set the new concentrations
+    this._model_comp_from.co2 = new_co2_comp_blood1;
+    this._model_comp_from.cco2 = new_cco2_comp_blood1;
+
+    this._model_comp_to.co2 = new_co2_comp_blood2;
+    this._model_comp_to.cco2 = new_cco2_comp_blood2;
   }
 
   analyze() {

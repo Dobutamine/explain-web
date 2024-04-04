@@ -78,7 +78,7 @@
 
             <q-tab name="heart">
               <q-icon name="fa-solid fa-heart" size="xs"></q-icon>
-              <q-tooltip>mechanical ventilator</q-tooltip>
+              <q-tooltip>cath lab</q-tooltip>
             </q-tab>
 
             <q-tab name="ventilator">
