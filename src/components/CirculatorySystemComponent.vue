@@ -1,85 +1,183 @@
 <template>
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
-    <div
-      class="q-mt-es row gutter text-overline justify-center text-red"
-      @click="isEnabled = !isEnabled"
-    >
-      {{ title }}
-    </div>
     <div v-if="isEnabled">
-      <div class="row text-overline justify-center">
-        <div class="col text-center">left heart contractility</div>
+
+      <div class="q-ml-md q-md-sm q-mt-xs row gutter text-overline justify-center text-red">
+        HEART
+        <q-btn @click="toggleHeart" class="q-ma-sm q-ml-xs q-mt-xs" :color="heartEnabledColor" dense size="xs"
+          :icon="heartEnabledIcon"></q-btn>
+        <q-btn @click="showAdvancedHeart" class="q-ma-sm" :color="heartAdvancedColor" dense size="xs"
+          icon="fa-solid fa-ellipsis"></q-btn>
       </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="thorax_compliance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeThoraxCompliance"/>
+      <div v-if="heartEnabled">
+        <div>
+          <div class="row text-overline justify-center">
+            <q-badge class="q-pa-sm" color="black">
+              heart contractility L/R
+              <q-btn @click="linkContractility" class="q-ml-sm" :color="contractilityLinkedColor" dense size="xs"
+                icon="fa-solid fa-link"></q-btn>
+            </q-badge>
+          </div>
+          <div class="row text-overline justify-center">
+            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
+              snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
+            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+          </div>
+          <div v-if="!contractilityLinked" class="row text-overline justify-center">
+            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
+              snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
+            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+          </div>
+        </div>
+
+        <div>
+          <div class="row text-overline justify-center">
+            <q-badge class="q-pa-sm" color="black">
+              heart relaxation L/R
+              <q-btn @click="linkRelaxation" class="q-ml-sm" :color="relaxationLinkedColor" dense size="xs"
+                icon="fa-solid fa-link" </q-btn>
+            </q-badge>
+          </div>
+          <div class="row text-overline justify-center">
+            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
+              snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
+            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+          </div>
+          <div v-if="!relaxationLinked" class="row text-overline justify-center">
+            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
+              snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
+            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+          </div>
+        </div>
       </div>
 
-      <div class="row text-overline justify-center">
-        <div class="col text-center">left heart relaxation</div>
+      <div class="q-mt-xs row gutter text-overline justify-center text-red">
+        VASCULAR TONE
+        <q-btn @click="toggleCirc" class="q-ma-sm q-ml-xs q-mt-xs" :color="circEnabledColor" dense size="xs"
+          :icon="circEnabledIcon"></q-btn>
+        <q-btn @click="showAdvancedCirc" class="q-ma-sm" :color="circAdvancedColor" dense size="xs"
+          icon="fa-solid fa-ellipsis"></q-btn>
       </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="lungs_compliance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeLungCompliance"/>
-      </div>
-
-      <div class="row text-overline justify-center">
-        <div class="col text-center">right heart contractility</div>
-      </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="upper_airway_resistance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeUpperAirwayResistance"/>
-      </div>
-
-      <div class="row text-overline justify-center">
-        <div class="col text-center">right heart relaxation</div>
-      </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="lower_airway_resistance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeLowerAirwayResistance"/>
-      </div>
-
-      <div class="row text-overline justify-center">
-        <div class="col text-center">systemic vascular resistance</div>
-      </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="dead_space" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDeadSpace"/>
-      </div>
-
-      <div class="row text-overline justify-center">
-        <div class="col text-center">pulmonary vascular resistance</div>
-      </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="atelectasis" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeAtelectasis"/>
-      </div>
-
-      <div class="row text-overline justify-center">
-        <div class="col text-center">venous pool size</div>
-      </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="lung_shunt" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
-      </div>
-
-      <div class="row text-overline justify-center">
-        <div class="col text-center">blood volume</div>
-      </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="lung_shunt" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
-      </div>
-
-      <div class="row text-overline justify-center">
-        <div class="col text-center">systemic arteries compliance</div>
-      </div>
-      <div class="row text-overline justify-center">
-        <q-slider v-model="lung_shunt" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
+      <div v-if="circEnabled">
+        <div>
+          <div class="row text-overline justify-center">
+            <q-badge class="q-pa-sm" color="black">
+              systemic vascular resistance
+            </q-badge>
+          </div>
+          <div class="row text-overline justify-center">
+            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
+              snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
+            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+          </div>
+        </div>
+        <div>
+          <div class="row text-overline justify-center">
+            <q-badge class="q-pa-sm" color="black">
+              pulmonary vascular resistance
+            </q-badge>
+          </div>
+          <div class="row text-overline justify-center">
+            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
+              snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
+            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+          </div>
+        </div>
+        <div>
+          <div class="row text-overline justify-center">
+            <q-badge class="q-pa-sm" color="black">
+              venous pooling
+            </q-badge>
+          </div>
+          <div class="row text-overline justify-center">
+            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
+              snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
+            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+          </div>
+        </div>
       </div>
 
-      <div class="row text-overline justify-center">
-        <div class="col text-center">pulmonary arteries compliance</div>
+      <div class="q-mt-xs row gutter text-overline justify-center text-red">
+        SHUNT SIZES
+        <q-btn @click="toggleShunts" class="q-ma-sm q-ml-xs q-mt-xs" :color="shuntsEnabledColor" dense size="xs"
+          :icon="shuntsEnabledIcon"></q-btn>
+        <q-btn @click="showAdvancedShunts" class="q-ma-sm" :color="shuntsAdvancedColor" dense size="xs"
+          icon="fa-solid fa-ellipsis"></q-btn>
       </div>
-      <div class="row text-overline justify-center q-mb-sm">
-        <q-slider v-model="lung_shunt" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
+      <div v-if="shuntsEnabled">
+        <div>
+          <div class="row text-overline justify-center">
+            <q-badge class="q-pa-sm" color="black">
+              ductus arteriosus
+            </q-badge>
+          </div>
+          <div class="row text-overline justify-center">
+            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
+              snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
+            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+          </div>
+        </div>
+        <div>
+          <div class="row text-overline justify-center">
+            <q-badge class="q-pa-sm" color="black">
+              foramen ovale
+            </q-badge>
+          </div>
+          <div class="row text-overline justify-center">
+            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
+              snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
+            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+          </div>
+        </div>
+        <div v-if="shuntsAdvanced">
+          <div class="row text-overline justify-center">
+            <q-badge class="q-pa-sm" color="black">
+              ventricular septal defect
+            </q-badge>
+          </div>
+          <div class="row text-overline justify-center">
+            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
+              snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
+            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+          </div>
+        </div>
+        <div v-if="shuntsAdvanced">
+          <div class="row text-overline justify-center">
+            <q-badge class="q-pa-sm" color="black">
+              modified BTT shunt
+            </q-badge>
+          </div>
+          <div class="row text-overline justify-center">
+            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
+              snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
+            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+          </div>
+        </div>
+        <div v-if="shuntsAdvanced">
+          <div class="row text-overline justify-center">
+            <q-badge class="q-pa-sm" color="black">
+              sano shunt
+            </q-badge>
+          </div>
+          <div class="row text-overline justify-center">
+            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
+              snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
+            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+          </div>
+        </div>
       </div>
-
-
-
-
     </div>
   </q-card>
 </template>
@@ -92,19 +190,110 @@ export default {
   data() {
     return {
       title: "CIRCULATORY SYSTEM",
+      advanced: false,
       isEnabled: true,
-      thorax_compliance: 0,
-      lungs_compliance: 0,
-      upper_airway_resistance: 0,
-      lower_airway_resistance: 0,
-      diffusion_coefficient: 0,
-      dead_space: 0,
-      lung_shunt: 0,
-      atelectasis: 0
+      heartEnabled: true,
+      heartEnabledIcon: "fa-solid fa-chevron-down",
+      heartEnabledColor: "transparent",
+      heartAdvanced: false,
+      heartAdvancedColor: "transparent",
+      contractilityLinked: true,
+      contractilityLinkedColor: "black",
+      relaxationLinked: true,
+      relaxationLinkedColor: "black",
+      circEnabled: true,
+      circEnabledIcon: "fa-solid fa-chevron-down",
+      circEnabledColor: "transparent",
+      circAdvanced: false,
+      circAdvancedColor: "transparent",
+      shuntsEnabled: true,
+      shuntsEnabledIcon: "fa-solid fa-chevron-down",
+      shuntsEnabledColor: "transparent",
+      shuntsAdvanced: false,
+      shuntsAdvancedColor: "transparent",
+      leftHeartContractility: 0.0,
+      leftHeartRelaxation: 0.0,
+      rightHeartContractility: 0.0,
+      rightHeartRelaxation: 0.0,
 
     };
   },
   methods: {
+    toggleHeart() {
+      if (this.heartEnabled) {
+        this.heartEnabled = false
+        this.heartEnabledIcon = "fa-solid fa-chevron-right"
+      } else {
+        this.heartEnabled = true
+        this.heartEnabledIcon = "fa-solid fa-chevron-down"
+      }
+    },
+    toggleCirc() {
+      if (this.circEnabled) {
+        this.circEnabled = false
+        this.circEnabledIcon = "fa-solid fa-chevron-right"
+      } else {
+        this.circEnabled = true
+        this.circEnabledIcon = "fa-solid fa-chevron-down"
+      }
+    },
+    toggleShunts() {
+      if (this.shuntsEnabled) {
+        this.shuntsEnabled = false
+        this.shuntsEnabledIcon = "fa-solid fa-chevron-right"
+      } else {
+        this.shuntsEnabled = true
+        this.shuntsEnabledIcon = "fa-solid fa-chevron-down"
+      }
+
+    },
+    showAdvancedCirc() {
+      if (this.circAdvanced) {
+        this.circAdvanced = false
+        this.circAdvancedColor = "transparent"
+      } else {
+        this.circAdvanced = true
+        this.circAdvancedColor = "negative"
+      }
+    },
+    showAdvancedHeart() {
+      if (this.heartAdvanced) {
+        this.heartAdvanced = false
+        this.heartAdvancedColor = "transparent"
+      } else {
+        this.heartAdvanced = true
+        this.heartAdvancedColor = "negative"
+      }
+    },
+    showAdvancedShunts() {
+      if (this.shuntsAdvanced) {
+        this.shuntsAdvanced = false
+        this.shuntsAdvancedColor = "transparent"
+      } else {
+        this.shuntsAdvanced = true
+        this.shuntsAdvancedColor = "negative"
+      }
+    },
+    linkRelaxation() {
+      if (this.relaxationLinked) {
+        this.relaxationLinked = false
+        this.relaxationLinkedColor = "negative"
+
+      } else {
+        this.relaxationLinked = true
+        this.relaxationLinkedColor = "black"
+      }
+    },
+    linkContractility() {
+      if (this.contractilityLinked) {
+        this.contractilityLinked = false
+        this.contractilityLinkedColor = "negative"
+
+      } else {
+        this.contractilityLinked = true
+        this.contractilityLinkedColor = "black"
+      }
+    },
     translateSliderToValue(v) {
       if (v == 0) {
         return 1;
@@ -131,48 +320,31 @@ export default {
 
       return 0;
     },
-    changeAtelectasis() {
-      let factor = parseFloat(this.translateSliderToValue(this.atelectasis))
-      explain.callModelFunction("Lungs.change_atelactasis", [factor])
+    changeLeftHeartContractility() {
+      let factor = parseFloat(this.translateSliderToValue(this.leftHeartContractility))
+      explain.setPropValue("LV.el_max_factor", factor, 1.0, 0.0)
     },
-    changeIntrapulmonaryShunt() {
-      let factor = parseFloat(this.translateSliderToValue(this.lung_shunt))
-      explain.callModelFunction("Lungs.change_lung_shunt", [1 / factor])
+    changeLeftHeartRelaxation() {
+      let factor = parseFloat(this.translateSliderToValue(-this.leftHeartRelaxation))
+      explain.setPropValue("LV.el_min_factor", factor, 1.0, 0.0)
     },
-    changeDeadSpace() {
-      let factor = parseFloat(this.translateSliderToValue(this.dead_space))
-      explain.callModelFunction("Lungs.change_dead_space", [factor])
+    changeRightHeartContractility() {
+      let factor = parseFloat(this.translateSliderToValue(this.rightHeartContractility))
+      explain.setPropValue("RV.el_max_factor", factor, 1.0, 0.0)
     },
-    changeLungCompliance() {
-      let factor = parseFloat(this.translateSliderToValue(this.lungs_compliance))
-      explain.callModelFunction("Lungs.change_lung_compliance", [factor])
+    changeRightHeartRelaxation() {
+      let factor = parseFloat(this.translateSliderToValue(-this.rightHeartRelaxation))
+      explain.setPropValue("RV.el_min_factor", factor, 1.0, 0.0)
     },
-    changeThoraxCompliance() {
-      let factor = parseFloat(this.translateSliderToValue(this.thorax_compliance))
-      explain.callModelFunction("Lungs.change_thorax_compliance", [factor])
-    },
-    changeUpperAirwayResistance() {
-      let factor = this.translateSliderToValue(this.upper_airway_resistance)
-      explain.callModelFunction("Lungs.change_upper_airway_resistance", [factor])
-    },
-    changeLowerAirwayResistance() {
-      let factor = this.translateSliderToValue(this.lower_airway_resistance)
-      explain.callModelFunction("Lungs.change_lower_airway_resistance", [factor])
-    },
-    changeDiffusionCoefficient() {
-      let factor = this.translateSliderToValue(this.diffusion_coefficient)
-      explain.callModelFunction("Lungs.change_dif_o2", [factor])
-      explain.callModelFunction("Lungs.change_dif_co2", [factor])
-    },
+
     processModelState() {
       if (explain.modelState.models) {
-        this.thorax_compliance = this.translateValueToSlider(explain.modelState.models['Lungs'].thorax_comp_change)
-        this.lungs_compliance = this.translateValueToSlider(explain.modelState.models['Lungs'].lung_comp_change)
-        this.upper_airway_resistance = this.translateValueToSlider(explain.modelState.models['Lungs'].upper_aw_res_change)
-        this.lower_airway_resistance = this.translateValueToSlider(explain.modelState.models['Lungs'].lower_aw_res_change)
-        this.dead_space = this.translateValueToSlider(explain.modelState.models['Lungs'].dead_space_change)
-        this.lung_shunt = this.translateValueToSlider(1.0 / explain.modelState.models['Lungs'].lung_shunt_change)
-        this.atelectasis = this.translateValueToSlider(explain.modelState.models['Lungs'].atelectasis_change)
+        this.leftHeartContractility = this.translateValueToSlider(explain.modelState.models['LV'].el_max_factor)
+        this.leftHeartRelaxation = this.translateValueToSlider(explain.modelState.models['LV'].el_min_factor)
+
+        this.rightHeartContractility = this.translateValueToSlider(explain.modelState.models['RV'].el_max_factor)
+        this.rightHeartRelaxation = this.translateValueToSlider(explain.modelState.models['RV'].el_min_factor)
+
       }
     },
   },

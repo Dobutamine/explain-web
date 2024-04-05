@@ -44,8 +44,6 @@
             opacity: 0.5
           }">
                 <CirculatorySystemComponent></CirculatorySystemComponent>
-                <ShuntSystemComponent></ShuntSystemComponent>
-
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="respiratory_system">
