@@ -15,7 +15,10 @@
             <q-tab name="respiratory_system"><q-icon name="fa-solid fa-lungs" size="xs"></q-icon><q-tooltip>edit
                 respiratory system</q-tooltip>
             </q-tab>
+            <q-tab name="tweaker"><q-icon name="fa-solid fa-wrench" size="xs"></q-icon><q-tooltip>tweaker</q-tooltip>
+            </q-tab>
           </q-tabs>
+
           <q-tab-panels v-model="tab_left" keep-alive>
             <q-tab-panel name="model_editor">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
@@ -58,6 +61,20 @@
 
               </q-scroll-area>
             </q-tab-panel>
+            <q-tab-panel name="tweaker">
+              <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
+            right: '5px',
+            borderRadius: '5px',
+            background: 'grey-10',
+            width: '5px',
+            opacity: 0.5
+          }">
+                <TweakerComponent></TweakerComponent>
+
+              </q-scroll-area>
+            </q-tab-panel>
+
+
           </q-tab-panels>
         </div>
 
@@ -241,6 +258,7 @@ import RespiratorySystemComponent from 'src/components/RespiratorySystemComponen
 import HeartComponent from 'src/components/HeartComponent.vue';
 import ShuntSystemComponent from 'src/components/ShuntSystemComponent.vue'
 import DiagramComponent from 'src/components/DiagramComponent.vue';
+import TweakerComponent from 'src/components/TweakerComponent.vue'
 
 import { explain } from 'src/boot/explain';
 
@@ -257,11 +275,12 @@ export default defineComponent({
     RespiratorySystemComponent,
     HeartComponent,
     ShuntSystemComponent,
-    DiagramComponent
+    DiagramComponent,
+    TweakerComponent
   },
   data() {
     return {
-      tab_left: "model_editor",
+      tab_left: "tweaker",
       tab_center: "diagram",
       tab_right: "numerics",
       no_of_modeleditor: 1,
@@ -278,7 +297,8 @@ export default defineComponent({
           collapsed: false,
           parameters: [
             { label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"] },
-            { label: "Abp", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AA.pres_max", "AA.pres_min"] },
+            { label: "Abp AA", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AA.pres_max", "AA.pres_min"] },
+            { label: "Abp AD", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AD.pres_max", "AD.pres_min"] },
             { label: "Resp rate", unit: "/min", factor: 1.0, rounding: 0, props: ["Breathing.resp_rate"] },
             { label: "SpO2(pre)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_pre"] },
             { label: "SpO2(post)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_post"] },
@@ -288,7 +308,7 @@ export default defineComponent({
         },
         lab_numerics: {
           title: "LABS",
-          collapsed: false,
+          collapsed: true,
           parameters: [
             { label: "pH", unit: "", factor: 1.0, rounding: 2, props: ["Blood.ph"] },
             { label: "pO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.po2"] },
@@ -322,7 +342,8 @@ export default defineComponent({
           collapsed: false,
           parameters: [
             { label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"] },
-            { label: "Abp", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AD.pres_max", "AD.pres_min"] },
+            { label: "Abp AA", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AA.pres_max", "AA.pres_min"] },
+            { label: "Abp AD", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AD.pres_max", "AD.pres_min"] },
             { label: "Pap", unit: "mmHg", factor: 1.0, rounding: 0, props: ["PA.pres_max", "PA.pres_min"] },
             { label: "Resp rate", unit: "/min", factor: 1.0, rounding: 0, props: ["Breathing.resp_rate"] },
             { label: "SpO2(pre)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_pre"] },
@@ -330,9 +351,25 @@ export default defineComponent({
             { label: "SpO2(ven)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_ven"] }
           ]
         },
+        heart_numerics: {
+          title: "HEART",
+          collapsed: true,
+          parameters: [
+            { label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"] },
+            { label: "LVO", unit: "ml/min", factor: 282.0, rounding: 0, props: ["LV_AA.flow_lmin"] },
+            { label: "RVO", unit: "ml/min", factor: 282.0, rounding: 0, props: ["RV_PA.flow_lmin"] },
+            { label: "COR", unit: "ml/min", factor: 282.0, rounding: 1, props: ["COR_RA.flow_lmin"] },
+            { label: "LVP", unit: "mmHg", factor: 1.0, rounding: 1, props: ["LV.pres_max", "LV.pres_min"] },
+            { label: "LVV", unit: "ml", factor: 282.0, rounding: 1, props: ["LV.vol_max", "LV.vol_min"] },
+            { label: "LV_SV", unit: "ml", factor: 282.0, rounding: 1, props: ["LV.vol_sv"] },
+            { label: "RVP", unit: "mmHg", factor: 1.0, rounding: 1, props: ["RV.pres_max", "RV.pres_min"] },
+            { label: "RVV", unit: "mL", factor: 282.0, rounding: 1, props: ["RV.vol_max", "RV.vol_min"] },
+            { label: "RV_SV", unit: "mL", factor: 282.0, rounding: 1, props: ["RV.vol_sv"] },
+          ]
+        },
         lab_numerics: {
           title: "LABS",
-          collapsed: false,
+          collapsed: true,
           parameters: [
             { label: "pH", unit: "", factor: 1.0, rounding: 2, props: ["Blood.ph"] },
             { label: "pO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.po2"] },
@@ -342,22 +379,7 @@ export default defineComponent({
             { label: "SO2", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2"] },
           ]
         },
-        heart_numerics: {
-          title: "HEART",
-          collapsed: true,
-          parameters: [
-            { label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"] },
-            { label: "LVO", unit: "ml/min", factor: 1000.0, rounding: 0, props: ["LV_AA.flow_lmin"] },
-            { label: "RVO", unit: "ml/min", factor: 1000.0, rounding: 0, props: ["RV_PA.flow_lmin"] },
-            { label: "COR", unit: "ml/min", factor: 1000.0, rounding: 1, props: ["COR_RA.flow_lmin"] },
-            { label: "LVP", unit: "mmHg", factor: 1.0, rounding: 1, props: ["LV.pres_max", "LV.pres_min"] },
-            { label: "LVV", unit: "ml", factor: 1000.0, rounding: 1, props: ["LV.vol_max", "LV.vol_min"] },
-            { label: "LV_SV", unit: "ml", factor: 1000.0, rounding: 1, props: ["LV.vol_sv"] },
-            { label: "RVP", unit: "mmHg", factor: 1.0, rounding: 1, props: ["RV.pres_max", "RV.pres_min"] },
-            { label: "RVV", unit: "mL", factor: 1000.0, rounding: 1, props: ["RV.vol_max", "RV.vol_min"] },
-            { label: "RV_SV", unit: "mL", factor: 1000.0, rounding: 1, props: ["RV.vol_sv"] },
-          ]
-        },
+
         circulation_numerics: {
           title: "CIRCULATION",
           collapsed: true,

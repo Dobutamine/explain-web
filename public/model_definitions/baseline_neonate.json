@@ -359,7 +359,7 @@
           "dependencies": [],
           "vol": 0.005928356844665125,
           "u_vol": 0.0012431702152874951,
-          "el_base": 4380.631311706629,
+          "el_base": 4380,
           "el_k": 0.0,
           "solutes": {
               "na": 138.0,
@@ -420,7 +420,7 @@
           "dependencies": [],
           "vol": 0.005928356844665125,
           "u_vol": 0.0012431702152874951,
-          "el_base": 4380.631311706629,
+          "el_base": 4380,
           "el_k": 0.0,
           "solutes": {
               "na": 138.0,
@@ -481,7 +481,7 @@
           "dependencies": [],
           "vol": 0.008296398319197018,
           "u_vol": 0.00563081048728314,
-          "el_base": 4517.090267983075,
+          "el_base": 4517,
           "el_k": 0.0,
           "solutes": {
               "na": 138.0,
@@ -542,7 +542,7 @@
           "dependencies": [],
           "vol": 0.007,
           "u_vol": 0.0022,
-          "el_base": 7500,
+          "el_base": 4700,
           "el_k": 0.0,
           "solutes": {
               "na": 138.0,
@@ -601,9 +601,9 @@
           "category": "arteries",
           "is_enabled": true,
           "dependencies": [],
-          "u_vol": 0.0032829332375575344,
-          "vol": 0.005338089111304872,
-          "el_base": 22909.16784203103,
+          "u_vol": 0.0033,
+          "vol": 0.0053,
+          "el_base": 17500,
           "el_k": 0.0,
           "solutes": {
               "na": 138.0,
@@ -664,7 +664,7 @@
           "dependencies": [],
           "u_vol": 0.003501795453394704,
           "vol": 0.005186780991541622,
-          "el_base": 27889.42172073343,
+          "el_base": 17500,
           "el_k": 0.0,
           "solutes": {
               "na": 138.0,
@@ -725,7 +725,7 @@
           "dependencies": [],
           "vol": 0.023992962328177863,
           "u_vol": 0.019697599425345207,
-          "el_base": 9960.507757404795,
+          "el_base": 17500,
           "el_k": 0.0,
           "solutes": {
               "na": 138.0,
@@ -1644,8 +1644,8 @@
           "no_back_flow": true,
           "comp_from": "LA",
           "comp_to": "LV",
-          "r_for": 55,
-          "r_back": 55,
+          "r_for": 55.0,
+          "r_back": 55.0,
           "r_k": 0
       },
       "LV_AA": {
@@ -1662,8 +1662,8 @@
           "no_back_flow": true,
           "comp_from": "LV",
           "comp_to": "AA",
-          "r_for": 17,
-          "r_back": 17,
+          "r_for": 55.0,
+          "r_back": 55.0,
           "r_k": 0
       },
       "LV_PA": {
@@ -1680,8 +1680,8 @@
           "no_back_flow": true,
           "comp_from": "LV",
           "comp_to": "PA",
-          "r_for": 16.75599435825106,
-          "r_back": 16.75599435825106,
+          "r_for": 55.0,
+          "r_back": 55.0,
           "r_k": 0
       },
       "RA_RV": {
@@ -1698,8 +1698,8 @@
           "no_back_flow": true,
           "comp_from": "RA",
           "comp_to": "RV",
-          "r_for": 55.85331452750353,
-          "r_back": 55.85331452750353,
+          "r_for": 55.0,
+          "r_back": 55.0,
           "r_k": 0
       },
       "RV_PA": {
@@ -1716,8 +1716,8 @@
           "no_back_flow": true,
           "comp_from": "RV",
           "comp_to": "PA",
-          "r_for": 16.75599435825106,
-          "r_back": 16.75599435825106,
+          "r_for": 55.0,
+          "r_back": 55.0,
           "r_k": 0
       },
       "RV_AA": {
@@ -1734,8 +1734,8 @@
           "no_back_flow": true,
           "comp_from": "RV",
           "comp_to": "AA",
-          "r_for": 16.75599435825106,
-          "r_back": 16.75599435825106,
+          "r_for": 55.0,
+          "r_back": 55.0,
           "r_k": 0
       },
       "AA_AAR": {
@@ -1752,8 +1752,8 @@
           "no_back_flow": false,
           "comp_from": "AA",
           "comp_to": "AAR",
-          "r_for": 55.85331452750353,
-          "r_back": 55.85331452750353,
+          "r_for": 30.0,
+          "r_back": 30.0,
           "r_k": 0,
           "diffusion_enabled": true
       },
@@ -1771,8 +1771,8 @@
           "no_back_flow": false,
           "comp_from": "AA",
           "comp_to": "COR",
-          "r_for": 335119.88716502115,
-          "r_back": 335119.88716502115,
+          "r_for": 335119,
+          "r_back": 335119,
           "r_k": 0,
           "diffusion_enabled": false
       },
@@ -1811,8 +1811,8 @@
           "no_back_flow": false,
           "comp_from": "AAR",
           "comp_to": "AD",
-          "r_for": 55.85331452750353,
-          "r_back": 55.85331452750353,
+          "r_for": 30.0,
+          "r_back": 30.0,
           "r_k": 0,
           "diffusion_enabled": true
       },

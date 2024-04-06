@@ -408,7 +408,7 @@
       "enabled": true,
       "label": "AA",
       "models": [
-        "AA"
+        "AA", "AAR"
       ],
       "compType": "BloodCompartment",
       "layout": {
@@ -416,36 +416,6 @@
           "type": "arc",
           "x": 1.5910052049446972,
           "y": 1.1849788549121665,
-          "dgs": 350
-        },
-        "morph": {
-          "x": 1,
-          "y": 1
-        },
-        "scale": {
-          "x": 1,
-          "y": 1
-        },
-        "rotation": 0,
-        "text": {
-          "x": 0,
-          "y": 0,
-          "size": 10
-        }
-      }
-    },
-    "AAR": {
-      "enabled": true,
-      "label": "AAR",
-      "models": [
-        "AAR"
-      ],
-      "compType": "BloodCompartment",
-      "layout": {
-        "pos": {
-          "type": "arc",
-          "x": 1.5387117761873779,
-          "y": 1.3783208631533288,
           "dgs": 10
         },
         "morph": {
@@ -959,20 +929,10 @@
       "enabled": true,
       "label": "AA_AAR",
       "models": [
-        "AA_AAR"
+        "AA_AAR", "AAR_AD"
       ],
       "compType": "BloodConnector",
       "dbcFrom": "AA",
-      "dbcTo": "AAR"
-    },
-    "AAR_AD": {
-      "enabled": true,
-      "label": "AAR_AD",
-      "models": [
-        "AAR_AD"
-      ],
-      "compType": "BloodConnector",
-      "dbcFrom": "AAR",
       "dbcTo": "AD"
     },
     "AA_COR": {
@@ -1012,7 +972,7 @@
         "DA_OUT"
       ],
       "compType": "Shunt",
-      "dbcFrom": "AAR",
+      "dbcFrom": "AA",
       "dbcTo": "PA"
     },
     "FO": {

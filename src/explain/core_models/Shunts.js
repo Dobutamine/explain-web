@@ -247,14 +247,18 @@ export class Shunts {
         this.da_length,
         this.viscosity
       );
-      this._da.el_base = this.da_el_base;
-      this._da.u_vol = this.da_u_vol;
-      this._da.el_k = this.da_el_k;
-      this._da_in.r_for = this.da_in_res;
-      this._da_in.r_back = this.da_in_res * this.da_in_res_backflow_factor;
+      //this._da.el_base = this.da_el_base;
+      //this._da.u_vol = this.da_u_vol;
+      //this._da.el_k = this.da_el_k;
+      // this._da_in.r_for = this.da_in_res;
+      // this._da_in.r_back = this.da_in_res * this.da_in_res_backflow_factor;
       this._da_out.r_for = this.da_out_res;
       this._da_out.r_back = this.da_out_res * this.da_out_res_backflow_factor;
       this._da.r_k = this.da_out_r_k;
+    } else {
+      this._da.flow = 0.0;
+      this._da.flow_lmin = 0.0;
+      this.da_velocity = 0.0;
     }
 
     if (this.fo_enabled) {
@@ -266,6 +270,10 @@ export class Shunts {
       this._fo.r_for = this.fo_res; // RA -> LA
       this._fo.r_back = this.fo_res * this.fo_res_backflow_factor; // LA -> RA
       this._fo.r_k = this.fo_r_k;
+    } else {
+      this._fo.flow = 0.0;
+      this._fo.flow_lmin = 0.0;
+      this.fo_velocity = 0.0;
     }
 
     if (this.vsd_enabled) {
@@ -277,6 +285,10 @@ export class Shunts {
       this._vsd.r_for = this.vsd_res;
       this._vsd.r_back = this.vsd_res * this.vsd_res_backflow_factor;
       this._vsd.r_k = this.vsd_r_k;
+    } else {
+      this._vsd.flow = 0.0;
+      this._vsd.flow_lmin = 0.0;
+      this.vsd_velocity = 0.0;
     }
 
     if (this.ips_enabled) {
@@ -285,6 +297,9 @@ export class Shunts {
       this._ips.r_for_factor = this.ips_res_factor;
       this._ips.r_back_factor = this.ips_res_backflow_factor;
       this._ips.r_k = this.ips_r_k;
+    } else {
+      this._ips.flow = 0.0;
+      this._ips.flow_lmin = 0.0;
     }
 
     this.da_flow = this._da_out.flow;
