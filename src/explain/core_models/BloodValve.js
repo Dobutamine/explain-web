@@ -190,6 +190,7 @@ export class BloodValve {
   // dependent parameters
   flow = 0.0;
   flow_lmin = 0.0;
+  flow_lmin_avg = 0.0;
   flow_forward_lmin = 0.0;
   flow_backward_lmin = 0.0;
 
@@ -209,6 +210,8 @@ export class BloodValve {
   _cum_forward_flow = 0.0;
   _cum_backward_flow = 0.0;
   _flow_counter = 0.0;
+  _flow_mov_avg_counter = 0.0;
+  _alpha = 0.05;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -380,6 +383,13 @@ export class BloodValve {
       this._cum_forward_flow = 0.0;
       this._cum_backward_flow = 0.0;
       this._flow_counter = 0.0;
+
+      this._flow_mov_avg_counter += 1;
+      this._flow_mov_avg_counter += 1;
+      if (this._flow_mov_avg_counter > 5) {
+        this.flow_lmin_avg =
+          this._alpha * this.flow_lmin + (1 - this._alpha) * this.flow_lmin_avg;
+      }
     }
   }
 }

@@ -22,12 +22,12 @@
           <q-tab-panels v-model="tab_left" keep-alive>
             <q-tab-panel name="model_editor">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-            right: '5px',
-            borderRadius: '5px',
-            background: 'grey-10',
-            width: '5px',
-            opacity: 0.5
-          }">
+                right: '5px',
+                borderRadius: '5px',
+                background: 'grey-10',
+                width: '5px',
+                opacity: 0.5
+              }">
                 <div v-for="(index) in no_of_modeleditor" :key="index">
                   <ModelEditor></ModelEditor>
                 </div>
@@ -40,35 +40,35 @@
             </q-tab-panel>
             <q-tab-panel name="circulatory_system">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-            right: '5px',
-            borderRadius: '5px',
-            background: 'grey-10',
-            width: '5px',
-            opacity: 0.5
-          }">
+                right: '5px',
+                borderRadius: '5px',
+                background: 'grey-10',
+                width: '5px',
+                opacity: 0.5
+              }">
                 <CirculatorySystemComponent></CirculatorySystemComponent>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="respiratory_system">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-            right: '5px',
-            borderRadius: '5px',
-            background: 'grey-10',
-            width: '5px',
-            opacity: 0.5
-          }">
+                right: '5px',
+                borderRadius: '5px',
+                background: 'grey-10',
+                width: '5px',
+                opacity: 0.5
+              }">
                 <RespiratorySystemComponent></RespiratorySystemComponent>
 
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="tweaker">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-            right: '5px',
-            borderRadius: '5px',
-            background: 'grey-10',
-            width: '5px',
-            opacity: 0.5
-          }">
+                right: '5px',
+                borderRadius: '5px',
+                background: 'grey-10',
+                width: '5px',
+                opacity: 0.5
+              }">
                 <TweakerComponent></TweakerComponent>
 
               </q-scroll-area>
@@ -112,60 +112,60 @@
           <q-tab-panels v-model="tab_center" keep-alive>
             <q-tab-panel name="time_chart">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-            right: '5px',
-            borderRadius: '5px',
-            background: 'grey-10',
-            width: '5px',
-            opacity: 0.5
-          }">
+                right: '5px',
+                borderRadius: '5px',
+                background: 'grey-10',
+                width: '5px',
+                opacity: 0.5
+              }">
                 <TimeBasedChartComponent :alive="chart_alive"></TimeBasedChartComponent>
               </q-scroll-area>
             </q-tab-panel>
 
             <q-tab-panel name="ventilator">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-            right: '5px',
-            borderRadius: '5px',
-            background: 'grey-10',
-            width: '5px',
-            opacity: 0.5
-          }">
+                right: '5px',
+                borderRadius: '5px',
+                background: 'grey-10',
+                width: '5px',
+                opacity: 0.5
+              }">
                 <VentilatorComponent :alive="ventilator_alive"></VentilatorComponent>
               </q-scroll-area>
             </q-tab-panel>
 
             <q-tab-panel name="heart">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-            right: '5px',
-            borderRadius: '5px',
-            background: 'grey-10',
-            width: '5px',
-            opacity: 0.5
-          }">
+                right: '5px',
+                borderRadius: '5px',
+                background: 'grey-10',
+                width: '5px',
+                opacity: 0.5
+              }">
                 <HeartComponent :alive="heart_alive"></HeartComponent>
               </q-scroll-area>
             </q-tab-panel>
 
             <q-tab-panel name="xy_chart">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-            right: '5px',
-            borderRadius: '5px',
-            background: 'grey-10',
-            width: '5px',
-            opacity: 0.5
-          }">
+                right: '5px',
+                borderRadius: '5px',
+                background: 'grey-10',
+                width: '5px',
+                opacity: 0.5
+              }">
                 <XYChartComponent :alive="xy_alive" title="XY Graph" :presets={}></XYChartComponent>
               </q-scroll-area>
             </q-tab-panel>
 
             <q-tab-panel name="diagram">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-            right: '5px',
-            borderRadius: '5px',
-            background: 'grey-10',
-            width: '5px',
-            opacity: 0.5
-          }">
+                right: '5px',
+                borderRadius: '5px',
+                background: 'grey-10',
+                width: '5px',
+                opacity: 0.5
+              }">
                 <DiagramComponent :alive="diagram_alive"></DiagramComponent>
               </q-scroll-area>
             </q-tab-panel>
@@ -196,12 +196,12 @@
           <q-tab-panels v-model="tab_right" keep-alive>
             <q-tab-panel name="numerics">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-            right: '5px',
-            borderRadius: '5px',
-            background: 'grey-10',
-            width: '5px',
-            opacity: 0.5
-          }">
+                right: '5px',
+                borderRadius: '5px',
+                background: 'grey-10',
+                width: '5px',
+                opacity: 0.5
+              }">
                 <div v-for="(numeric, index) in numerics" :key="index">
                   <NumericsComponent :title="numeric.title" :collapsed="numeric.collapsed"
                     :parameters="numeric.parameters"></NumericsComponent>
@@ -211,12 +211,12 @@
 
             <q-tab-panel name="respiration">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-            right: '5px',
-            borderRadius: '5px',
-            background: 'grey-10',
-            width: '5px',
-            opacity: 0.5
-          }">
+                right: '5px',
+                borderRadius: '5px',
+                background: 'grey-10',
+                width: '5px',
+                opacity: 0.5
+              }">
                 <div v-for="(numeric, index) in respiration" :key="index">
                   <NumericsComponent :title="numeric.title" :collapsed="numeric.collapsed"
                     :parameters="numeric.parameters"></NumericsComponent>
@@ -226,12 +226,12 @@
 
             <q-tab-panel name="heart">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-            right: '5px',
-            borderRadius: '5px',
-            background: 'grey-10',
-            width: '5px',
-            opacity: 0.5
-          }">
+                right: '5px',
+                borderRadius: '5px',
+                background: 'grey-10',
+                width: '5px',
+                opacity: 0.5
+              }">
                 <div v-for="(numeric, index) in heart" :key="index">
                   <NumericsComponent :title="numeric.title" :collapsed="numeric.collapsed"
                     :parameters="numeric.parameters"></NumericsComponent>
@@ -341,70 +341,78 @@ export default defineComponent({
           title: "VITALS",
           collapsed: false,
           parameters: [
-            { label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"] },
-            { label: "Abp AA", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AA.pres_max", "AA.pres_min"] },
-            { label: "Abp AD", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AD.pres_max", "AD.pres_min"] },
-            { label: "Pap", unit: "mmHg", factor: 1.0, rounding: 0, props: ["PA.pres_max", "PA.pres_min"] },
-            { label: "Resp rate", unit: "/min", factor: 1.0, rounding: 0, props: ["Breathing.resp_rate"] },
-            { label: "SpO2(pre)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_pre"] },
-            { label: "SpO2(post)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_post"] },
-            { label: "SpO2(ven)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_ven"] }
+            { label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"], weight_based: false },
+            { label: "Abp AA", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AA.pres_max", "AA.pres_min"], weight_based: false },
+            { label: "Abp AD", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AD.pres_max", "AD.pres_min"], weight_based: false },
+            { label: "Pap", unit: "mmHg", factor: 1.0, rounding: 0, props: ["PA.pres_max", "PA.pres_min"], weight_based: false },
+            { label: "Cvp", unit: "mmHg", factor: 1.0, rounding: 0, props: ["RA.pres_mean"], weight_based: false },
+            { label: "Resp rate", unit: "/min", factor: 1.0, rounding: 0, props: ["Breathing.resp_rate"], weight_based: false },
+            { label: "SpO2(pre)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_pre"], weight_based: false },
+            { label: "SpO2(post)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_post"], weight_based: false },
+            { label: "SpO2(ven)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_ven"], weight_based: false }
           ]
         },
         heart_numerics: {
           title: "HEART",
-          collapsed: true,
+          collapsed: false,
           parameters: [
-            { label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"] },
-            { label: "LVO", unit: "ml/min", factor: 282.0, rounding: 0, props: ["LV_AA.flow_lmin"] },
-            { label: "RVO", unit: "ml/min", factor: 282.0, rounding: 0, props: ["RV_PA.flow_lmin"] },
-            { label: "COR", unit: "ml/min", factor: 282.0, rounding: 1, props: ["COR_RA.flow_lmin"] },
-            { label: "LVP", unit: "mmHg", factor: 1.0, rounding: 1, props: ["LV.pres_max", "LV.pres_min"] },
-            { label: "LVV", unit: "ml", factor: 282.0, rounding: 1, props: ["LV.vol_max", "LV.vol_min"] },
-            { label: "LV_SV", unit: "ml", factor: 282.0, rounding: 1, props: ["LV.vol_sv"] },
-            { label: "RVP", unit: "mmHg", factor: 1.0, rounding: 1, props: ["RV.pres_max", "RV.pres_min"] },
-            { label: "RVV", unit: "mL", factor: 282.0, rounding: 1, props: ["RV.vol_max", "RV.vol_min"] },
-            { label: "RV_SV", unit: "mL", factor: 282.0, rounding: 1, props: ["RV.vol_sv"] },
+            { label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"], weight_based: false },
+            { label: "LVP", unit: "mmHg", factor: 1.0, rounding: 1, props: ["LV.pres_max", "LV.pres_min"], weight_based: false },
+            { label: "LVV", unit: "ml/kg", factor: 1000.0, rounding: 1, props: ["LV.vol_max", "LV.vol_min"], weight_based: true },
+            { label: "LV_SV", unit: "ml/kg", factor: 1000.0, rounding: 1, props: ["LV.vol_sv"], weight_based: true },
+            { label: "RVP", unit: "mmHg", factor: 1.0, rounding: 1, props: ["RV.pres_max", "RV.pres_min"], weight_based: false },
+            { label: "RVV", unit: "ml/kg", factor: 1000.0, rounding: 1, props: ["RV.vol_max", "RV.vol_min"], weight_based: true },
+            { label: "RV_SV", unit: "ml/kg", factor: 1000.0, rounding: 1, props: ["RV.vol_sv"], weight_based: true },
+          ]
+        },
+        circulation_numerics: {
+          title: "CIRCULATION",
+          collapsed: false,
+          parameters: [
+            { label: "LVO", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["LV_AA.flow_lmin_avg"], weight_based: true },
+            { label: "RVO", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["RV_PA.flow_lmin_avg"], weight_based: true },
+            { label: "fCOR", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["COR_RA.flow_lmin_avg"], weight_based: true },
+            { label: "fSVC", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["SVC_RA.flow_lmin_avg"], weight_based: true },
+            { label: "fIVC", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["IVCI_RA.flow_lmin_avg"], weight_based: true },
+            { label: "fDAo", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["AAR_AD.flow_lmin_avg"], weight_based: true },
           ]
         },
         lab_numerics: {
           title: "LABS",
           collapsed: true,
           parameters: [
-            { label: "pH", unit: "", factor: 1.0, rounding: 2, props: ["Blood.ph"] },
-            { label: "pO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.po2"] },
-            { label: "pCO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.pco2"] },
-            { label: "HCO3", unit: "mmol/l", factor: 1.0, rounding: 0, props: ["Blood.hco3"] },
-            { label: "BE", unit: "mmol/l", factor: 1.0, rounding: 1, props: ["Blood.be"] },
-            { label: "SO2", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2"] },
+            { label: "pH", unit: "", factor: 1.0, rounding: 2, props: ["Blood.ph"], weight_based: false },
+            { label: "pO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.po2"], weight_based: false },
+            { label: "pCO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.pco2"], weight_based: false },
+            { label: "HCO3", unit: "mmol/l", factor: 1.0, rounding: 0, props: ["Blood.hco3"], weight_based: false },
+            { label: "BE", unit: "mmol/l", factor: 1.0, rounding: 1, props: ["Blood.be"], weight_based: false },
+            { label: "SO2", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2"], weight_based: false },
           ]
-        },
-
-        circulation_numerics: {
-          title: "CIRCULATION",
-          collapsed: true,
-          parameters: []
         },
         resp_numerics: {
           title: "RESPIRATION",
           collapsed: true,
-          parameters: []
+          parameters: [
+            { label: "Resp rate", unit: "/min", factor: 1.0, rounding: 0, props: ["Breathing.resp_rate"], weight_based: false },
+            { label: "Tv", unit: "ml/kg", factor: 1000.0, rounding: 1, props: ["Breathing.exp_tidal_volume"], weight_based: true },
+            { label: "Mv", unit: "ml/kg/min", factor: 1000.0, rounding: 0, props: ["Breathing.minute_volume"], weight_based: true },
+          ]
         },
         vent_numerics: {
           title: "VENTILATOR",
           collapsed: true,
           parameters: [
-            { label: "Pip", unit: "cmh2o", factor: 1.0, rounding: 0, props: ["Ventilator.pip_cmh2o"] },
-            { label: "Peep", unit: "cmh2o", factor: 1.0, rounding: 0, props: ["Ventilator.peep_cmh2o"] },
-            { label: "Freq", unit: "/min", factor: 1.0, rounding: 0, props: ["Ventilator.vent_rate"] },
-            { label: "Tv", unit: "ml", factor: 1000.0, rounding: 1, props: ["Ventilator.exp_tidal_volume"] },
-            { label: "Mv", unit: "ml/min", factor: 1000.0, rounding: 0, props: ["Ventilator.minute_volume"] },
-            { label: "Comp", unit: "ml/cmh2o", factor: 1.0, rounding: 1, props: ["Ventilator.compliance"] },
-            { label: "Res", unit: "ml/cmh2o", factor: 1.0, rounding: 1, props: ["Ventilator.resistance"] },
-            { label: "Etco2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Ventilator.etco2"] },
-            { label: "Tv_hfo", unit: "ml", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_tv"] },
-            { label: "Mv_hfo", unit: "ml/min", factor: 1.0, rounding: 0, props: ["Ventilator.hfo_mv"] },
-            { label: "dco2", unit: "ml^2/s", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_dco2"] },
+            { label: "Pip", unit: "cmh2o", factor: 1.0, rounding: 0, props: ["Ventilator.pip_cmh2o"], weight_based: false },
+            { label: "Peep", unit: "cmh2o", factor: 1.0, rounding: 0, props: ["Ventilator.peep_cmh2o"], weight_based: false },
+            { label: "Freq", unit: "/min", factor: 1.0, rounding: 0, props: ["Ventilator.vent_rate"], weight_based: false },
+            { label: "Tv", unit: "ml/kg", factor: 1000.0, rounding: 1, props: ["Ventilator.exp_tidal_volume"], weight_based: true },
+            { label: "Mv", unit: "ml/kg/min", factor: 1000.0, rounding: 0, props: ["Ventilator.minute_volume"], weight_based: true },
+            { label: "Comp", unit: "ml/cmh2o", factor: 1.0, rounding: 1, props: ["Ventilator.compliance"], weight_based: false },
+            { label: "Res", unit: "ml/cmh2o", factor: 1.0, rounding: 1, props: ["Ventilator.resistance"], weight_based: false },
+            { label: "Etco2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Ventilator.etco2"], weight_based: false },
+            { label: "Tv_hfo", unit: "ml/kg", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_tv"], weight_based: true },
+            { label: "Mv_hfo", unit: "ml/kg/min", factor: 1.0, rounding: 0, props: ["Ventilator.hfo_mv"], weight_based: true },
+            { label: "dco2", unit: "ml^2/s", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_dco2"], weight_based: false },
           ]
         }
       },

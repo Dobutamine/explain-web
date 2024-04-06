@@ -59,10 +59,6 @@ export default {
         value: 'FO'
       },
       {
-        label: 'ventricular septal defect',
-        value: 'VSD'
-      },
-      {
         label: 'intrapulmonary shunt',
         value: 'IPS'
       }
@@ -484,9 +480,6 @@ export default {
           }
           if (this.diagram.components['FO'].enabled) {
             this.selected_shunts.push('FO')
-          }
-          if (this.diagram.components['VSD'].enabled) {
-            this.selected_shunts.push('VSD')
           }
           if (this.diagram.components['IPS'].enabled) {
             this.selected_shunts.push('IPS')

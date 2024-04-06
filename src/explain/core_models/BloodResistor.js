@@ -198,6 +198,7 @@ export class BloodResistor {
   // dependent parameters
   flow = 0.0;
   flow_lmin = 0.0;
+  flow_lmin_avg = 0.0;
   flow_forward_lmin = 0.0;
   flow_backward_lmin = 0.0;
   flux_o2 = 0;
@@ -219,6 +220,8 @@ export class BloodResistor {
   _cum_forward_flow = 0.0;
   _cum_backward_flow = 0.0;
   _flow_counter = 0.0;
+  _flow_mov_avg_counter = 0.0;
+  _alpha = 0.05;
 
   test1 = 0.0;
   test2 = 0.0;
@@ -459,7 +462,9 @@ export class BloodResistor {
   }
 
   analyze() {
+    const alpha = 0.1;
     this._flow_counter += this._t;
+
     if (this._heart.ncc_ventricular === 1) {
       this.flow_forward_lmin =
         (this._cum_forward_flow / this._flow_counter) * 60.0;
@@ -469,6 +474,13 @@ export class BloodResistor {
       this._cum_forward_flow = 0.0;
       this._cum_backward_flow = 0.0;
       this._flow_counter = 0.0;
+
+      //
+      this._flow_mov_avg_counter += 1;
+      if (this._flow_mov_avg_counter > 5) {
+        this.flow_lmin_avg =
+          this._alpha * this.flow_lmin + (1 - this._alpha) * this.flow_lmin_avg;
+      }
     }
   }
 }

@@ -12,45 +12,45 @@
       <div v-if="heartEnabled">
         <div>
           <div class="row text-overline justify-center">
-            <q-badge class="q-pa-sm" color="black">
+            <q-badge class="q-pa-sm" color="grey-10">
               heart contractility L/R
               <q-btn @click="linkContractility" class="q-ml-sm" :color="contractilityLinkedColor" dense size="xs"
                 icon="fa-solid fa-link"></q-btn>
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
               snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
-            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+            <q-btn class="q-ma-sm col" dense size="xs" color="grey-10" icon="fa-solid fa-chevron-right"></q-btn>
           </div>
           <div v-if="!contractilityLinked" class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
               snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
-            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+            <q-btn class="q-ma-sm col" dense size="xs" color="grey-10" icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
 
         <div>
           <div class="row text-overline justify-center">
-            <q-badge class="q-pa-sm" color="black">
+            <q-badge class="q-pa-sm" color="grey-10">
               heart relaxation L/R
               <q-btn @click="linkRelaxation" class="q-ml-sm" :color="relaxationLinkedColor" dense size="xs"
                 icon="fa-solid fa-link" </q-btn>
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
               snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
-            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
           </div>
           <div v-if="!relaxationLinked" class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
               snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
-            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
       </div>
@@ -65,41 +65,41 @@
       <div v-if="circEnabled">
         <div>
           <div class="row text-overline justify-center">
-            <q-badge class="q-pa-sm" color="black">
+            <q-badge class="q-pa-sm" color="grey-10">
               systemic vascular resistance
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
               snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
-            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
         <div>
           <div class="row text-overline justify-center">
-            <q-badge class="q-pa-sm" color="black">
+            <q-badge class="q-pa-sm" color="grey-10">
               pulmonary vascular resistance
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
               snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
-            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
         <div>
           <div class="row text-overline justify-center">
-            <q-badge class="q-pa-sm" color="black">
+            <q-badge class="q-pa-sm" color="grey-10">
               venous pooling
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
               snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
-            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
       </div>
@@ -114,67 +114,67 @@
       <div v-if="shuntsEnabled">
         <div>
           <div class="row text-overline justify-center">
-            <q-badge class="q-pa-sm" color="black">
+            <q-badge class="q-pa-sm" color="grey-10">
               ductus arteriosus
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
               snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
-            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
         <div>
           <div class="row text-overline justify-center">
-            <q-badge class="q-pa-sm" color="black">
+            <q-badge class="q-pa-sm" color="grey-10">
               foramen ovale
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
               snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
-            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
         <div v-if="shuntsAdvanced">
           <div class="row text-overline justify-center">
-            <q-badge class="q-pa-sm" color="black">
+            <q-badge class="q-pa-sm" color="grey-10">
               ventricular septal defect
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
               snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
-            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
         <div v-if="shuntsAdvanced">
           <div class="row text-overline justify-center">
-            <q-badge class="q-pa-sm" color="black">
+            <q-badge class="q-pa-sm" color="grey-10">
               modified BTT shunt
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
               snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
-            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
         <div v-if="shuntsAdvanced">
           <div class="row text-overline justify-center">
-            <q-badge class="q-pa-sm" color="black">
+            <q-badge class="q-pa-sm" color="grey-10">
               sano shunt
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-9" dense size="xs">min</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
               snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
-            <q-btn class="q-ma-sm col" dense size="xs" color="grey-9">max</q-btn>
+            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
       </div>
