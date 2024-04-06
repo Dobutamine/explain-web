@@ -1,9 +1,6 @@
 <template>
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
-    <div
-      class="q-mt-es row gutter text-overline justify-center text-red"
-      @click="isEnabled = !isEnabled"
-    >
+    <div class="q-mt-es row gutter text-overline justify-center text-red" @click="isEnabled = !isEnabled">
       {{ title }}
     </div>
     <div v-if="isEnabled">
@@ -11,56 +8,69 @@
         <div class="col text-center">thorax compliance</div>
       </div>
       <div class="row text-overline justify-center">
-        <q-slider v-model="thorax_compliance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeThoraxCompliance"/>
+        <q-slider v-model="thorax_compliance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense
+          thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col"
+          @update:model-value="changeThoraxCompliance" />
       </div>
 
       <div class="row text-overline justify-center">
         <div class="col text-center">lung compliance</div>
       </div>
       <div class="row text-overline justify-center">
-        <q-slider v-model="lungs_compliance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeLungCompliance"/>
+        <q-slider v-model="lungs_compliance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense
+          thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col"
+          @update:model-value="changeLungCompliance" />
       </div>
 
       <div class="row text-overline justify-center">
         <div class="col text-center">upper airway resistance</div>
       </div>
       <div class="row text-overline justify-center">
-        <q-slider v-model="upper_airway_resistance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeUpperAirwayResistance"/>
+        <q-slider v-model="upper_airway_resistance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense
+          thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col"
+          @update:model-value="changeUpperAirwayResistance" />
       </div>
 
       <div class="row text-overline justify-center">
         <div class="col text-center">lower airway resistance</div>
       </div>
       <div class="row text-overline justify-center">
-        <q-slider v-model="lower_airway_resistance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeLowerAirwayResistance"/>
+        <q-slider v-model="lower_airway_resistance" :step="0.1" :min="-10" :max="10" snap :markers="10" dense
+          thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col"
+          @update:model-value="changeLowerAirwayResistance" />
       </div>
 
       <div class="row text-overline justify-center">
         <div class="col text-center">dead space</div>
       </div>
       <div class="row text-overline justify-center">
-        <q-slider v-model="dead_space" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDeadSpace"/>
+        <q-slider v-model="dead_space" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal"
+          color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDeadSpace" />
       </div>
 
       <div class="row text-overline justify-center">
         <div class="col text-center">atelectasis</div>
       </div>
       <div class="row text-overline justify-center">
-        <q-slider v-model="atelectasis" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeAtelectasis"/>
+        <q-slider v-model="atelectasis" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal"
+          color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeAtelectasis" />
       </div>
 
       <div class="row text-overline justify-center">
         <div class="col text-center">intra-pulmonary shunting</div>
       </div>
       <div class="row text-overline justify-center">
-        <q-slider v-model="lung_shunt" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt"/>
+        <q-slider v-model="lung_shunt" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal"
+          color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeIntrapulmonaryShunt" />
       </div>
 
       <div class="row text-overline justify-center">
         <div class="col text-center">diffusion capacity</div>
       </div>
       <div class="row text-overline justify-center q-mb-sm">
-        <q-slider v-model="diffusion_coefficient" :step="0.1" :min="-10" :max="10" snap :markers="10" dense thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col" @update:model-value="changeDiffusionCoefficient"/>
+        <q-slider v-model="diffusion_coefficient" :step="0.1" :min="-10" :max="10" snap :markers="10" dense
+          thumb-color="teal" color="transparent" class="q-ml-sm q-mr-sm col"
+          @update:model-value="changeDiffusionCoefficient" />
       </div>
 
     </div>

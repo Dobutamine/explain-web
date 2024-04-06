@@ -1,9 +1,11 @@
 <template>
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
     <div v-if="isEnabled">
+      <div class="q-ml-md q-md-sm q-mt-xs row gutter justify-center text-secondary">
+        <div class="q-mt-sm text-secondary">
+          Heart
+        </div>
 
-      <div class="q-ml-md q-md-sm q-mt-xs row gutter text-overline justify-center text-red">
-        HEART
         <q-btn @click="toggleHeart" class="q-ma-sm q-ml-xs q-mt-xs" :color="heartEnabledColor" dense size="xs"
           :icon="heartEnabledIcon"></q-btn>
         <q-btn @click="showAdvancedHeart" class="q-ma-sm" :color="heartAdvancedColor" dense size="xs"
@@ -35,6 +37,7 @@
         <div>
           <div class="row text-overline justify-center">
             <q-badge class="q-pa-sm" color="grey-10">
+
               heart relaxation L/R
               <q-btn @click="linkRelaxation" class="q-ml-sm" :color="relaxationLinkedColor" dense size="xs"
                 icon="fa-solid fa-link" </q-btn>
@@ -55,8 +58,11 @@
         </div>
       </div>
 
-      <div class="q-mt-xs row gutter text-overline justify-center text-red">
-        VASCULAR TONE
+      <div class="q-mt-xs row gutter  justify-center text-secondary">
+        <div class="q-mt-sm text-secondary">
+          Circulation
+        </div>
+
         <q-btn @click="toggleCirc" class="q-ma-sm q-ml-xs q-mt-xs" :color="circEnabledColor" dense size="xs"
           :icon="circEnabledIcon"></q-btn>
         <q-btn @click="showAdvancedCirc" class="q-ma-sm" :color="circAdvancedColor" dense size="xs"
@@ -104,8 +110,11 @@
         </div>
       </div>
 
-      <div class="q-mt-xs row gutter text-overline justify-center text-red">
-        SHUNT SIZES
+      <div class="q-mt-xs row gutter  justify-center text-secondary">
+        <div class="q-mt-sm text-secondary">
+          Shunts
+        </div>
+
         <q-btn @click="toggleShunts" class="q-ma-sm q-ml-xs q-mt-xs" :color="shuntsEnabledColor" dense size="xs"
           :icon="shuntsEnabledIcon"></q-btn>
         <q-btn @click="showAdvancedShunts" class="q-ma-sm" :color="shuntsAdvancedColor" dense size="xs"
