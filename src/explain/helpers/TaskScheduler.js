@@ -41,7 +41,8 @@ export default class TaskScheduler {
       });
       if (index > -1) {
         //console.log("Removed completed task with id: ", this.tasks[index].id);
-        this.tasks.splice(index, 1);
+        let removed_task = this.tasks.splice(index, 1);
+        console.log("Removed task: ", removed_task[0].id);
       }
     });
   }
@@ -69,19 +70,8 @@ export default class TaskScheduler {
               } else {
                 task.v += task.step;
               }
-
               // update the property
-              try {
-                task.m[task.p] = parseFloat(task.v);
-              } catch {
-                task.status = "completed";
-                completed = true;
-                task.it = 0;
-                task.at = 0;
-                this.tasks_ready = true;
-                this._completed_tasks.push(task.id);
-              }
-
+              task.m[task.p] = parseFloat(task.v);
               break;
 
             case "boolean":
@@ -132,8 +122,6 @@ export default class TaskScheduler {
               break;
           }
         }
-      } else {
-        completed = true;
       }
     });
     if (completed) {

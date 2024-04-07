@@ -255,6 +255,7 @@ export class Circulation {
   calc_model() {}
 
   change_pvr(change_forward, change_backward = -1) {
+    console.log("Change pvr with factor: ", change_forward);
     if (change_forward > 0.0) {
       this.pvr_change = change_forward;
       this._pvr_targets.forEach((target) => {
@@ -268,6 +269,7 @@ export class Circulation {
   }
 
   change_svr(change_forward, change_backward = -1) {
+    console.log("Change svr with factor: ", change_forward);
     if (change_forward > 0.0) {
       this.svr_change = change_forward;
       this._svr_targets.forEach((target) => {
@@ -281,6 +283,7 @@ export class Circulation {
   }
 
   change_venpool(change) {
+    console.log("Change venous pool with factor: ", change);
     if (change > 0.0) {
       this.venpool_change = change;
       this._venpool_targets.forEach((target) => {
@@ -290,6 +293,7 @@ export class Circulation {
   }
 
   change_syst_arterial_elastance(change) {
+    console.log("Change syst art elastance with factor: ", change);
     if (change > 0.0) {
       this.systartcomp_change = change;
       this._systemic_arteries.forEach((target) => {
@@ -299,6 +303,7 @@ export class Circulation {
   }
 
   change_pulm_arterial_elastance(change) {
+    console.log("Change pulm art elastance with factor: ", change);
     if (change > 0.0) {
       this.pulmartcomp_change = change;
       this._pulmonary_arteries.forEach((target) => {
@@ -308,6 +313,7 @@ export class Circulation {
   }
 
   change_venous_elastance(change) {
+    console.log("Change venous elastance with factor: ", change);
     if (change > 0.0) {
       this.vencomp_change = change;
       this._systemic_veins.forEach((target) => {
@@ -317,6 +323,7 @@ export class Circulation {
   }
 
   set_total_blood_volume(new_blood_volume) {
+    console.log("Set new blood volume to: ", volume);
     let current_blood_volume = this.get_total_blood_volume();
     for (let [model_name, model] of Object.entries(this._model_engine.models)) {
       if (
