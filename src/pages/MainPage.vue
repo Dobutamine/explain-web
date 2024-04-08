@@ -1,8 +1,7 @@
 <template>
   <q-page>
-    <div class="q-pa-sm">
+    <div class="q-pa-sm" style="background-color: black; min-height: 100vh;">
       <div class="row">
-
         <div class="col-3">
           <q-tabs v-model="tab_left" dense class="text-white" active-color="primary" indicator-color="primary"
             align="left" narrow-indicator outside-arrows @update:model-value="tabLeftChanged">
@@ -19,14 +18,14 @@
             </q-tab>
           </q-tabs>
 
-          <q-tab-panels v-model="tab_left" keep-alive>
+          <q-tab-panels v-model="tab_left" keep-alive style="background-color: black">
             <q-tab-panel name="model_editor">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
                 right: '5px',
                 borderRadius: '5px',
-                background: 'grey-10',
+                background: 'black',
                 width: '5px',
-                opacity: 0.5
+                opacity: 1.0
               }">
                 <div v-for="(index) in no_of_modeleditor" :key="index">
                   <ModelEditor></ModelEditor>
@@ -42,18 +41,18 @@
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
                 right: '5px',
                 borderRadius: '5px',
-                background: 'grey-10',
+                background: 'black',
                 width: '5px',
                 opacity: 0.5
               }">
-                <CirculatorySystemComponent></CirculatorySystemComponent>
+                <NiceController :config="circulation_controller"></NiceController>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="respiratory_system">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
                 right: '5px',
                 borderRadius: '5px',
-                background: 'grey-10',
+                background: 'black',
                 width: '5px',
                 opacity: 0.5
               }">
@@ -65,7 +64,7 @@
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
                 right: '5px',
                 borderRadius: '5px',
-                background: 'grey-10',
+                background: 'black',
                 width: '5px',
                 opacity: 0.5
               }">
@@ -109,12 +108,12 @@
 
 
           </q-tabs>
-          <q-tab-panels v-model="tab_center" keep-alive>
+          <q-tab-panels v-model="tab_center" keep-alive style="background-color: black">
             <q-tab-panel name="time_chart">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
                 right: '5px',
                 borderRadius: '5px',
-                background: 'grey-10',
+                background: 'black',
                 width: '5px',
                 opacity: 0.5
               }">
@@ -126,7 +125,7 @@
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
                 right: '5px',
                 borderRadius: '5px',
-                background: 'grey-10',
+                background: 'black',
                 width: '5px',
                 opacity: 0.5
               }">
@@ -138,7 +137,7 @@
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
                 right: '5px',
                 borderRadius: '5px',
-                background: 'grey-10',
+                background: 'black',
                 width: '5px',
                 opacity: 0.5
               }">
@@ -150,7 +149,7 @@
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
                 right: '5px',
                 borderRadius: '5px',
-                background: 'grey-10',
+                background: 'black',
                 width: '5px',
                 opacity: 0.5
               }">
@@ -162,7 +161,7 @@
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
                 right: '5px',
                 borderRadius: '5px',
-                background: 'grey-10',
+                background: 'black',
                 width: '5px',
                 opacity: 0.5
               }">
@@ -193,12 +192,12 @@
               <q-tooltip>respiratory monitoring</q-tooltip>
             </q-tab>
           </q-tabs>
-          <q-tab-panels v-model="tab_right" keep-alive>
+          <q-tab-panels v-model="tab_right" keep-alive style="background-color: black">
             <q-tab-panel name="numerics">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
                 right: '5px',
                 borderRadius: '5px',
-                background: 'grey-10',
+                background: 'black',
                 width: '5px',
                 opacity: 0.5
               }">
@@ -213,7 +212,7 @@
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
                 right: '5px',
                 borderRadius: '5px',
-                background: 'grey-10',
+                background: 'black',
                 width: '5px',
                 opacity: 0.5
               }">
@@ -228,7 +227,7 @@
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
                 right: '5px',
                 borderRadius: '5px',
-                background: 'grey-10',
+                background: 'black',
                 width: '5px',
                 opacity: 0.5
               }">
@@ -253,12 +252,12 @@ import ModelEditor from "src/components/ModelEditorComponent.vue"
 import TimeBasedChartComponent from 'src/components/TimeBasedChartComponent.vue';
 import VentilatorComponent from 'src/components/VentilatorComponent.vue';
 import XYChartComponent from 'src/components/XYChartComponent.vue';
-import CirculatorySystemComponent from 'src/components/CirculatorySystemComponent.vue';
 import RespiratorySystemComponent from 'src/components/RespiratorySystemComponent.vue';
 import HeartComponent from 'src/components/HeartComponent.vue';
 import ShuntSystemComponent from 'src/components/ShuntSystemComponent.vue'
 import DiagramComponent from 'src/components/DiagramComponent.vue';
 import TweakerComponent from 'src/components/TweakerComponent.vue'
+import NiceController from 'src/components/NiceController.vue';
 
 import { explain } from 'src/boot/explain';
 
@@ -271,12 +270,12 @@ export default defineComponent({
     TimeBasedChartComponent,
     VentilatorComponent,
     XYChartComponent,
-    CirculatorySystemComponent,
     RespiratorySystemComponent,
     HeartComponent,
     ShuntSystemComponent,
     DiagramComponent,
-    TweakerComponent
+    TweakerComponent,
+    NiceController
   },
   data() {
     return {
@@ -452,6 +451,205 @@ export default defineComponent({
           parameters: []
         }
       },
+      circulation_controller: {
+        categories: {
+          heart: {
+            caption: "Heart",
+            enabled: true,
+            advanced: false,
+          },
+          circulation: {
+            caption: "Circulation",
+            enabled: true,
+            advanced: false,
+          },
+          shunts: {
+            caption: "Shunts",
+            enabled: true,
+            advanced: false,
+          }
+        },
+        items: {
+          left_contractility: {
+            caption: "left contractility",
+            category: "heart",
+            enabled: true,
+            advanced: false,
+            linked: true,
+            link_button: true,
+            linked_caption: "contractility L/R",
+            linked_to: "right_contractility",
+            type: "factor",
+            caller: "direct",
+            function_name: "",
+            model: "LV",
+            prop: "el_max_factor",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          right_contractility: {
+            caption: "right contractility",
+            category: "heart",
+            enabled: true,
+            advanced: false,
+            linked: true,
+            link_button: false,
+            linked_to: "",
+            type: "factor",
+            caller: "direct",
+            function_name: "",
+            model: "RV",
+            prop: "el_max_factor",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          left_relaxation: {
+            caption: "left relaxation",
+            category: "heart",
+            enabled: true,
+            advanced: false,
+            linked: true,
+            link_button: true,
+            linked_caption: "relaxation L/R",
+            linked_to: "right_relaxation",
+            type: "factor",
+            caller: "direct",
+            function_name: "",
+            model: "LV",
+            prop: "el_min_factor",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          right_relaxation: {
+            caption: "right relaxation",
+            category: "heart",
+            enabled: true,
+            advanced: false,
+            linked: true,
+            link_button: false,
+            linked_to: "",
+            type: "factor",
+            caller: "direct",
+            function_name: "",
+            model: "RV",
+            prop: "el_min_factor",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          svr: {
+            caption: "syst vasc resistance",
+            category: "circulation",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Circulation",
+            prop: "svr_change",
+            type: "factor",
+            caller: "function",
+            function_name: "change_svr",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          svel: {
+            caption: "syst vasc elastance",
+            category: "circulation",
+            enabled: true,
+            advanced: true,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Circulation",
+            prop: "systartcomp_change",
+            type: "factor",
+            caller: "function",
+            function_name: "change_syst_arterial_elastance",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          pvr: {
+            caption: "pulm vasc resistance",
+            category: "circulation",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Circulation",
+            prop: "pvr_change",
+            type: "factor",
+            caller: "function",
+            function_name: "change_pvr",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          pvel: {
+            caption: "pulm vasc elastance",
+            category: "circulation",
+            enabled: true,
+            advanced: true,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Circulation",
+            prop: "pulmartcomp_change",
+            type: "factor",
+            caller: "function",
+            function_name: "change_pulm_arterial_elastance",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          pda: {
+            caption: "ductus arteriosus",
+            category: "shunts",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            model: "Shunts",
+            prop: "da_diameter",
+            min: 0.0,
+            max: 5.0,
+            step: 0.1
+          },
+          fo: {
+            caption: "foramen ovale",
+            category: "shunts",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            model: "Shunts",
+            prop: "fo_diameter",
+            min: 0.0,
+            max: 5.0,
+            step: 0.1
+          },
+        }
+      },
 
     }
   },
@@ -542,7 +740,7 @@ export default defineComponent({
 
     // get the screen height
     let h = this.$q.screen.height - this.screen_offset;
-    this.screen_height = "height: " + h + "px";
+    this.screen_height = "height: " + h + "px; background: black";
 
     // make sure the modelengine watches everything which is visible on the main screen.
     this.updateWatchlist()

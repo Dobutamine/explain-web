@@ -3,7 +3,7 @@
     <q-header class="bg-indigo-10 text-white headerCustomStyle" height-hint="68">
     </q-header>
 
-    <q-page-container>
+    <q-page-container class="black-background">
       <router-view />
     </q-page-container>
 
@@ -256,6 +256,12 @@ export default defineComponent({
 })
 </script>
 <style scoped>
+.black-background {
+  background-color: black;
+  min-height: 100vh;
+  /* Ensures the background covers the whole page */
+}
+
 .headerCustomStyle {
   height: 30px !important;
   display: flex;
