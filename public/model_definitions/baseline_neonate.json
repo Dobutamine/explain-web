@@ -2881,10 +2881,12 @@
               "AA_RUB",
               "AD_RLB"
           ],
+          "svr_res_elastance_ratio" : 4.0,
           "pvr_targets": [
               "PA_LL",
               "PA_RL"
           ],
+          "pvr_res_elastance_ratio" : 1.0,
           "ofo_targets": [
               "FO"
           ],

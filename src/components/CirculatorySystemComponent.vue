@@ -14,22 +14,27 @@
         <div>
           <div class="row text-overline justify-center">
             <q-badge class="q-pa-sm" color="grey-10">
-              heart contractility L/R
+              heart contractility L/R ({{ leftHeartContractility_display_factor }}/{{
+                rightHeartContractility_display_factor }})
               <q-btn @click="linkContractility" class="q-ml-sm" :color="contractilityLinkedColor" dense size="xs"
                 icon="fa-solid fa-link"></q-btn>
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
+            <q-btn @click="decLeftHeartContractility" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartContractility" :step="0.1" :min="-10" :max="10"
               snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartContractility" />
-            <q-btn class="q-ma-sm col" dense size="xs" color="grey-10" icon="fa-solid fa-chevron-right"></q-btn>
+            <q-btn @click="incLeftHeartContractility" class="q-ma-sm col" dense size="xs" color="grey-10"
+              icon="fa-solid fa-chevron-right"></q-btn>
           </div>
           <div v-if="!contractilityLinked" class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
+            <q-btn @click="decRightHeartContractility" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="rightHeartContractility" :step="0.1" :min="-10" :max="10"
               snap :markers="10" dense thumb-color="teal" color="transparent" @change="changeRightHeartContractility" />
-            <q-btn class="q-ma-sm col" dense size="xs" color="grey-10" icon="fa-solid fa-chevron-right"></q-btn>
+            <q-btn @click="incRightHeartContractility" class="q-ma-sm col" dense size="xs" color="grey-10"
+              icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
 
@@ -37,22 +42,27 @@
           <div class="row text-overline justify-center">
             <q-badge class="q-pa-sm" color="grey-10">
 
-              heart relaxation L/R
+              heart relaxation L/R ({{ leftHeartRelaxation_display_factor }}/{{
+                rightHeartRelaxation_display_factor }})
               <q-btn @click="linkRelaxation" class="q-ml-sm" :color="relaxationLinkedColor" dense size="xs"
                 icon="fa-solid fa-link" </q-btn>
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
+            <q-btn @click="decLeftHeartRelaxation" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="leftHeartRelaxation" :step="0.1" :min="-10" :max="10" snap
               :markers="10" dense thumb-color="teal" color="transparent" @change="changeLeftHeartRelaxation" />
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
+            <q-btn @click="incLeftHeartRelaxation" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-right"></q-btn>
           </div>
           <div v-if="!relaxationLinked" class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
+            <q-btn @click="decRightHeartRelaxation" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="rightHeartRelaxation" :step="0.1" :min="-10" :max="10" snap
               :markers="10" dense thumb-color="teal" color="transparent" @change="changeRightHeartRelaxation" />
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
+            <q-btn @click="incRightHeartRelaxation" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
       </div>
@@ -71,33 +81,67 @@
         <div>
           <div class="row text-overline justify-center">
             <q-badge class="q-pa-sm" color="grey-10">
-              systemic vascular resistance
+              syst vasc resistance ({{ this.svr_display_factor }})
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
+            <q-btn @click="decSvr" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="svr" :step="0.1" :min="-10" :max="10" snap :markers="10"
               dense thumb-color="teal" color="transparent" @change="changeSvr" />
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
+            <q-btn @click="incSvr" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
-        <div>
+        <div v-if="circAdvanced">
           <div class="row text-overline justify-center">
             <q-badge class="q-pa-sm" color="grey-10">
-              pulmonary vascular resistance
+              syst vasc elastance ({{ this.svel_display_factor }})
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
-            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="pvr" :step="0.1" :min="-10" :max="10" snap :markers="10"
-              dense thumb-color="teal" color="transparent" @change="changePvr" />
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
+            <q-btn @click="decSvel" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-left"></q-btn>
+            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="svel" :step="0.1" :min="-10" :max="10" snap :markers="10"
+              dense thumb-color="teal" color="transparent" @change="changeSvel" />
+            <q-btn @click="incSvel" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
         <div>
           <div class="row text-overline justify-center">
             <q-badge class="q-pa-sm" color="grey-10">
-              venous pooling
+              pulm vasc resistance ({{ this.pvr_display_factor }})
+            </q-badge>
+          </div>
+          <div class="row text-overline justify-center">
+            <q-btn @click="decPvr" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-left"></q-btn>
+            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="pvr" :step="0.1" :min="-10" :max="10" snap :markers="10"
+              dense thumb-color="teal" color="transparent" @change="changePvr" />
+            <q-btn @click="incPvr" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-right"></q-btn>
+          </div>
+        </div>
+        <div v-if="circAdvanced">
+          <div class="row text-overline justify-center">
+            <q-badge class="q-pa-sm" color="grey-10">
+              pulm vasc elastance ({{ this.pvel_display_factor }})
+            </q-badge>
+          </div>
+          <div class="row text-overline justify-center">
+            <q-btn @click="decPvel" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-left"></q-btn>
+            <q-slider class="q-ma-sm q-mr-sm col-8" v-model="pvel" :step="0.1" :min="-10" :max="10" snap :markers="10"
+              dense thumb-color="teal" color="transparent" @change="changePvel" />
+            <q-btn @click="incPvel" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-right"></q-btn>
+          </div>
+        </div>
+        <div>
+          <div class="row text-overline justify-center">
+            <q-badge class="q-pa-sm" color="grey-10">
+              venous pooling ({{ this.venpool_display_factor }})
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
@@ -125,40 +169,46 @@
         <div>
           <div class="row text-overline justify-center">
             <q-badge class="q-pa-sm" color="grey-10">
-              ductus arteriosus
+              ductus arteriosus ({{ this.da.toFixed(1) }})
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
+            <q-btn @click="decDa" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="da" :step="0.1" :min="0" :max="5" snap :markers="1" dense
               thumb-color="teal" color="transparent" @change="changeDa" />
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
+            <q-btn @click="incDa" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
         <div>
           <div class="row text-overline justify-center">
             <q-badge class="q-pa-sm" color="grey-10">
-              foramen ovale
+              foramen ovale ({{ this.fo.toFixed(1) }})
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
+            <q-btn @click="decFo" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="fo" :step="0.1" :min="0" :max="5" snap :markers="1" dense
               thumb-color="teal" color="transparent" @change="changeFo" />
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
+            <q-btn @click="incFo" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
         <div v-if="shuntsAdvanced">
           <div class="row text-overline justify-center">
             <q-badge class="q-pa-sm" color="grey-10">
-              ventricular septal defect
+              ventricular septal defect {{ this.vsd_diameter.toFixed(1) }}
             </q-badge>
           </div>
           <div class="row text-overline justify-center">
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-left"></q-btn>
+            <q-btn @click="decVsd" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-left"></q-btn>
             <q-slider class="q-ma-sm q-mr-sm col-8" v-model="vsd" :step="0.1" :min="0" :max="5" snap :markers="1" dense
               thumb-color="teal" color="transparent" @change="changeVsd" />
-            <q-btn class="q-ma-sm col" color="grey-10" dense size="xs" icon="fa-solid fa-chevron-right"></q-btn>
+            <q-btn @click="incVsd" class="q-ma-sm col" color="grey-10" dense size="xs"
+              icon="fa-solid fa-chevron-right"></q-btn>
           </div>
         </div>
         <div v-if="shuntsAdvanced">
@@ -222,12 +272,23 @@ export default {
       relaxationLinked: true,
       relaxationLinkedColor: "black",
       leftHeartContractility: 0.0,
+      leftHeartContractility_display_factor: 1.0,
       rightHeartContractility: 0.0,
+      rightHeartContractility_display_factor: 1.0,
       leftHeartRelaxation: 0.0,
+      leftHeartRelaxation_display_factor: 1.0,
       rightHeartRelaxation: 0.0,
+      rightHeartRelaxation_display_factor: 1.0,
       svr: 0.0,
+      svr_display_factor: 1.0,
+      svel: 0.0,
+      svel_display_factor: 1.0,
       pvr: 0.0,
+      pvr_display_factor: 1.0,
+      pvel: 0.0,
+      pvel_display_factor: 1.0,
       venPool: 0.0,
+      venpool_display_factor: 1.0,
       da: 0.0,
       fo: 0.0,
       vsd: 0.0,
@@ -339,70 +400,250 @@ export default {
     },
     changeLeftHeartContractility() {
       let factor = parseFloat(this.translateSliderToValue(this.leftHeartContractility))
+      this.leftHeartContractility_display_factor = factor.toFixed(2)
       explain.setPropValue("LV.el_max_factor", factor)
+      explain.setPropValue("LA.el_max_factor", factor)
       if (this.contractilityLinked) {
         this.rightHeartContractility = this.leftHeartContractility
+        this.rightHeartContractility_display_factor = factor.toFixed(2)
         explain.setPropValue("RV.el_max_factor", factor)
+        explain.setPropValue("RA.el_max_factor", factor)
       }
-
+    },
+    incLeftHeartContractility() {
+      this.leftHeartContractility += 0.05
+      if (this.leftHeartContractility > 10) {
+        this.leftHeartContractility = 10
+      }
+      this.changeLeftHeartContractility()
+    },
+    decLeftHeartContractility() {
+      this.leftHeartContractility -= 0.05
+      if (this.leftHeartContractility < -10) {
+        this.leftHeartContractility = -10
+      }
+      this.changeLeftHeartContractility()
     },
     changeRightHeartContractility() {
       let factor = parseFloat(this.translateSliderToValue(this.rightHeartContractility))
+      this.rightHeartContractility_display_factor = factor.toFixed(2)
       explain.setPropValue("RV.el_max_factor", factor)
+      explain.setPropValue("RA.el_max_factor", factor)
       if (this.contractilityLinked) {
         this.leftHeartContractility = this.rightHeartContractility
+        this.leftHeartContractility_display_factor = factor.toFixed(2)
         explain.setPropValue("LV.el_max_factor", factor)
+        explain.setPropValue("LA.el_max_factor", factor)
       }
     },
+    incRightHeartContractility() {
+      this.rightHeartContractility += 0.05
+      if (this.rightHeartContractility > 10) {
+        this.rightHeartContractility = 10
+      }
+      this.changeRightHeartContractility()
+    },
+    decRightHeartContractility() {
+      this.rightHeartContractility -= 0.05
+      if (this.rightHeartContractility < -10) {
+        this.rightHeartContractility = -10
+      }
+      this.changeRightHeartContractility()
+    },
     changeLeftHeartRelaxation() {
-      let factor = parseFloat(this.translateSliderToValue(this.leftHeartContractility))
+      let factor = parseFloat(this.translateSliderToValue(this.leftHeartRelaxation))
+      this.leftHeartRelaxation_display_factor = factor.toFixed(2)
       explain.setPropValue("LV.el_min_factor", factor)
       if (this.contractilityLinked) {
-        this.rightHeartContractility = this.leftHeartContractility
+        this.rightHeartContractility = this.leftHeartRelaxation
+        this.rightHeartRelaxation_display_factor = factor.toFixed(2)
         explain.setPropValue("RV.el_min_factor", factor)
       }
     },
+    decLeftHeartRelaxation() {
+      this.leftHeartRelaxation -= 0.05
+      if (this.leftHeartRelaxation < -10) {
+        this.leftHeartRelaxation = -10
+      }
+      this.changeLeftHeartRelaxation()
+    },
+    incLeftHeartRelaxation() {
+      this.leftHeartRelaxation += 0.05
+      if (this.leftHeartRelaxation > 10) {
+        this.leftHeartRelaxation = 10
+      }
+      this.changeLeftHeartRelaxation()
+    },
     changeRightHeartRelaxation() {
-      let factor = parseFloat(this.translateSliderToValue(this.rightHeartContractility))
+      let factor = parseFloat(this.translateSliderToValue(this.rightHeartRelaxation))
+      this.rightHeartRelaxation_display_factor = factor.toFixed(2)
       explain.setPropValue("RV.el_min_factor", factor)
       if (this.contractilityLinked) {
-        this.leftHeartContractility = this.rightHeartContractility
+        this.leftHeartContractility = this.rightHeartRelaxation
+        this.leftHeartRelaxation_display_factor = factor.toFixed(2)
         explain.setPropValue("LV.el_min_factor", factor)
       }
     },
+    incRightHeartRelaxation() {
+      this.rightHeartRelaxation += 0.05
+      if (this.rightHeartRelaxation > 10) {
+        this.rightHeartRelaxation = 10
+      }
+      this.changeRightHeartRelaxation()
+    },
+    decRightHeartRelaxation() {
+      this.rightHeartRelaxation -= 0.05
+      if (this.rightHeartRelaxation < -10) {
+        this.rightHeartRelaxation = -10
+      }
+      this.changeRightHeartRelaxation()
+    },
     changeSvr() {
       let factor = parseFloat(this.translateSliderToValue(this.svr))
+      this.svr_display_factor = factor.toFixed(2)
       explain.callModelFunction("Circulation.change_svr", [factor])
-      explain.callModelFunction("Circulation.change_syst_arterial_elastance", [factor])
+    },
+    decSvr() {
+      this.svr -= 0.05
+      if (this.svr < -10) {
+        this.svr = -10
+      }
+      this.changeSvr()
+    },
+    incSvr() {
+      this.svr += 0.05
+      if (this.svr > 10) {
+        this.svr = 10
+      }
+      this.changeSvr()
     },
     changePvr() {
       let factor = parseFloat(this.translateSliderToValue(this.pvr))
+      this.pvr_display_factor = factor.toFixed(2)
       explain.callModelFunction("Circulation.change_pvr", [factor])
+    },
+    decPvr() {
+      this.pvr -= 0.05
+      if (this.pvr < -10) {
+        this.pvr = -10
+      }
+      this.changePvr()
+    },
+    incPvr() {
+      this.pvr += 0.05
+      if (this.pvr > 10) {
+        this.pvr = 10
+      }
+      this.changePvr()
+    },
+    changeSvel() {
+      let factor = parseFloat(this.translateSliderToValue(this.svel))
+      this.svel_display_factor = factor.toFixed(2)
+      explain.callModelFunction("Circulation.change_syst_arterial_elastance", [factor])
+    },
+    decSvel() {
+      this.svel -= 0.05
+      if (this.svel < -10) {
+        this.svel = -10
+      }
+      this.changeSvel()
+    },
+    incSvel() {
+      this.svel += 0.05
+      if (this.svel > 10) {
+        this.svel = 10
+      }
+      this.changeSvel()
+    },
+    changePvel() {
+      let factor = parseFloat(this.translateSliderToValue(this.pvel))
+      this.pvel_display_factor = factor.toFixed(2)
+      explain.callModelFunction("Circulation.change_pulm_arterial_elastance", [factor])
+    },
+    decPvel() {
+      this.pvel -= 0.05
+      if (this.pvel < -10) {
+        this.pvel = -10
+      }
+      this.changePvel()
+    },
+    incPvel() {
+      this.pvel += 0.05
+      if (this.pvel > 10) {
+        this.pvel = 10
+      }
+      this.changePvel()
     },
     changeVenPool() {
       let factor = parseFloat(this.translateSliderToValue(this.venPool))
+      this.venpool_display_factor = factor.toFixed(2)
       explain.callModelFunction("Circulation.change_venpool", [factor])
     },
     decVenPoolFactor() {
-      this.venPool -= 0.01
+      this.venPool -= 0.05
       if (this.venPool < -5.0) {
         this.venPool = -5.0
       }
+      this.changeVenPool()
     },
     incVenPoolFactor() {
-      this.venPool += 0.01
+      this.venPool += 0.05
       if (this.venPool > 5.0) {
         this.venPool = 5.0
       }
+      this.changeVenPool()
     },
     changeDa() {
+      explain.setPropValue("Shunts.da_diameter", this.da)
 
+    },
+    incDa() {
+      this.da += 0.1
+      if (this.da > 5) {
+        this.da = 5
+      }
+      this.changeDa()
+    },
+    decDa() {
+      this.da -= 0.1
+      if (this.da < 0.0) {
+        this.da = 0.0
+      }
+      this.changeDa()
     },
     changeFo() {
-
+      explain.setPropValue("Shunts.fo_diameter", this.fo)
+    },
+    incFo() {
+      this.fo += 0.1
+      if (this.fo > 5.0) {
+        this.fo = 5.0
+      }
+      this.changeFo()
+    },
+    decFo() {
+      this.fo -= 0.1
+      if (this.fo < 0.0) {
+        this.fo = 0.0
+      }
+      this.changeFo()
     },
     changeVsd() {
-
+      explain.setPropValue("Shunts.vsd_diameter", this.vsd)
+    },
+    incVsd() {
+      this.vsd += 0.1
+      if (this.vsd > 5.0) {
+        this.vsd = 5.0
+      }
+      this.changeVsd()
+    },
+    decVsd() {
+      this.vsd -= 0.1
+      if (this.vsd < 0.0) {
+        this.vsd = 0.0
+      }
+      this.changeVsd()
     },
     changeBt() {
 
@@ -413,12 +654,24 @@ export default {
     processModelState() {
       if (explain.modelState.models) {
         this.leftHeartContractility = this.translateValueToSlider(explain.modelState.models['LV'].el_max_factor)
+        this.leftHeartContractility_display_factor = this.translateSliderToValue(this.leftHeartContractility).toFixed(2)
         this.leftHeartRelaxation = this.translateValueToSlider(explain.modelState.models['LV'].el_min_factor)
+        this.leftHeartRelaxation_display_factor = this.translateSliderToValue(this.leftHeartRelaxation).toFixed(2)
         this.rightHeartContractility = this.translateValueToSlider(explain.modelState.models['RV'].el_max_factor)
+        this.rightHeartContractility_display_factor = this.translateSliderToValue(this.rightHeartContractility).toFixed(2)
         this.rightHeartRelaxation = this.translateValueToSlider(explain.modelState.models['RV'].el_min_factor)
+        this.rightHeartRelaxation_display_factor = this.translateSliderToValue(this.rightHeartRelaxation).toFixed(2)
         this.svr = this.translateValueToSlider(explain.modelState.models["Circulation"].svr_change)
+        this.svr_display_factor = this.translateSliderToValue(this.svr).toFixed(2)
         this.pvr = this.translateValueToSlider(explain.modelState.models["Circulation"].pvr_change)
+        this.pvr_display_factor = this.translateSliderToValue(this.pvr).toFixed(2)
+        this.svel = this.translateValueToSlider(explain.modelState.models["Circulation"].systartcomp_change)
+        this.svel_display_factor = this.translateSliderToValue(this.svel).toFixed(2)
+        this.pvel = this.translateValueToSlider(explain.modelState.models["Circulation"].pulmartcomp_change)
+        this.pvel_display_factor = this.translateSliderToValue(this.pvel).toFixed(2)
         this.venPool = this.translateValueToSlider(explain.modelState.models["Circulation"].venpool_change)
+        this.venpool_display_factor = this.translateSliderToValue(this.venPool).toFixed(2)
+
         this.da = explain.modelState.models["Shunts"].da_diameter
         this.fo = explain.modelState.models["Shunts"].fo_diameter
         this.vsd = explain.modelState.models["Shunts"].vsd_diameter
