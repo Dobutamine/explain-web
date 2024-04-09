@@ -14,8 +14,6 @@
             <q-tab name="respiratory_system"><q-icon name="fa-solid fa-lungs" size="xs"></q-icon><q-tooltip>edit
                 respiratory system</q-tooltip>
             </q-tab>
-            <q-tab name="tweaker"><q-icon name="fa-solid fa-wrench" size="xs"></q-icon><q-tooltip>tweaker</q-tooltip>
-            </q-tab>
           </q-tabs>
 
           <q-tab-panels v-model="tab_left" keep-alive style="background-color: black">
@@ -56,19 +54,7 @@
                 width: '5px',
                 opacity: 0.5
               }">
-                <RespiratorySystemComponent></RespiratorySystemComponent>
-
-              </q-scroll-area>
-            </q-tab-panel>
-            <q-tab-panel name="tweaker">
-              <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-                right: '5px',
-                borderRadius: '5px',
-                background: 'black',
-                width: '5px',
-                opacity: 0.5
-              }">
-                <TweakerComponent></TweakerComponent>
+                <NiceController :config="respiration_controller"></NiceController>
 
               </q-scroll-area>
             </q-tab-panel>
@@ -256,7 +242,6 @@ import RespiratorySystemComponent from 'src/components/RespiratorySystemComponen
 import HeartComponent from 'src/components/HeartComponent.vue';
 import ShuntSystemComponent from 'src/components/ShuntSystemComponent.vue'
 import DiagramComponent from 'src/components/DiagramComponent.vue';
-import TweakerComponent from 'src/components/TweakerComponent.vue'
 import NiceController from 'src/components/NiceController.vue';
 
 import { explain } from 'src/boot/explain';
@@ -274,7 +259,6 @@ export default defineComponent({
     HeartComponent,
     ShuntSystemComponent,
     DiagramComponent,
-    TweakerComponent,
     NiceController
   },
   data() {
@@ -452,6 +436,7 @@ export default defineComponent({
         }
       },
       circulation_controller: {
+        title: "CIRCULATORY SYSTEM",
         categories: {
           heart: {
             caption: "Heart",
@@ -612,6 +597,24 @@ export default defineComponent({
             max: 10.0,
             step: 0.05
           },
+          ven_pool: {
+            caption: "venous pool",
+            category: "circulation",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Circulation",
+            prop: "venpool_change",
+            type: "factor",
+            caller: "function",
+            function_name: "change_venpool",
+            min: -5.0,
+            max: 5.0,
+            step: 0.05
+          },
           pda: {
             caption: "ductus arteriosus",
             category: "shunts",
@@ -648,8 +651,215 @@ export default defineComponent({
             max: 5.0,
             step: 0.1
           },
+          vsd: {
+            caption: "ventricular septal defect",
+            category: "shunts",
+            enabled: true,
+            advanced: true,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            model: "Shunts",
+            prop: "vsd_diameter",
+            min: 0.0,
+            max: 5.0,
+            step: 0.1
+          },
         }
       },
+      respiration_controller: {
+        title: "RESPIRATORY SYSTEM",
+        categories: {
+          breathing: {
+            caption: "Breathing",
+            enabled: true,
+            advanced: false,
+          },
+          thorax: {
+            caption: "Thorax",
+            enabled: true,
+            advanced: false,
+          },
+          airways: {
+            caption: "Airways",
+            enabled: true,
+            advanced: false,
+          },
+          lungs: {
+            caption: "Lungs",
+            enabled: true,
+            advanced: false,
+          }
+        },
+        items: {
+          breathing_enabled: {
+            caption: "spontaneous breathing",
+            category: "breathing",
+            enabled: true,
+            advanced: false,
+            linked: true,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "boolean",
+            caller: "direct",
+            function_name: "",
+            model: "Breathing",
+            prop: "breathing_enabled",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          thorax_compliance: {
+            caption: "thoracic compliance",
+            category: "thorax",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Lungs",
+            prop: "thorax_comp_change",
+            type: "factor",
+            caller: "function",
+            function_name: "change_thorax_compliance",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          lung_compliance: {
+            caption: "lung compliance",
+            category: "lungs",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Lungs",
+            prop: "lung_comp_change",
+            type: "factor",
+            caller: "function",
+            function_name: "change_lung_compliance",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          dead_space: {
+            caption: "dead space",
+            category: "lungs",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Lungs",
+            prop: "dead_space_change",
+            type: "factor",
+            caller: "function",
+            function_name: "change_dead_space",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          uaw_resistance: {
+            caption: "upper airway resistance",
+            category: "airways",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Lungs",
+            prop: "upper_aw_res_change",
+            type: "factor",
+            caller: "function",
+            function_name: "change_upper_airway_resistance",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          law_resistance: {
+            caption: "lower airway resistance",
+            category: "airways",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Lungs",
+            prop: "lower_aw_res_change",
+            type: "factor",
+            caller: "function",
+            function_name: "change_lower_airway_resistance",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          ips: {
+            caption: "intra-pulmonary shunt resistance",
+            category: "lungs",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Shunts",
+            prop: "ips_res_factor",
+            type: "factor",
+            caller: "direct",
+            function_name: "",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          diff_o2: {
+            caption: "diffusion capacity o2",
+            category: "lungs",
+            enabled: true,
+            advanced: false,
+            linked: true,
+            link_button: true,
+            linked_caption: "diffusion capacity",
+            linked_to: "diff_co2",
+            type: "factor",
+            caller: "function",
+            function_name: "change_dif_o2",
+            model: "Lungs",
+            prop: "dif_o2_change",
+            min: -100.0,
+            max: 100.0,
+            step: 1
+          },
+          diff_co2: {
+            caption: "diffusion capacity co2",
+            category: "lungs",
+            enabled: true,
+            advanced: false,
+            linked: true,
+            link_button: false,
+            linked_to: "",
+            type: "factor",
+            caller: "function",
+            function_name: "change_dif_co2",
+            model: "Lungs",
+            prop: "dif_co2_change",
+            min: -100.0,
+            max: 100.0,
+            step: 1
+          },
+        }
+
+      }
 
     }
   },

@@ -1,7 +1,7 @@
 <template>
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
     <div class="q-mt-es row gutter text-overline justify-center" @click="isEnabled = !isEnabled">
-      {{ title }}
+      {{ controllers.title }}
     </div>
 
     <div v-for="(category, category_name) in controllers.categories" :key="category_name">
@@ -17,28 +17,45 @@
 
       <div v-if="!category.advanced">
         <div v-for="(controller, controller_name) in controllers.items" :key="controller_name">
-          <div v-if="controller.category == category_name && !controller.advanced">
-            <div v-if="category.enabled && !(controller.linked && controller.linked_to == '')">
-              <div class="row justify-center">
-                <q-badge class="q-pa-sm" color="grey-10">
-                  <div v-if="!controller.linked" style="font-size: small;">
-                    {{ controller.caption }} ({{ controller.display_value }})
-                  </div>
-                  <div v-if="controller.linked" style="font-size: small;">
-                    {{ controller.linked_caption }} ({{ controller.display_value }})
-                  </div>
-                  <q-btn v-if="controller.link_button" @click="linkControllers(controller)" class="q-ml-sm" dense
-                    size="xs" icon="fa-solid fa-link" :color="controller.link_color"></q-btn>
-                </q-badge>
+          <div v-if="controller.type == 'factor' || controller.type == 'number'">
+            <div v-if="controller.category == category_name && !controller.advanced">
+              <div v-if="category.enabled && !(controller.linked && controller.linked_to == '')">
+                <div class="row justify-center">
+                  <q-badge class="q-pa-sm" color="grey-10">
+                    <div v-if="!controller.linked" style="font-size: small;">
+                      {{ controller.caption }} ({{ controller.display_value }})
+                    </div>
+                    <div v-if="controller.linked" style="font-size: small;">
+                      {{ controller.linked_caption }} ({{ controller.display_value }})
+                    </div>
+                    <q-btn v-if="controller.link_button" @click="linkControllers(controller)" class="q-ml-sm" dense
+                      size="xs" icon="fa-solid fa-link" :color="controller.link_color"></q-btn>
+                  </q-badge>
+                </div>
+                <div class="row  justify-center">
+                  <q-btn @click="decreaseValue(controller)" class="q-ma-sm col" color="grey-10" dense size="xs"
+                    icon="fa-solid fa-chevron-left"></q-btn>
+                  <q-slider class="q-ma-sm q-mr-sm col-8" v-model="controller.slider_value" :step="controller.step"
+                    :min="controller.min" :max="controller.max" snap :markers="10" dense thumb-color="teal"
+                    color="transparent" @change="changeValue(controller)" />
+                  <q-btn @click="increaseValue(controller)" class="q-ma-sm col" dense size="xs" color="grey-10"
+                    icon="fa-solid fa-chevron-right"></q-btn>
+                </div>
               </div>
-              <div class="row  justify-center">
-                <q-btn @click="decreaseValue(controller)" class="q-ma-sm col" color="grey-10" dense size="xs"
-                  icon="fa-solid fa-chevron-left"></q-btn>
-                <q-slider class="q-ma-sm q-mr-sm col-8" v-model="controller.slider_value" :step="controller.step"
-                  :min="controller.min" :max="controller.max" snap :markers="10" dense thumb-color="teal"
-                  color="transparent" @change="changeValue(controller)" />
-                <q-btn @click="increaseValue(controller)" class="q-ma-sm col" dense size="xs" color="grey-10"
-                  icon="fa-solid fa-chevron-right"></q-btn>
+            </div>
+          </div>
+          <div v-if="controller.type == 'boolean'">
+            <div v-if="controller.category == category_name && !controller.advanced">
+              <div v-if="category.enabled">
+                <div class="row justify-center">
+                  <q-badge class="q-pa-sm" color="grey-10">
+                    <div style="font-size: small;">
+                      {{ controller.caption }}
+                      <q-toggle class="q-ml-sm" v-model="controller.model_value" dense size="sm"
+                        @update:model-value="changeValue(controller)"></q-toggle>
+                    </div>
+                  </q-badge>
+                </div>
               </div>
             </div>
           </div>
@@ -47,28 +64,45 @@
 
       <div v-if="category.advanced">
         <div v-for="(controller, controller_name) in controllers.items" :key="controller_name">
-          <div v-if="controller.category == category_name">
-            <div v-if="category.enabled && !(controller.linked && controller.linked_to == '')">
-              <div class="row justify-center">
-                <q-badge class="q-pa-sm" color="grey-10">
-                  <div v-if="!controller.linked" style="font-size: small;">
-                    {{ controller.caption }} ({{ controller.display_value }})
-                  </div>
-                  <div v-if="controller.linked" style="font-size: small;">
-                    {{ controller.linked_caption }} ({{ controller.display_value }})
-                  </div>
-                  <q-btn v-if="controller.link_button" @click="linkControllers(controller)" class="q-ml-sm" dense
-                    size="xs" icon="fa-solid fa-link" :color="controller.link_color"></q-btn>
-                </q-badge>
+          <div v-if="controller.type == 'factor' || controller.type == 'number'">
+            <div v-if="controller.category == category_name">
+              <div v-if="category.enabled && !(controller.linked && controller.linked_to == '')">
+                <div class="row justify-center">
+                  <q-badge class="q-pa-sm" color="grey-10">
+                    <div v-if="!controller.linked" style="font-size: small;">
+                      {{ controller.caption }} ({{ controller.display_value }})
+                    </div>
+                    <div v-if="controller.linked" style="font-size: small;">
+                      {{ controller.linked_caption }} ({{ controller.display_value }})
+                    </div>
+                    <q-btn v-if="controller.link_button" @click="linkControllers(controller)" class="q-ml-sm" dense
+                      size="xs" icon="fa-solid fa-link" :color="controller.link_color"></q-btn>
+                  </q-badge>
+                </div>
+                <div class="row justify-center">
+                  <q-btn @click="decreaseValue(controller)" class="q-ma-sm col" color="grey-10" dense size="xs"
+                    icon="fa-solid fa-chevron-left"></q-btn>
+                  <q-slider class="q-ma-sm q-mr-sm col-8" v-model="controller.slider_value" :step="controller.step"
+                    :min="controller.min" :max="controller.max" snap :markers="10" dense thumb-color="teal"
+                    color="transparent" @change="changeValue(controller)" />
+                  <q-btn @click="increaseValue(controller)" class="q-ma-sm col" dense size="xs" color="grey-10"
+                    icon="fa-solid fa-chevron-right"></q-btn>
+                </div>
               </div>
-              <div class="row justify-center">
-                <q-btn @click="decreaseValue(controller)" class="q-ma-sm col" color="grey-10" dense size="xs"
-                  icon="fa-solid fa-chevron-left"></q-btn>
-                <q-slider class="q-ma-sm q-mr-sm col-8" v-model="controller.slider_value" :step="controller.step"
-                  :min="controller.min" :max="controller.max" snap :markers="10" dense thumb-color="teal"
-                  color="transparent" @change="changeValue(controller)" />
-                <q-btn @click="increaseValue(controller)" class="q-ma-sm col" dense size="xs" color="grey-10"
-                  icon="fa-solid fa-chevron-right"></q-btn>
+            </div>
+          </div>
+          <div v-if="controller.type == 'boolean'">
+            <div v-if="controller.category == category_name && !controller.advanced">
+              <div v-if="category.enabled">
+                <div class="row justify-center">
+                  <q-badge class="q-pa-sm" color="grey-10">
+                    <div style="font-size: small;">
+                      {{ controller.caption }}
+                      <q-toggle class="q-ml-sm" v-model="controller.model_value" dense size="sm"
+                        @update:model-value="changeValue(controller)"></q-toggle>
+                    </div>
+                  </q-badge>
+                </div>
               </div>
             </div>
           </div>
@@ -238,6 +272,11 @@ export default {
             explain.callModelFunction(target_function, [controller.model_value])
           }
           break;
+
+        case "boolean":
+          let target_boolean = controller.model + "." + controller.prop
+          explain.setPropValue(target_boolean, controller.model_value)
+          break;
       }
     },
     increaseValue(controller) {
@@ -296,6 +335,11 @@ export default {
               controller.model_value = explain.modelState.models[controller.model][controller.prop]
               controller.slider_value = controller.model_value
               controller.display_value = controller.model_value.toFixed(2)
+              break;
+            case 'boolean':
+              controller.model_value = explain.modelState.models[controller.model][controller.prop]
+              controller.slider_value = controller.model_value
+              controller.display_value = controller.model_value
               break;
           }
         }
