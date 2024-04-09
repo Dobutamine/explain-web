@@ -185,7 +185,7 @@ export class Container {
 
   calc_model() {
     // set the volume
-    this.vol = this.vol_extra;
+    this.vol = this.vol_extra / 1000.0;
 
     // get the current volume from all contained models
     for (const c of this.contained_components) {

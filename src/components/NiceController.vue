@@ -4,104 +4,104 @@
       {{ controllers.title }}
     </div>
 
-    <div v-for="(category, category_name) in controllers.categories" :key="category_name">
-      <div class="q-ml-md q-md-sm q-mt-xs row gutter justify-center text-secondary">
-        <div class="q-mt-sm text-secondary" style="font-size: small;">
-          {{ category.caption }}
+    <div v-if="isEnabled">
+      <div v-for="(category, category_name) in controllers.categories" :key="category_name">
+        <div class="q-ml-md q-md-sm q-mt-xs row gutter justify-center text-secondary">
+          <div class="q-mt-sm text-secondary" @click="selectEnabled(category)" style="font-size: small;">
+            {{ category.caption }}
+          </div>
+          <q-btn v-if="category.enabled" @click="selectAdvanced(category)" class="q-ma-sm"
+            :color="category.advancedColor" dense size="xs" icon="fa-solid fa-ellipsis"></q-btn>
         </div>
-        <q-btn @click="selectEnabled(category)" class="q-ma-sm q-ml-xs q-mt-xs" :color="category.enabledColor" dense
-          size="xs" :icon="category.enabledIcon"></q-btn>
-        <q-btn @click="selectAdvanced(category)" class="q-ma-sm" :color="category.advancedColor" dense size="xs"
-          icon="fa-solid fa-ellipsis"></q-btn>
-      </div>
 
-      <div v-if="!category.advanced">
-        <div v-for="(controller, controller_name) in controllers.items" :key="controller_name">
-          <div v-if="controller.type == 'factor' || controller.type == 'number'">
-            <div v-if="controller.category == category_name && !controller.advanced">
-              <div v-if="category.enabled && !(controller.linked && controller.linked_to == '')">
-                <div class="row justify-center">
-                  <q-badge class="q-pa-sm" color="grey-10">
-                    <div v-if="!controller.linked" style="font-size: small;">
-                      {{ controller.caption }} ({{ controller.display_value }})
-                    </div>
-                    <div v-if="controller.linked" style="font-size: small;">
-                      {{ controller.linked_caption }} ({{ controller.display_value }})
-                    </div>
-                    <q-btn v-if="controller.link_button" @click="linkControllers(controller)" class="q-ml-sm" dense
-                      size="xs" icon="fa-solid fa-link" :color="controller.link_color"></q-btn>
-                  </q-badge>
-                </div>
-                <div class="row  justify-center">
-                  <q-btn @click="decreaseValue(controller)" class="q-ma-sm col" color="grey-10" dense size="xs"
-                    icon="fa-solid fa-chevron-left"></q-btn>
-                  <q-slider class="q-ma-sm q-mr-sm col-8" v-model="controller.slider_value" :step="controller.step"
-                    :min="controller.min" :max="controller.max" snap :markers="10" dense thumb-color="teal"
-                    color="transparent" @change="changeValue(controller)" />
-                  <q-btn @click="increaseValue(controller)" class="q-ma-sm col" dense size="xs" color="grey-10"
-                    icon="fa-solid fa-chevron-right"></q-btn>
+        <div v-if="!category.advanced">
+          <div v-for="(controller, controller_name) in controllers.items" :key="controller_name">
+            <div v-if="controller.type == 'factor' || controller.type == 'number'">
+              <div v-if="controller.category == category_name && !controller.advanced">
+                <div v-if="category.enabled && !(controller.linked && controller.linked_to == '')">
+                  <div class="row justify-center">
+                    <q-badge class="q-pa-sm" color="grey-10">
+                      <div v-if="!controller.linked" style="font-size: small;">
+                        {{ controller.caption }} ({{ controller.display_value }})
+                      </div>
+                      <div v-if="controller.linked" style="font-size: small;">
+                        {{ controller.linked_caption }} ({{ controller.display_value }})
+                      </div>
+                      <q-btn v-if="controller.link_button" @click="linkControllers(controller)" class="q-ml-sm" dense
+                        size="xs" icon="fa-solid fa-link" :color="controller.link_color"></q-btn>
+                    </q-badge>
+                  </div>
+                  <div class="row  justify-center">
+                    <q-btn @click="decreaseValue(controller)" class="q-ma-sm col" color="grey-10" dense size="xs"
+                      icon="fa-solid fa-chevron-left"></q-btn>
+                    <q-slider class="q-ma-sm q-mr-sm col-8" v-model="controller.slider_value" :step="controller.step"
+                      :min="controller.min" :max="controller.max" snap :markers="10" dense thumb-color="teal"
+                      color="transparent" @change="changeValue(controller)" />
+                    <q-btn @click="increaseValue(controller)" class="q-ma-sm col" dense size="xs" color="grey-10"
+                      icon="fa-solid fa-chevron-right"></q-btn>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div v-if="controller.type == 'boolean'">
-            <div v-if="controller.category == category_name && !controller.advanced">
-              <div v-if="category.enabled">
-                <div class="row justify-center">
-                  <q-badge class="q-pa-sm" color="grey-10">
-                    <div style="font-size: small;">
-                      {{ controller.caption }}
-                      <q-toggle class="q-ml-sm" v-model="controller.model_value" dense size="sm"
-                        @update:model-value="changeValue(controller)"></q-toggle>
-                    </div>
-                  </q-badge>
+            <div v-if="controller.type == 'boolean'">
+              <div v-if="controller.category == category_name && !controller.advanced">
+                <div v-if="category.enabled">
+                  <div class="row justify-center">
+                    <q-badge class="q-pa-sm" color="grey-10">
+                      <div style="font-size: small;">
+                        {{ controller.caption }}
+                        <q-toggle class="q-ml-sm" v-model="controller.model_value" dense size="sm"
+                          @update:model-value="changeValue(controller)"></q-toggle>
+                      </div>
+                    </q-badge>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div v-if="category.advanced">
-        <div v-for="(controller, controller_name) in controllers.items" :key="controller_name">
-          <div v-if="controller.type == 'factor' || controller.type == 'number'">
-            <div v-if="controller.category == category_name">
-              <div v-if="category.enabled && !(controller.linked && controller.linked_to == '')">
-                <div class="row justify-center">
-                  <q-badge class="q-pa-sm" color="grey-10">
-                    <div v-if="!controller.linked" style="font-size: small;">
-                      {{ controller.caption }} ({{ controller.display_value }})
-                    </div>
-                    <div v-if="controller.linked" style="font-size: small;">
-                      {{ controller.linked_caption }} ({{ controller.display_value }})
-                    </div>
-                    <q-btn v-if="controller.link_button" @click="linkControllers(controller)" class="q-ml-sm" dense
-                      size="xs" icon="fa-solid fa-link" :color="controller.link_color"></q-btn>
-                  </q-badge>
-                </div>
-                <div class="row justify-center">
-                  <q-btn @click="decreaseValue(controller)" class="q-ma-sm col" color="grey-10" dense size="xs"
-                    icon="fa-solid fa-chevron-left"></q-btn>
-                  <q-slider class="q-ma-sm q-mr-sm col-8" v-model="controller.slider_value" :step="controller.step"
-                    :min="controller.min" :max="controller.max" snap :markers="10" dense thumb-color="teal"
-                    color="transparent" @change="changeValue(controller)" />
-                  <q-btn @click="increaseValue(controller)" class="q-ma-sm col" dense size="xs" color="grey-10"
-                    icon="fa-solid fa-chevron-right"></q-btn>
+        <div v-if="category.advanced">
+          <div v-for="(controller, controller_name) in controllers.items" :key="controller_name">
+            <div v-if="controller.type == 'factor' || controller.type == 'number'">
+              <div v-if="controller.category == category_name">
+                <div v-if="category.enabled && !(controller.linked && controller.linked_to == '')">
+                  <div class="row justify-center">
+                    <q-badge class="q-pa-sm" color="grey-10">
+                      <div v-if="!controller.linked" style="font-size: small;">
+                        {{ controller.caption }} ({{ controller.display_value }})
+                      </div>
+                      <div v-if="controller.linked" style="font-size: small;">
+                        {{ controller.linked_caption }} ({{ controller.display_value }})
+                      </div>
+                      <q-btn v-if="controller.link_button" @click="linkControllers(controller)" class="q-ml-sm" dense
+                        size="xs" icon="fa-solid fa-link" :color="controller.link_color"></q-btn>
+                    </q-badge>
+                  </div>
+                  <div class="row justify-center">
+                    <q-btn @click="decreaseValue(controller)" class="q-ma-sm col" color="grey-10" dense size="xs"
+                      icon="fa-solid fa-chevron-left"></q-btn>
+                    <q-slider class="q-ma-sm q-mr-sm col-8" v-model="controller.slider_value" :step="controller.step"
+                      :min="controller.min" :max="controller.max" snap :markers="10" dense thumb-color="teal"
+                      color="transparent" @change="changeValue(controller)" />
+                    <q-btn @click="increaseValue(controller)" class="q-ma-sm col" dense size="xs" color="grey-10"
+                      icon="fa-solid fa-chevron-right"></q-btn>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div v-if="controller.type == 'boolean'">
-            <div v-if="controller.category == category_name && !controller.advanced">
-              <div v-if="category.enabled">
-                <div class="row justify-center">
-                  <q-badge class="q-pa-sm" color="grey-10">
-                    <div style="font-size: small;">
-                      {{ controller.caption }}
-                      <q-toggle class="q-ml-sm" v-model="controller.model_value" dense size="sm"
-                        @update:model-value="changeValue(controller)"></q-toggle>
-                    </div>
-                  </q-badge>
+            <div v-if="controller.type == 'boolean'">
+              <div v-if="controller.category == category_name">
+                <div v-if="category.enabled">
+                  <div class="row justify-center">
+                    <q-badge class="q-pa-sm" color="grey-10">
+                      <div style="font-size: small;">
+                        {{ controller.caption }}
+                        <q-toggle class="q-ml-sm" v-model="controller.model_value" dense size="sm"
+                          @update:model-value="changeValue(controller)"></q-toggle>
+                      </div>
+                    </q-badge>
+                  </div>
                 </div>
               </div>
             </div>
@@ -200,10 +200,8 @@ export default {
     selectEnabled(category) {
       if (category.enabled) {
         category.enabled = false
-        category.enabledIcon = "fa-solid fa-chevron-right"
       } else {
         category.enabled = true
-        category.enabledIcon = "fa-solid fa-chevron-down"
       }
 
     },
@@ -356,7 +354,6 @@ export default {
     this.controllers = { ...this.config }
     // build the controllers object
     Object.values(this.controllers.categories).forEach(category => {
-      category['enabledIcon'] = "fa-solid fa-chevron-down"
       category['enabledColor'] = "transparent"
       category['advancedColor'] = "transparent"
     })

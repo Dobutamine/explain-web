@@ -542,7 +542,7 @@
           "dependencies": [],
           "vol": 0.007,
           "u_vol": 0.0022,
-          "el_base": 6580,
+          "el_base": 4000,
           "el_k": 0.0,
           "solutes": {
               "na": 138.0,
