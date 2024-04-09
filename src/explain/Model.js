@@ -394,8 +394,8 @@ export default class Model {
 
   setPropValue(prop, new_value, it = 1, at = 0) {
     // make sure the it is not zero
-    if (it < 1) {
-      it = 1;
+    if (it < 0) {
+      it = 0;
     }
     // set the property of a model with format {prop: model.prop1.prop2, v: value, at: time, it: time, type: task_type}
     this.sendMessageToModelEngine({

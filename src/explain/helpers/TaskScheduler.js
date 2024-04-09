@@ -35,7 +35,7 @@ export default class TaskScheduler {
     this._completed_tasks.forEach((id) => {
       let index = -1;
       this.tasks.forEach((task, i) => {
-        if (task.id == id) {
+        if (task.id === id) {
           index = i;
         }
       });
@@ -138,12 +138,11 @@ export default class TaskScheduler {
       id: Math.floor(Math.random() * 1000),
       m: {},
       p: {},
-      o: {},
+      o: null,
       t: new_prop_value.t,
       at: parseFloat(new_prop_value.at),
       it: parseFloat(new_prop_value.it),
       type: new_prop_value.type,
-      ct: new_prop_value.ct,
       status: "scheduled",
       step: 0.0,
       v: 0.0,
@@ -165,17 +164,16 @@ export default class TaskScheduler {
         break;
     }
 
-    if (new_prop_value.type === "number") {
-      if (new_prop_value.ct === "rel") {
-        new_task.t = new_task.o * new_prop_value.t;
-      }
+    if (new_task.type === "number") {
       if (new_task.it > 0.0) {
         new_task.step =
-          (new_task.t - new_task.o) / (new_task.it / this._update_interval);
+          ((new_task.t - new_task.o) / new_task.it) * this._update_interval;
       } else {
-        new_task.step = 0.0;
+        new_task.step = new_task.t - new_task.o;
+        new_task.it = this._update_interval;
       }
     }
+
     // push the task onto the list
     console.log("Added new task: ", new_task);
     this.tasks.push(new_task);

@@ -203,7 +203,7 @@ export default {
           controller.display_value = controller.model_value.toFixed(2)
           let target_factor = controller.model + "." + controller.prop
           if (controller.caller == 'direct') {
-            explain.setPropValue(target_factor, controller.model_value)
+            explain.setPropValue(target_factor, controller.model_value, 0.0)
           }
           if (controller.caller == 'function') {
             let target_function = controller.model + "." + controller.function_name
@@ -216,7 +216,7 @@ export default {
             this.controllers.items[controller.linked_to].display_value = controller.display_value
             let target_factor_linked = this.controllers.items[controller.linked_to].model + "." + this.controllers.items[controller.linked_to].prop
             if (controller.caller == 'direct') {
-              explain.setPropValue(target_factor_linked, this.controllers.items[controller.linked_to].model_value)
+              explain.setPropValue(target_factor_linked, this.controllers.items[controller.linked_to].model_value, 0.0)
             }
             if (controller.caller == 'function') {
               let target_factor_function = this.controllers.items[controller.linked_to].model + "." + this.controllers.items[controller.linked_to].function_name
@@ -230,7 +230,7 @@ export default {
           controller.display_value = controller.model_value.toFixed(2)
           let target_number = controller.model + "." + controller.prop
           if (controller.caller == 'direct') {
-            explain.setPropValue(target_number, controller.model_value)
+            explain.setPropValue(target_number, controller.model_value, 0.0)
           }
           if (controller.caller == 'function') {
             let target_function = controller.model + "." + controller.function_name

@@ -256,6 +256,23 @@ export class Circulation {
 
   calc_model() {}
 
+  pulmonary_hypertension(change) {
+    console.log("Change PHT with factor: ", change);
+    if (change > 0.0) {
+      this.pvr_change = change;
+      this._pvr_targets.forEach((target) => {
+        target.r_for_factor = change;
+        target.r_back_factor = change;
+      });
+    }
+    // the change in elastance is different then the change in resistance and is determined by the svr_res_elastance_ratio
+    let change_elastance = 1.0;
+    if (this.pvr_res_elastance_ratio > 0.0) {
+      change_elastance = 1 + (change - 1.0) / this.pvr_res_elastance_ratio;
+    }
+    this.change_pulm_arterial_elastance(change_elastance);
+  }
+
   change_pvr(change_forward, change_backward = -1) {
     console.log("Change pvr with factor: ", change_forward);
     if (change_forward > 0.0) {
@@ -268,14 +285,8 @@ export class Circulation {
         }
       });
     }
-    // the change in elastance is different then the change in resistance and is determined by the svr_res_elastance_ratio
-    let change_elastance = 1.0;
-    if (this.pvr_res_elastance_ratio > 0.0) {
-      change_elastance =
-        1 + (change_forward - 1.0) / this.pvr_res_elastance_ratio;
-    }
-    //this.change_pulm_arterial_elastance(change_elastance);
   }
+
   change_svr(change_forward, change_backward = -1) {
     // the systemic vascular resistance is a result of the resistance and the elastance of the arterial tree. So when the arteries contract they will get less compliant
     // so decreasing svr means decreasing elastance (increased compliance) and decreasing resistance
