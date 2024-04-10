@@ -13,7 +13,6 @@
           <q-btn v-if="category.enabled" @click="selectAdvanced(category)" class="q-ma-sm"
             :color="category.advancedColor" dense size="xs" icon="fa-solid fa-ellipsis"></q-btn>
         </div>
-
         <div v-if="!category.advanced">
           <div v-for="(controller, controller_name) in controllers.items" :key="controller_name">
             <div v-if="controller.type == 'factor' || controller.type == 'number'">
@@ -23,18 +22,18 @@
                     <q-badge class="q-pa-sm" color="grey-10">
                       <div v-if="!controller.linked" style="font-size: small;">
                         <div v-if="controller.type == 'factor'">
-                          {{ controller.caption }} ({{ controller.display_value }}x)
+                          {{ controller.caption }} = {{ controller.display_value }} x N
                         </div>
                         <div v-else>
-                          {{ controller.caption }} ({{ controller.display_value }})
+                          {{ controller.caption }} = {{ controller.display_value }} {{ controller.unit }}
                         </div>
                       </div>
                       <div v-if="controller.linked" style="font-size: small;">
                         <div v-if="controller.type == 'factor'">
-                          {{ controller.linked_caption }} ({{ controller.display_value }}x)
+                          {{ controller.linked_caption }} = {{ controller.display_value }} x N
                         </div>
                         <div v-else>
-                          {{ controller.linked_caption }} ({{ controller.display_value }}x)
+                          {{ controller.linked_caption }} = {{ controller.display_value }} {{ controller.unit }}
                         </div>
                       </div>
                       <q-btn v-if="controller.link_button" @click="linkControllers(controller)" class="q-ml-sm" dense
@@ -80,18 +79,18 @@
                     <q-badge class="q-pa-sm" color="grey-10">
                       <div v-if="!controller.linked" style="font-size: small;">
                         <div v-if="controller.type == 'factor'">
-                          {{ controller.caption }} ({{ controller.display_value }}x)
+                          {{ controller.caption }} = {{ controller.display_value }} x N
                         </div>
                         <div v-else>
-                          {{ controller.caption }} ({{ controller.display_value }})
+                          {{ controller.caption }} = {{ controller.display_value }} {{ controller.unit }}
                         </div>
                       </div>
                       <div v-if="controller.linked" style="font-size: small;">
                         <div v-if="controller.type == 'factor'">
-                          {{ controller.linked_caption }} ({{ controller.display_value }}x)
+                          {{ controller.linked_caption }} = {{ controller.display_value }} x N
                         </div>
                         <div v-else>
-                          {{ controller.linked_caption }} ({{ controller.display_value }}x)
+                          {{ controller.linked_caption }} = {{ controller.display_value }} {{ controller.unit }}
                         </div>
                       </div>
                       <q-btn v-if="controller.link_button" @click="linkControllers(controller)" class="q-ml-sm" dense
