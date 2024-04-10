@@ -22,10 +22,20 @@
                   <div class="row justify-center">
                     <q-badge class="q-pa-sm" color="grey-10">
                       <div v-if="!controller.linked" style="font-size: small;">
-                        {{ controller.caption }} ({{ controller.display_value }})
+                        <div v-if="controller.type == 'factor'">
+                          {{ controller.caption }} ({{ controller.display_value }}x)
+                        </div>
+                        <div v-else>
+                          {{ controller.caption }} ({{ controller.display_value }})
+                        </div>
                       </div>
                       <div v-if="controller.linked" style="font-size: small;">
-                        {{ controller.linked_caption }} ({{ controller.display_value }})
+                        <div v-if="controller.type == 'factor'">
+                          {{ controller.linked_caption }} ({{ controller.display_value }}x)
+                        </div>
+                        <div v-else>
+                          {{ controller.linked_caption }} ({{ controller.display_value }}x)
+                        </div>
                       </div>
                       <q-btn v-if="controller.link_button" @click="linkControllers(controller)" class="q-ml-sm" dense
                         size="xs" icon="fa-solid fa-link" :color="controller.link_color"></q-btn>
@@ -69,10 +79,20 @@
                   <div class="row justify-center">
                     <q-badge class="q-pa-sm" color="grey-10">
                       <div v-if="!controller.linked" style="font-size: small;">
-                        {{ controller.caption }} ({{ controller.display_value }})
+                        <div v-if="controller.type == 'factor'">
+                          {{ controller.caption }} ({{ controller.display_value }}x)
+                        </div>
+                        <div v-else>
+                          {{ controller.caption }} ({{ controller.display_value }})
+                        </div>
                       </div>
                       <div v-if="controller.linked" style="font-size: small;">
-                        {{ controller.linked_caption }} ({{ controller.display_value }})
+                        <div v-if="controller.type == 'factor'">
+                          {{ controller.linked_caption }} ({{ controller.display_value }}x)
+                        </div>
+                        <div v-else>
+                          {{ controller.linked_caption }} ({{ controller.display_value }}x)
+                        </div>
                       </div>
                       <q-btn v-if="controller.link_button" @click="linkControllers(controller)" class="q-ml-sm" dense
                         size="xs" icon="fa-solid fa-link" :color="controller.link_color"></q-btn>

@@ -43,9 +43,10 @@
                 width: '5px',
                 opacity: 0.5
               }">
+
+                <NiceController :config="heart_controller"></NiceController>
+                <NiceController :config="circulation_controller"></NiceController>
                 <NiceController :config="pda_controller" </NiceController>
-                  <NiceController :config="heart_controller"></NiceController>
-                  <NiceController :config="circulation_controller"></NiceController>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="respiratory_system">
@@ -360,6 +361,8 @@ export default defineComponent({
             { label: "fSVC", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["SVC_RA.flow_lmin_avg"], weight_based: true },
             { label: "fIVC", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["IVCI_RA.flow_lmin_avg"], weight_based: true },
             { label: "fDAo", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["AAR_AD.flow_lmin_avg"], weight_based: true },
+            { label: "fPda", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["DA_OUT.flow_lmin_avg"], weight_based: true },
+
           ]
         },
         lab_numerics: {
@@ -750,14 +753,14 @@ export default defineComponent({
             link_button: false,
             linked_caption: "",
             linked_to: "",
-            type: "factor",
+            type: "number",
             caller: "direct",
             function_name: "",
             model: "Shunts",
             prop: "da_diameter",
-            min: -10,
-            max: 10.0,
-            step: 0.05
+            min: 0.0,
+            max: 5.0,
+            step: 0.1
           },
           da_length: {
             caption: "length",
