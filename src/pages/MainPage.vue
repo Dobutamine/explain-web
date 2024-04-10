@@ -43,8 +43,9 @@
                 width: '5px',
                 opacity: 0.5
               }">
-                <NiceController :config="heart_controller"></NiceController>
-                <NiceController :config="circulation_controller"></NiceController>
+                <NiceController :config="pda_controller" </NiceController>
+                  <NiceController :config="heart_controller"></NiceController>
+                  <NiceController :config="circulation_controller"></NiceController>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="respiratory_system">
@@ -438,17 +439,13 @@ export default defineComponent({
       },
       circulation_controller: {
         title: "CIRCULATORY SYSTEM",
+        enabled: false,
         categories: {
           circulation: {
             caption: "Circulation",
             enabled: true,
             advanced: false,
           },
-          shunts: {
-            caption: "Shunts",
-            enabled: true,
-            advanced: false,
-          }
         },
         items: {
           svr: {
@@ -541,64 +538,11 @@ export default defineComponent({
             max: 5.0,
             step: 0.05
           },
-          pda: {
-            caption: "ductus arteriosus",
-            category: "shunts",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            caller: "direct",
-            function_name: "",
-            model: "Shunts",
-            prop: "da_diameter",
-            min: 0.0,
-            max: 5.0,
-            step: 0.1
-          },
-          fo: {
-            caption: "foramen ovale",
-            category: "shunts",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            caller: "direct",
-            function_name: "",
-            model: "Shunts",
-            prop: "fo_diameter",
-            min: 0.0,
-            max: 5.0,
-            step: 0.1
-          },
-          vsd: {
-            caption: "ventricular septal defect",
-            category: "shunts",
-            enabled: true,
-            advanced: true,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            caller: "direct",
-            function_name: "",
-            model: "Shunts",
-            prop: "vsd_diameter",
-            min: 0.0,
-            max: 5.0,
-            step: 0.1
-          },
         }
       },
       respiration_controller: {
         title: "RESPIRATORY SYSTEM",
+        enabled: true,
         categories: {
           breathing: {
             caption: "Breathing",
@@ -786,12 +730,103 @@ export default defineComponent({
         }
 
       },
+      pda_controller: {
+        title: "DUCTUS ARTERIOSUS",
+        enabled: false,
+        categories: {
+          properties: {
+            caption: "Properties",
+            enabled: true,
+            advanced: false,
+          },
+        },
+        items: {
+          da_diameter: {
+            caption: "diameter",
+            category: "properties",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "factor",
+            caller: "direct",
+            function_name: "",
+            model: "Shunts",
+            prop: "da_diameter",
+            min: -10,
+            max: 10.0,
+            step: 0.05
+          },
+          da_length: {
+            caption: "length",
+            category: "properties",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "factor",
+            caller: "direct",
+            function_name: "",
+            model: "Shunts",
+            prop: "da_length",
+            min: 0.1,
+            max: 50.0,
+            step: 0.1
+          },
+          da_el: {
+            caption: "elastance (abs)",
+            category: "properties",
+            enabled: true,
+            advanced: true,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            model: "Shunts",
+            prop: "da_el_base",
+            min: 100.0,
+            max: 120000.0,
+            step: 10.0
+          },
+          da_in: {
+            caption: "inflow resistance (abs)",
+            category: "properties",
+            enabled: true,
+            advanced: true,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            model: "Shunts",
+            prop: "da_in_res",
+            min: 20.0,
+            max: 1000.0,
+            step: 10.0
+          },
+        }
+      },
       heart_controller: {
         title: "HEART CONTROLLER",
+        enabled: false,
         categories: {
           function: {
             caption: "Function",
-            enabled: false,
+            enabled: true,
+            advanced: false,
+          },
+          shunts: {
+            caption: "Shunts",
+            enabled: true,
             advanced: false,
           },
           aortic_valve: {
@@ -963,7 +998,6 @@ export default defineComponent({
             max: 1000.0,
             step: 1
           },
-
           pv_noflow: {
             caption: "valve closed",
             category: "pulm_valve",
@@ -1036,7 +1070,6 @@ export default defineComponent({
             max: 1000.0,
             step: 1
           },
-
           mv_noflow: {
             caption: "valve closed",
             category: "mitral_valve",
@@ -1181,6 +1214,42 @@ export default defineComponent({
             max: 1000.0,
             step: 1
           },
+          fo: {
+            caption: "foramen ovale",
+            category: "shunts",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            model: "Shunts",
+            prop: "fo_diameter",
+            min: 0.0,
+            max: 5.0,
+            step: 0.1
+          },
+          vsd: {
+            caption: "ventricular septal defect",
+            category: "shunts",
+            enabled: true,
+            advanced: true,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            model: "Shunts",
+            prop: "vsd_diameter",
+            min: 0.0,
+            max: 5.0,
+            step: 0.1
+          },
           pc_el: {
             caption: "pericardium elastance",
             category: "pericardium",
@@ -1217,8 +1286,6 @@ export default defineComponent({
             max: 500.0,
             step: 5
           },
-
-
         }
 
       },

@@ -1,10 +1,10 @@
 <template>
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
-    <div class="q-mt-es row gutter text-overline justify-center" @click="isEnabled = !isEnabled">
+    <div class="q-mt-es row gutter text-overline justify-center" @click="controllers.enabled = !controllers.enabled">
       {{ controllers.title }}
     </div>
 
-    <div v-if="isEnabled">
+    <div v-if="controllers.enabled" class="q-mb-sm">
       <div v-for="(category, category_name) in controllers.categories" :key="category_name">
         <div class="q-ml-md q-md-sm q-mt-xs row gutter justify-center text-secondary">
           <div class="q-mt-sm text-secondary" @click="selectEnabled(category)" style="font-size: small;">

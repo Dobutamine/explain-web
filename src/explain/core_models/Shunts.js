@@ -247,13 +247,15 @@ export class Shunts {
         this.da_length,
         this.viscosity
       );
-      //this._da.el_base = this.da_el_base;
-      //this._da.u_vol = this.da_u_vol;
-      //this._da.el_k = this.da_el_k;
-      // this._da_in.r_for = this.da_in_res;
-      // this._da_in.r_back = this.da_in_res * this.da_in_res_backflow_factor;
+
+      this._da.el_base = this.da_el_base;
+      this._da.u_vol = this.da_u_vol;
+      this._da.el_k = this.da_el_k;
+      this._da_in.r_for = this.da_in_res;
+      this._da_in.r_back = this.da_in_res;
+      this._da_in.r_k = this.da_in_r_k;
       this._da_out.r_for = this.da_out_res;
-      this._da_out.r_back = this.da_out_res * this.da_out_res_backflow_factor;
+      this._da_out.r_back = this.da_out_res;
       this._da.r_k = this.da_out_r_k;
     } else {
       this._da.flow = 0.0;
