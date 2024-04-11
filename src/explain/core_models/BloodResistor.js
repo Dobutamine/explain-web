@@ -352,7 +352,7 @@ export class BloodResistor {
 
     // calculate the diffusion only when the two have birectional connection
     if (!this.no_flow && !this.no_back_flow && this.diffusion_enabled) {
-      this.diffusion(_r_for, _r_back);
+      //this.diffusion(_r_for, _r_back);
     }
 
     // analyze the data
@@ -363,7 +363,6 @@ export class BloodResistor {
     if (this.flow > 0) {
       // flow is from comp_from to comp_to
       vol_not_removed = this._model_comp_from.volume_out(this.flow * this._t);
-      vol_not_removed = 0.0;
       // if not all volume can be removed from the model component then transfer the remaining volume to the other model component
       // this is undesirable but it is better than having a negative volume
       this._model_comp_to.volume_in(
@@ -376,7 +375,6 @@ export class BloodResistor {
     if (this.flow < 0) {
       // flow is from comp_to to comp_from
       vol_not_removed = this._model_comp_to.volume_out(-this.flow * this._t);
-      vol_not_removed = 0.0;
       // if not all volume can be removed from the model component then transfer the remaining volume to the other model component
       // this is undesirable but it is better than having a negative volume
       this._model_comp_from.volume_in(
@@ -460,7 +458,7 @@ export class BloodResistor {
   analyze() {
     this._flow_counter += this._t;
 
-    if (this._heart.ncc_ventricular === 1) {
+    if (this._heart.ncc_ventricular === 1 || this._heart.ncc_resus === 1) {
       this.flow_forward_lmin =
         (this._cum_forward_flow / this._flow_counter) * 60.0;
       this.flow_backward_lmin =

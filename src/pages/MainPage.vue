@@ -46,7 +46,8 @@
 
                 <NiceController :config="heart_controller"></NiceController>
                 <NiceController :config="circulation_controller"></NiceController>
-                <NiceController :config="pda_controller" </NiceController>
+                <NiceController :config="pda_controller"></NiceController>
+                <NiceController :config="resuscitation_controller"></NiceController>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="respiratory_system">
@@ -1299,7 +1300,108 @@ export default defineComponent({
         }
 
       },
-      metabolic_controller: {
+      resuscitation_controller: {
+        title: "RESUSCITATION",
+        enabled: false,
+        categories: {
+          hr: {
+            caption: "Heartrate",
+            enabled: true,
+            advanced: false,
+          },
+        },
+        items: {
+          hr_forced_toggle: {
+            caption: "force heartrate",
+            category: "hr",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "boolean",
+            caller: "direct",
+            function_name: "",
+            model: "Resuscitation",
+            prop: "forced_hr",
+            min: 1.0,
+            max: 1000.0,
+            step: 1
+          },
+          hr_forced: {
+            caption: "forced heartrate",
+            category: "hr",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Resuscitation",
+            prop: "overriden_hr",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            min: 0,
+            max: 300,
+            step: 1
+          },
+          comp_enabled: {
+            caption: "compressions",
+            category: "hr",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "boolean",
+            caller: "direct",
+            function_name: "",
+            model: "Resuscitation",
+            prop: "chest_comp_enabled",
+            min: 1.0,
+            max: 1000.0,
+            step: 1
+          },
+          comp_pres: {
+            caption: "compressions pressure",
+            category: "hr",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Resuscitation",
+            prop: "chest_comp_pres",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            min: 0,
+            max: 300,
+            step: 1
+          },
+          comp_freq: {
+            caption: "compressions frequency",
+            category: "hr",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Resuscitation",
+            prop: "chest_comp_freq",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            min: 0,
+            max: 300,
+            step: 1
+          },
+        }
 
       },
       ans_controller: {

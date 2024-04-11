@@ -298,7 +298,7 @@ export class BloodTimeVaryingElastance {
     }
 
     // set the max and min pressures
-    if (this._heart.ncc_ventricular === 1) {
+    if (this._heart.ncc_ventricular === 1 || this._heart.ncc_resus === 1) {
       this.pres_max = this._temp_pres_max;
       this.pres_min = this._temp_pres_min;
       this.pres_mean = (2.0 * this.pres_min + this.pres_max) / 3.0;

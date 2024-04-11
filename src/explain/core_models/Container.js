@@ -248,6 +248,7 @@ export class Container {
     this.pres_ext = 0.0;
     this.pres_cc = 0.0;
     this.pres_mus = 0.0;
+    this.act_factor = 0.0;
 
     // transfer the pressures to the models the container contains
     for (const c of this.contained_components) {

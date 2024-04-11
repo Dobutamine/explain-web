@@ -1038,6 +1038,7 @@ export class Heart {
   ans_activity_factor = 1.0;
   ncc_ventricular = 0.0;
   ncc_atrial = 0.0;
+  ncc_resus = 0.0;
 
   // dependent parameters
   heart_rate = 110.0;

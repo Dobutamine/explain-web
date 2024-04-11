@@ -352,7 +352,6 @@ export class GasResistor {
     if (this.flow > 0) {
       // flow is from comp_from to comp_to
       vol_not_removed = this._model_comp_from.volume_out(this.flow * this._t);
-      vol_not_removed = 0.0;
       // if not all volume can be removed from the model component then transfer the remaining volume to the other model component
       // this is undesirable but it is better than having a negative volume
       this._model_comp_to.volume_in(
@@ -365,7 +364,6 @@ export class GasResistor {
     if (this.flow < 0) {
       // flow is from comp_to to comp_from
       vol_not_removed = this._model_comp_to.volume_out(-this.flow * this._t);
-      vol_not_removed = 0.0;
       // if not all volume can be removed from the model component then transfer the remaining volume to the other model component
       // this is undesirable but it is better than having a negative volume
       this._model_comp_from.volume_in(
