@@ -397,6 +397,7 @@ export class Ventilator {
   }
 
   switch_ventilator(state) {
+    console.log("ventilator true");
     this._model_engine.models["MOUTH_DS"].no_flow = state;
     this._model_engine.models["Breathing"].is_intubated = state;
     this.et_tube.no_flow = !state;
@@ -408,6 +409,13 @@ export class Ventilator {
     this.insp_valve.is_enabled = state;
     this.exp_valve.is_enabled = state;
     this.et_tube.is_enabled = state;
+  }
+
+  trigger_breath() {
+    // we have a triggered breath
+    this._triggered_breath = true;
+    // reset the trigger volume counter
+    this._trigger_volume_counter = 0.0;
   }
 
   step_model() {

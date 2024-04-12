@@ -292,7 +292,13 @@ export default {
 
         case "boolean":
           let target_boolean = controller.model + "." + controller.prop
-          explain.setPropValue(target_boolean, controller.model_value)
+          if (controller.caller == 'direct') {
+            explain.setPropValue(target_boolean, controller.model_value)
+          }
+          if (controller.caller == 'function') {
+            let target_function = controller.model + "." + controller.function_name
+            explain.callModelFunction(target_function, [controller.model_value])
+          }
           break;
       }
     },

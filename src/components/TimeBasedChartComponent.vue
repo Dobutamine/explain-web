@@ -1,448 +1,114 @@
 <template>
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
-    <div
-      class="q-mt-es row gutter text-overline justify-center"
-      @click="isEnabled = !isEnabled"
-    >
+    <div class="q-mt-es row gutter text-overline justify-center" @click="isEnabled = !isEnabled">
       {{ title }}
     </div>
-    <div v-if="isEnabled"
-        class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center q-gutter-xs row"
-      >
-      <q-select
-          label-color="red"
-          class="q-pa-xs col"
-          v-model="selectedModel1"
-          square
-          label="model1"
-          hide-hint
-          :options="modelNames"
-          dense
-          dark
-          stack-label
-          @update:model-value="selectModel1"
-        />
-        <q-select
-          v-if="selectedModel1 !== ''"
-          label-color="red"
-          class="q-pa-xs col"
-          v-model="selectedProp1"
-          square
-          label="prop1"
-          hide-hint
-          :options="prop1Names"
-          dense
-          dark
-          stack-label
-          @update:model-value="selectProp1"
-        />
-        <q-select
-          label-color="green"
-          class="q-pa-xs col"
-          v-model="selectedModel2"
-          square
-          label="model2"
-          hide-hint
-          :options="modelNames"
-          dense
-          dark
-          stack-label
-          @update:model-value="selectModel2"
-        />
-        <q-select
-          v-if="selectedModel2 !== ''"
-          label-color="green"
-          class="q-pa-xs col"
-          v-model="selectedProp2"
-          square
-          label="prop2"
-          hide-hint
-          :options="prop2Names"
-          dense
-          dark
-          stack-label
-          @update:model-value="selectProp2"
-        />
-        <q-select
-          label-color="light-blue"
-          class="q-pa-xs col"
-          v-model="selectedModel3"
-          square
-          label="model3"
-          hide-hint
-          :options="modelNames"
-          dense
-          dark
-          stack-label
-          @update:model-value="selectModel3"
-        />
-        <q-select
-          v-if="selectedModel3 !== ''"
-          label-color="light-blue"
-          class="q-pa-xs col"
-          v-model="selectedProp3"
-          square
-          label="select model"
-          hide-hint
-          :options="prop3Names"
-          dense
-          dark
-          stack-label
-          @update:model-value="selectProp3"
-        />
+    <div v-if="isEnabled" class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center q-gutter-xs row">
+      <q-select label-color="red" class="q-pa-xs col" v-model="selectedModel1" square label="model1" hide-hint
+        :options="modelNames" dense dark stack-label @update:model-value="selectModel1" />
+      <q-select v-if="selectedModel1 !== ''" label-color="red" class="q-pa-xs col" v-model="selectedProp1" square
+        label="prop1" hide-hint :options="prop1Names" dense dark stack-label @update:model-value="selectProp1" />
+      <q-select label-color="green" class="q-pa-xs col" v-model="selectedModel2" square label="model2" hide-hint
+        :options="modelNames" dense dark stack-label @update:model-value="selectModel2" />
+      <q-select v-if="selectedModel2 !== ''" label-color="green" class="q-pa-xs col" v-model="selectedProp2" square
+        label="prop2" hide-hint :options="prop2Names" dense dark stack-label @update:model-value="selectProp2" />
+      <q-select label-color="light-blue" class="q-pa-xs col" v-model="selectedModel3" square label="model3" hide-hint
+        :options="modelNames" dense dark stack-label @update:model-value="selectModel3" />
+      <q-select v-if="selectedModel3 !== ''" label-color="light-blue" class="q-pa-xs col" v-model="selectedProp3" square
+        label="select model" hide-hint :options="prop3Names" dense dark stack-label @update:model-value="selectProp3" />
     </div>
 
     <!-- chart -->
-    <Line v-if="isEnabled"
-        id="my-chart-id"
-        :options="chartOptions"
-        :data="chartData"
-        style="max-height: 300px;"
-    />
-        <!-- presets -->
-        <div v-if="isEnabled && showPresets"
-        class="text-overline justify-center q-gutter-xs row q-mb-sm"
-      >
-          <div
-            class="q-mb-sm text-left text-secondary"
-            :style="{ 'font-size': '12px' }"
-          >
-          </div>
-            <q-select v-if="!presetEditMode"
-              class="q-pa-xs"
-              v-model="selectedPresetName"
-              square
-              label="selected preset"
-              hide-hint
-              :options="presetNames"
-              dense
-              dark
-              :style="{'width': '200px'}"
-              stack-label
-              @update:model-value="selectPreset"
-            />
-            <q-input v-if="presetEditMode"
-              class="q-pa-xs"
-              v-model="newPresetName"
-              square
-              label="new preset name"
-              hide-hint
-              dense
-              dark
-              :style="{'width': '200px'}"
-              stack-label
-            />
-            <q-btn v-if="presetEditMode"
-              class="q-ma-sm"
-              color="black"
-              size="xs"
-              icon="fa-solid fa-plus"
-              @click="addToPresets"
-              style="font-size: 8px; width: 50px;"
+    <Line v-if="isEnabled" id="my-chart-id" :options="chartOptions" :data="chartData" style="max-height: 300px;" />
+    <!-- presets -->
+    <div v-if="isEnabled && showPresets" class="text-overline justify-center q-gutter-xs row q-mb-sm">
+      <div class="q-mb-sm text-left text-secondary" :style="{ 'font-size': '12px' }">
+      </div>
+      <q-select v-if="!presetEditMode" class="q-pa-xs" v-model="selectedPresetName" square label="selected preset"
+        hide-hint :options="presetNames" dense dark :style="{ 'width': '200px' }" stack-label
+        @update:model-value="selectPreset" />
+      <q-input v-if="presetEditMode" class="q-pa-xs" v-model="newPresetName" square label="new preset name" hide-hint
+        dense dark :style="{ 'width': '200px' }" stack-label />
+      <q-btn v-if="presetEditMode" class="q-ma-sm" color="black" size="xs" icon="fa-solid fa-plus" @click="addToPresets"
+        style="font-size: 8px; width: 50px;"><q-tooltip>add to presets</q-tooltip></q-btn>
 
-            ><q-tooltip>add to presets</q-tooltip></q-btn>
-
-            <q-btn v-if="!presetEditMode"
-              class="q-ma-sm"
-              color="black"
-              size="xs"
-              icon="fa-solid fa-bookmark"
-              @click="makeNewPreset"
-              style="font-size: 8px; width: 50px;"
-            ><q-tooltip>bookmark current configuration</q-tooltip></q-btn>
+      <q-btn v-if="!presetEditMode" class="q-ma-sm" color="black" size="xs" icon="fa-solid fa-bookmark"
+        @click="makeNewPreset" style="font-size: 8px; width: 50px;"><q-tooltip>bookmark current
+          configuration</q-tooltip></q-btn>
 
     </div>
     <!-- bottom buttons -->
-    <div v-if="isEnabled"
-        class="q-ma-sm text-overline justify-center q-gutter-sm row"
-      >
-              <q-checkbox
-                v-if="autoscaleEnabled"
-                v-model="autoscale"
-                dense
-                size="xs"
-                label="autoscale"
-                @update:model-value="autoscaling"
-              />
-              <q-input
-                v-if="!autoscale"
-                v-model.number="y_min"
-                type="number"
-                @update:model-value="autoscaling"
-                label="y min"
-                filled
-                dense
-                hide-bottom-space
-                style="max-width: 75px;"
-              />
-              <q-input
-                v-if="!autoscale"
-                v-model.number="y_max"
-                type="number"
-                @update:model-value="autoscaling"
-                label="y max"
-                filled
-                dense
-                hide-bottom-space
-                style="max-width: 75px;"
-              />
+    <div v-if="isEnabled" class="q-ma-sm text-overline justify-center q-gutter-sm row">
+      <q-checkbox v-if="autoscaleEnabled" v-model="autoscale" dense size="xs" label="autoscale"
+        @update:model-value="autoscaling" />
+      <q-input v-if="!autoscale" v-model.number="y_min" type="number" @update:model-value="autoscaling" label="y min"
+        filled dense hide-bottom-space style="max-width: 75px;" />
+      <q-input v-if="!autoscale" v-model.number="y_max" type="number" @update:model-value="autoscaling" label="y max"
+        filled dense hide-bottom-space style="max-width: 75px;" />
 
-              <q-checkbox
-                v-if="multipliersEnabled"
-                v-model="scaling"
-                @update:model-value="toggleFactors"
-                dense
-                size="xs"
-                label="factors"
-              />
-              <q-input
-                v-if="scaling && selectedProp1 !== ''"
-                v-model.number="chart1_factor"
-                type="number"
-                label="y1 factor"
-                filled
-                dense
-                style="max-width: 75px;"
-              />
-              <q-input
-                v-if="scaling && selectedProp2 !== ''"
-                v-model.number="chart2_factor"
-                type="number"
-                label="y2 factor"
-                filled
-                dense
-                style="max-width: 75px;"
-              />
-              <q-input
-                v-if="scaling && selectedProp3 !== ''"
-                v-model.number="chart3_factor"
-                type="number"
-                label="y3 factor"
-                filled
-                dense
-                style="max-width: 75px;"
-              />
+      <q-checkbox v-if="multipliersEnabled" v-model="scaling" @update:model-value="toggleFactors" dense size="xs"
+        label="factors" />
+      <q-input v-if="scaling && selectedProp1 !== ''" v-model.number="chart1_factor" type="number" label="y1 factor"
+        filled dense style="max-width: 75px;" />
+      <q-input v-if="scaling && selectedProp2 !== ''" v-model.number="chart2_factor" type="number" label="y2 factor"
+        filled dense style="max-width: 75px;" />
+      <q-input v-if="scaling && selectedProp3 !== ''" v-model.number="chart3_factor" type="number" label="y3 factor"
+        filled dense style="max-width: 75px;" />
 
-              <q-checkbox
-                v-if="analysisEnabled"
-                v-model="show_summary"
-                dense
-                label="statistics"
-                size="sm"
-                @update:model-value="toggleSummary"
-              />
-              <q-checkbox
-                v-if="presetsEnabled"
-                v-model="showPresets"
-                dense
-                label="presets"
-                size="sm"
-              />
-              <q-checkbox
-                v-model="chart_fill"
-                dense
-                label="fill"
-                size="sm"
-              />
-              <q-input
-                v-model.number="rtWindow"
-                type="number"
-                label="time"
-                filled
-                dense
-                min="1"
-                max="30"
-                hide-bottom-space
-                @update:model-value="updateRtWindow"
-              />
-              <q-btn
-                v-if="exportEnabled"
-                color="black"
-                size="sm"
-                @click="exportData"
-                icon="fa-solid fa-file-export"
-                ></q-btn>
-              <q-btn
-                color="negative"
-                size="xs"
-                @click="clearProps"
-                icon="fa-solid fa-trash-can"
-                ></q-btn>
+      <q-checkbox v-if="analysisEnabled" v-model="show_summary" dense label="statistics" size="sm"
+        @update:model-value="toggleSummary" />
+      <q-checkbox v-if="presetsEnabled" v-model="showPresets" dense label="presets" size="sm" />
+      <q-checkbox v-model="chart_fill" dense label="fill" size="sm" />
+      <q-input v-model.number="rtWindow" type="number" label="time" filled dense min="1" max="30" hide-bottom-space
+        @update:model-value="updateRtWindow" />
+      <q-btn v-if="exportEnabled" color="black" size="sm" @click="exportData" icon="fa-solid fa-file-export"></q-btn>
+      <q-btn color="negative" size="xs" @click="clearProps" icon="fa-solid fa-trash-can"></q-btn>
     </div>
 
 
     <!-- statistics -->
     <div v-if="show_summary && isEnabled" class="q-mt-sm">
-          <div
-            v-if="p1 !== '' && show_summary"
-            class="q-gutter-xs row justify-center q-mt-xs"
-          >
-            <q-input
-              label-color="red"
-              color="black"
-              v-model="p1_max"
-              outlined
-              dense
-              square
-              label="y1 max"
-              style="width: 100px; font-size: 12px"
-            />
-            <q-input
-              label-color="red"
-              color="black"
-              v-model="p1_min"
-              outlined
-              dense
-              square
-              label="y1 min"
-              style="width: 100px; font-size: 12px"
-            />
+      <div v-if="p1 !== '' && show_summary" class="q-gutter-xs row justify-center q-mt-xs">
+        <q-input label-color="red" color="black" v-model="p1_max" outlined dense square label="y1 max"
+          style="width: 100px; font-size: 12px" />
+        <q-input label-color="red" color="black" v-model="p1_min" outlined dense square label="y1 min"
+          style="width: 100px; font-size: 12px" />
 
-            <q-input
-              label-color="red"
-              color="black"
-              v-model="p1_mean"
-              outlined
-              dense
-              square
-              label="y1 mean"
-              style="width: 100px; font-size: 12px"
-            />
-            <q-input
-              label-color="red"
-              color="black"
-              v-model="p1_sd"
-              outlined
-              dense
-              square
-              label="y1 sd"
-              style="width: 100px; font-size: 12px"
-            />
-            <q-input
-              label-color="red"
-              color="black"
-              v-model="p1_permin"
-              outlined
-              dense
-              square
-              label="y1 /min"
-              style="width: 100px; font-size: 12px"
-            />
-          </div>
-          <div
-            v-if="p2 !== '' && show_summary"
-            class="q-gutter-xs row justify-center q-mt-xs"
-          >
-            <q-input
-              label-color="green"
-              color="black"
-              v-model="p2_max"
-              outlined
-              dense
-              square
-              label="y2 max"
-              style="width: 100px; font-size: 12px"
-            />
-            <q-input
-            label-color="green"
-              color="black"
-              v-model="p2_min"
-              outlined
-              dense
-              square
-              label="y2 min"
-              style="width: 100px; font-size: 12px"
-            />
+        <q-input label-color="red" color="black" v-model="p1_mean" outlined dense square label="y1 mean"
+          style="width: 100px; font-size: 12px" />
+        <q-input label-color="red" color="black" v-model="p1_sd" outlined dense square label="y1 sd"
+          style="width: 100px; font-size: 12px" />
+        <q-input label-color="red" color="black" v-model="p1_permin" outlined dense square label="y1 /min"
+          style="width: 100px; font-size: 12px" />
+      </div>
+      <div v-if="p2 !== '' && show_summary" class="q-gutter-xs row justify-center q-mt-xs">
+        <q-input label-color="green" color="black" v-model="p2_max" outlined dense square label="y2 max"
+          style="width: 100px; font-size: 12px" />
+        <q-input label-color="green" color="black" v-model="p2_min" outlined dense square label="y2 min"
+          style="width: 100px; font-size: 12px" />
 
-            <q-input
-            label-color="green"
-              color="black"
-              v-model="p2_mean"
-              outlined
-              dense
-              square
-              label="y2 mean"
-              style="width: 100px; font-size: 12px"
-            />
-            <q-input
-            label-color="green"
-              color="black"
-              v-model="p2_sd"
-              outlined
-              dense
-              square
-              label="y2 sd"
-              style="width: 100px; font-size: 12px"
-            />
+        <q-input label-color="green" color="black" v-model="p2_mean" outlined dense square label="y2 mean"
+          style="width: 100px; font-size: 12px" />
+        <q-input label-color="green" color="black" v-model="p2_sd" outlined dense square label="y2 sd"
+          style="width: 100px; font-size: 12px" />
 
-            <q-input
-            label-color="green"
-              color="black"
-              v-model="p2_permin"
-              outlined
-              dense
-              square
-              label="y2 /min"
-              style="width: 100px; font-size: 12px"
-            />
-          </div>
-          <div
-            v-if="p3 !== '' && show_summary"
-            class="q-gutter-xs row justify-center q-mt-xs"
-          >
-            <q-input
-            label-color="light-blue"
-              color="black"
-              v-model="p3_max"
-              outlined
-              dense
-              square
-              label="y3 max"
-              style="width: 100px; font-size: 12px"
-            />
-            <q-input
-            label-color="light-blue"
-              color="black"
-              v-model="p3_min"
-              outlined
-              dense
-              square
-              label="y3 min"
-              style="width: 100px; font-size: 12px"
-            />
+        <q-input label-color="green" color="black" v-model="p2_permin" outlined dense square label="y2 /min"
+          style="width: 100px; font-size: 12px" />
+      </div>
+      <div v-if="p3 !== '' && show_summary" class="q-gutter-xs row justify-center q-mt-xs">
+        <q-input label-color="light-blue" color="black" v-model="p3_max" outlined dense square label="y3 max"
+          style="width: 100px; font-size: 12px" />
+        <q-input label-color="light-blue" color="black" v-model="p3_min" outlined dense square label="y3 min"
+          style="width: 100px; font-size: 12px" />
 
-            <q-input
-            label-color="light-blue"
-              color="black"
-              v-model="p3_mean"
-              outlined
-              dense
-              square
-              label="y3 mean"
-              style="width: 100px; font-size: 12px"
-            />
-            <q-input
-            label-color="light-blue"
-              color="black"
-              v-model="p3_sd"
-              outlined
-              dense
-              square
-              label="y3 sd"
-              style="width: 100px; font-size: 12px"
-            />
+        <q-input label-color="light-blue" color="black" v-model="p3_mean" outlined dense square label="y3 mean"
+          style="width: 100px; font-size: 12px" />
+        <q-input label-color="light-blue" color="black" v-model="p3_sd" outlined dense square label="y3 sd"
+          style="width: 100px; font-size: 12px" />
 
-            <q-input
-            label-color="light-blue"
-              color="black"
-              v-model="p3_permin"
-              outlined
-              dense
-              square
-              label="y3 /min"
-              style="width: 100px; font-size: 12px"
-            />
-          </div>
+        <q-input label-color="light-blue" color="black" v-model="p3_permin" outlined dense square label="y3 /min"
+          style="width: 100px; font-size: 12px" />
+      </div>
 
     </div>
 
@@ -458,6 +124,7 @@ import { Bar, Line, Scatter } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Filler } from 'chart.js'
 import { ref } from 'vue'
 import * as Stat from "simple-statistics";
+import { TextureUvs } from "pixi.js";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Filler)
 
@@ -466,46 +133,46 @@ export default {
   setup() {
     // make the chartdata reactive
     let chartData = ref({
-        labels: [],
-        backgroundColor: '#888888',
-        datasets: [ { data: [] } ]
-      })
+      labels: [],
+      backgroundColor: '#888888',
+      datasets: [{ data: [] }]
+    })
 
-      let chartOptions = ref({
-        responsive: true,
-        animation: false,
-        spanGaps: true,
-        showLine: true,
-        plugins: {
-          legend: {
+    let chartOptions = ref({
+      responsive: true,
+      animation: false,
+      spanGaps: true,
+      showLine: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      datasets: {
+        line: {
+          pointRadius: 0 // disable for all `'line'` datasets
+        },
+      },
+      scales: {
+        x: {
+          display: false,
+          grid: {
+            color: '#444444'
+          },
+          border: {
             display: false
           }
         },
-        datasets: {
-            line: {
-                pointRadius: 0 // disable for all `'line'` datasets
-            },
-        },
-        scales: {
-            x: {
-              display: false,
-              grid: {
-                color: '#444444'
-              },
-              border: {
-                display: false
-              }
-            },
-            y: {
-              grid: {
-                color: '#333333'
-              },
-              border: {
-                display: false
-              }
-            }
+        y: {
+          grid: {
+            color: '#333333'
+          },
+          border: {
+            display: false
+          }
         }
-      })
+      }
+    })
 
     return {
       chartData,
@@ -593,6 +260,17 @@ export default {
       presetNames: [],
       newPresetName: "",
       presets: {
+        "Compressions": {
+          props: ["Resuscitation.chest_comp_force"],
+          autoscale: true,
+          y_min: -5,
+          y_max: 5,
+          factors: false,
+          fill: false,
+          chart1_factor: 1.0,
+          chart2_factor: 1.0,
+          chart3_factor: 1.0
+        },
         "PDA Doppler": {
           props: ["Shunts.da_velocity"],
           autoscale: false,
@@ -638,7 +316,7 @@ export default {
           chart3_factor: this.chart3_factor,
         }
         this.presetNames.push(this.newPresetName)
-        this.presets[this.newPresetName] = {...preset}
+        this.presets[this.newPresetName] = { ...preset }
         this.newPresetName = ""
       }
 
@@ -776,7 +454,7 @@ export default {
       let param3 = []
 
       if (this.p1 !== '') {
-        param1 = explain.modelData.map((item) => {return item[this.p1] * this.chart1_factor;});
+        param1 = explain.modelData.map((item) => { return item[this.p1] * this.chart1_factor; });
         this.p1_max = Stat.max(param1).toFixed(4)
         this.p1_min = Stat.min(param1).toFixed(4)
         this.p1_sd = Stat.standardDeviation(param1).toFixed(4)
@@ -786,7 +464,7 @@ export default {
       }
 
       if (this.p2 !== '') {
-        param2 = explain.modelData.map((item) => {return item[this.p2] * this.chart2_factor;});
+        param2 = explain.modelData.map((item) => { return item[this.p2] * this.chart2_factor; });
         this.p2_max = Stat.max(param2).toFixed(4)
         this.p2_min = Stat.min(param2).toFixed(4)
         this.p2_sd = Stat.standardDeviation(param2).toFixed(4)
@@ -796,7 +474,7 @@ export default {
       }
 
       if (this.p3 !== '') {
-        param3 = explain.modelData.map((item) => {return item[this.p3] * this.chart3_factor;});
+        param3 = explain.modelData.map((item) => { return item[this.p3] * this.chart3_factor; });
         this.p3_max = Stat.max(param3).toFixed(4)
         this.p3_min = Stat.min(param3).toFixed(4)
         this.p3_sd = Stat.standardDeviation(param3).toFixed(4)
@@ -821,21 +499,21 @@ export default {
             }
           },
           datasets: {
-              line: {
-                  pointRadius: 0 // disable for all `'line'` datasets
-              }
+            line: {
+              pointRadius: 0 // disable for all `'line'` datasets
+            }
           },
           scales: {
-              x: {
-                display: false
+            x: {
+              display: false
+            },
+            y: {
+              min: this.y_min,
+              max: this.y_max,
+              grid: {
+                color: '#333333'
               },
-              y: {
-                min: this.y_min,
-                max: this.y_max,
-                grid: {
-                  color: '#333333'
-                },
-              }
+            }
           }
         }
       } else {
@@ -850,19 +528,19 @@ export default {
             }
           },
           datasets: {
-              line: {
-                  pointRadius: 0 // disable for all `'line'` datasets
-              }
+            line: {
+              pointRadius: 0 // disable for all `'line'` datasets
+            }
           },
           scales: {
-              x: {
-                display: false
+            x: {
+              display: false
+            },
+            y: {
+              grid: {
+                color: '#333333'
               },
-              y: {
-                grid: {
-                  color: '#333333'
-                },
-              }
+            }
           }
         }
       }
@@ -875,7 +553,7 @@ export default {
       this.p1 = ""
       if (this.selectedModel1 !== "") {
         Object.keys(explain.modelState.models[this.selectedModel1]).forEach(prop => {
-        if (typeof(explain.modelState.models[this.selectedModel1][prop]) === 'number') {
+          if (typeof (explain.modelState.models[this.selectedModel1][prop]) === 'number') {
             if (prop[0] !== "_") {
               this.prop1Names.push(prop)
             }
@@ -883,7 +561,7 @@ export default {
         })
         this.prop1Names.sort()
       } else {
-        this.selectedProp1 =""
+        this.selectedProp1 = ""
         this.p1 = ""
       }
     },
@@ -902,7 +580,7 @@ export default {
       this.p2 = ""
       if (this.selectedModel2 !== "") {
         Object.keys(explain.modelState.models[this.selectedModel2]).forEach(prop => {
-          if (typeof(explain.modelState.models[this.selectedModel2][prop]) === 'number') {
+          if (typeof (explain.modelState.models[this.selectedModel2][prop]) === 'number') {
             if (prop[0] !== "_") {
               this.prop2Names.push(prop)
             }
@@ -910,7 +588,7 @@ export default {
         })
         this.prop2Names.sort()
       } else {
-        this.selectedProp2 =""
+        this.selectedProp2 = ""
         this.p2 = ""
       }
     },
@@ -929,7 +607,7 @@ export default {
       this.p3 = ""
       if (this.selectedModel3 !== "") {
         Object.keys(explain.modelState.models[this.selectedModel3]).forEach(prop => {
-          if (typeof(explain.modelState.models[this.selectedModel3][prop]) === 'number') {
+          if (typeof (explain.modelState.models[this.selectedModel3][prop]) === 'number') {
             if (prop[0] !== "_") {
               this.prop3Names.push(prop)
             }
@@ -937,7 +615,7 @@ export default {
         })
         this.prop3Names.sort()
       } else {
-        this.selectedProp3 =""
+        this.selectedProp3 = ""
         this.p3 = ""
       }
     },
@@ -957,7 +635,7 @@ export default {
         this.y3_axis_fill = this.chart_fill
 
         // update is every 0.015 ms and the data is sampled with 0.005 ms resolution (so 3 data points per 0.015 sec = 200 datapoints per second)
-        for (let i=0; i < explain.modelData.length; i++) {
+        for (let i = 0; i < explain.modelData.length; i++) {
           this.y1_axis.push(explain.modelData[i][this.p1] * this.chart1_factor)
           this.y2_axis.push(explain.modelData[i][this.p2] * this.chart2_factor)
           this.y3_axis.push(explain.modelData[i][this.p3] * this.chart3_factor)
@@ -978,28 +656,28 @@ export default {
           this.chartData = {
             labels: this.x_axis,
             datasets: [
-            {
-              data: [...this.y1_axis],
-              fill: this.y1_axis_fill,
-              borderColor: 'rgb(192, 0, 0, 1.0)',
-              backgroundColor: 'rgba(192, 0, 0, 0.3)',
-              borderWidth: 1,
-              pointStyle: false
-            }, {
-              data: [...this.y2_axis],
-              fill: this.y2_axis_fill,
-              borderColor: 'rgb(0, 192, 0, 1.0)',
-              backgroundColor: 'rgba(0, 192, 0, 0.3)',
-              borderWidth: 1,
-              pointStyle: false
-            }, {
-              data: [...this.y3_axis],
-              fill: this.y3_axis_fill,
-              borderColor: 'rgb(0, 192, 192, 1.0)',
-              backgroundColor: 'rgb(0, 192, 192, 0.3)',
-              borderWidth: 1,
-              pointStyle: false
-            } ]
+              {
+                data: [...this.y1_axis],
+                fill: this.y1_axis_fill,
+                borderColor: 'rgb(192, 0, 0, 1.0)',
+                backgroundColor: 'rgba(192, 0, 0, 0.3)',
+                borderWidth: 1,
+                pointStyle: false
+              }, {
+                data: [...this.y2_axis],
+                fill: this.y2_axis_fill,
+                borderColor: 'rgb(0, 192, 0, 1.0)',
+                backgroundColor: 'rgba(0, 192, 0, 0.3)',
+                borderWidth: 1,
+                pointStyle: false
+              }, {
+                data: [...this.y3_axis],
+                fill: this.y3_axis_fill,
+                borderColor: 'rgb(0, 192, 192, 1.0)',
+                backgroundColor: 'rgb(0, 192, 192, 0.3)',
+                borderWidth: 1,
+                pointStyle: false
+              }]
           }
 
           if (this.show_summary) {
@@ -1008,7 +686,7 @@ export default {
 
         }
         this.redrawTimer += 0.015
-    }
+      }
     },
     processAvailableModels() {
       this.modelNames = [""]
@@ -1018,8 +696,8 @@ export default {
           this.modelNames.push("")
           this.modelNames.sort()
 
-      }
-      } catch {}
+        }
+      } catch { }
     },
     toggleSummary() {
       if (this.show_summary) {
@@ -1036,39 +714,39 @@ export default {
       this.y3_axis_fill = this.chart_fill
 
       if (this.p1 !== '') {
-        this.y1_axis = explain.modelData.map((item) => {return item[this.p1] * this.chart1_factor;});
+        this.y1_axis = explain.modelData.map((item) => { return item[this.p1] * this.chart1_factor; });
         data_sets.push({
-              data: this.y1_axis,
-              borderColor: 'rgb(192, 0, 0, 1.0)',
-              backgroundColor: 'rgb(192, 0, 0, 0.3)',
-              fill: this.y1_axis_fill,
-              borderWidth: 1,
-              pointStyle: false
-            })
+          data: this.y1_axis,
+          borderColor: 'rgb(192, 0, 0, 1.0)',
+          backgroundColor: 'rgb(192, 0, 0, 0.3)',
+          fill: this.y1_axis_fill,
+          borderWidth: 1,
+          pointStyle: false
+        })
       }
 
       if (this.p2 !== '') {
-        this.y2_axis = explain.modelData.map((item) => {return item[this.p2] * this.chart2_factor;});
+        this.y2_axis = explain.modelData.map((item) => { return item[this.p2] * this.chart2_factor; });
         data_sets.push({
-              data: this.y2_axis,
-              borderColor: 'rgb(0, 192, 0, 1.0)',
-              backgroundColor: 'rgb(0, 192, 0, 0.3)',
-              fill: this.y2_axis_fill,
-              borderWidth: 1,
-              pointStyle: false
-            });
+          data: this.y2_axis,
+          borderColor: 'rgb(0, 192, 0, 1.0)',
+          backgroundColor: 'rgb(0, 192, 0, 0.3)',
+          fill: this.y2_axis_fill,
+          borderWidth: 1,
+          pointStyle: false
+        });
       }
 
       if (this.p3 !== '') {
-        this.y3_axis = explain.modelData.map((item) => {return item[this.p3] * this.chart3_factor;});
+        this.y3_axis = explain.modelData.map((item) => { return item[this.p3] * this.chart3_factor; });
         data_sets.push({
-              data: this.y3_axis,
-              borderColor: 'rgb(0, 192, 192, 1.0)',
-              backgroundColor: 'rgb(0, 192, 192, 0.3)',
-              fill: this.y3_axis_fill,
-              borderWidth: 1,
-              pointStyle: false
-            });
+          data: this.y3_axis,
+          borderColor: 'rgb(0, 192, 192, 1.0)',
+          backgroundColor: 'rgb(0, 192, 192, 0.3)',
+          fill: this.y3_axis_fill,
+          borderWidth: 1,
+          pointStyle: false
+        });
       }
 
       if (data_sets.length > 0) {
@@ -1076,12 +754,11 @@ export default {
       }
 
       this.chartData = {
-            labels: this.x_axis,
-            datasets: [...data_sets]
+        labels: this.x_axis,
+        datasets: [...data_sets]
       }
 
-      if (this.show_summary)
-      {
+      if (this.show_summary) {
         this.analyzeDataRt()
       }
       // prepare for realtime analysis
@@ -1095,23 +772,23 @@ export default {
     exportData() {
       let header = ""
       let data = {
-        time: explain.modelData.map((item) => {return parseFloat(item['time'])}),
+        time: explain.modelData.map((item) => { return parseFloat(item['time']) }),
       }
 
       if (this.p1 !== "") {
         let h1 = this.selectedModel1.toUpperCase() + this.selectedProp1.toUpperCase() + "_";
         header += h1
-        data[h1] = explain.modelData.map((item) => {return (parseFloat(item[this.p1]))});
+        data[h1] = explain.modelData.map((item) => { return (parseFloat(item[this.p1])) });
       }
       if (this.p2 !== "") {
         let h2 = this.selectedModel2.toUpperCase() + this.selectedProp2.toUpperCase() + "_";
         header += h2
-        data[h2] = explain.modelData.map((item) => {return (parseFloat(item[this.p2]))});
+        data[h2] = explain.modelData.map((item) => { return (parseFloat(item[this.p2])) });
       }
       if (this.p3 !== "") {
         let h3 = this.selectedModel3.toUpperCase() + this.selectedProp3.toUpperCase();
         header += h3
-        data[h3] = explain.modelData.map((item) => {return (parseFloat(item[this.p3]))});
+        data[h3] = explain.modelData.map((item) => { return (parseFloat(item[this.p3])) });
       }
       this.exportFileName = `time_vs_${header}.csv`;
       this.writeDataToDisk(data)

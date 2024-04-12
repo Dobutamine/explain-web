@@ -1302,13 +1302,18 @@ export default defineComponent({
       },
       resuscitation_controller: {
         title: "RESUSCITATION",
-        enabled: false,
+        enabled: true,
         categories: {
           hr: {
             caption: "Heartrate",
             enabled: true,
             advanced: false,
           },
+          cpr: {
+            caption: "Ventilation and compressions",
+            enabled: true,
+            advanced: false
+          }
         },
         items: {
           hr_forced_toggle: {
@@ -1347,27 +1352,27 @@ export default defineComponent({
             max: 300,
             step: 1
           },
-          comp_enabled: {
-            caption: "compressions",
-            category: "hr",
+          cpr_enabled: {
+            caption: "cpr enabled",
+            category: "cpr",
             enabled: true,
             advanced: false,
             linked: false,
             link_button: false,
             linked_caption: "",
             linked_to: "",
-            type: "boolean",
-            caller: "direct",
-            function_name: "",
             model: "Resuscitation",
-            prop: "chest_comp_enabled",
-            min: 1.0,
-            max: 1000.0,
-            step: 1
+            prop: "cpr_enabled",
+            type: "boolean",
+            caller: "function",
+            function_name: "switch_cpr",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
           },
           comp_pres: {
             caption: "compressions pressure",
-            category: "hr",
+            category: "cpr",
             enabled: true,
             advanced: false,
             linked: false,
@@ -1385,7 +1390,7 @@ export default defineComponent({
           },
           comp_freq: {
             caption: "compressions frequency",
-            category: "hr",
+            category: "cpr",
             enabled: true,
             advanced: false,
             linked: false,
@@ -1399,6 +1404,24 @@ export default defineComponent({
             function_name: "",
             min: 0,
             max: 300,
+            step: 1
+          },
+          comp_no: {
+            caption: "no of compressions",
+            category: "cpr",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Resuscitation",
+            prop: "compressions",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            min: -1,
+            max: 30,
             step: 1
           },
         }
