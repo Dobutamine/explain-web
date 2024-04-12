@@ -260,11 +260,22 @@ export default {
       presetNames: [],
       newPresetName: "",
       presets: {
-        "Brain flows": {
+        "Brain flow": {
           props: ["AA_BR.flow_lmin_avg"],
           autoscale: false,
           y_min: 0.05,
           y_max: 0.20,
+          factors: false,
+          fill: false,
+          chart1_factor: 1.0,
+          chart2_factor: 1.0,
+          chart3_factor: 1.0
+        },
+        "Coronary flow": {
+          props: ["COR_RA.flow_lmin_avg"],
+          autoscale: false,
+          y_min: 0.005,
+          y_max: 0.0001,
           factors: false,
           fill: false,
           chart1_factor: 1.0,
