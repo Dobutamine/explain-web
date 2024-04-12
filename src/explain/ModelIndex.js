@@ -29,3 +29,4 @@ export { Ecls } from "./device_models/Ecls";
 export { Resuscitation } from "./device_models/Resuscitation";
 export { Ventilator } from "./device_models/Ventilator";
 export { Shunts } from "./core_models/Shunts";
+export { Scaler } from "./core_models/Scaler";

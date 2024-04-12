@@ -13,7 +13,6 @@
   "age": 0.0,
   "modeling_stepsize": 0.0005,
   "model_time_total": 0.0,
-  "scaler_settings" : {},
   "models": {
       "LA": {
           "name": "LA",
@@ -3479,6 +3478,29 @@
           "hfo_bias_flow": 10.0,
           "hfo_freq": 12,
           "hfo_amplitude_cmh2o": 10.0
+      },
+      "Scaler": {
+        "name": "Scaler",
+        "description": "model scaler",
+        "model_type": "Scaler",
+        "category": "general_models",
+        "is_enabled": true,
+        "dependencies": [],
+        "left_atrium":  ["LA"],
+        "right_atrium":  ["RA"],
+        "left_ventricle":  ["LV"],
+        "right_ventricle":  ["RV"],
+        "coronaries":  ["COR"],
+        "arteries":  ["AA", "AAR", "AD", "PA", "DA"],
+        "veins":  ["IVCE", "IVCI", "SVC", "PV"],
+        "capillaries":  ["INT", "KID", "LS", "RLB", "BR", "RUB", "LL", "RL"],
+        "heart_valves":  ["LA_LV", "LV_AA", "RA_RV", "RV_PA"],
+        "shunts":  ["DA_IN", "DA_OUT", "FO", "VSD", "IPS"],
+        "blood_connectors":  ["AA_AAR", "AAR_AD", "AD_INT", "AD_KID", ""],
+        "pericardium":  ["PC"],
+        "lungs":  ["ALL", "ALR"],
+        "airways":  [""],
+        "thorax":  ["THORAX"]
       }
   }
 }

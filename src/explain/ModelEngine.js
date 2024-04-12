@@ -17,7 +17,6 @@
 import * as models from "./ModelIndex";
 import DataCollector from "./helpers/DataCollector";
 import TaskScheduler from "./helpers/TaskScheduler";
-import Scaler from "./helpers/Scaler";
 
 // store all imported models in a list to be able to instantiate them dynamically
 let available_models = [];
@@ -314,9 +313,6 @@ const process_model_definition = function (model_definition) {
 
     // add a task scheduler instance to the model object
     model["TaskScheduler"] = new TaskScheduler(model);
-
-    // add a scaler instance to the model object
-    model["Scaler"] = new Scaler(model);
   }
 
   if (errors > 0) {
