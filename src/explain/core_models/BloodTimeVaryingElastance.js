@@ -164,6 +164,8 @@ export class BloodTimeVaryingElastance {
   _temp_pres_min = 1000.0;
   _temp_vol_max = -1000.0;
   _temp_vol_min = 1000.0;
+  _analytics_timer = 0.0;
+  _analytics_window = 1.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -298,7 +300,13 @@ export class BloodTimeVaryingElastance {
     }
 
     // set the max and min pressures
-    if (this._heart.ncc_ventricular === 1 || this._heart.ncc_resus === 1) {
+    this._analytics_timer += this._t;
+    // set the max and min pressures
+    if (
+      this._heart.ncc_ventricular === 1 ||
+      this._analytics_timer > this._analytics_window
+    ) {
+      this._analytics_timer = 0.0;
       this.pres_max = this._temp_pres_max;
       this.pres_min = this._temp_pres_min;
       this.pres_mean = (2.0 * this.pres_min + this.pres_max) / 3.0;

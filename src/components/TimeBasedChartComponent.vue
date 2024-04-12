@@ -260,6 +260,17 @@ export default {
       presetNames: [],
       newPresetName: "",
       presets: {
+        "Brain flows": {
+          props: ["AA_BR.flow_lmin_avg"],
+          autoscale: false,
+          y_min: 0.05,
+          y_max: 0.20,
+          factors: false,
+          fill: false,
+          chart1_factor: 1.0,
+          chart2_factor: 1.0,
+          chart3_factor: 1.0
+        },
         "Compressions": {
           props: ["Resuscitation.chest_comp_force", "ALL.pres_rel"],
           autoscale: true,

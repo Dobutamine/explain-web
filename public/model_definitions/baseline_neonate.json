@@ -2947,7 +2947,7 @@
         "da_el_base_factor": 1.0,
         "da_el_k": 1000.0,
         "da_el_k_factor": 1.0,
-        "da_diameter": 0.1,
+        "da_diameter": 3.0,
         "da_length": 10.0,
         "da_in_res_backflow_factor": 1.0,
         "da_in_r_k": 1000,
@@ -3409,8 +3409,10 @@
             "AA": 1.0,
             "AAR": 1.0,
             "SVC": 1.0,
-            "IVCI": 1.0
+            "IVCI": 1.0,
+            "COR": 1.0
           },
+          "chest_comp_cont": false,
           "ventilations": 1.0,
           "vent_freq": 1.0,
           "vent_pres_pip": 16.0,

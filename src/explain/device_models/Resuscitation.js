@@ -50,6 +50,8 @@ export class Resuscitation {
   chest_comp_targets = {
     THORAX: 0.1,
   };
+  chest_comp_cont = false;
+
   ventilations = 2.0;
   vent_freq = 30.0;
   vent_pres_pip = 16.0;
@@ -72,6 +74,8 @@ export class Resuscitation {
   _comp_pause = false;
   _comp_pause_timer = 0.0;
   _vent_timer = 0.0;
+
+  _analytics_timer = 0.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -100,7 +104,7 @@ export class Resuscitation {
   }
 
   step_model() {
-    if (this.is_enabled && this._is_initialized && this.cpr_enabled) {
+    if (this.is_enabled && this._is_initialized) {
       this.calc_model();
     }
   }
@@ -145,46 +149,58 @@ export class Resuscitation {
         this.overriden_hr
       );
     }
-    let f = this.chest_comp_freq / 60.0;
-    let a = this.chest_comp_pres / 2.0;
-    if (!this._comp_pause) {
-      this.chest_comp_force =
-        a * Math.sin(2 * Math.PI * f * this._comp_timer - 0.5 * Math.PI) + a;
-      this._comp_timer += this._t;
-      this._model_engine.models["Heart"].ncc_resus += 1.0;
-    }
-
-    if (this._comp_timer > 60.0 / this.chest_comp_freq) {
-      this._comp_timer = 0.0;
-      this._comp_counter += 1;
-      this._model_engine.models["Heart"].ncc_resus = 0.0;
-    }
-    if (this._comp_counter == this.compressions) {
-      this._model_engine.models["Ventilator"].trigger_breath();
-      this._vent_timer = 0.0;
-      this._comp_counter = 0;
-      this._comp_pause_timer = 0.0;
-      this._comp_pause = true;
-    }
-    if (this._comp_pause) {
-      this._comp_pause_timer += this._t;
-      this._vent_timer += this._t;
-      if (this._vent_timer > this.vent_insp_time * 2.1) {
-        this._vent_timer = 0.0;
-        this._model_engine.models["Ventilator"].trigger_breath();
+    if (this.cpr_enabled) {
+      let f = this.chest_comp_freq / 60.0;
+      let a = this.chest_comp_pres / 2.0;
+      if (this.chest_comp_cont) {
+        this._comp_pause = false;
       }
-    }
-    if (
-      this._comp_pause_timer >
-      this.ventilations * this.vent_insp_time * 2.0
-    ) {
-      this._comp_pause = false;
-      this._vent_timer = 0.0;
-    }
-    for (let [comp_target, force] of Object.entries(this.chest_comp_targets)) {
-      this._model_engine.models[comp_target].pres_cc = parseFloat(
-        this.chest_comp_force * force
-      );
+
+      if (!this._comp_pause) {
+        this.chest_comp_force =
+          a * Math.sin(2 * Math.PI * f * this._comp_timer - 0.5 * Math.PI) + a;
+        this._comp_timer += this._t;
+        this._model_engine.models["Heart"].ncc_resus += 1.0;
+      }
+
+      if (this._comp_timer > 60.0 / this.chest_comp_freq) {
+        this._comp_timer = 0.0;
+        this._comp_counter += 1;
+        this._model_engine.models["Heart"].ncc_resus = 0.0;
+      }
+
+      if (this._comp_counter == this.compressions && !this.chest_comp_cont) {
+        this._model_engine.models["Ventilator"].trigger_breath();
+        this._vent_timer = 0.0;
+        this._comp_counter = 0;
+        this._comp_pause_timer = 0.0;
+        this._comp_pause = true;
+      }
+
+      if (this._comp_pause && !this.chest_comp_cont) {
+        this._comp_pause_timer += this._t;
+        this._vent_timer += this._t;
+        if (this._vent_timer > this.vent_insp_time * 2.1) {
+          this._vent_timer = 0.0;
+          this._model_engine.models["Ventilator"].trigger_breath();
+        }
+      }
+
+      if (
+        this._comp_pause_timer >
+        this.ventilations * this.vent_insp_time * 2.0
+      ) {
+        this._comp_pause = false;
+        this._vent_timer = 0.0;
+      }
+
+      for (let [comp_target, force] of Object.entries(
+        this.chest_comp_targets
+      )) {
+        this._model_engine.models[comp_target].pres_cc = parseFloat(
+          this.chest_comp_force * force
+        );
+      }
     }
   }
 }

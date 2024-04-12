@@ -222,6 +222,9 @@ export class BloodResistor {
   _flow_counter = 0.0;
   _flow_mov_avg_counter = 0.0;
   _alpha = 0.05;
+  _analytics_timer = 0.0;
+  _analytics_window = 2.0;
+
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
     // name of the model
@@ -457,8 +460,13 @@ export class BloodResistor {
 
   analyze() {
     this._flow_counter += this._t;
+    this._analytics_timer += this._t;
 
-    if (this._heart.ncc_ventricular === 1 || this._heart.ncc_resus === 1) {
+    if (
+      this._heart.ncc_ventricular === 1 ||
+      this._analytics_timer > this._analytics_window
+    ) {
+      this._analytics_timer = 0.0;
       this.flow_forward_lmin =
         (this._cum_forward_flow / this._flow_counter) * 60.0;
       this.flow_backward_lmin =

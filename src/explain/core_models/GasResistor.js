@@ -214,6 +214,8 @@ export class GasResistor {
   _cum_forward_flow = 0.0;
   _cum_backward_flow = 0.0;
   _flow_counter = 0.0;
+  _analytics_timer = 0.0;
+  _analytics_window = 10.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -445,7 +447,12 @@ export class GasResistor {
 
   analyze() {
     this._flow_counter += this._t;
-    if (this._heart.ncc_ventricular === 1) {
+    this._analytics_timer += this._t;
+    if (
+      this._heart.ncc_ventricular === 1 &&
+      this._analytics_timer > this._analytics_window
+    ) {
+      this._analytics_timer = 0.0;
       this.flow_forward_lmin =
         (this._cum_forward_flow / this._flow_counter) * 60.0;
       this.flow_backward_lmin =

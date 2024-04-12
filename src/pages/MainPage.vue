@@ -363,6 +363,7 @@ export default defineComponent({
             { label: "fIVC", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["IVCI_RA.flow_lmin_avg"], weight_based: true },
             { label: "fDAo", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["AAR_AD.flow_lmin_avg"], weight_based: true },
             { label: "fPda", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["DA_OUT.flow_lmin_avg"], weight_based: true },
+            { label: "fBR", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["AA_BR.flow_lmin_avg"], weight_based: true },
 
           ]
         },
@@ -1366,6 +1367,24 @@ export default defineComponent({
             type: "boolean",
             caller: "function",
             function_name: "switch_cpr",
+            min: -10.0,
+            max: 10.0,
+            step: 0.05
+          },
+          chest_comp_cont: {
+            caption: "continuous compressions",
+            category: "cpr",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Resuscitation",
+            prop: "chest_comp_cont",
+            type: "boolean",
+            caller: "direct",
+            function_name: "",
             min: -10.0,
             max: 10.0,
             step: 0.05
