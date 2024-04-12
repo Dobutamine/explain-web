@@ -69,6 +69,7 @@ export class Ventilator {
   hfo_exp_tv = 0.0;
   hfo_mv = 0.0;
   synchronized = false;
+  vent_sync = false;
 
   // local parameters
   _model_engine = {};
@@ -436,14 +437,16 @@ export class Ventilator {
     this.trigger_volume = (this.tidal_volume / 100) * this.trigger_volume_perc;
 
     // check whether the trigger volume is reached
-    if (
-      this._trigger_volume_counter > this.trigger_volume &&
-      !this._triggered_breath
-    ) {
-      // we have a triggered breath
-      this._triggered_breath = true;
-      // reset the trigger volume counter
-      this._trigger_volume_counter = 0.0;
+    if (this.vent_sync) {
+      if (
+        this._trigger_volume_counter > this.trigger_volume &&
+        !this._triggered_breath
+      ) {
+        // we have a triggered breath
+        this._triggered_breath = true;
+        // reset the trigger volume counter
+        this._trigger_volume_counter = 0.0;
+      }
     }
 
     // update the triggered volume

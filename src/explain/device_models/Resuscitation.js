@@ -71,6 +71,7 @@ export class Resuscitation {
   _comp_counter = 0.0;
   _comp_pause = false;
   _comp_pause_timer = 0.0;
+  _vent_timer = 0.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -114,6 +115,7 @@ export class Resuscitation {
         10.0
       );
       this._model_engine.models["Ventilator"].switch_ventilator(true);
+      this._model_engine.models["Ventilator"].vent_sync = false;
       this._model_engine.models["Breathing"].switch_breathing(false);
       this.cpr_enabled = true;
     } else {
@@ -125,6 +127,7 @@ export class Resuscitation {
         0.4,
         10.0
       );
+      this._model_engine.models["Ventilator"].vent_sync = true;
       for (let [comp_target, force] of Object.entries(
         this.chest_comp_targets
       )) {
@@ -158,15 +161,25 @@ export class Resuscitation {
     }
     if (this._comp_counter == this.compressions) {
       this._model_engine.models["Ventilator"].trigger_breath();
+      this._vent_timer = 0.0;
       this._comp_counter = 0;
       this._comp_pause_timer = 0.0;
       this._comp_pause = true;
     }
     if (this._comp_pause) {
       this._comp_pause_timer += this._t;
+      this._vent_timer += this._t;
+      if (this._vent_timer > this.vent_insp_time * 2.1) {
+        this._vent_timer = 0.0;
+        this._model_engine.models["Ventilator"].trigger_breath();
+      }
     }
-    if (this._comp_pause_timer > 1.0) {
+    if (
+      this._comp_pause_timer >
+      this.ventilations * this.vent_insp_time * 2.0
+    ) {
       this._comp_pause = false;
+      this._vent_timer = 0.0;
     }
     for (let [comp_target, force] of Object.entries(this.chest_comp_targets)) {
       this._model_engine.models[comp_target].pres_cc = parseFloat(

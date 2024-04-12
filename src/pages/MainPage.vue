@@ -1424,6 +1424,24 @@ export default defineComponent({
             max: 30,
             step: 1
           },
+          vent_no: {
+            caption: "no of ventilations",
+            category: "cpr",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Resuscitation",
+            prop: "ventilations",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            min: -1,
+            max: 30,
+            step: 1
+          },
         }
 
       },

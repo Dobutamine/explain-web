@@ -3415,7 +3415,7 @@
           "vent_freq": 1.0,
           "vent_pres_pip": 16.0,
           "vent_pres_peep": 5.0,
-          "vent_insp_time": 1.0,
+          "vent_insp_time": 0.5,
           "vent_fio2": 1.0,
           "async_ventilation": false
       },

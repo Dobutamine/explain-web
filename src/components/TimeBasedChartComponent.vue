@@ -261,7 +261,7 @@ export default {
       newPresetName: "",
       presets: {
         "Compressions": {
-          props: ["Resuscitation.chest_comp_force"],
+          props: ["Resuscitation.chest_comp_force", "ALL.pres_rel"],
           autoscale: true,
           y_min: -5,
           y_max: 5,
