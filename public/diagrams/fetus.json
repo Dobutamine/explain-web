@@ -765,6 +765,36 @@
         }
       }
     },
+    "PLF": {
+      "enabled": true,
+      "label": "PLF",
+      "models": [
+        "PLF"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.0,
+          "y": 1.1,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
     "AD_RLB": {
       "enabled": true,
       "label": "AD_RLB",
@@ -954,6 +984,26 @@
       "compType": "BloodConnector",
       "dbcFrom": "COR",
       "dbcTo": "RA"
+    },
+    "UMB_ART": {
+      "enabled": true,
+      "label": "UMB_ART",
+      "models": [
+        "UMB_ART"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "AD",
+      "dbcTo": "PLF"
+    },
+    "UMB_VEN": {
+      "enabled": true,
+      "label": "UMB_VEN",
+      "models": [
+        "UMB_VEN"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "PLF",
+      "dbcTo": "IVCE"
     },
     "IPS": {
       "enabled": true,
