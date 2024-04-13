@@ -14,74 +14,10 @@
     "pathColor": 4473924,
     "radius": 0.6,
     "xOffset": 0.0,
-    "yOffset": 20.0,
+    "yOffset": 0.0,
     "shuntOptionsVisible": true
   },
   "components": {
-    "ALL": {
-      "enabled": true,
-      "label": "",
-      "models": [
-        "ALL"
-      ],
-      "compType": "GasCompartment",
-      "compPicto": "gas_container.png",
-      "layout": {
-        "pos": {
-          "type": "arc",
-          "x": 1.0,
-          "y": 0.29,
-          "dgs": 270
-        },
-        "morph": {
-          "x": 1,
-          "y": 1
-        },
-        "scale": {
-          "x": 1,
-          "y": 1
-        },
-        "rotation": 0,
-        "level": 1,
-        "text": {
-          "x": 0,
-          "y": 0,
-          "size": 10
-        }
-      }
-    },
-    "ALR": {
-      "enabled": true,
-      "label": "",
-      "models": [
-        "ALR"
-      ],
-      "compType": "GasCompartment",
-      "compPicto": "gas_container.png",
-      "layout": {
-        "pos": {
-          "type": "rel",
-          "x": 0.0,
-          "y": -0.78,
-          "dgs": 270
-        },
-        "morph": {
-          "x": 1,
-          "y": 1
-        },
-        "scale": {
-          "x": 1,
-          "y": 1
-        },
-        "rotation": 0,
-        "level": 1,
-        "text": {
-          "x": 0,
-          "y": 0,
-          "size": 10
-        }
-      }
-    },
     "LV": {
       "enabled": true,
       "label": "LV",
@@ -232,11 +168,11 @@
         }
       }
     },
-    "LL": {
+    "LUNGS": {
       "enabled": true,
-      "label": "LL",
+      "label": "LUNGS",
       "models": [
-        "LL"
+        "LL", "RL"
       ],
       "compType": "BloodCompartment",
       "compPicto": "container.png",
@@ -246,37 +182,6 @@
           "x": 1.0,
           "y": 0.2,
           "dgs": 270
-        },
-        "morph": {
-          "x": 1,
-          "y": 1
-        },
-        "scale": {
-          "x": 1,
-          "y": 1
-        },
-        "rotation": 0,
-        "text": {
-          "x": 0,
-          "y": 0,
-          "size": 10
-        }
-      }
-    },
-    "RL": {
-      "enabled": true,
-      "label": "RL",
-      "models": [
-        "RL"
-      ],
-      "compType": "BloodCompartment",
-      "compPicto": "container.png",
-      "layout": {
-        "pos": {
-          "type": "rel",
-          "x": 0.0,
-          "y": -0.78,
-          "dgs": 0
         },
         "morph": {
           "x": 1,
@@ -324,34 +229,24 @@
         }
       }
     },
-    "PA_LL": {
+    "PA_LUNGS": {
       "enabled": true,
-      "label": "PA_LL",
+      "label": "PA_LUNGS",
       "models": [
-        "PA_LL"
+        "PA_LL", "PA_RL"
       ],
       "compType": "BloodConnector",
       "dbcFrom": "PA",
-      "dbcTo": "LL"
+      "dbcTo": "LUNGS"
     },
-    "PA_RL": {
+    "LUNGS_PV": {
       "enabled": true,
-      "label": "PA_RL",
+      "label": "LUNGS_PV",
       "models": [
-        "PA_RL"
+        "LL_PV", "RL_PV"
       ],
       "compType": "BloodConnector",
-      "dbcFrom": "PA",
-      "dbcTo": "RL"
-    },
-    "LL_PV": {
-      "enabled": true,
-      "label": "LL_PV",
-      "models": [
-        "LL_PV"
-      ],
-      "compType": "BloodConnector",
-      "dbcFrom": "LL",
+      "dbcFrom": "LUNGS",
       "dbcTo": "PV"
     },
     "PV_LA": {
@@ -373,16 +268,6 @@
       "compType": "BloodConnector",
       "dbcFrom": "RV",
       "dbcTo": "PA"
-    },
-    "RL_PV": {
-      "enabled": true,
-      "label": "RL_PV",
-      "models": [
-        "RL_PV"
-      ],
-      "compType": "BloodConnector",
-      "dbcFrom": "RL",
-      "dbcTo": "PV"
     },
     "RA_RV": {
       "enabled": true,
@@ -776,7 +661,7 @@
         "pos": {
           "type": "rel",
           "x": 0.0,
-          "y": 1.1,
+          "y": 0.3,
           "dgs": 0
         },
         "morph": {
@@ -1044,73 +929,6 @@
       "compType": "Shunt",
       "dbcFrom": "LV",
       "dbcTo": "RV"
-    },
-
-    "GASEX_LL": {
-      "enabled": true,
-      "label": "O2",
-      "models": [
-        "GASEX_LL"
-      ],
-      "compType": "GasExchanger",
-      "compPicto": "exchange.png",
-      "gas": "o2",
-      "layout": {
-        "pos": {
-          "type": "rel",
-          "x": 0.0,
-          "y": -1.08,
-          "dgs": 0
-        },
-        "morph": {
-          "x": 1,
-          "y": 1
-        },
-        "scale": {
-          "x": 0.15,
-          "y": 0.15
-        },
-        "rotation": 0,
-        "level": 7,
-        "text": {
-          "x": 0,
-          "y": 0,
-          "size": 6
-        }
-      }
-    },
-    "GASEX_RL": {
-      "enabled": true,
-      "label": "O2",
-      "models": [
-        "GASEX_RL"
-      ],
-      "compType": "GasExchanger",
-      "compPicto": "exchange.png",
-      "gas": "o2",
-      "layout": {
-        "pos": {
-          "type": "rel",
-          "x": 0.0,
-          "y": -0.70,
-          "dgs": 0
-        },
-        "morph": {
-          "x": 1,
-          "y": 1
-        },
-        "scale": {
-          "x": 0.15,
-          "y": 0.15
-        },
-        "rotation": 0,
-        "level": 7,
-        "text": {
-          "x": 0,
-          "y": 0,
-          "size": 6
-        }
-      }
     }
   }
 }
