@@ -15,8 +15,8 @@ export default class Shunt {
   spriteColor = 0xffffff;
 
   path = null;
-  pathColor = 0x333333;
-  pathWidth = 5;
+  pathColor = 0x555555;
+  pathWidth = 7;
 
   arc = {
     enabled: false,

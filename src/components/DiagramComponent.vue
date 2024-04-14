@@ -48,7 +48,7 @@ export default {
       shortTimer: null,
       rt_running: false,
       selected_diagram: 'fetus',
-      diagram_options: ['default', 'fetus'],
+      diagram_options: ['default', 'coarctatio_aortae', 'double_outlet_right_ventricle', 'fetus', 'hypoplastic_left_heart_syndrome', 'mitral_atresia', 'pulmonary_atresia', 'total_anomalous_venous_connection', 'transposition_of_great_arteries', 'tricuspid_atresia', 'truncus_arteriosus'],
       selected_shunts: [],
       shunt_options: [{
         label: 'ductus arteriosus',
@@ -57,6 +57,10 @@ export default {
       {
         label: 'foramen ovale',
         value: 'FO'
+      },
+      {
+        label: 'ventricular septal defect',
+        value: 'VSD'
       },
       {
         label: 'intrapulmonary shunt',
@@ -150,7 +154,7 @@ export default {
       this.pixiApp = new PIXI.Application({
         transparent: false,
         antialias: true,
-        backgroundColor: 0x222222,
+        backgroundColor: 0x111111,
         view: canvas,
         eventMode: 'passive',
         eventFeatures: {

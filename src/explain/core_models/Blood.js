@@ -106,8 +106,10 @@ export class Blood {
         model.model_type === "BloodCapacitance" ||
         model.model_type === "BloodTimeVaryingElastance"
       ) {
-        model.aboxy = { ...this.aboxy };
-        model.solutes = { ...this.solutes };
+        if (!model.aboxy) {
+          model.aboxy = { ...this.aboxy };
+          model.solutes = { ...this.solutes };
+        }
       }
     }
 

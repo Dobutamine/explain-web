@@ -20,8 +20,8 @@ export default class BloodConnector {
   textStyle = {};
 
   path = null;
-  pathColor = 0x555555;
-  pathWidth = 5;
+  pathColor = 0x666666;
+  pathWidth = 7;
   prevPosition = 0;
 
   arc = {
