@@ -248,6 +248,7 @@ import HeartComponent from 'src/components/HeartComponent.vue';
 import ShuntSystemComponent from 'src/components/ShuntSystemComponent.vue'
 import DiagramComponent from 'src/components/DiagramComponent.vue';
 import NiceController from 'src/components/NiceController.vue';
+import BigNumbersComponent from 'src/components/BigNumbersComponent.vue';
 
 import { explain } from 'src/boot/explain';
 
@@ -256,6 +257,7 @@ export default defineComponent({
   setup() { },
   components: {
     NumericsComponent,
+    BigNumbersComponent,
     ModelEditor,
     TimeBasedChartComponent,
     VentilatorComponent,
