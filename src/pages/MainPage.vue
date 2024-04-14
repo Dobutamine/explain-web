@@ -48,6 +48,7 @@
                 <NiceController :config="circulation_controller"></NiceController>
                 <NiceController :config="pda_controller"></NiceController>
                 <NiceController :config="resuscitation_controller"></NiceController>
+                <NiceController :config="placenta_controller"></NiceController>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="respiratory_system">
@@ -1303,7 +1304,7 @@ export default defineComponent({
       },
       resuscitation_controller: {
         title: "RESUSCITATION",
-        enabled: true,
+        enabled: false,
         categories: {
           hr: {
             caption: "Heartrate",
@@ -1466,6 +1467,89 @@ export default defineComponent({
       },
       ans_controller: {
 
+      },
+      placenta_controller: {
+        title: "PLACENTA",
+        enabled: false,
+        categories: {
+          properties: {
+            caption: "Properties",
+            enabled: true,
+            advanced: false,
+          }
+        },
+        items: {
+          placenta_enabled: {
+            caption: "placenta enabled",
+            category: "properties",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Placenta",
+            prop: "pl_circ_enabled",
+            type: "boolean",
+            caller: "function",
+            function_name: "switch_placenta"
+          },
+          umb_art_res: {
+            caption: "umbilical artery resistance",
+            category: "properties",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Placenta",
+            prop: "umb_art_res",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            min: 20,
+            max: 50000,
+            step: 10
+          },
+          umb_ven_res: {
+            caption: "umbilical veins resistance",
+            category: "properties",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Placenta",
+            prop: "umb_ven_res",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            min: 20,
+            max: 50000,
+            step: 10
+          },
+          plf_el: {
+            caption: "fetal placenta elastance",
+            category: "properties",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Placenta",
+            prop: "plf_el_base",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            min: 20,
+            max: 50000,
+            step: 10
+          }
+
+        }
       }
 
     }

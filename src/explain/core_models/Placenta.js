@@ -15,8 +15,27 @@ export class Placenta {
   is_enabled = false;
   dependencies = [];
   pl_circ_enabled = false;
+  umb_art_diameter = 1.0;
+  umb_art_length = 1.0;
+  umb_ven_diameter = 1.0;
+  umb_ven_length = 1.0;
+  umb_art_res = 30000;
+  umb_art_res_factor = 1.0;
+  umb_ven_res = 30000;
+  umb_ven_res_factor = 1.0;
+  plf_el_base = 5000.0;
+  plf_el_base_factor = 5000.0;
+  plf_u_vol = 0.15;
+  plf_u_vol_factor = 0.15;
+  plm_el_base = 5000.0;
+  plm_el_base_factor = 5000.0;
+  plm_u_vol = 0.5;
+  plm_u_vol_factor = 0.5;
 
   // dependent parameters
+  umb_art_flow = 0.0;
+  umb_art_flow_lmin = 0.0;
+  umb_art_velocity = 0.0;
 
   // local parameters
   _model_engine = {};
@@ -66,13 +85,38 @@ export class Placenta {
     }
   }
 
-  enable_placenta() {
-    this._umb_art.is_enabled = true;
-    this._umb_ven.is_enabled = true;
-    this._plf.is_enabled = true;
-    this._plm.is_enabled = true;
-    this._pl_gasex.is_enabled = true;
+  switch_placenta(state) {
+    this.pl_circ_enabled = state;
+    this._umb_art.is_enabled = state;
+    this._umb_ven.is_enabled = state;
+    this._plf.is_enabled = state;
+    this._plm.is_enabled = state;
+    //this._pl_gasex.is_enabled = state;
   }
 
-  calc_model() {}
+  calc_model() {
+    if (this.pl_circ_enabled) {
+      this._umb_art.r_for = this.umb_art_res;
+      this._umb_art.r_for_factor = this.umb_art_res_factor;
+
+      this._umb_art.r_back = this.umb_art_res;
+      this._umb_art.r_back_factor = this.umb_art_res_factor;
+
+      this._umb_ven.r_for = this.umb_ven_res;
+      this._umb_ven.r_for_factor = this.umb_ven_res_factor;
+
+      this._umb_ven.r_back = this.umb_ven_res;
+      this._umb_ven.r_back_factor = this.umb_ven_res_factor;
+
+      this._plf.el_base = this.plf_el_base;
+      this._plf.el_base_factor = this.plf_el_base_factor;
+
+      this._plf.u_vol = this.plf_u_vol;
+      this._plf.u_vol_factor = this.plf_u_vol_factor;
+    } else {
+      this.umb_art_flow = 0.0;
+      this.umb_art_flow_lmin = 0.0;
+      this.umb_art_velocity = 0.0;
+    }
+  }
 }

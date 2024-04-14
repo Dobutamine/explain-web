@@ -14,7 +14,7 @@
     "pathColor": 4473924,
     "radius": 0.6,
     "xOffset": 0.0,
-    "yOffset": 0.0,
+    "yOffset": -15.0,
     "shuntOptionsVisible": true
   },
   "components": {
@@ -319,36 +319,6 @@
         }
       }
     },
-    "COR": {
-      "enabled": true,
-      "label": "COR",
-      "models": [
-        "COR"
-      ],
-      "compType": "BloodCompartment",
-      "layout": {
-        "pos": {
-          "type": "rel",
-          "x": 0.0,
-          "y": -0.2,
-          "dgs": 0
-        },
-        "morph": {
-          "x": 1,
-          "y": 1
-        },
-        "scale": {
-          "x": 1,
-          "y": 1
-        },
-        "rotation": 0,
-        "text": {
-          "x": 0,
-          "y": 0,
-          "size": 10
-        }
-      }
-    },
     "AD": {
       "enabled": true,
       "label": "AD",
@@ -601,7 +571,7 @@
         "pos": {
           "type": "rel",
           "x": 0.0,
-          "y": -0.05,
+          "y": 0.05,
           "dgs": 0
         },
         "morph": {
@@ -631,7 +601,7 @@
         "pos": {
           "type": "rel",
           "x": 0.0,
-          "y": 0.1,
+          "y": 0.2,
           "dgs": 0
         },
         "morph": {
@@ -657,11 +627,12 @@
         "PLF"
       ],
       "compType": "BloodCompartment",
+      "compPicto": "placenta.png",
       "layout": {
         "pos": {
           "type": "rel",
           "x": 0.0,
-          "y": 0.3,
+          "y": 1.1,
           "dgs": 0
         },
         "morph": {
@@ -673,6 +644,37 @@
           "y": 0.5
         },
         "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "PLM": {
+      "enabled": true,
+      "label": "PLM",
+      "models": [
+        "PLM"
+      ],
+      "compType": "BloodCompartment",
+      "compPicto": "placenta.png",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.0,
+          "y": 1.2,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.35,
+          "y": 0.35
+        },
+        "rotation": 3.14,
         "text": {
           "x": 0,
           "y": 0,
@@ -850,26 +852,6 @@
       "dbcFrom": "AA",
       "dbcTo": "AD"
     },
-    "AA_COR": {
-      "enabled": true,
-      "label": "AA_COR",
-      "models": [
-        "AA_COR"
-      ],
-      "compType": "BloodConnector",
-      "dbcFrom": "AA",
-      "dbcTo": "COR"
-    },
-    "COR_RA": {
-      "enabled": true,
-      "label": "COR_RA",
-      "models": [
-        "COR_RA"
-      ],
-      "compType": "BloodConnector",
-      "dbcFrom": "COR",
-      "dbcTo": "RA"
-    },
     "UMB_ART": {
       "enabled": true,
       "label": "UMB_ART",
@@ -929,6 +911,38 @@
       "compType": "Shunt",
       "dbcFrom": "LV",
       "dbcTo": "RV"
+    },
+    "PL_GASEX": {
+      "enabled": true,
+      "label": "O2",
+      "models": [
+        "PL_GASEX"
+      ],
+      "compType": "GasExchanger",
+      "compPicto": "exchange.png",
+      "gas": "o2",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.0,
+          "y": 1.15,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.14,
+          "y": 0.14
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
     }
   }
 }
