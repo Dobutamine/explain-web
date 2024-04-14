@@ -104,16 +104,19 @@ export class BloodDiffusor {
     this._t = this._model_engine.modeling_stepsize;
 
     // get a reference to the models
-    if (typeof this.comp_from == "string") {
+    if (typeof this.comp_blood1 == "string") {
       this._comp_blood1 = this._model_engine.models[this.comp_blood1];
     } else {
       this._comp_blood1 = this.comp_blood1;
     }
-    if (typeof this.comp_from == "string") {
+    if (typeof this.comp_blood2 == "string") {
       this._comp_blood2 = this._model_engine.models[this.comp_blood2];
     } else {
       this._comp_blood2 = this.comp_blood2;
     }
+
+    console.log(this._comp_blood1);
+    console.log(this._comp_blood2);
 
     // set the flag to model is initialized
     this._is_initialized = true;
@@ -187,10 +190,14 @@ export class BloodDiffusor {
     }
 
     // set the new concentrations
-    this._comp_blood1.aboxy.to2 = new_to2_comp_blood1;
-    this._comp_blood1.aboxy.tco2 = new_tco2_comp_blood1;
+    if (!this._comp_blood1.fixed_composition) {
+      this._comp_blood1.aboxy.to2 = new_to2_comp_blood1;
+      this._comp_blood1.aboxy.tco2 = new_tco2_comp_blood1;
+    }
 
-    this._comp_blood2.aboxy.to2 = new_to2_comp_blood2;
-    this._comp_blood2.aboxy.tco2 = new_tco2_comp_blood2;
+    if (!this._comp_blood2.fixed_composition) {
+      this._comp_blood2.aboxy.to2 = new_to2_comp_blood2;
+      this._comp_blood2.aboxy.tco2 = new_tco2_comp_blood2;
+    }
   }
 }

@@ -77,7 +77,7 @@ export default defineComponent({
       selectedDuration: 10,
       durations: [1, 2, 3, 5, 10, 20, 30, 60, 120, 240, 360, 600, 1200, 1800],
       current_model_definition: 'baseline_neonate',
-      available_model_definitions: ['baseline_neonate', 'test']
+      available_model_definitions: ['baseline_neonate', 'fetus']
     }
   },
   methods: {
