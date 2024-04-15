@@ -49,6 +49,7 @@
                 <NiceController :config="pda_controller"></NiceController>
                 <NiceController :config="resuscitation_controller"></NiceController>
                 <NiceController :config="placenta_controller"></NiceController>
+                <NiceController :config="metabolism_controller"></NiceController>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="respiratory_system">
@@ -192,6 +193,7 @@
                 width: '5px',
                 opacity: 0.5
               }">
+                <BigNumbersComponent></BigNumbersComponent>
                 <div v-for="(numeric, index) in numerics" :key="index">
                   <NumericsComponent :title="numeric.title" :collapsed="numeric.collapsed"
                     :parameters="numeric.parameters"></NumericsComponent>
@@ -328,23 +330,19 @@ export default defineComponent({
       },
       numerics: {
         vitals_numerics: {
-          title: "VITALS",
-          collapsed: false,
+          title: "ADDITIONAL VITALS",
+          collapsed: true,
           parameters: [
-            { label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"], weight_based: false },
-            { label: "Abp AA", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AA.pres_max", "AA.pres_min"], weight_based: false },
-            { label: "Abp AD", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AD.pres_max", "AD.pres_min"], weight_based: false },
+            { label: "Abp PRE", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AA.pres_max", "AA.pres_min"], weight_based: false },
             { label: "Pap", unit: "mmHg", factor: 1.0, rounding: 0, props: ["PA.pres_max", "PA.pres_min"], weight_based: false },
             { label: "Cvp", unit: "mmHg", factor: 1.0, rounding: 0, props: ["RA.pres_mean"], weight_based: false },
-            { label: "Resp rate", unit: "/min", factor: 1.0, rounding: 0, props: ["Breathing.resp_rate"], weight_based: false },
-            { label: "SpO2(pre)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_pre"], weight_based: false },
-            { label: "SpO2(post)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_post"], weight_based: false },
-            { label: "SpO2(ven)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_ven"], weight_based: false }
+            { label: "SpO2(ven)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_ven"], weight_based: false },
+            { label: "EtCO2", unit: "mmHg", factor: 1.0, rounding: 0, props: ["Ventilator.etco2"], weight_based: false }
           ]
         },
         heart_numerics: {
           title: "HEART",
-          collapsed: false,
+          collapsed: true,
           parameters: [
             { label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"], weight_based: false },
             { label: "LVP", unit: "mmHg", factor: 1.0, rounding: 1, props: ["LV.pres_max", "LV.pres_min"], weight_based: false },
@@ -357,7 +355,7 @@ export default defineComponent({
         },
         circulation_numerics: {
           title: "CIRCULATION",
-          collapsed: false,
+          collapsed: true,
           parameters: [
             { label: "LVO", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["LV_AA.flow_lmin_avg"], weight_based: true },
             { label: "RVO", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["RV_PA.flow_lmin_avg"], weight_based: true },
@@ -1553,7 +1551,59 @@ export default defineComponent({
           }
 
         }
-      }
+      },
+      metabolism_controller: {
+        title: "METABOLISM",
+        enabled: false,
+        categories: {
+          properties: {
+            caption: "Properties",
+            enabled: true,
+            advanced: false,
+          }
+        },
+        items: {
+          vo2: {
+            caption: "oxygen use (mmol/s)",
+            category: "properties",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Metabolism",
+            prop: "vo2",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            min: 0,
+            max: 10,
+            step: 0.05
+          },
+          resp_q: {
+            caption: "respiratory quotient",
+            category: "properties",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Metabolism",
+            prop: "resp_q",
+            type: "number",
+            caller: "direct",
+            function_name: "",
+            min: 0,
+            max: 1.0,
+            step: 0.01
+          }
+
+
+        }
+      },
+
 
     }
   },
@@ -1618,6 +1668,8 @@ export default defineComponent({
       }
     },
     updateWatchlist() {
+      explain.watchModelPropsSlow(["Heart.heart_rate", "Blood.so2_pre", "Blood.so2_post", "AD.pres_max", "AD.pres_min", "AD.pres_mean", "Breathing.resp_rate", "Ventilator.vent_rate"])
+
       Object.keys(this.numerics).forEach(numeric => {
         this.numerics[numeric].parameters.forEach((p) => {
           explain.watchModelPropsSlow([...p.props])

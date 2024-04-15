@@ -251,6 +251,13 @@ export default defineComponent({
     } catch { }
     document.addEventListener("data", this.dataUpdate);
 
+    this.$bus.on('load_new_model', (t) => {
+      if (t !== this.current_model_definition) {
+        this.current_model_definition = t
+        this.selectModelDefinition()
+      }
+    })
+
 
   }
 })

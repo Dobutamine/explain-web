@@ -49,6 +49,17 @@ export default {
       rt_running: false,
       selected_diagram: 'fetus',
       diagram_options: ['default', 'coarctatio_aortae', 'double_outlet_right_ventricle', 'fetus', 'hypoplastic_left_heart_syndrome', 'mitral_atresia', 'pulmonary_atresia', 'total_anomalous_venous_connection', 'transposition_of_great_arteries', 'tricuspid_atresia', 'truncus_arteriosus'],
+      diagram_options_filenames: {
+        default: {
+          filename: 'default',
+          caption: 'normal neonate 24 hours',
+        },
+        fetus: {
+          filename: 'fetus',
+          caption: 'normal term fetus',
+        }
+      },
+
       selected_shunts: [],
       shunt_options: [{
         label: 'ductus arteriosus',
@@ -111,6 +122,7 @@ export default {
         .then((jsonData) => {
           this.diagram = { ...jsonData }
           this.buildDiagram()
+          this.$bus.emit('load_new_model', this.diagram.settings.model_filename)
         })
         .catch((error) => {
           console.error("Error: ", error);
@@ -131,6 +143,7 @@ export default {
         .then((jsonData) => {
           this.diagram = { ...jsonData }
           this.initDiagram()
+          this.$bus.emit('load_new_model', this.diagram.settings.model_filename)
         })
         .catch((error) => {
           console.error("Error: ", error);
@@ -508,6 +521,9 @@ export default {
           }
           if (this.diagram.components['IPS'].enabled) {
             this.selected_shunts.push('IPS')
+          }
+          if (this.diagram.components['VSD'].enabled) {
+            this.selected_shunts.push('VSD')
           }
         } catch { }
       }

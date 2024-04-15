@@ -3,23 +3,54 @@
     <div class="q-mt-es row gutter text-overline justify-center" @click="isEnabled = !isEnabled">
       {{ title }}
     </div>
-    <div v-if="parameters.length > 0 && isEnabled">
+    <div v-if="isEnabled">
       <div class="q-ma-sm q-gutter-xs row items-center">
-        <div v-for="(field, index) in mutableParameters" :key="index">
-          <!-- <div class="col q-mr-xs text-left text-secondary" :style="{ 'font-size': '12px' }">
-            {{ field.label }} {{ field.unit }}
+        <div class="q-mr-md">
+          <div class="q-mr-sm text-left text-green" :style="{ 'font-size': '12px' }">
+            Heart rate (/min)
           </div>
-          <q-input v-model="field.value" color="blue" hide-hint filled readonly dense stack-label
-            style="max-width: 90px; font-size: 16px" squared /> -->
-          <div class="col q-mr-xs text-left text-secondary" :style="{ 'font-size': '12px' }">
-            {{ field.label }} {{ field.unit }}
+          <div class="text-green" :style="{ 'font-size': '46px' }">
+            {{ hr }}
           </div>
-          <div class="col q-mr-xs text-left text-secondary" :style="{ 'font-size': '26px' }">
-            {{ field.value }}
+        </div>
+        <div class="q-mr-sm">
+          <div class="q-mr-sm text-left text-purple-12" :style="{ 'font-size': '12px' }">
+            SpO2 pre (%)
           </div>
-
+          <div class="text-purple-12" :style="{ 'font-size': '46px' }">
+            {{ spo2_pre }}
+          </div>
+        </div>
+        <div class="q-mr-sm">
+          <div class="q-mr-sm text-left text-purple-11" :style="{ 'font-size': '12px' }">
+            SpO2 post (%)
+          </div>
+          <div class="text-purple-11" :style="{ 'font-size': '46px' }">
+            {{ spo2_post }}
+          </div>
+        </div>
+        <div class="q-mr-sm">
+          <div class="q-mr-sm text-left text-white" :style="{ 'font-size': '12px' }">
+            Resp rate (/min)
+          </div>
+          <div class="text-white" :style="{ 'font-size': '46px' }">
+            {{ rr }}
+          </div>
+        </div>
+        <div class="q-mr-sm">
+          <div class="q-mr-sm text-left text-red-12" :style="{ 'font-size': '12px' }">
+            ABP (mmHg)
+          </div>
+          <div class="text-red-12 row" :style="{ 'font-size': '46px' }">
+            {{ abp }}
+            <div class="q-ma-sm q-mt-md text-red-12" :style="{ 'font-size': '28px' }">
+              {{ abp_mean }}
+            </div>
+          </div>
         </div>
       </div>
+
+
     </div>
   </q-card>
 </template>
@@ -29,16 +60,21 @@ import { explain } from "../boot/explain";
 
 
 export default {
-  props: {
-    title: String,
-    collapsed: Boolean,
-    parameters: Array,
-  },
   data() {
     return {
       isEnabled: true,
+      title: "VITALS",
       currentData: {},
       mutableParameters: [],
+      hr: "-",
+      spo2_pre: "-",
+      spo2_post: "-",
+      abp: "-/-",
+      abp_mean: "(-)",
+      rr: "-",
+      vent_rate: "-",
+      etco2: "-",
+      temp: "-",
     };
   },
   methods: {
@@ -49,44 +85,25 @@ export default {
       this.currentData =
         explain.modelDataSlow[explain.modelDataSlow.length - 1];
 
-      this.mutableParameters.forEach((param) => {
-        param.value = "";
-        let weight_factor = 1.0
-        if (param.weight_based) {
-          weight_factor = 1.0 / explain.modelState.weight
-        }
-        if (param.props.length > 1) {
-          // two values
-          for (let i = 0; i < param.props.length; i++) {
-            try {
-              if (this.currentData[param.props[i]] !== undefined) {
-                param.value +=
-                  (this.currentData[param.props[i]] * param.factor * weight_factor).toFixed(param.rounding) + "/";
-              } else {
-                param.value = "--";
-              }
-            } catch { }
-          }
-          // slice off the last value, removing the /
-          param.value = param.value.slice(0, -1);
-        } else {
-          try {
-            if (this.currentData[param.props[0]] !== undefined) {
-              param.value = (
-                this.currentData[param.props[0]] * param.factor * weight_factor).toFixed(param.rounding);
-            } else {
-              param.value = "-";
-            }
-          } catch { }
-        }
-      });
+
+      if (this.currentData) {
+        try {
+          this.hr = this.currentData["Heart.heart_rate"].toFixed(0)
+          this.spo2_pre = this.currentData["Blood.so2_pre"].toFixed(0)
+          this.spo2_post = this.currentData["Blood.so2_post"].toFixed(0)
+          this.abp = this.currentData["AD.pres_max"].toFixed(0) + "/" + this.currentData["AD.pres_min"].toFixed(0)
+          this.abp_mean = "(" + this.currentData["AD.pres_mean"].toFixed(0) + ")"
+          this.rr = this.currentData["Breathing.resp_rate"].toFixed(0)
+          this.vent_rate = this.currentData["Ventilator.vent_rate"].toFixed(0)
+        } catch { }
+
+      }
     },
   },
   beforeUnmount() {
   },
   mounted() {
     this.isEnabled = !this.collapsed;
-    this.mutableParameters = [...this.parameters];
 
     // get the realtime slow data
     this.$bus.on("rts", () => {
@@ -97,6 +114,7 @@ export default {
     this.$bus.on("data", () => {
       this.dataUpdate()
     });
+
   },
 };
 </script>

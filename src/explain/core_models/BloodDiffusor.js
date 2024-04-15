@@ -115,9 +115,6 @@ export class BloodDiffusor {
       this._comp_blood2 = this.comp_blood2;
     }
 
-    console.log(this._comp_blood1);
-    console.log(this._comp_blood2);
-
     // set the flag to model is initialized
     this._is_initialized = true;
   }
