@@ -133,6 +133,117 @@ export class Ans {
     this._is_initialized = true;
   }
 
+  change_set_map(new_map) {
+    this.set_map = new_map;
+    AnsEffector.set_map = this.set_map;
+    AnsEffector.min_map = this.set_map / 2.0;
+    AnsEffector.max_map = this.set_map * 2.0;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+  }
+
+  change_set_po2(new_po2) {
+    this.set_po2 = new_po2;
+    AnsEffector.set_po2 = this.set_po2;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+    this._mv_effector.calc_gains();
+  }
+
+  change_max_po2(new_po2) {
+    this.max_po2 = new_po2;
+    AnsEffector.max_po2 = this.max_po2;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+    this._mv_effector.calc_gains();
+  }
+
+  change_min_po2(new_po2) {
+    this.min_po2 = new_po2;
+    AnsEffector.min_po2 = this.min_po2;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+    this._mv_effector.calc_gains();
+  }
+
+  change_set_pco2(new_pco2) {
+    this.set_pco2 = new_pco2;
+    AnsEffector.set_pco2 = this.set_pco2;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+    this._mv_effector.calc_gains();
+  }
+
+  change_max_pco2(new_pco2) {
+    this.max_pco2 = new_pco2;
+    AnsEffector.max_pco2 = this.max_pco2;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+    this._mv_effector.calc_gains();
+  }
+
+  change_min_pco2(new_pco2) {
+    this.min_pco2 = new_pco2;
+    AnsEffector.min_pco2 = this.min_pco2;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+    this._mv_effector.calc_gains();
+  }
+
+  change_set_ph(new_ph) {
+    this.set_ph = new_ph;
+    AnsEffector.set_ph = this.set_ph;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+    this._mv_effector.calc_gains();
+  }
+
+  change_max_ph(new_ph) {
+    this.max_ph = new_ph;
+    AnsEffector.max_ph = this.max_ph;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+    this._mv_effector.calc_gains();
+  }
+
+  change_min_ph(new_ph) {
+    this.min_ph = new_ph;
+    AnsEffector.min_pco2 = this.min_ph;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+    this._mv_effector.calc_gains();
+  }
+
   step_model() {
     if (this.is_enabled && this._is_initialized) {
       this.calc_model();

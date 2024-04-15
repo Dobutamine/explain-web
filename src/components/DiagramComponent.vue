@@ -47,19 +47,8 @@ export default {
       skeletonGraphics: null,
       shortTimer: null,
       rt_running: false,
-      selected_diagram: 'fetus',
+      selected_diagram: 'default',
       diagram_options: ['default', 'coarctatio_aortae', 'double_outlet_right_ventricle', 'fetus', 'hypoplastic_left_heart_syndrome', 'mitral_atresia', 'pulmonary_atresia', 'total_anomalous_venous_connection', 'transposition_of_great_arteries', 'tricuspid_atresia', 'truncus_arteriosus'],
-      diagram_options_filenames: {
-        default: {
-          filename: 'default',
-          caption: 'normal neonate 24 hours',
-        },
-        fetus: {
-          filename: 'fetus',
-          caption: 'normal term fetus',
-        }
-      },
-
       selected_shunts: [],
       shunt_options: [{
         label: 'ductus arteriosus',

@@ -31,15 +31,21 @@ export class Placenta {
   plm_el_base_factor = 5000.0;
   plm_u_vol = 0.5;
   plm_u_vol_factor = 0.5;
+  diff = 0.01;
+  diff_factor = 1.0;
+  dif_o2 = 0.01;
+  dif_o2_factor = 1.0;
+  dif_co2 = 0.01;
+  dif_co2_factor = 1.0;
 
   // dependent parameters
   umb_art_flow = 0.0;
   umb_art_flow_lmin = 0.0;
   umb_art_velocity = 0.0;
   mat_po2 = 0.0;
-  mat_to2 = 0.0;
   mat_pco2 = 0.0;
-  mat_tco2 = 0.0;
+  mat_to2 = 6.5;
+  mat_tco2 = 23.0;
 
   // local parameters
   _model_engine = {};
@@ -90,16 +96,33 @@ export class Placenta {
   }
 
   switch_placenta(state) {
+    console.log(state);
     this.pl_circ_enabled = state;
     this._umb_art.is_enabled = state;
     this._umb_ven.is_enabled = state;
     this._plf.is_enabled = state;
     this._plm.is_enabled = state;
-    //this._pl_gasex.is_enabled = state;
+    this._pl_gasex.is_enabled = state;
+    this._umb_art.no_flow = !state;
+    this._umb_ven.no_flow = !state;
+    if (!state) {
+      this.umb_art_flow = 0.0;
+      this.umb_art_flow_lmin = 0.0;
+      this.umb_art_velocity = 0.0;
+
+      this._umb_art.flow = 0.0;
+      this._umb_art.flow_lmin = 0.0;
+
+      this._umb_ven.flow = 0.0;
+      this._umb_ven.flow_lmin = 0.0;
+    }
   }
 
   calc_model() {
     if (this.pl_circ_enabled) {
+      this._umb_art.no_flow = false;
+      this._umb_ven.no_flow = false;
+
       this._umb_art.r_for = this.umb_art_res;
       this._umb_art.r_for_factor = this.umb_art_res_factor;
 
@@ -118,8 +141,13 @@ export class Placenta {
       this._plf.u_vol = this.plf_u_vol;
       this._plf.u_vol_factor = this.plf_u_vol_factor;
 
-      this._plm.aboxy["to2"] = 6.5;
-      this._plm.aboxy["tco2"] = 23.0;
+      this._plm.aboxy["to2"] = this.mat_to2;
+      this._plm.aboxy["tco2"] = this.mat_tco2;
+
+      this._pl_gasex.dif_co2 = this.dif_co2;
+      this._pl_gasex.dif_o2 = this.dif_o2;
+      this._pl_gasex.dif_co2_factor = this.dif_co2_factor;
+      this._pl_gasex.dif_o2_factor = this.dif_co2_factor;
 
       this.mat_po2 = this._plm.aboxy["po2"];
       this.mat_pco2 = this._plm.aboxy["pco2"];
@@ -129,9 +157,17 @@ export class Placenta {
       this.umb_art_flow = this._umb_art.flow;
       this.umb_art_flow_lmin = this._umb_art.umb_art_flow_lmin;
     } else {
+      this._umb_art.no_flow = true;
+      this._umb_ven.no_flow = true;
       this.umb_art_flow = 0.0;
       this.umb_art_flow_lmin = 0.0;
       this.umb_art_velocity = 0.0;
+
+      this._umb_art.flow = 0.0;
+      this._umb_art.flow_lmin = 0.0;
+
+      this._umb_ven.flow = 0.0;
+      this._umb_ven.flow_lmin = 0.0;
     }
   }
 }
