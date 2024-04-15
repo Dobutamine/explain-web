@@ -77,7 +77,7 @@ export default defineComponent({
       selectedDuration: 10,
       durations: [1, 2, 3, 5, 10, 20, 30, 60, 120, 240, 360, 600, 1200, 1800],
       current_model_definition: 'baseline_neonate',
-      available_model_definitions: ['baseline_neonate', 'fetus']
+      available_model_definitions: ['default', 'coarctatio_aortae', 'double_outlet_right_ventricle', 'term_fetus', 'hypoplastic_left_heart_syndrome', 'mitral_atresia', 'pulmonary_atresia', 'total_anomalous_venous_connection', 'transposition_of_great_arteries', 'tricuspid_atresia', 'truncus_arteriosus']
     }
   },
   methods: {

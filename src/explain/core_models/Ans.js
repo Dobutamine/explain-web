@@ -145,6 +145,25 @@ export class Ans {
     this._venpool_effector.calc_gains();
   }
 
+  change_min_map(new_map) {
+    this.min_map = new_map;
+    AnsEffector.min_map = this.min_map;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+  }
+  change_max_map(new_map) {
+    this.max_map = new_map;
+    AnsEffector.max_map = this.max_map;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+  }
+
   change_set_po2(new_po2) {
     this.set_po2 = new_po2;
     AnsEffector.set_po2 = this.set_po2;

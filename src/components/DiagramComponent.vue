@@ -48,7 +48,7 @@ export default {
       shortTimer: null,
       rt_running: false,
       selected_diagram: 'default',
-      diagram_options: ['default', 'coarctatio_aortae', 'double_outlet_right_ventricle', 'fetus', 'hypoplastic_left_heart_syndrome', 'mitral_atresia', 'pulmonary_atresia', 'total_anomalous_venous_connection', 'transposition_of_great_arteries', 'tricuspid_atresia', 'truncus_arteriosus'],
+      diagram_options: ['default', 'coarctatio_aortae', 'double_outlet_right_ventricle', 'term_fetus', 'hypoplastic_left_heart_syndrome', 'mitral_atresia', 'pulmonary_atresia', 'total_anomalous_venous_connection', 'transposition_of_great_arteries', 'tricuspid_atresia', 'truncus_arteriosus'],
       selected_shunts: [],
       shunt_options: [{
         label: 'ductus arteriosus',
