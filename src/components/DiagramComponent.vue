@@ -7,7 +7,8 @@
     </div>
 
     <div class="stage" :style="{ display: display }">
-      <canvas id="stage"></canvas>
+      <canvas id="stage">
+      </canvas>
     </div>
 
     <div v-if="shuntOptionsVisible" class="row justify-center">
@@ -142,7 +143,7 @@ export default {
         })
         .then((jsonData) => {
           this.diagram = { ...jsonData }
-          this.initDiagram()
+          this.initDiagram().then(() => this.buildDiagram())
           this.$bus.emit('load_new_model', this.diagram.settings.model_filename)
         })
         .catch((error) => {
@@ -154,18 +155,20 @@ export default {
         comp.setEditingMode(this.editingSelection);
       });
     },
-    initDiagram() {
+    async initDiagram() {
       // first clear all children from the stage
       if (this.pixiApp) {
         this.pixiApp = null
       }
       // get the reference to the canvas
       canvas = document.getElementById("stage");
+
       // set the resolution of the pix application
       PIXI.settings.RESOLUTION = 2;
+
       // define a pixi app with the canvas as view
       this.pixiApp = new PIXI.Application({
-        transparent: false,
+        transparent: true,
         antialias: true,
         backgroundColor: 0x111111,
         view: canvas,
@@ -535,7 +538,7 @@ export default {
   mounted() {
     this.loadDiagram()
     this.$bus.on("state", this.processStateChanged)
-    this.$bus.on('reset', () => setTimeout(this.buildDiagram, 2000))
+    this.$bus.on('reset', () => this.buildDiagram())
     this.$bus.on('rt_start', () => this.rt_running = true)
     this.$bus.on('rt_stop', () => this.rt_running = false)
   },
