@@ -235,8 +235,9 @@ export default class Model {
   }
 
   loadBakedInModelDefinition(definition_name) {
+    let test = "/model_definitions/baseline_neonate.json";
     const absoluteUrl = new URL(
-      `/model_definitions/${definition_name}.json`,
+      "/model_definitions/baseline_neonate.json",
       import.meta.url
     );
 
