@@ -465,7 +465,7 @@ export default defineComponent({
       },
       circulation_controller: {
         title: "CIRCULATORY SYSTEM",
-        enabled: false,
+        enabled: true,
         categories: {
           circulation: {
             caption: "Circulation",
@@ -761,7 +761,7 @@ export default defineComponent({
       },
       pda_controller: {
         title: "SHUNTS",
-        enabled: false,
+        enabled: true,
         categories: {
           fo: {
             caption: "foramen ovale",
