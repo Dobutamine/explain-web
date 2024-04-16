@@ -176,6 +176,7 @@ export default defineComponent({
         this.$bus.emit('reset')
         this.rtState = false
         this.togglePlay()
+        explain.calculate(5)
       }
 
     },
