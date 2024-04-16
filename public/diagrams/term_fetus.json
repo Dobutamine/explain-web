@@ -874,7 +874,7 @@
       "dbcTo": "IVCE"
     },
     "IPS": {
-      "enabled": true,
+      "enabled": false,
       "label": "IPS",
       "models": [
         "IPS"

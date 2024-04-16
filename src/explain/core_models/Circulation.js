@@ -91,6 +91,24 @@ export class Circulation {
       ],
     },
     {
+      target: "change_coarc",
+      caption: "coarctatio aortae severity",
+      type: "function",
+      optional: false,
+      relative: false,
+      args: [
+        {
+          target: "coarc_change",
+          type: "number",
+          factor: 1,
+          delta: 1,
+          rounding: 0,
+          ul: 1000.0,
+          ll: 1.0,
+        },
+      ],
+    },
+    {
       target: "change_venpool",
       caption: "venous pool factor",
       type: "function",
@@ -152,6 +170,7 @@ export class Circulation {
   pvr_res_elastance_ratio = 1.0;
 
   // dependent parameters
+  coarc_change = 1.0;
   pvr_change = 1.0;
   svr_change = 1.0;
   venpool_change = 1.0;
@@ -255,6 +274,18 @@ export class Circulation {
   }
 
   calc_model() {}
+
+  change_coarc(change_forward, change_backward = -1) {
+    console.log("Change coarc with factor: ", change_forward);
+    if (change_forward > 0.0) {
+      this.coarc_change = change_forward;
+      this._model_engine.models["AA_AAR"].r_for_factor = change_forward;
+      this._model_engine.models["AA_AAR"].r_back_factor = change_forward;
+      if (change_backward >= 0.0) {
+        this._model_engine.models["AA_AAR"].r_back_factor = change_backward;
+      }
+    }
+  }
 
   change_pvr(change_forward, change_backward = -1) {
     console.log("Change pvr with factor: ", change_forward);

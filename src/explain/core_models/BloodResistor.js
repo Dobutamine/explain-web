@@ -355,7 +355,7 @@ export class BloodResistor {
 
     // calculate the diffusion only when the two have birectional connection
     if (!this.no_flow && !this.no_back_flow && this.diffusion_enabled) {
-      //this.diffusion(_r_for, _r_back);
+      this.diffusion(_r_for, _r_back);
     }
 
     // analyze the data

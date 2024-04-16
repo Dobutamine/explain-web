@@ -864,7 +864,7 @@
       "dbcTo": "AD"
     },
     "IPS": {
-      "enabled": true,
+      "enabled": false,
       "label": "IPS",
       "models": [
         "IPS"

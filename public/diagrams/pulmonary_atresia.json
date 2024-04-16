@@ -3,7 +3,7 @@
     "name": "default",
     "owner": "Timothy Antonius",
     "type": "explain_diagram",
-    "model_filename": "baseline_neonate",
+    "model_filename": "pulmonary_atresia",
     "backgroundColor": 3355443,
     "editingMode": 1,
     "scaling": 1.0,
