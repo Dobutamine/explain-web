@@ -745,11 +745,21 @@ export default defineComponent({
 
       },
       pda_controller: {
-        title: "DUCTUS ARTERIOSUS",
+        title: "SHUNTS",
         enabled: false,
         categories: {
-          properties: {
-            caption: "Properties",
+          fo: {
+            caption: "foramen ovale",
+            enabled: true,
+            advanced: false,
+          },
+          da: {
+            caption: "ductus arteriosus",
+            enabled: true,
+            advanced: false,
+          },
+          vsd: {
+            caption: "venticular septal defect",
             enabled: true,
             advanced: false,
           },
@@ -757,7 +767,7 @@ export default defineComponent({
         items: {
           da_diameter: {
             caption: "diameter",
-            category: "properties",
+            category: "da",
             enabled: true,
             advanced: false,
             linked: false,
@@ -776,7 +786,7 @@ export default defineComponent({
           },
           da_length: {
             caption: "length",
-            category: "properties",
+            category: "da",
             enabled: true,
             advanced: false,
             linked: false,
@@ -795,7 +805,7 @@ export default defineComponent({
           },
           da_el: {
             caption: "elastance (abs)",
-            category: "properties",
+            category: "da",
             enabled: true,
             advanced: true,
             linked: false,
@@ -814,7 +824,7 @@ export default defineComponent({
           },
           da_in: {
             caption: "inflow resistance (abs)",
-            category: "properties",
+            category: "da",
             enabled: true,
             advanced: true,
             linked: false,
@@ -831,6 +841,44 @@ export default defineComponent({
             max: 1000.0,
             step: 10.0
           },
+          fo_diameter: {
+            caption: "diameter",
+            category: "fo",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "number",
+            unit: "mm",
+            caller: "direct",
+            function_name: "",
+            model: "Shunts",
+            prop: "fo_diameter",
+            min: 0.0,
+            max: 5.0,
+            step: 0.1
+          },
+          vsd_diameter: {
+            caption: "diameter",
+            category: "vsd",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "number",
+            unit: "mm",
+            caller: "direct",
+            function_name: "",
+            model: "Shunts",
+            prop: "vsd_diameter",
+            min: 0.0,
+            max: 5.0,
+            step: 0.1
+          }
         }
       },
       heart_controller: {
