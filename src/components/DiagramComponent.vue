@@ -99,7 +99,7 @@ export default {
     reloadDiagram() {
       const path = "/diagrams/" + this.selected_diagram + ".json"
       const absoluteUrl = new URL(
-        path,
+        path.toString(),
         import.meta.url
       );
       console.log(absoluteUrl.toString());
@@ -125,7 +125,7 @@ export default {
     loadDiagram(filename = "default") {
       const path = "/diagrams/" + this.selected_diagram + ".json"
       const absoluteUrl = new URL(
-        path,
+        path.toString(),
         import.meta.url
       );
       console.log(absoluteUrl.toString());
