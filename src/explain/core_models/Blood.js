@@ -139,7 +139,7 @@ export class Blood {
         model.model_type === "BloodCapacitance" ||
         model.model_type === "BloodTimeVaryingElastance"
       ) {
-        if (model.is_enabled) {
+        if (model.is_enabled && model.name !== "PLM" && model.name !== "PLF") {
           // calculate the current fraction of the blood volume in this blood containing capacitance
           let current_fraction = model.vol / current_blood_volume;
           // calculate the current uvol/vol fraction
@@ -171,7 +171,7 @@ export class Blood {
         model.model_type === "BloodCapacitance" ||
         model.model_type === "BloodTimeVaryingElastance"
       ) {
-        if (model.is_enabled) {
+        if (model.is_enabled && model.name !== "PLM" && model.name !== "PLF") {
           total_volume += model.vol;
         }
       }

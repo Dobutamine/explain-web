@@ -3,7 +3,7 @@
     <div class="row justify-center">
       <q-select class="q-pa-xs q-mr-sm q-ml-sm col text-overline" v-model="selected_diagram" square
         label="selected animated model diagram" hide-hint :options="diagram_options" dense dark stack-label
-        @update:model-value="reloadDiagram" />
+        @update:model-value="reloadDiagram" :style="{ 'font-size': '14px' }" />
     </div>
 
     <div class="stage" :style="{ display: display }">
@@ -48,8 +48,8 @@ export default {
       skeletonGraphics: null,
       shortTimer: null,
       rt_running: false,
-      selected_diagram: 'default',
-      diagram_options: ['default', 'coarctatio_aortae', 'double_outlet_right_ventricle', 'term_fetus', 'hypoplastic_left_heart_syndrome', 'mitral_atresia', 'pulmonary_atresia', 'total_anomalous_venous_connection', 'transposition_of_great_arteries', 'tricuspid_atresia', 'truncus_arteriosus'],
+      selected_diagram: 'normal_neonate_24h',
+      diagram_options: ['normal_neonate_24h', 'coarctatio_aortae', 'double_outlet_right_ventricle', 'term_fetus', 'hypoplastic_left_heart_syndrome', 'mitral_atresia', 'pulmonary_atresia', 'total_anomalous_venous_connection', 'transposition_of_great_arteries', 'tricuspid_atresia', 'truncus_arteriosus'],
       selected_shunts: [],
       shunt_options: [{
         label: 'ductus arteriosus',
@@ -121,7 +121,7 @@ export default {
           console.error("Error: ", error);
         });
     },
-    loadDiagram(filename = "default") {
+    loadDiagram(filename = "normal_neonate_24h") {
       this.selected_diagram = filename
       const path = "/diagrams/" + filename + ".json"
       const absoluteUrl = new URL(

@@ -405,6 +405,36 @@
       "dbcFrom": "LA",
       "dbcTo": "LV"
     },
+    "AAR": {
+      "enabled": true,
+      "label": "",
+      "models": [
+        "AAR"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 1.5910052049446972,
+          "y": 1.1849788549121665,
+          "dgs": 355
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
     "AA": {
       "enabled": true,
       "label": "AA",
@@ -435,36 +465,7 @@
         }
       }
     },
-    "AAR": {
-      "enabled": true,
-      "label": "AAR",
-      "models": [
-        "AAR"
-      ],
-      "compType": "BloodCompartment",
-      "layout": {
-        "pos": {
-          "type": "arc",
-          "x": 1.5910052049446972,
-          "y": 1.1849788549121665,
-          "dgs": 5
-        },
-        "morph": {
-          "x": 1,
-          "y": 1
-        },
-        "scale": {
-          "x": 1,
-          "y": 1
-        },
-        "rotation": 0,
-        "text": {
-          "x": 0,
-          "y": 0,
-          "size": 10
-        }
-      }
-    },
+
     "COR": {
       "enabled": true,
       "label": "COR",
