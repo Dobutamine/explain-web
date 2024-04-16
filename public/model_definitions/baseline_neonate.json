@@ -17584,7 +17584,7 @@
       "tricuspid_valve": "RA_RV",
       "pulmonary_valve": "RV_PA",
       "aortic_valve": "LV_AA",
-      "heart_rate_ref": 110,
+      "heart_rate_ref": 125,
       "heart_rate_override": false,
       "heart_rate_forced": 60,
       "rhythm_type": 0,

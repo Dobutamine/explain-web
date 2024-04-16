@@ -14,6 +14,9 @@
             <q-tab name="respiratory_system"><q-icon name="fa-solid fa-lungs" size="xs"></q-icon><q-tooltip>edit
                 respiratory system</q-tooltip>
             </q-tab>
+            <q-tab name="other_systems"><q-icon name="fa-solid fa-bars-staggered" size="xs"></q-icon><q-tooltip>edit
+                respiratory system</q-tooltip>
+            </q-tab>
           </q-tabs>
 
           <q-tab-panels v-model="tab_left" keep-alive style="background-color: black">
@@ -47,11 +50,7 @@
                 <NiceController :config="heart_controller"></NiceController>
                 <NiceController :config="circulation_controller"></NiceController>
                 <NiceController :config="pda_controller"></NiceController>
-                <NiceController :config="metabolism_controller"></NiceController>
-                <NiceController :config="baroreflex_controller"></NiceController>
-                <NiceController :config="chemoreflex_controller"></NiceController>
-                <NiceController :config="resuscitation_controller"></NiceController>
-                <NiceController :config="placenta_controller"></NiceController>
+
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="respiratory_system">
@@ -63,6 +62,22 @@
                 opacity: 0.5
               }">
                 <NiceController :config="respiration_controller"></NiceController>
+
+              </q-scroll-area>
+            </q-tab-panel>
+            <q-tab-panel name="other_systems">
+              <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
+                right: '5px',
+                borderRadius: '5px',
+                background: 'black',
+                width: '5px',
+                opacity: 0.5
+              }">
+                <NiceController :config="metabolism_controller"></NiceController>
+                <NiceController :config="baroreflex_controller"></NiceController>
+                <NiceController :config="chemoreflex_controller"></NiceController>
+                <NiceController :config="resuscitation_controller"></NiceController>
+                <NiceController :config="placenta_controller"></NiceController>
 
               </q-scroll-area>
             </q-tab-panel>
