@@ -235,12 +235,13 @@ export default class Model {
   }
 
   loadBakedInModelDefinition(definition_name) {
-    const baseUrl = import.meta.url;
-    const relativeUrl = "/path/to/resource";
-    const absoluteUrl = new URL(relativeUrl, baseUrl);
+    const absoluteUrl = new URL(
+      `/model_definitions/${definition_name}.json`,
+      import.meta.url
+    );
 
     console.log(absoluteUrl.toString());
-    console.log(t);
+
     fetch(
       new URL(`/model_definitions/${definition_name}.json`, import.meta.url)
     )
