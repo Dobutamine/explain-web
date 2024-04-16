@@ -97,8 +97,9 @@ export default {
 
     },
     reloadDiagram() {
+      const path = "/diagrams/" + this.selected_diagram + ".json"
       const absoluteUrl = new URL(
-        "/diagrams/default.json",
+        path,
         import.meta.url
       );
       console.log(absoluteUrl.toString());
@@ -122,8 +123,9 @@ export default {
         });
     },
     loadDiagram(filename = "default") {
+      const path = "/diagrams/" + this.selected_diagram + ".json"
       const absoluteUrl = new URL(
-        "/diagrams/default.json",
+        path,
         import.meta.url
       );
       console.log(absoluteUrl.toString());
@@ -532,7 +534,7 @@ export default {
   mounted() {
     this.loadDiagram()
     this.$bus.on("state", this.processStateChanged)
-    this.$bus.on('reset', () => setTimeout(this.buildDiagram, 500))
+    this.$bus.on('reset', () => setTimeout(this.buildDiagram, 2000))
     this.$bus.on('rt_start', () => this.rt_running = true)
     this.$bus.on('rt_stop', () => this.rt_running = false)
   },
