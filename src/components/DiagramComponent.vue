@@ -103,8 +103,6 @@ export default {
         path.toString(),
         import.meta.url
       );
-      console.log(absoluteUrl.toString());
-
       fetch(absoluteUrl)
         .then((response) => {
           if (!response.ok) {
@@ -130,7 +128,6 @@ export default {
         path.toString(),
         import.meta.url
       );
-      console.log(absoluteUrl.toString());
 
       fetch(absoluteUrl)
         .then((response) => {
@@ -143,8 +140,12 @@ export default {
         })
         .then((jsonData) => {
           this.diagram = { ...jsonData }
-          this.initDiagram().then(() => this.buildDiagram())
-          this.$bus.emit('load_new_model', this.diagram.settings.model_filename)
+          this.initDiagram().then(() => {
+            this.buildDiagram()
+            this.$bus.emit('load_new_model', this.diagram.settings.model_filename)
+          }
+          )
+
         })
         .catch((error) => {
           console.error("Error: ", error);
