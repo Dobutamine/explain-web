@@ -97,9 +97,7 @@ export default {
 
     },
     reloadDiagram() {
-
-      let fn = "/diagrams/" + this.selected_diagram + ".json"
-      fetch(new URL(fn, import.meta.url))
+      fetch(new URL(`/diagrams/${this.selected_diagram}.json`, import.meta.url))
         .then((response) => {
           if (!response.ok) {
             throw new Error(
@@ -119,8 +117,7 @@ export default {
     },
     loadDiagram(filename = "default") {
 
-      let fn = "/diagrams/" + this.selected_diagram + ".json"
-      fetch(new URL(fn, import.meta.url))
+      fetch(new URL(`/diagrams/${this.selected_diagram}.json`, import.meta.url))
         .then((response) => {
           if (!response.ok) {
             throw new Error(
