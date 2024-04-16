@@ -237,7 +237,10 @@ export default class Model {
   loadBakedInModelDefinition(definition_name) {
     let fn = "/model_definitions/" + definition_name + ".json";
     console.log(import.meta.url);
-    let t = new URL(fn, import.meta.url);
+    let t = new URL(
+      `/model_definitions/${definition_name}.json`,
+      import.meta.url
+    );
     console.log(t);
     fetch(new URL(fn, import.meta.url))
       .then((response) => {
