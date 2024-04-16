@@ -243,9 +243,7 @@ export default class Model {
 
     console.log(absoluteUrl.toString());
 
-    fetch(
-      new URL(`/model_definitions/${definition_name}.json`, import.meta.url)
-    )
+    fetch(absoluteUrl)
       .then((response) => {
         if (!response.ok) {
           throw new Error(
