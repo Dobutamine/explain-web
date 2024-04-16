@@ -123,7 +123,8 @@ export default {
         });
     },
     loadDiagram(filename = "default") {
-      const path = "/diagrams/" + this.selected_diagram + ".json"
+      this.selected_diagram = filename
+      const path = "/diagrams/" + filename + ".json"
       const absoluteUrl = new URL(
         path.toString(),
         import.meta.url
