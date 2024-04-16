@@ -97,7 +97,13 @@ export default {
 
     },
     reloadDiagram() {
-      fetch(new URL(`/diagrams/${this.selected_diagram}.json`, import.meta.url))
+      const absoluteUrl = new URL(
+        "/diagrams/default.json",
+        import.meta.url
+      );
+      console.log(absoluteUrl.toString());
+
+      fetch(absoluteUrl)
         .then((response) => {
           if (!response.ok) {
             throw new Error(
@@ -116,8 +122,13 @@ export default {
         });
     },
     loadDiagram(filename = "default") {
+      const absoluteUrl = new URL(
+        "/diagrams/default.json",
+        import.meta.url
+      );
+      console.log(absoluteUrl.toString());
 
-      fetch(new URL(`/diagrams/${this.selected_diagram}.json`, import.meta.url))
+      fetch(absoluteUrl)
         .then((response) => {
           if (!response.ok) {
             throw new Error(
