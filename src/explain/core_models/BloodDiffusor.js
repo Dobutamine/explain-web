@@ -70,6 +70,8 @@ export class BloodDiffusor {
   dif_co2 = 0.01;
   dif_co2_factor = 1.0;
   dif_co2_scaling_factor = 1.0;
+  flux_o2 = 0.0;
+  flux_co2 = 0.0;
 
   // dependent parameters
 
@@ -156,6 +158,9 @@ export class BloodDiffusor {
       this.dif_co2_factor *
       this.dif_co2_scaling_factor *
       this._t;
+
+    this.flux_o2 = this._flux_o2;
+    this.flux_co2 = this._flux_co2;
 
     // calculate the new O2 and CO2 concentrations
     let new_to2_comp_blood1 =
