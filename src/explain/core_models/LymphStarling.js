@@ -1,5 +1,5 @@
-export class Lymph {
-  static model_type = "Lymph";
+export class LymphStarling {
+  static model_type = "LymphStarling";
   static model_interface = [];
   // independent parameters
   name = "";
