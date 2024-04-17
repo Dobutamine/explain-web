@@ -49,7 +49,7 @@ export default {
       shortTimer: null,
       rt_running: false,
       selected_diagram: 'normal_neonate_24h',
-      diagram_options: ['normal_neonate_24h', 'coarctatio_aortae', 'term_fetus', 'hypoplastic_left_heart_syndrome', 'mitral_atresia', 'pulmonary_atresia', 'total_anomalous_venous_connection', 'transposition_of_great_arteries', 'tricuspid_atresia'],
+      diagram_options: ['term_fetus', 'normal_neonate_24h', 'mink01', 'mink02', 'mink03', 'mink04', 'mink05', 'mink06', 'mink07'],
       selected_shunts: [],
       shunt_options: [{
         label: 'ductus arteriosus',

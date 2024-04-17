@@ -3,7 +3,7 @@
     "name": "default",
     "owner": "Timothy Antonius",
     "type": "explain_diagram",
-    "model_filename": "pulmonary_atresia",
+    "model_filename": "mink05",
     "backgroundColor": 3355443,
     "editingMode": 1,
     "scaling": 1.0,
@@ -283,7 +283,7 @@
       "dbcTo": "PV"
     },
     "PV_LA": {
-      "enabled": true,
+      "enabled": false,
       "label": "PV_LA",
       "models": [
         "PV_LA"
@@ -292,8 +292,18 @@
       "dbcFrom": "PV",
       "dbcTo": "LA"
     },
+    "PV_RA": {
+      "enabled": true,
+      "label": "",
+      "models": [
+        "PV_RA"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "PV",
+      "dbcTo": "RA"
+    },
     "RV_PA": {
-      "enabled": false,
+      "enabled": true,
       "label": "RV_PA",
       "models": [
         "RV_PA"

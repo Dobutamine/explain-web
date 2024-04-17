@@ -3,7 +3,7 @@
     "name": "default",
     "owner": "Timothy Antonius",
     "type": "explain_diagram",
-    "model_filename": "tapvc",
+    "model_filename": "mink01",
     "backgroundColor": 3355443,
     "editingMode": 1,
     "scaling": 1.0,
@@ -283,7 +283,7 @@
       "dbcTo": "PV"
     },
     "PV_LA": {
-      "enabled": false,
+      "enabled": true,
       "label": "PV_LA",
       "models": [
         "PV_LA"
@@ -291,16 +291,6 @@
       "compType": "BloodConnector",
       "dbcFrom": "PV",
       "dbcTo": "LA"
-    },
-    "PV_RA": {
-      "enabled": true,
-      "label": "",
-      "models": [
-        "PV_RA"
-      ],
-      "compType": "Shunt",
-      "dbcFrom": "PV",
-      "dbcTo": "RA"
     },
     "RV_PA": {
       "enabled": true,

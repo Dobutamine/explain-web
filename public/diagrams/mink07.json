@@ -3,7 +3,7 @@
     "name": "default",
     "owner": "Timothy Antonius",
     "type": "explain_diagram",
-    "model_filename": "hlhs",
+    "model_filename": "mink07",
     "backgroundColor": 3355443,
     "editingMode": 1,
     "scaling": 1.0,
@@ -303,7 +303,7 @@
       "dbcTo": "PA"
     },
     "RA_RV": {
-      "enabled": true,
+      "enabled": false,
       "label": "RA_RV",
       "models": [
         "RA_RV"
@@ -834,7 +834,7 @@
       "dbcTo": "BR"
     },
     "LV_AA": {
-      "enabled": false,
+      "enabled": true,
       "label": "LV_AA",
       "models": [
         "LV_AA"

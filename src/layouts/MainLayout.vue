@@ -174,7 +174,7 @@ export default defineComponent({
 
       if (this.infoMessage.includes("model ready")) {
         this.$bus.emit('reset')
-        this.rtState = false
+        this.rtState = true
         this.togglePlay()
         explain.calculate(5)
       }
