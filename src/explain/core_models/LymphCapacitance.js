@@ -102,6 +102,7 @@ export class LymphCapacitance {
   pres_cc = 0.0;
   pres_atm = 0.0;
   pres_mus = 0.0;
+  pres_osm = 0.0;
 
   act_factor = 0.0;
   ans_activity_factor = 1.0;
