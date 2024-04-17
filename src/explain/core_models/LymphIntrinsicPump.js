@@ -7,8 +7,15 @@ export class LymphIntrinsicPump {
   description = "";
   is_enabled = false;
   dependencies = [];
+  duration = 2.0; // duration of contraction
+  freq = 10.0; // frequency
+  el_rest = 20.0; // elastance at rest
+  targets = ["LT", "LD"];
 
   // dependent parameters
+  el_con = 0.0; // variable elastance simulating contraction
+  el_tot = 0.0; // total elastance
+  total_time = 0.0;
 
   // local parameters
   _model_engine = {};
@@ -46,5 +53,65 @@ export class LymphIntrinsicPump {
     }
   }
 
-  calc_model() {}
+  calc_model() {
+    this.total_time += this._t;
+
+    this.targets.forEach((target) => {
+      let t_start = 1;
+      if (this._model_engine.models[target].pacemaker) {
+        t_start = 1;
+        this._model_engine.models[target].t_start = t_start;
+      } else {
+        let act = this._model_engine.models[target].activator;
+        t_start = this._model_engine.models[act].t_start + 0.5;
+        this._model_engine.models[target].t_start = t_start;
+      }
+
+      let el_rest = this._model_engine.models[target].el_rest;
+      this._model_engine.models[target].contraction_interval = 60 / this.freq;
+
+      if (this.total_time >= t_start) {
+        this._model_engine.models[target].interval_running = true;
+        // if timer exceeds contraction duration refractory period starts
+        if (
+          this._model_engine.models[target].contraction_timer > this.duration
+        ) {
+          this._model_engine.models[target].contraction_timer = 0.0;
+          this._model_engine.models[target].contraction_running = false;
+        }
+
+        // if timer exceeds interval, new interval starts
+        if (
+          this._model_engine.models[target].interval_timer >
+          this._model_engine.models[target].contraction_interval
+        ) {
+          this._model_engine.models[target].interval_timer = 0.0;
+          this._model_engine.models[target].contraction_running = true;
+        }
+
+        let amp = this._model_engine.models[target].amp;
+        let el_con =
+          amp *
+          (0.5 *
+            (1 -
+              Math.cos(
+                ((2 * Math.PI) / this.duration) *
+                  this._model_engine.models[target].contraction_timer
+              )));
+        // el_con = amp * math.sin(2*math.pi/(2*this.duration) * (this._model.models[targets].contraction_timer))
+        this._model_engine.models[target].el_con = el_con;
+        let el_tot = el_rest + el_con;
+        this._model_engine.models[target].el_base = el_tot;
+      }
+
+      // increase the timers
+      if (this._model_engine.models[target].interval_running) {
+        this._model_engine.models[target].interval_timer += this._t;
+      }
+
+      if (this._model_engine.models[target].contraction_running) {
+        this._model_engine.models[target].contraction_timer += this._t;
+      }
+    });
+  }
 }

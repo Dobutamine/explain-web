@@ -31,6 +31,13 @@ export class LymphStarling {
   _model_comp_to = {};
   _is_initialized = false;
   _t = 0.0005;
+  _cum_forward_flow = 0.0;
+  _cum_backward_flow = 0.0;
+  _flow_counter = 0.0;
+  _flow_mov_avg_counter = 0.0;
+  _alpha = 0.05;
+  _analytics_timer = 0.0;
+  _analytics_window = 2.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -100,8 +107,65 @@ export class LymphStarling {
 
     // calculate transcapillary flow
     this.flow = this.L * this.S * (hP1 - hP2 - this.sigma * (oP1 - oP2));
+    console.log(this.oP1);
 
     this.flow_h = this.L * this.S * (hP1 - hP2);
     this.flow_o = -(this.L * this.S * this.sigma * (oP1 - oP2));
+
+    // analyze the data
+    this.analyze();
+
+    let vol_not_removed = 0.0;
+    // now update the volumes of the model components which are connected by this resistor
+    if (this.flow > 0) {
+      this._cum_forward_flow += this.flow * this._t;
+      // flow is from comp_from to comp_to
+      vol_not_removed = this._model_comp_from.volume_out(this.flow * this._t);
+      // if not all volume can be removed from the model component then transfer the remaining volume to the other model component
+      // this is undesirable but it is better than having a negative volume
+      this._model_comp_to.volume_in(
+        this.flow * this._t - vol_not_removed,
+        this._model_comp_from
+      );
+      return;
+    }
+
+    if (this.flow < 0) {
+      this._cum_backward_flow += this.flow * this._t;
+      // flow is from comp_to to comp_from
+      vol_not_removed = this._model_comp_to.volume_out(-this.flow * this._t);
+      // if not all volume can be removed from the model component then transfer the remaining volume to the other model component
+      // this is undesirable but it is better than having a negative volume
+      this._model_comp_from.volume_in(
+        -this.flow * this._t - vol_not_removed,
+        this._model_comp_to
+      );
+      return;
+    }
+  }
+
+  analyze() {
+    this._flow_counter += this._t;
+    this._analytics_timer += this._t;
+
+    if (this._analytics_timer > this._analytics_window) {
+      this._analytics_timer = 0.0;
+      this.flow_forward_lmin =
+        (this._cum_forward_flow / this._flow_counter) * 60.0;
+      this.flow_backward_lmin =
+        (this._cum_backward_flow / this._flow_counter) * 60.0;
+      this.flow_lmin = this.flow_forward_lmin + this.flow_backward_lmin;
+      this._cum_forward_flow = 0.0;
+      this._cum_backward_flow = 0.0;
+      this._flow_counter = 0.0;
+
+      // prevent startup avergaing problems
+      this._flow_mov_avg_counter += 1;
+      if (this._flow_mov_avg_counter > 5) {
+        this._flow_mov_avg_counter = 5;
+        this.flow_lmin_avg =
+          this._alpha * this.flow_lmin + (1 - this._alpha) * this.flow_lmin_avg;
+      }
+    }
   }
 }

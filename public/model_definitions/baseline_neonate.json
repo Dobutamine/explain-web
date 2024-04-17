@@ -75,7 +75,7 @@
       "description": "interstitial space to lymphatic trunk",
       "model_type": "LymphResistor",
       "is_enabled": true,
-      "no_flow": false,
+      "no_flow": true,
       "no_back_flow": true,
       "comp_from": "IS",
       "comp_to": "LT",

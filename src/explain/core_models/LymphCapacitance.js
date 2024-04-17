@@ -92,6 +92,7 @@ export class LymphCapacitance {
   dependencies = [];
   fixed_composition = false;
   u_vol = 0.0;
+  el_rest = 0.0;
   el_base = 0.0;
   el_k = 0.0;
   solutes = {};
@@ -121,6 +122,16 @@ export class LymphCapacitance {
   el_k_ans_factor = 1.0;
   el_k_drug_factor = 1.0;
   el_k_scaling_factor = 1.0;
+
+  t_start = 0.0;
+  pacemaker = false;
+  activator = {};
+  contraction_timer = 0.0;
+  interval_timer = 0.0;
+  contraction_running = false;
+  interval_running = false;
+
+  contraction_interval = 12.0;
 
   // dependent parameters
   vol = 0.0;

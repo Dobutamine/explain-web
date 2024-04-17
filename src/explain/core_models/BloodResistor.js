@@ -358,9 +358,6 @@ export class BloodResistor {
       this.diffusion(_r_for, _r_back);
     }
 
-    // analyze the data
-    this.analyze();
-
     let vol_not_removed = 0.0;
     // now update the volumes of the model components which are connected by this resistor
     if (this.flow > 0) {

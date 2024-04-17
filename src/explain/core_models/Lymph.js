@@ -36,6 +36,16 @@ export class Lymph {
     // set the modeling step size
     this._t = this._model_engine.modeling_stepsize;
 
+    // set the aboxy and solutes
+    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+      if (model.model_type === "LymphCapacitance") {
+        if (!model.aboxy) {
+          model.aboxy = { ...this.aboxy };
+          model.solutes = { ...this.solutes };
+        }
+      }
+    }
+
     // set the flag to model is initialized
     this._is_initialized = true;
   }
