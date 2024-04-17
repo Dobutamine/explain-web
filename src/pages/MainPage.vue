@@ -803,7 +803,7 @@ export default defineComponent({
             caption: "length",
             category: "da",
             enabled: true,
-            advanced: false,
+            advanced: true,
             linked: false,
             link_button: false,
             linked_caption: "",
