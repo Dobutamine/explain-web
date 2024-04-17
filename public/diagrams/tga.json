@@ -3,7 +3,7 @@
     "name": "default",
     "owner": "Timothy Antonius",
     "type": "explain_diagram",
-    "model_filename": "mink03",
+    "model_filename": "tga",
     "backgroundColor": 3355443,
     "editingMode": 1,
     "scaling": 1.0,
@@ -292,16 +292,6 @@
       "dbcFrom": "PV",
       "dbcTo": "LA"
     },
-    "RV_PA": {
-      "enabled": true,
-      "label": "RV_PA",
-      "models": [
-        "RV_PA"
-      ],
-      "compType": "BloodConnector",
-      "dbcFrom": "RV",
-      "dbcTo": "PA"
-    },
     "RA_RV": {
       "enabled": true,
       "label": "RA_RV",
@@ -326,7 +316,7 @@
       "enabled": true,
       "label": "AA",
       "models": [
-        "AA"
+        "AA", "AAR"
       ],
       "compType": "BloodCompartment",
       "layout": {
@@ -334,37 +324,7 @@
           "type": "arc",
           "x": 1.5910052049446972,
           "y": 1.1849788549121665,
-          "dgs": 350
-        },
-        "morph": {
-          "x": 1,
-          "y": 1
-        },
-        "scale": {
-          "x": 1,
-          "y": 1
-        },
-        "rotation": 0,
-        "text": {
-          "x": 0,
-          "y": 0,
-          "size": 10
-        }
-      }
-    },
-    "AAR": {
-      "enabled": true,
-      "label": "AAR",
-      "models": [
-        "AAR"
-      ],
-      "compType": "BloodCompartment",
-      "layout": {
-        "pos": {
-          "type": "arc",
-          "x": 1.5910052049446972,
-          "y": 1.1849788549121665,
-          "dgs": 5
+          "dgs": 10
         },
         "morph": {
           "x": 1,
@@ -683,6 +643,16 @@
         }
       }
     },
+    "RV_AA": {
+      "enabled": true,
+      "label": "",
+      "models": [
+        "RV_AA"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "RV",
+      "dbcTo": "AA"
+    },
     "AD_RLB": {
       "enabled": true,
       "label": "AD_RLB",
@@ -833,38 +803,28 @@
       "dbcFrom": "AA",
       "dbcTo": "BR"
     },
-    "LV_AA": {
-      "enabled": false,
-      "label": "LV_AA",
+    "LV_PA": {
+      "enabled": true,
+      "label": "",
       "models": [
-        "LV_AA"
+        "LV_PA"
       ],
-      "compType": "BloodConnector",
+      "compType": "Shunt",
       "dbcFrom": "LV",
-      "dbcTo": "AA"
+      "dbcTo": "PA"
     },
     "AA_AAR": {
       "enabled": true,
       "label": "AA_AAR",
       "models": [
-        "AA_AAR"
+        "AA_AAR", "AAR_AD"
       ],
       "compType": "BloodConnector",
       "dbcFrom": "AA",
-      "dbcTo": "AAR"
-    },
-    "AAR_AD": {
-      "enabled": true,
-      "label": "AAR_AD",
-      "models": [
-        "AAR_AD"
-      ],
-      "compType": "BloodConnector",
-      "dbcFrom": "AAR",
       "dbcTo": "AD"
     },
     "IPS": {
-      "enabled": false,
+      "enabled": true,
       "label": "IPS",
       "models": [
         "IPS"
@@ -880,7 +840,7 @@
         "DA_OUT"
       ],
       "compType": "Shunt",
-      "dbcFrom": "AAR",
+      "dbcFrom": "AA",
       "dbcTo": "PA"
     },
     "FO": {

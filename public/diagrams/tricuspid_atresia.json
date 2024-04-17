@@ -3,7 +3,7 @@
     "name": "default",
     "owner": "Timothy Antonius",
     "type": "explain_diagram",
-    "model_filename": "mink02",
+    "model_filename": "tricuspid_atresia",
     "backgroundColor": 3355443,
     "editingMode": 1,
     "scaling": 1.0,
@@ -293,7 +293,7 @@
       "dbcTo": "LA"
     },
     "RV_PA": {
-      "enabled": false,
+      "enabled": true,
       "label": "RV_PA",
       "models": [
         "RV_PA"
@@ -303,7 +303,7 @@
       "dbcTo": "PA"
     },
     "RA_RV": {
-      "enabled": true,
+      "enabled": false,
       "label": "RA_RV",
       "models": [
         "RA_RV"

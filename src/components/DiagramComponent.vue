@@ -2,8 +2,8 @@
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
     <div class="row justify-center">
       <q-select class="q-pa-xs q-mr-sm q-ml-sm col text-overline" v-model="selected_diagram" square
-        label="selected animated model diagram" hide-hint :options="diagram_options" dense dark stack-label
-        @update:model-value="reloadDiagram" :style="{ 'font-size': '14px' }" />
+        label="selected condition" hide-hint :options="conditions" dense dark stack-label
+        @update:model-value="reloadDiagram" :style="{ 'font-size': '16px' }" />
     </div>
 
     <div class="stage" :style="{ display: display }">
@@ -48,8 +48,46 @@ export default {
       skeletonGraphics: null,
       shortTimer: null,
       rt_running: false,
-      selected_diagram: 'normal_neonate_24h',
-      diagram_options: ['term_fetus', 'normal_neonate_24h', 'mink01', 'mink02', 'mink03', 'mink04', 'mink05', 'mink06', 'mink07'],
+      conditions: ["normal neonate at 24h", "fetus at term", "coarctatio aortae", "pulmonary atresia", "hypoplastic left heart syndrome", "transposition of the great arteries", "total anomalous pulmonary venous connection", "mitral valve atresia", "tricuspid valve atresia"],
+      condition_filenames: [
+        {
+          name: "normal neonate at 24h",
+          filename: "normal_neonate_24h"
+        },
+        {
+          name: "fetus at term",
+          filename: "term_fetus"
+        },
+        {
+          name: "coarctatio aortae",
+          filename: "coarctatio_aortae"
+        },
+        {
+          name: "pulmonary atresia",
+          filename: "pulmonary_atresia"
+        },
+        {
+          name: "hypoplastic left heart syndrome",
+          filename: "hlhs"
+        },
+        {
+          name: "transposition of the great arteries",
+          filename: "tga"
+        },
+        {
+          name: "total anomalous pulmonary venous connection",
+          filename: "tapvc"
+        },
+        {
+          name: "mitral valve atresia",
+          filename: "mitral_atresia"
+        },
+        {
+          name: "tricuspid valve atresia",
+          filename: "tricuspid_atresia"
+        }
+      ],
+      selected_diagram: 'normal neonate at 24h',
       selected_shunts: [],
       shunt_options: [{
         label: 'ductus arteriosus',
@@ -98,7 +136,8 @@ export default {
 
     },
     reloadDiagram() {
-      const path = "/diagrams/" + this.selected_diagram + ".json"
+      let fn = this.findDiagramFilename(this.selected_diagram)
+      const path = "/diagrams/" + fn + ".json"
       const absoluteUrl = new URL(
         path.toString(),
         import.meta.url
@@ -121,9 +160,19 @@ export default {
           console.error("Error: ", error);
         });
     },
-    loadDiagram(filename = "normal_neonate_24h") {
-      this.selected_diagram = filename
-      const path = "/diagrams/" + filename + ".json"
+    findDiagramFilename(condition) {
+      let filename = "normal_neonate_24h"
+      this.condition_filenames.forEach(c => {
+        if (condition == c.name) {
+          filename = c.filename
+        }
+      })
+      return filename
+    },
+    loadDiagram(filename = "normal neonate at 24h") {
+      let fn = this.findDiagramFilename(filename)
+      console.log(fn)
+      const path = "/diagrams/" + fn + ".json"
       const absoluteUrl = new URL(
         path.toString(),
         import.meta.url

@@ -3,7 +3,7 @@
     "name": "default",
     "owner": "Timothy Antonius",
     "type": "explain_diagram",
-    "model_filename": "mink05",
+    "model_filename": "coarctatio_aortae",
     "backgroundColor": 3355443,
     "editingMode": 1,
     "scaling": 1.0,
@@ -283,7 +283,7 @@
       "dbcTo": "PV"
     },
     "PV_LA": {
-      "enabled": false,
+      "enabled": true,
       "label": "PV_LA",
       "models": [
         "PV_LA"
@@ -291,16 +291,6 @@
       "compType": "BloodConnector",
       "dbcFrom": "PV",
       "dbcTo": "LA"
-    },
-    "PV_RA": {
-      "enabled": true,
-      "label": "",
-      "models": [
-        "PV_RA"
-      ],
-      "compType": "Shunt",
-      "dbcFrom": "PV",
-      "dbcTo": "RA"
     },
     "RV_PA": {
       "enabled": true,
@@ -854,7 +844,7 @@
       "dbcTo": "AA"
     },
     "AA_AAR": {
-      "enabled": true,
+      "enabled": false,
       "label": "AA_AAR",
       "models": [
         "AA_AAR"

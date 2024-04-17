@@ -3,7 +3,7 @@
     "name": "default",
     "owner": "Timothy Antonius",
     "type": "explain_diagram",
-    "model_filename": "mink06",
+    "model_filename": "pulmonary_atresia",
     "backgroundColor": 3355443,
     "editingMode": 1,
     "scaling": 1.0,
@@ -293,7 +293,7 @@
       "dbcTo": "LA"
     },
     "RV_PA": {
-      "enabled": true,
+      "enabled": false,
       "label": "RV_PA",
       "models": [
         "RV_PA"
@@ -313,7 +313,7 @@
       "dbcTo": "RV"
     },
     "LA_LV": {
-      "enabled": false,
+      "enabled": true,
       "label": "LA_LV",
       "models": [
         "LA_LV"

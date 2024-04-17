@@ -3,7 +3,7 @@
     "name": "default",
     "owner": "Timothy Antonius",
     "type": "explain_diagram",
-    "model_filename": "mink07",
+    "model_filename": "mitral_atresia",
     "backgroundColor": 3355443,
     "editingMode": 1,
     "scaling": 1.0,
@@ -303,7 +303,7 @@
       "dbcTo": "PA"
     },
     "RA_RV": {
-      "enabled": false,
+      "enabled": true,
       "label": "RA_RV",
       "models": [
         "RA_RV"
@@ -313,7 +313,7 @@
       "dbcTo": "RV"
     },
     "LA_LV": {
-      "enabled": true,
+      "enabled": false,
       "label": "LA_LV",
       "models": [
         "LA_LV"
