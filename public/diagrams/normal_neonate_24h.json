@@ -465,7 +465,6 @@
         }
       }
     },
-
     "COR": {
       "enabled": true,
       "label": "COR",
@@ -796,6 +795,136 @@
           "size": 10
         }
       }
+    },
+    "IS": {
+      "enabled": true,
+      "label": "IS",
+      "models": [
+        "IS"
+      ],
+      "compType": "LymphCompartment",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.35,
+          "y": 0.35,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "LT": {
+      "enabled": true,
+      "label": "LT",
+      "models": [
+        "LT"
+      ],
+      "compType": "LymphCompartment",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.0,
+          "y": 0.35,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "LD": {
+        "enabled": true,
+        "label": "LD",
+        "models": [
+          "LD"
+        ],
+        "compType": "LymphCompartment",
+        "layout": {
+          "pos": {
+            "type": "rel",
+            "x": -0.35,
+            "y": 0.35,
+            "dgs": 0
+          },
+          "morph": {
+            "x": 1,
+            "y": 1
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0
+          },
+          "rotation": 0,
+          "text": {
+            "x": 0,
+            "y": 0,
+            "size": 10
+          }
+        }
+    },
+    "IS_LT": {
+      "enabled": true,
+      "label": "IS_LT",
+      "models": [
+        "IS_LT"
+      ],
+      "compType": "LymphConnector",
+      "dbcFrom": "IS",
+      "dbcTo": "LT"
+    },
+    "LT_LD": {
+      "enabled": true,
+      "label": "LT_LD",
+      "models": [
+        "LT_LD"
+      ],
+      "compType": "LymphConnector",
+      "dbcFrom": "LT",
+      "dbcTo": "LD"
+    },
+    "LD_SVC": {
+      "enabled": true,
+      "label": "LD_SVC",
+      "models": [
+        "LD_SVC"
+      ],
+      "compType": "LymphConnector",
+      "dbcFrom": "LD",
+      "dbcTo": "SVC"
+    },
+    "LS_IS": {
+      "enabled": true,
+      "label": "LS_IS",
+      "models": [
+        "LS_IS"
+      ],
+      "compType": "LymphConnector",
+      "dbcFrom": "LS",
+      "dbcTo": "IS"
     },
     "AD_RLB": {
       "enabled": true,

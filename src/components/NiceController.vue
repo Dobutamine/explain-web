@@ -251,7 +251,7 @@ export default {
       switch (controller.type) {
         case "factor":
           controller.model_value = this.translateSliderToValue(controller.slider_value)
-          controller.display_value = controller.model_value.toFixed(2)
+          controller.display_value = controller.model_value.toFixed(controller.rounding)
           let target_factor = controller.model + "." + controller.prop
           if (controller.caller == 'direct') {
             explain.setPropValue(target_factor, controller.model_value, 0.0)
@@ -278,7 +278,7 @@ export default {
           break;
         case "number":
           controller.model_value = controller.slider_value
-          controller.display_value = controller.model_value.toFixed(2)
+          controller.display_value = controller.model_value.toFixed(controller.rounding)
           let target_number = controller.model + "." + controller.prop
           if (controller.caller == 'direct') {
             explain.setPropValue(target_number, controller.model_value, 0.0)
@@ -352,12 +352,12 @@ export default {
             case 'factor':
               controller.model_value = explain.modelState.models[controller.model][controller.prop]
               controller.slider_value = this.translateValueToSlider(controller.model_value)
-              controller.display_value = controller.model_value.toFixed(2)
+              controller.display_value = controller.model_value.toFixed(controller.rounding)
               break;
             case 'number':
               controller.model_value = explain.modelState.models[controller.model][controller.prop]
               controller.slider_value = controller.model_value
-              controller.display_value = controller.model_value.toFixed(2)
+              controller.display_value = controller.model_value.toFixed(controller.rounding)
               break;
             case 'boolean':
               controller.model_value = explain.modelState.models[controller.model][controller.prop]
@@ -387,6 +387,9 @@ export default {
       item['model_value'] = 0.0
       item['slider_value'] = 0.0
       item['display_value'] = 0.0
+      if (!item['rounding']) {
+        item['rounding'] = 1.0
+      }
     })
   },
 };

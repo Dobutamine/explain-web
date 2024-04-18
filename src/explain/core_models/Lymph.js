@@ -39,7 +39,7 @@ export class Lymph {
     // set the aboxy and solutes
     for (let [model_name, model] of Object.entries(this._model_engine.models)) {
       if (model.model_type === "LymphCapacitance") {
-        if (!model.aboxy) {
+        if (Object.keys(model.aboxy).length < 1) {
           model.aboxy = { ...this.aboxy };
           model.solutes = { ...this.solutes };
         }

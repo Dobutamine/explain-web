@@ -22,11 +22,14 @@
 import { explain } from "../boot/explain";
 import { PIXI } from "../boot/pixi";
 import BloodCompartment from "./ui_elements/BloodCompartment";
+import LymphCompartment from "./ui_elements/LymphCompartment";
 import GasCompartment from "./ui_elements/GasCompartment";
 import BloodConnector from "./ui_elements/BloodConnector";
+import LymphConnector from "./ui_elements/LymphConnector";
 import GasConnector from "./ui_elements/GasConnector";
 import GasExchanger from "./ui_elements/GasExchanger";
 import Shunt from "./ui_elements/Shunt";
+import { LymphCapacitance } from "src/explain/ModelIndex";
 
 let canvas = null;
 export default {
@@ -375,6 +378,27 @@ export default {
                 global_scaling
               );
               break;
+            case "LymphCompartment":
+              this.diagramComponents[key] = new LymphCompartment(
+                this.pixiApp,
+                key,
+                component.label,
+                component.models,
+                component.layout,
+                xCenter,
+                yCenter,
+                xOffset,
+                yOffset,
+                radius,
+                component.compPicto,
+                global_scaling
+              );
+              let watched_models_lc = []
+              component.models.forEach(m => {
+                watched_models_lc.push(m + ".vol")
+              })
+              explain.watchModelProps(watched_models_lc)
+              break;
             case "BloodCompartment":
               this.diagramComponents[key] = new BloodCompartment(
                 this.pixiApp,
@@ -436,6 +460,24 @@ export default {
                 watched_models_bcon.push(m + ".flow")
               })
               explain.watchModelProps(watched_models_bcon)
+              break;
+            case "LymphConnector":
+              this.diagramComponents[key] = new LymphConnector(
+                this.pixiApp,
+                key,
+                component.label,
+                component.models,
+                this.diagramComponents[component.dbcFrom],
+                this.diagramComponents[component.dbcTo],
+                {},
+                component.compPicto,
+                global_scaling
+              );
+              let watched_models_lcon = []
+              component.models.forEach(m => {
+                watched_models_lcon.push(m + ".flow")
+              })
+              explain.watchModelProps(watched_models_lcon)
               break;
             case "Shunt":
               this.diagramComponents[key] = new Shunt(

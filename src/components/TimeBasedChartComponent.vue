@@ -260,6 +260,39 @@ export default {
       presetNames: [],
       newPresetName: "",
       presets: {
+        "Lymph volumes": {
+          props: ["LD.vol", "LT.vol"],
+          autoscale: true,
+          y_min: 0.05,
+          y_max: 0.20,
+          factors: false,
+          fill: false,
+          chart1_factor: 1.0,
+          chart2_factor: 1.0,
+          chart3_factor: 1.0
+        },
+        "Lymph flows": {
+          props: ["LD_SVC.flow", "LT_LD.flow", "IS_LT.flow"],
+          autoscale: true,
+          y_min: 0.05,
+          y_max: 0.20,
+          factors: false,
+          fill: false,
+          chart1_factor: 1.0,
+          chart2_factor: 1.0,
+          chart3_factor: 1.0
+        },
+        "Lymph pressures": {
+          props: ["LD.pres", "LT.pres", "SVC.pres"],
+          autoscale: true,
+          y_min: 0.05,
+          y_max: 0.20,
+          factors: false,
+          fill: false,
+          chart1_factor: 1.0,
+          chart2_factor: 1.0,
+          chart3_factor: 1.0
+        },
         "Brain flow": {
           props: ["AA_BR.flow_lmin_avg"],
           autoscale: false,

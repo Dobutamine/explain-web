@@ -107,7 +107,6 @@ export class LymphStarling {
 
     // calculate transcapillary flow
     this.flow = this.L * this.S * (hP1 - hP2 - this.sigma * (oP1 - oP2));
-    console.log(this.oP1);
 
     this.flow_h = this.L * this.S * (hP1 - hP2);
     this.flow_o = -(this.L * this.S * this.sigma * (oP1 - oP2));

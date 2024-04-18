@@ -215,7 +215,7 @@ export class LymphResistor {
   _cum_backward_flow = 0.0;
   _flow_counter = 0.0;
   _analytics_timer = 0.0;
-  _analytics_window = 10.0;
+  _analytics_window = 60.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -343,7 +343,7 @@ export class LymphResistor {
 
     // calculate the diffusion only when the two have birectional connection
     if (!this.no_flow && !this.no_back_flow && this.diffusion_enabled) {
-      this.diffusion(_r_for, _r_back);
+      //this.diffusion(_r_for, _r_back);
     }
 
     // analyze the data
@@ -448,10 +448,7 @@ export class LymphResistor {
   analyze() {
     this._flow_counter += this._t;
     this._analytics_timer += this._t;
-    if (
-      this._heart.ncc_ventricular === 1 &&
-      this._analytics_timer > this._analytics_window
-    ) {
+    if (this._analytics_timer > this._analytics_window) {
       this._analytics_timer = 0.0;
       this.flow_forward_lmin =
         (this._cum_forward_flow / this._flow_counter) * 60.0;

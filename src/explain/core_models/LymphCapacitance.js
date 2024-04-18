@@ -145,6 +145,7 @@ export class LymphCapacitance {
   pres_max = 0.0;
   pres_min = 0.0;
   pres_mean = 0.0;
+  albumin = 0.0;
 
   // local parameters
   _model_engine = {};
@@ -242,6 +243,9 @@ export class LymphCapacitance {
     // calculate the total pressure
     this.pres = this.pres_in + this.pres_out;
 
+    // store albumin for interfacing
+    this.albumin = this.aboxy["albumin"];
+
     // analyze the pressures and volume
     this.analyze();
 
@@ -268,10 +272,7 @@ export class LymphCapacitance {
 
     this._analytics_timer += this._t;
     // set the max and min pressures
-    if (
-      this._heart.ncc_ventricular === 1 ||
-      this._analytics_timer > this._analytics_window
-    ) {
+    if (this._analytics_timer > this._analytics_window) {
       this._analytics_timer = 0.0;
       this.pres_max = this._temp_pres_max;
       this.pres_min = this._temp_pres_min;
