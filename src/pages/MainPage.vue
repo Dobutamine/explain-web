@@ -410,6 +410,15 @@ export default defineComponent({
             { label: "Mv", unit: "ml/kg/min", factor: 1000.0, rounding: 0, props: ["Breathing.minute_volume"], weight_based: true },
           ]
         },
+        resp_numerics: {
+          title: "LYMPHATICS",
+          collapsed: true,
+          parameters: [
+            { label: "is flow", unit: "ml/kg/min", factor: 1000, rounding: 2, props: ["Lymph.is_flow"], weight_based: true },
+            { label: "duct flow", unit: "ml/kg/min", factor: 1000.0, rounding: 2, props: ["LD_SVC.flow_lmin"], weight_based: true },
+            { label: "is pres", unit: "mmHg", factor: 1.0, rounding: 1, props: ["IS.pres"], weight_based: false },
+          ]
+        },
         vent_numerics: {
           title: "VENTILATOR",
           collapsed: true,
