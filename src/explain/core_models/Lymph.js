@@ -7,13 +7,32 @@ export class Lymph {
   description = "";
   is_enabled = false;
   dependencies = [];
+  capacitances = [
+    "INT_IS",
+    "KID_IS",
+    "RLB_IS",
+    "LS_IS",
+    "RUB_IS",
+    "LL_IS",
+    "RL_IS",
+  ];
 
   // dependent parameters
+  is_flow = 0.0;
+  is_lt_flow = 0.0;
+  lt_ld_flow = 0.0;
+  ld_svc_flow = 0.0;
 
   // local parameters
   _model_engine = {};
   _is_initialized = false;
   _t = 0.0005;
+  _analysis_counter = 0.0;
+  _analysis_interval = 2.0;
+  _cum_is_flow = 0.0;
+  _cum_is_lt_flow = 0.0;
+  _cum_lt_ld_flow = 0.0;
+  _cum_ld_svc_flow = 0.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -45,7 +64,6 @@ export class Lymph {
         }
       }
     }
-
     // set the flag to model is initialized
     this._is_initialized = true;
   }
@@ -56,5 +74,28 @@ export class Lymph {
     }
   }
 
-  calc_model() {}
+  calc_model() {
+    if (this._analysis_counter > this._analysis_interval) {
+      this.is_flow = (this._cum_is_flow / this._analysis_counter) * 60.0;
+      this.is_lt_flow = (this._cum_is_lt_flow / this._analysis_counter) * 60.0;
+      this.lt_ld_flow = (this._cum_lt_ld_flow / this._analysis_counter) * 60.0;
+      this.ld_svc_flow =
+        (this._cum_ld_svc_flow / this._analysis_counter) * 60.0;
+
+      this._cum_is_flow = 0.0;
+      this._cum_is_lt_flow = 0.0;
+      this._cum_lt_ld_flow = 0.0;
+      this._cum_ld_svc_flow = 0.0;
+
+      this._analysis_counter = 0.0;
+    }
+    this.capacitances.forEach((cap) => {
+      this._cum_is_flow += this._model_engine.models[cap].flow * this._t;
+    });
+    this._cum_is_lt_flow += this._model_engine.models["IS_LT"].flow * this._t;
+    this._cum_lt_ld_flow += this._model_engine.models["LT_LD"].flow * this._t;
+    this._cum_ld_svc_flow += this._model_engine.models["LD_SVC"].flow * this._t;
+
+    this._analysis_counter += this._t;
+  }
 }

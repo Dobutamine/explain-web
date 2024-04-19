@@ -21,6 +21,7 @@
       "is_enabled": true,
       "dependencies": [],
       "fixed_composition": false,
+      "vol": 0.897,
       "u_vol": 0.9,
       "el_rest": 0,
       "el_base": 1000,
@@ -65,11 +66,10 @@
       "contraction_running": false,
       "interval_running": false,
       "contraction_interval": 12,
-      "vol": 0.9011114367875797,
       "vol_max": 0.9011429785171139,
       "vol_min": 0.9011298540350707,
       "vol_sv": 0.000013124482043158636,
-      "pres": 1.111433265798767,
+      "pres": -3,
       "pres_in": 1.111433265798767,
       "pres_out": 0,
       "pres_tm": 1.111433265798767,
@@ -77,89 +77,6 @@
       "pres_min": 1.1298540350707098,
       "pres_mean": 1.1342288624184294,
       "albumin": 6,
-      "model_interface": [
-        {
-          "target": "is_enabled",
-          "caption": "is enabled",
-          "type": "boolean",
-          "optional": true
-        },
-        {
-          "target": "fixed_composition",
-          "caption": "fixed composition",
-          "type": "boolean",
-          "optional": true
-        },
-        {
-          "target": "u_vol",
-          "caption": "unstressed volume (l)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 0.0001,
-          "rounding": 4,
-          "ul": 100000000,
-          "ll": -10000000
-        },
-        {
-          "target": "u_vol_factor",
-          "caption": "unstressed volume factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0
-        },
-        {
-          "target": "el_base",
-          "caption": "baseline elastance (mmHg/l)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 1,
-          "rounding": 0,
-          "ul": 100000000,
-          "ll": 1
-        },
-        {
-          "target": "el_base_factor",
-          "caption": "baseline elastance factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0
-        },
-        {
-          "target": "el_k",
-          "caption": "non-linear elastance (mmHg/l^2)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 1,
-          "rounding": 0,
-          "ul": 100000000,
-          "ll": 0
-        },
-        {
-          "target": "el_k_factor",
-          "caption": "non-linear elastance factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0
-        }
-      ],
       "amp": 0
     },
     "LT": {
@@ -169,9 +86,10 @@
       "is_enabled": true,
       "dependencies": [],
       "fixed_composition": false,
+      "vol": 0.0044,
       "u_vol": 0.005,
-      "el_rest": 10000,
-      "el_base": 10000,
+      "el_rest": 5000,
+      "el_base": 5000,
       "el_k": 0,
       "solutes": {
         "na": 138,
@@ -213,7 +131,6 @@
       "contraction_running": false,
       "interval_running": true,
       "contraction_interval": 6,
-      "vol": 0.005111140157894473,
       "vol_max": 0.005114294367607212,
       "vol_min": 0.0051129820238230966,
       "vol_sv": 0.0000013123437841155994,
@@ -225,90 +142,7 @@
       "pres_min": 1.1298202382309646,
       "pres_mean": 1.1341947175113498,
       "albumin": 6,
-      "model_interface": [
-        {
-          "target": "is_enabled",
-          "caption": "is enabled",
-          "type": "boolean",
-          "optional": true
-        },
-        {
-          "target": "fixed_composition",
-          "caption": "fixed composition",
-          "type": "boolean",
-          "optional": true
-        },
-        {
-          "target": "u_vol",
-          "caption": "unstressed volume (l)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 0.0001,
-          "rounding": 4,
-          "ul": 100000000,
-          "ll": -10000000
-        },
-        {
-          "target": "u_vol_factor",
-          "caption": "unstressed volume factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0
-        },
-        {
-          "target": "el_base",
-          "caption": "baseline elastance (mmHg/l)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 1,
-          "rounding": 0,
-          "ul": 100000000,
-          "ll": 1
-        },
-        {
-          "target": "el_base_factor",
-          "caption": "baseline elastance factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0
-        },
-        {
-          "target": "el_k",
-          "caption": "non-linear elastance (mmHg/l^2)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 1,
-          "rounding": 0,
-          "ul": 100000000,
-          "ll": 0
-        },
-        {
-          "target": "el_k_factor",
-          "caption": "non-linear elastance factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0
-        }
-      ],
-      "amp": 15000,
+      "amp": 7500.0,
       "el_con": 0
     },
     "LD": {
@@ -318,6 +152,7 @@
       "is_enabled": true,
       "dependencies": [],
       "fixed_composition": false,
+      "vol": 0.0057,
       "u_vol": 0.005,
       "el_rest": 10000,
       "el_base": 10000,
@@ -362,7 +197,6 @@
       "contraction_running": false,
       "interval_running": true,
       "contraction_interval": 6,
-      "vol": 0.005731719996327497,
       "vol_max": 0.005723706828169402,
       "vol_min": 0.005722769589788162,
       "vol_sv": 9.372383812404281e-7,
@@ -374,90 +208,7 @@
       "pres_min": 3.4700740375923957,
       "pres_mean": 3.8310873732107473,
       "albumin": 6,
-      "model_interface": [
-        {
-          "target": "is_enabled",
-          "caption": "is enabled",
-          "type": "boolean",
-          "optional": true
-        },
-        {
-          "target": "fixed_composition",
-          "caption": "fixed composition",
-          "type": "boolean",
-          "optional": true
-        },
-        {
-          "target": "u_vol",
-          "caption": "unstressed volume (l)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 0.0001,
-          "rounding": 4,
-          "ul": 100000000,
-          "ll": -10000000
-        },
-        {
-          "target": "u_vol_factor",
-          "caption": "unstressed volume factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0
-        },
-        {
-          "target": "el_base",
-          "caption": "baseline elastance (mmHg/l)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 1,
-          "rounding": 0,
-          "ul": 100000000,
-          "ll": 1
-        },
-        {
-          "target": "el_base_factor",
-          "caption": "baseline elastance factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0
-        },
-        {
-          "target": "el_k",
-          "caption": "non-linear elastance (mmHg/l^2)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 1,
-          "rounding": 0,
-          "ul": 100000000,
-          "ll": 0
-        },
-        {
-          "target": "el_k_factor",
-          "caption": "non-linear elastance factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0
-        }
-      ],
-      "amp": 15000,
+      "amp": 7500.0,
       "el_con": 0
     },
     "LymphIntrinsicPump": {
@@ -514,172 +265,7 @@
       "flux_o2": 0,
       "flux_co2": 0,
       "p1": 0,
-      "p2": 0,
-      "model_interface": [
-        {
-          "target": "is_enabled",
-          "caption": "is enabled",
-          "type": "boolean",
-          "optional": true
-        },
-        {
-          "target": "no_flow",
-          "caption": "no flow allowed",
-          "type": "boolean",
-          "optional": false
-        },
-        {
-          "target": "no_back_flow",
-          "caption": "no back flow allowed",
-          "type": "boolean",
-          "optional": false
-        },
-        {
-          "target": "diffusion_enabled",
-          "caption": "diffusion allowed",
-          "type": "boolean",
-          "optional": true
-        },
-        {
-          "target": "r_for",
-          "caption": "forward flow resistance (mmHg*sec/l)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 1,
-          "rounding": 0,
-          "ul": 100000000,
-          "ll": 10
-        },
-        {
-          "target": "r_for_factor",
-          "caption": "forward flow resistance factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0.01
-        },
-        {
-          "target": "r_back",
-          "caption": "forward flow resistance (mmHg*sec/l)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 1,
-          "rounding": 0,
-          "ul": 100000000,
-          "ll": 10
-        },
-        {
-          "target": "r_back_factor",
-          "caption": "backward flow resistance factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0.01
-        },
-        {
-          "target": "r_k",
-          "caption": "non-linear resistance (sec/l)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 1,
-          "rounding": 0,
-          "ul": 100000000,
-          "ll": -10000000
-        },
-        {
-          "target": "r_k_factor",
-          "caption": "non-linear resistance factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0.01
-        },
-        {
-          "target": "dif_o2",
-          "caption": "o2 diffusion coefficient",
-          "type": "number",
-          "optional": true,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.001,
-          "rounding": 3,
-          "ul": 100000000000000,
-          "ll": 0
-        },
-        {
-          "target": "dif_o2_factor",
-          "caption": "o2 diffusion coefficient factor",
-          "type": "number",
-          "optional": true,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.1,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0.01
-        },
-        {
-          "target": "dif_co2",
-          "caption": "co2 diffusion coefficient ",
-          "type": "number",
-          "optional": true,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.001,
-          "rounding": 3,
-          "ul": 100000000000000,
-          "ll": 0
-        },
-        {
-          "target": "dif_co2_factor",
-          "caption": "co2 diffusion coefficient factor",
-          "type": "number",
-          "optional": true,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.1,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0.01
-        },
-        {
-          "target": "reconnect",
-          "caption": "reconnect resistor",
-          "type": "function",
-          "optional": true,
-          "args": [
-            {
-              "target": "comp_from",
-              "type": "list",
-              "options": [
-                "GasCapacitance"
-              ]
-            },
-            {
-              "target": "comp_to",
-              "type": "list",
-              "options": [
-                "GasCapacitance"
-              ]
-            }
-          ]
-        }
-      ]
+      "p2": 0
     },
     "LT_LD": {
       "name": "LT_LD",
@@ -691,9 +277,9 @@
       "no_back_flow": true,
       "comp_from": "LT",
       "comp_to": "LD",
-      "r_for": 1700,
+      "r_for": 1500,
       "r_for_factor": 1,
-      "r_back": 1700,
+      "r_back": 1500,
       "r_back_factor": 1,
       "r_k": 0,
       "r_k_factor": 1,
@@ -717,172 +303,7 @@
       "flux_o2": 0,
       "flux_co2": 0,
       "p1": 0,
-      "p2": 0,
-      "model_interface": [
-        {
-          "target": "is_enabled",
-          "caption": "is enabled",
-          "type": "boolean",
-          "optional": true
-        },
-        {
-          "target": "no_flow",
-          "caption": "no flow allowed",
-          "type": "boolean",
-          "optional": false
-        },
-        {
-          "target": "no_back_flow",
-          "caption": "no back flow allowed",
-          "type": "boolean",
-          "optional": false
-        },
-        {
-          "target": "diffusion_enabled",
-          "caption": "diffusion allowed",
-          "type": "boolean",
-          "optional": true
-        },
-        {
-          "target": "r_for",
-          "caption": "forward flow resistance (mmHg*sec/l)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 1,
-          "rounding": 0,
-          "ul": 100000000,
-          "ll": 10
-        },
-        {
-          "target": "r_for_factor",
-          "caption": "forward flow resistance factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0.01
-        },
-        {
-          "target": "r_back",
-          "caption": "forward flow resistance (mmHg*sec/l)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 1,
-          "rounding": 0,
-          "ul": 100000000,
-          "ll": 10
-        },
-        {
-          "target": "r_back_factor",
-          "caption": "backward flow resistance factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0.01
-        },
-        {
-          "target": "r_k",
-          "caption": "non-linear resistance (sec/l)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 1,
-          "rounding": 0,
-          "ul": 100000000,
-          "ll": -10000000
-        },
-        {
-          "target": "r_k_factor",
-          "caption": "non-linear resistance factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0.01
-        },
-        {
-          "target": "dif_o2",
-          "caption": "o2 diffusion coefficient",
-          "type": "number",
-          "optional": true,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.001,
-          "rounding": 3,
-          "ul": 100000000000000,
-          "ll": 0
-        },
-        {
-          "target": "dif_o2_factor",
-          "caption": "o2 diffusion coefficient factor",
-          "type": "number",
-          "optional": true,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.1,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0.01
-        },
-        {
-          "target": "dif_co2",
-          "caption": "co2 diffusion coefficient ",
-          "type": "number",
-          "optional": true,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.001,
-          "rounding": 3,
-          "ul": 100000000000000,
-          "ll": 0
-        },
-        {
-          "target": "dif_co2_factor",
-          "caption": "co2 diffusion coefficient factor",
-          "type": "number",
-          "optional": true,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.1,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0.01
-        },
-        {
-          "target": "reconnect",
-          "caption": "reconnect resistor",
-          "type": "function",
-          "optional": true,
-          "args": [
-            {
-              "target": "comp_from",
-              "type": "list",
-              "options": [
-                "GasCapacitance"
-              ]
-            },
-            {
-              "target": "comp_to",
-              "type": "list",
-              "options": [
-                "GasCapacitance"
-              ]
-            }
-          ]
-        }
-      ]
+      "p2": 0
     },
     "LD_SVC": {
       "name": "LD_SVC",
@@ -894,9 +315,9 @@
       "no_back_flow": true,
       "comp_from": "LD",
       "comp_to": "SVC",
-      "r_for": 1700,
+      "r_for": 1500,
       "r_for_factor": 1,
-      "r_back": 1700,
+      "r_back": 1500,
       "r_back_factor": 1,
       "r_k": 0,
       "r_k_factor": 1,
@@ -920,172 +341,7 @@
       "flux_o2": 0,
       "flux_co2": 0,
       "p1": 0,
-      "p2": 0,
-      "model_interface": [
-        {
-          "target": "is_enabled",
-          "caption": "is enabled",
-          "type": "boolean",
-          "optional": true
-        },
-        {
-          "target": "no_flow",
-          "caption": "no flow allowed",
-          "type": "boolean",
-          "optional": false
-        },
-        {
-          "target": "no_back_flow",
-          "caption": "no back flow allowed",
-          "type": "boolean",
-          "optional": false
-        },
-        {
-          "target": "diffusion_enabled",
-          "caption": "diffusion allowed",
-          "type": "boolean",
-          "optional": true
-        },
-        {
-          "target": "r_for",
-          "caption": "forward flow resistance (mmHg*sec/l)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 1,
-          "rounding": 0,
-          "ul": 100000000,
-          "ll": 10
-        },
-        {
-          "target": "r_for_factor",
-          "caption": "forward flow resistance factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0.01
-        },
-        {
-          "target": "r_back",
-          "caption": "forward flow resistance (mmHg*sec/l)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 1,
-          "rounding": 0,
-          "ul": 100000000,
-          "ll": 10
-        },
-        {
-          "target": "r_back_factor",
-          "caption": "backward flow resistance factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0.01
-        },
-        {
-          "target": "r_k",
-          "caption": "non-linear resistance (sec/l)",
-          "type": "number",
-          "optional": true,
-          "factor": 1,
-          "delta": 1,
-          "rounding": 0,
-          "ul": 100000000,
-          "ll": -10000000
-        },
-        {
-          "target": "r_k_factor",
-          "caption": "non-linear resistance factor",
-          "type": "number",
-          "optional": false,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.01,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0.01
-        },
-        {
-          "target": "dif_o2",
-          "caption": "o2 diffusion coefficient",
-          "type": "number",
-          "optional": true,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.001,
-          "rounding": 3,
-          "ul": 100000000000000,
-          "ll": 0
-        },
-        {
-          "target": "dif_o2_factor",
-          "caption": "o2 diffusion coefficient factor",
-          "type": "number",
-          "optional": true,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.1,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0.01
-        },
-        {
-          "target": "dif_co2",
-          "caption": "co2 diffusion coefficient ",
-          "type": "number",
-          "optional": true,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.001,
-          "rounding": 3,
-          "ul": 100000000000000,
-          "ll": 0
-        },
-        {
-          "target": "dif_co2_factor",
-          "caption": "co2 diffusion coefficient factor",
-          "type": "number",
-          "optional": true,
-          "relative": false,
-          "factor": 1,
-          "delta": 0.1,
-          "rounding": 2,
-          "ul": 100000000,
-          "ll": 0.01
-        },
-        {
-          "target": "reconnect",
-          "caption": "reconnect resistor",
-          "type": "function",
-          "optional": true,
-          "args": [
-            {
-              "target": "comp_from",
-              "type": "list",
-              "options": [
-                "GasCapacitance"
-              ]
-            },
-            {
-              "target": "comp_to",
-              "type": "list",
-              "options": [
-                "GasCapacitance"
-              ]
-            }
-          ]
-        }
-      ]
+      "p2": 0
     },
     "LS_IS": {
       "name": "LS_IS",
@@ -21301,6 +20557,7 @@
       "is_enabled": true,
       "dependencies": [],
       "model_interface": [],
+      "capacitances": ["INT_IS", "KID_IS", "RLB_IS", "LS_IS", "RUB_IS", "LL_IS", "RL_IS"],
       "solutes": {
         "na": 138,
         "k": 3.5,

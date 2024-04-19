@@ -272,7 +272,7 @@ export default {
           chart3_factor: 1.0
         },
         "Lymph flows": {
-          props: ["LD_SVC.flow", "LT_LD.flow", "IS_LT.flow"],
+          props: ["Lymph.is_flow", "Lymph.is_lt_flow"],
           autoscale: true,
           y_min: 0.05,
           y_max: 0.20,
@@ -282,11 +282,22 @@ export default {
           chart2_factor: 1.0,
           chart3_factor: 1.0
         },
-        "Lymph pressures": {
-          props: ["LD.pres", "LT.pres", "SVC.pres"],
+        "SVC/LD pressures 2": {
+          props: ["SVC.pres", "LD.pres"],
           autoscale: true,
-          y_min: 0.05,
-          y_max: 0.20,
+          y_min: 1,
+          y_max: -4,
+          factors: false,
+          fill: false,
+          chart1_factor: 1.0,
+          chart2_factor: 1.0,
+          chart3_factor: 1.0
+        },
+        "Lymph pressures": {
+          props: ["IS.pres", "LT.pres", "LD.pres"],
+          autoscale: true,
+          y_min: 1,
+          y_max: -4,
           factors: false,
           fill: false,
           chart1_factor: 1.0,
