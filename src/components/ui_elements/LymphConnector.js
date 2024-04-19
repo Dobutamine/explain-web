@@ -20,7 +20,7 @@ export default class LymphConnector {
   textStyle = {};
 
   path = null;
-  pathColor = 0x666666;
+  pathColor = 0x003333;
   pathWidth = 7;
   prevPosition = 0;
 
@@ -89,7 +89,7 @@ export default class LymphConnector {
     );
     this.sprite.eventMode = "none";
     this.sprite.tint = this.spriteColor;
-    this.sprite.zIndex = 6;
+    this.sprite.zIndex = 1;
 
     this.pixiApp.stage.addChild(this.sprite);
     this.sprite.eventMode = "none";
@@ -110,6 +110,7 @@ export default class LymphConnector {
     this.path = new PIXI.Graphics();
     this.path["name_path"] = this.key;
     this.path.zIndex = 1;
+    this.path.alpha = 0.7;
     this.path.cacheAsBitmap = true;
 
     if (
@@ -228,7 +229,7 @@ export default class LymphConnector {
     }
 
     this.spritePosition += (flow * 100.0) / this.models.length;
-    this.sprite.tint = "0x003333";
+    this.sprite.tint = "0x005555";
 
     if (flow >= 0) {
       direction = 0;
@@ -239,7 +240,7 @@ export default class LymphConnector {
     if (noData) {
       this.sprite.alpha = 0.0;
     } else {
-      this.sprite.alpha = 1.0;
+      this.sprite.alpha = 0.7;
     }
 
     // get the position of the dbc's

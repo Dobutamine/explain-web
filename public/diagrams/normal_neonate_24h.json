@@ -798,7 +798,7 @@
     },
     "IS": {
       "enabled": true,
-      "label": "IS",
+      "label": "",
       "models": [
         "IS"
       ],
@@ -806,8 +806,8 @@
       "layout": {
         "pos": {
           "type": "rel",
-          "x": 0.35,
-          "y": 0.35,
+          "x": 0.0,
+          "y": 0.775,
           "dgs": 0
         },
         "morph": {
@@ -815,8 +815,8 @@
           "y": 1
         },
         "scale": {
-          "x": 0.5,
-          "y": 0.5
+          "x": 1.0,
+          "y": 1.0
         },
         "rotation": 0,
         "text": {
@@ -836,8 +836,8 @@
       "layout": {
         "pos": {
           "type": "rel",
-          "x": 0.0,
-          "y": 0.35,
+          "x": -0.37,
+          "y": 0.43,
           "dgs": 0
         },
         "morph": {
@@ -866,8 +866,8 @@
         "layout": {
           "pos": {
             "type": "rel",
-            "x": -0.35,
-            "y": 0.35,
+            "x": -0.45,
+            "y": 0.25,
             "dgs": 0
           },
           "morph": {
@@ -915,16 +915,6 @@
       "compType": "LymphConnector",
       "dbcFrom": "LD",
       "dbcTo": "SVC"
-    },
-    "LS_IS": {
-      "enabled": true,
-      "label": "LS_IS",
-      "models": [
-        "LS_IS"
-      ],
-      "compType": "LymphConnector",
-      "dbcFrom": "LS",
-      "dbcTo": "IS"
     },
     "AD_RLB": {
       "enabled": true,
