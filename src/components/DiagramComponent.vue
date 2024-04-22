@@ -174,7 +174,6 @@ export default {
     },
     loadDiagram(filename = "normal neonate at 24h") {
       let fn = this.findDiagramFilename(filename)
-      console.log(fn)
       const path = "/diagrams/" + fn + ".json"
       const absoluteUrl = new URL(
         path.toString(),

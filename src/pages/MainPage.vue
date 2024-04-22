@@ -795,6 +795,25 @@ export default defineComponent({
           }
         },
         items: {
+          enabled: {
+            caption: "lymphatics enabled",
+            category: "elastances",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "boolean",
+            unit: "",
+            caller: "function",
+            function_name: "switch_lymphatics",
+            model: "Lymph",
+            prop: "is_enabled",
+            min: 10.0,
+            max: 10000.0,
+            step: 10.0
+          },
           is_el_base: {
             caption: "interstitial space",
             category: "elastances",

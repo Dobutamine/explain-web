@@ -116,6 +116,9 @@ onmessage = (e) => {
     case "clear_watchlist_slow":
       clear_watchlist_slow();
       break;
+    case "build_execution_list":
+      build_execution_list();
+      break;
     case "get_model_props":
       get_props(e.data.payload);
       break;
@@ -337,9 +340,26 @@ const process_model_definition = function (model_definition) {
   }
 };
 
+const build_execution_list = function () {
+  // iterate over the models and add the models which should be executed to the list
+  model.execution_list = {};
+
+  // build the execution list
+  Object.values(model.models).forEach((model_comp) => {
+    if (model_comp.is_enabled) {
+      let key = model_comp.name;
+      model.execution_list[key] = model_comp;
+    }
+  });
+  console.log("Execution llist is rebuild");
+  rebuildExecutionList = false;
+};
 // prepare for a model run
 const prepare_for_execution = function () {
   // iterate over the models and add the models which should be executed to the list
+  model.execution_list = {};
+
+  // build the execution list
   Object.values(model.models).forEach((model_comp) => {
     if (model_comp.is_enabled) {
       let key = model_comp.name;
@@ -476,6 +496,10 @@ const model_step = function () {
 };
 
 const model_step_rt = function () {
+  // does the execution list need a rebuild
+  if (rebuildExecutionList) {
+    build_execution_list();
+  }
   // so the rt_interval determines how often the model is calculated
   const noOfSteps = rtInterval / model.modeling_stepsize;
   for (let i = 0; i < noOfSteps; i++) {

@@ -173,7 +173,6 @@ export class Container {
     // set the modeling step size
     this._t = this._model_engine.modeling_stepsize;
 
-    console.log(this.contained_components);
     // set the flag to model is initialized
     this._is_initialized = true;
   }

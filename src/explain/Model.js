@@ -296,6 +296,14 @@ export default class Model {
     });
   }
 
+  buildExecutionList() {
+    this.sendMessageToModelEngine({
+      type: "build_execution_list",
+      message: "",
+      payload: [],
+    });
+  }
+
   clearWatchList() {
     this.sendMessageToModelEngine({
       type: "clear_watchlist",

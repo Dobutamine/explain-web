@@ -82,6 +82,10 @@ export default class TaskScheduler {
                 this.tasks_ready = true;
                 // update the property
                 task.m[task.p] = task.v;
+                if (task.p == "is_enabled") {
+                  this._model_engine.rebuildExecutionList = true;
+                  console.log("rebuild execution list");
+                }
                 this._completed_tasks.push(task.id);
               }
               break;
@@ -147,6 +151,8 @@ export default class TaskScheduler {
       step: 0.0,
       v: 0.0,
     };
+
+    // check whether a task contains an is_enabled property
 
     let t = new_prop_value.prop.split(".");
     switch (t.length) {

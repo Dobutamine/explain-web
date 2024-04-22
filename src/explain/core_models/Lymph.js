@@ -7,7 +7,11 @@ export class Lymph {
   description = "";
   is_enabled = false;
   dependencies = [];
-  capacitances = [
+  ducts = ["LD"];
+  trunks = ["LT"];
+  interstitium = ["IS"];
+  pump = [];
+  starlings = [
     "INT_IS",
     "KID_IS",
     "RLB_IS",
@@ -68,6 +72,27 @@ export class Lymph {
     this._is_initialized = true;
   }
 
+  switch_lymphatics(state) {
+    this.interstitium.forEach((i) => {
+      this._model_engine.models[i].is_enabled = state;
+    });
+    this.trunks.forEach((i) => {
+      this._model_engine.models[i].is_enabled = state;
+    });
+    this.ducts.forEach((i) => {
+      this._model_engine.models[i].is_enabled = state;
+    });
+    this.pump.forEach((i) => {
+      this._model_engine.models[i].is_enabled = state;
+    });
+    this.starlings.forEach((i) => {
+      this._model_engine.models[i].is_enabled = state;
+    });
+    this.is_enabled = state;
+
+    //this._model_engine.rebuildExecutionList = true;
+    console.log(this._model_engine);
+  }
   step_model() {
     if (this.is_enabled && this._is_initialized) {
       this.calc_model();
@@ -89,7 +114,7 @@ export class Lymph {
 
       this._analysis_counter = 0.0;
     }
-    this.capacitances.forEach((cap) => {
+    this.starlings.forEach((cap) => {
       this._cum_is_flow += this._model_engine.models[cap].flow * this._t;
     });
     this._cum_is_lt_flow += this._model_engine.models["IS_LT"].flow * this._t;

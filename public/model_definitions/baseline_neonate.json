@@ -21134,7 +21134,11 @@
       "description": "lymphatics model",
       "is_enabled": true,
       "dependencies": [],
-      "capacitances": [
+      "interstitium": ["IS"],
+      "trunks": ["LT"],
+      "ducts": ["LD"],
+      "pump": ["LymphIntrinsicPump"],
+      "starlings": [
         "INT_IS",
         "KID_IS",
         "RLB_IS",
