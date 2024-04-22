@@ -89,7 +89,14 @@ export class LymphIntrinsicPump {
           this._model_engine.models[target].contraction_running = true;
         }
 
-        let amp = this._model_engine.models[target].amp;
+        let f = 1.0;
+        if (
+          this._model_engine.models[target].vol <
+          this._model_engine.models[target].u_vol
+        ) {
+          f = -1.0;
+        }
+        let amp = this._model_engine.models[target].amp * f;
         let el_con =
           amp *
           (0.5 *
@@ -99,6 +106,7 @@ export class LymphIntrinsicPump {
                   this._model_engine.models[target].contraction_timer
               )));
         // el_con = amp * math.sin(2*math.pi/(2*this.duration) * (this._model.models[targets].contraction_timer))
+
         this._model_engine.models[target].el_con = el_con;
         let el_tot = el_rest + el_con;
         this._model_engine.models[target].el_base = el_tot;

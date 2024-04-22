@@ -985,8 +985,8 @@ export default defineComponent({
             model: "LT",
             prop: "amp",
             min: 0,
-            max: 50000,
-            step: 1
+            max: 6500,
+            step: 100
           },
           ld_amp: {
             caption: "lymphatic ducts amp",
@@ -1004,8 +1004,8 @@ export default defineComponent({
             model: "LD",
             prop: "amp",
             min: 0,
-            max: 50000,
-            step: 1
+            max: 6500,
+            step: 100
           },
           is_lt_res: {
             caption: "IS_LT resistance",
