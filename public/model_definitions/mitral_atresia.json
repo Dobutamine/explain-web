@@ -20017,7 +20017,7 @@
       "name": "Lymph",
       "model_type": "Lymph",
       "description": "lymphatics model",
-      "is_enabled": true,
+      "is_enabled": false,
       "dependencies": [],
       "model_interface": [],
       "category": "general_models"

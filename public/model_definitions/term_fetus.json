@@ -20017,7 +20017,7 @@
       "name": "Lymph",
       "model_type": "Lymph",
       "description": "lymphatics model",
-      "is_enabled": true,
+      "is_enabled": false,
       "dependencies": [],
       "model_interface": [],
       "category": "general_models"
@@ -20171,7 +20171,7 @@
       "name": "Ventilator",
       "model_type": "Ventilator",
       "description": "ventilator model",
-      "is_enabled": true,
+      "is_enabled": false,
       "dependencies": [
         "DS",
         "MOUTH_DS"
