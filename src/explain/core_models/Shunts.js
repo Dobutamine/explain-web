@@ -121,6 +121,7 @@ export class Shunts {
   fo_diameter = 3.0;
   fo_length = 2.0;
   fo_res_backflow_factor = 10.0;
+  fo_res_forwardflow_factor = 1.0;
   fo_r_k = 1000;
   vsd = "VSD";
   vsd_enabled = false;
@@ -269,7 +270,7 @@ export class Shunts {
         this.fo_length,
         this.viscosity
       );
-      this._fo.r_for = this.fo_res; // RA -> LA
+      this._fo.r_for = this.fo_res * this.fo_res_forwardflow_factor; // RA -> LA
       this._fo.r_back = this.fo_res * this.fo_res_backflow_factor; // LA -> RA
       this._fo.r_k = this.fo_r_k;
     } else {

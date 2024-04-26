@@ -51,7 +51,7 @@ export default {
       skeletonGraphics: null,
       shortTimer: null,
       rt_running: false,
-      conditions: ["normal neonate at 24h", "fetus at term", "coarctatio aortae", "pulmonary atresia", "hypoplastic left heart syndrome", "transposition of the great arteries", "total anomalous pulmonary venous connection", "mitral valve atresia", "tricuspid valve atresia"],
+      conditions: ["normal neonate at 24h", "fetus at term", "coarctatio aortae", "pulmonary atresia", "hypoplastic left heart syndrome", "transposition of the great arteries", "total anomalous pulmonary venous connection", "mitral valve atresia", "tricuspid valve atresia", "fontan-1-norwood", "fontan-2-glenn", "fontan-3"],
       condition_filenames: [
         {
           name: "normal neonate at 24h",
@@ -88,6 +88,18 @@ export default {
         {
           name: "tricuspid valve atresia",
           filename: "tricuspid_atresia"
+        },
+        {
+          name: "fontan-1-norwood",
+          filename: "fontan-stage-1"
+        },
+        {
+          name: "fontan-2-glenn",
+          filename: "fontan-stage-2"
+        },
+        {
+          name: "fontan-3",
+          filename: "fontan-stage-3"
         }
       ],
       selected_diagram: 'normal neonate at 24h',
