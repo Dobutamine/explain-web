@@ -644,7 +644,7 @@ const save_model_state_json = function () {
   for (let [mn, m] of Object.entries(model.models)) {
     new_json["models"][mn] = {};
     for (let [pn, pv] of Object.entries(m)) {
-      if (pn[0] !== "_") {
+      if (pn[0] !== "_" && pn !== "model_interface") {
         if (typeof pv == "object" && pv.hasOwnProperty("name")) {
           new_json["models"][mn][pn] = pv.name;
         } else {
