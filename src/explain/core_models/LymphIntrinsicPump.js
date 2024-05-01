@@ -7,6 +7,7 @@ export class LymphIntrinsicPump {
   description = "";
   is_enabled = false;
   dependencies = [];
+  scalable = true;
   duration = 2.0; // duration of contraction
   freq = 10.0; // frequency
   el_rest = 20.0; // elastance at rest

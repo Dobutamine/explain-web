@@ -62,6 +62,7 @@ export class GasExchanger {
   description = "";
   is_enabled = false;
   dependencies = [];
+  scalable = true;
   dif_o2 = 0.01;
   dif_o2_factor = 1.0;
   dif_o2_scaling_factor = 1.0;

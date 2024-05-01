@@ -7,6 +7,7 @@ export class LymphStarling {
   description = "";
   is_enabled = false;
   dependencies = [];
+  scalable = true;
   L = 0.9788e-9; // hydraulic conductivity
   S = 50.0; // capillary surface area
   sigma = 0.7; //  osmotic reflection coefficient

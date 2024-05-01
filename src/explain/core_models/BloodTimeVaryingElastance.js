@@ -101,6 +101,7 @@ export class BloodTimeVaryingElastance {
   description = "";
   is_enabled = false;
   dependencies = [];
+  scalable = true;
   fixed_composition = false;
   u_vol = 0.0;
   el_min = 0.0;

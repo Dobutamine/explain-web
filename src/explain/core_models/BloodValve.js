@@ -168,6 +168,7 @@ export class BloodValve {
   description = "";
   is_enabled = false;
   dependencies = [];
+  scalable = true;
   no_flow = false;
   no_back_flow = true;
   comp_from = "";

@@ -243,13 +243,13 @@ export class Scaler {
     this.scale_total_gas_volume(this.scale_factor);
 
     // set the reference heartrate which is not weight based
-    // this._model_engine.models["Heart"].heart_rate_ref = hr_ref;
+    this._model_engine.models["Heart"].heart_rate_ref = hr_ref;
 
-    // // scale the baroreflex of the autonomous nervous system
-    // this._model_engine.models["Ans"].min_map = map_ref / 2.0;
-    // this._model_engine.models["Ans"].set_map = map_ref;
-    // this._model_engine.models["Ans"].max_map = map_ref * 2.0;
-    // this._model_engine.models["Ans"].init_effectors();
+    // scale the baroreflex of the autonomous nervous system
+    this._model_engine.models["Ans"].min_map = map_ref / 2.0;
+    this._model_engine.models["Ans"].set_map = map_ref;
+    this._model_engine.models["Ans"].max_map = map_ref * 2.0;
+    this._model_engine.models["Ans"].init_effectors();
 
     // // set the scaling factors for the heart chambers (el_max, el_min, u_vol)
     // this.left_atrium.forEach((la) => {
@@ -312,11 +312,11 @@ export class Scaler {
     //     this.scale_factor * this.el_base_cap_factor;
     // });
 
-    // set the scaling factors for the blood connectors (r_for, r_back, r_k)
-    this.blood_connectors.forEach((bc) => {
-      this._model_engine.models[bc].r_scaling_factor =
-        this.scale_factor * this.res_blood_connectors_factor;
-    });
+    // // set the scaling factors for the blood connectors (r_for, r_back, r_k)
+    // this.blood_connectors.forEach((bc) => {
+    //   this._model_engine.models[bc].r_scaling_factor =
+    //     this.scale_factor * this.res_blood_connectors_factor;
+    // });
 
     // // set the scaling factors for the heart valves (r_for, r_back, r_k)
     // this.heart_valves.forEach((valve) => {
@@ -357,7 +357,7 @@ export class Scaler {
     let new_blood_volume = current_blood_volume * scale_factor;
 
     // scale all enabled blood containing circulation components
-    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+    for (let [_, model] of Object.entries(this._model_engine.models)) {
       if (
         model.model_type === "BloodCapacitance" ||
         model.model_type === "BloodTimeVaryingElastance"
@@ -385,12 +385,12 @@ export class Scaler {
             model.vol = 0.0;
           }
 
-          // console.log(
-          //   `Scalled ${model.name}: volume to: {${model.vol} from ${vol_now}`
-          // );
-          // console.log(
-          //   `Scalled ${model.name}: u_vol to: {${model.u_vol} from ${uvol_now}`
-          // );
+          console.log(
+            `Scaled ${model.name}: volume to: {${model.vol} from ${vol_now}`
+          );
+          console.log(
+            `Scaled ${model.name}: u_vol to: {${model.u_vol} from ${uvol_now}`
+          );
         }
       }
     }
@@ -406,7 +406,7 @@ export class Scaler {
     let new_gas_volume = current_gas_volume * scale_factor;
 
     // scale all enabled blood containing circulation components
-    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+    for (let [_, model] of Object.entries(this._model_engine.models)) {
       if (model.model_type === "GasCapacitance") {
         if (model.is_enabled) {
           // calculate the current fraction of the blood volume in this blood containing capacitance
@@ -435,7 +435,7 @@ export class Scaler {
 
   get_total_blood_volume() {
     let total_volume = 0.0;
-    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+    for (let [_, model] of Object.entries(this._model_engine.models)) {
       if (
         model.model_type === "BloodCapacitance" ||
         model.model_type === "BloodTimeVaryingElastance"
@@ -451,7 +451,7 @@ export class Scaler {
 
   get_total_gas_volume() {
     let total_volume = 0.0;
-    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+    for (let [_, model] of Object.entries(this._model_engine.models)) {
       if (model.model_type === "GasCapacitance") {
         if (model.is_enabled && !model.fixed_composition) {
           total_volume += model.vol;

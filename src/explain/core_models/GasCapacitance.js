@@ -89,6 +89,7 @@ export class GasCapacitance {
   description = "";
   is_enabled = false;
   dependencies = [];
+  scalable = true;
   fixed_composition = true;
   u_vol = 0.0;
   el_base = 0.0;

@@ -90,6 +90,7 @@ export class BloodCapacitance {
   description = "";
   is_enabled = false;
   dependencies = [];
+  scalable = true;
   fixed_composition = false;
   u_vol = 0.0;
   el_base = 0.0;

@@ -3035,8 +3035,7 @@ export default defineComponent({
 
         }
       },
-
-
+      scaler_controller: {}
     }
   },
   methods: {

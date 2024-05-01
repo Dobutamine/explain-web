@@ -62,6 +62,7 @@ export class BloodDiffusor {
   description = "";
   is_enabled = false;
   dependencies = [];
+  scalable = true;
   comp_blood1 = {};
   comp_blood2 = {};
   dif_o2 = 0.01;
