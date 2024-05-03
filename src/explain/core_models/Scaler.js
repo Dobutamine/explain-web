@@ -9,6 +9,7 @@ export class Scaler {
       args: [
         {
           target: "weight",
+          caption: "weight (grams)",
           type: "number",
           factor: 1000,
           delta: 10,
@@ -18,6 +19,7 @@ export class Scaler {
         },
         {
           target: "blood_volume_ml_kg",
+          caption: "blood volume (ml/kg)",
           type: "number",
           factor: 1000,
           delta: 1,
@@ -27,6 +29,7 @@ export class Scaler {
         },
         {
           target: "gas_volume_ml_kg",
+          caption: "lung volume (ml/kg)",
           type: "number",
           factor: 1000,
           delta: 1,
@@ -36,6 +39,7 @@ export class Scaler {
         },
         {
           target: "hr_ref",
+          caption: "ref heartrate (bpm)",
           type: "number",
           factor: 1,
           delta: 1,
@@ -45,6 +49,7 @@ export class Scaler {
         },
         {
           target: "map_ref",
+          caption: "ref mean arterial pressure (mmHg)",
           type: "number",
           factor: 1,
           delta: 1,
