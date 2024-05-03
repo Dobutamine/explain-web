@@ -237,6 +237,9 @@ export class Scaler {
     this.hr_ref = hr_ref;
     this.map_ref = map_ref;
 
+    // set the new weight
+    this._model_engine.weight = new_weight;
+
     // scale the patient
     this.scale_patient();
   }
@@ -276,6 +279,51 @@ export class Scaler {
 
     // scale the blood volume
     this.scale_blood_volume(this.scale_factor);
+
+    // scale the lung volume
+    this.scale_lung_volume(this.scale_factor);
+
+    // scale the baroreflex of the autonomous nervous system
+    this.scale_ans(this.hr_ref, this.map_ref);
+
+    // scale pericardium
+    this.scale_pericardium(this.scale_factor);
+
+    // scale the thorax
+    this.scale_thorax(this.scale_factor);
+
+    // scale the control of breathing model
+    //this.scale_cob();
+
+    // scale the metabolism
+    //this.scale_metabolism();
+
+    // scale mob
+    //this.scale_mob();
+
+    // scale the heart
+    this.scale_heart(this.scale_factor);
+
+    // scale the arteries
+    this.scale_arteries(this.scale_factor);
+
+    // scale the capillaries
+    this.scale_capillaries(this.scale_factor);
+
+    // scale the veins
+    this.scale_veins(this.scale_factor);
+
+    // scale the blood connectors
+    this.scale_blood_connectors(this.scale_factor);
+
+    // scale the valves
+    this.scale_heart_valves(this.scale_factor);
+
+    // scale the lung
+    this.scale_lungs(this.scale_factor);
+
+    // scale the airways
+    this.scale_airways(this.scale_factor);
   }
 
   scale_blood_volume(scale_factor) {
@@ -345,14 +393,14 @@ export class Scaler {
     this.total_blood_volume = this.get_total_blood_volume();
   }
 
-  scale_lung_volume(scale_factor, output = true) {
+  scale_lung_volume(scale_factor) {
     // get the current gas volume
     let current_gas_volume = this.get_total_gas_volume();
 
     // calculate the new gas volume
     let new_gas_volume = current_gas_volume * scale_factor;
 
-    if (output) {
+    if (this._debug) {
       console.log(
         `Scale current lung volume from {${current_gas_volume} to ${new_gas_volume}`
       );
@@ -368,7 +416,7 @@ export class Scaler {
     gas_containing_capacitances.forEach((model_name) => {
       let model = this._model_engine.models[model_name];
       if (model.is_enabled) {
-        let current_fraction = model.vol / current_blood_volume;
+        let current_fraction = model.vol / current_gas_volume;
         output_message = `${model.name} volume = ${model.vol * 1000.0} ml ->`;
 
         // calculate the fraction of the unstressed volume of the current volume
@@ -392,7 +440,7 @@ export class Scaler {
         output_message += `${model.vol * 1000.0} ml = (${
           current_fraction * 100
         }% of total gas volume)`;
-        if (output) {
+        if (this._debug) {
           console.log(output_message);
         }
       }
@@ -401,6 +449,171 @@ export class Scaler {
     // recalculate the current gas volume
     this.total_gas_volume = this.get_total_gas_volume();
   }
+
+  scale_ans(hr_ref, map_ref) {
+    // set the reference heart rate
+    if (this._debug) {
+      console.log(
+        `Setting reference heartrate from ${this._model_engine.models["Heart"].heart_rate_ref} to ${hr_ref}`
+      );
+    }
+    this._model_engine.models["Heart"].heart_rate_ref = hr_ref;
+
+    // adjust the baroreceptor
+    if (this._debug) {
+      console.log(
+        `Setting mean arterial pressure setpoint from ${this._model_engine.models["Ans"].set_map} to ${map_ref}`
+      );
+    }
+    this._model_engine.models["Ans"].min_map = map_ref / 2.0;
+    this._model_engine.models["Ans"].set_map = map_ref;
+    this._model_engine.models["Ans"].max_map = map_ref * 2.0;
+    this._model_engine.models["Ans"].init_effectors();
+  }
+
+  scale_cob() {
+    // as the reference minute volume and reference vt_rr ratio are already weight based we don't need to change these
+  }
+
+  scale_heart(scale_factor) {
+    // right atrium
+    this.right_atrium.forEach((ra) => {
+      this._model_engine.models[ra].el_min_scaling_factor =
+        (1.0 / scale_factor) * this.el_min_ra_factor;
+      this._model_engine.models[ra].el_max_scaling_factor =
+        (1.0 / scale_factor) * this.el_max_ra_factor;
+      this._model_engine.models[ra].u_vol_scaling_factor = this.u_vol_ra_factor;
+    });
+
+    // right ventricle
+    this.right_atrium.forEach((rv) => {
+      this._model_engine.models[rv].el_min_scaling_factor =
+        (1.0 / scale_factor) * this.el_min_rv_factor;
+      this._model_engine.models[rv].el_max_scaling_factor =
+        (1.0 / scale_factor) * this.el_max_rv_factor;
+      this._model_engine.models[rv].u_vol_scaling_factor = this.u_vol_rv_factor;
+    });
+
+    // left atrium
+    this.left_atrium.forEach((la) => {
+      this._model_engine.models[la].el_min_scaling_factor =
+        (1.0 / scale_factor) * this.el_min_la_factor;
+      this._model_engine.models[la].el_max_scaling_factor =
+        (1.0 / scale_factor) * this.el_max_la_factor;
+      this._model_engine.models[la].u_vol_scaling_factor = this.u_vol_la_factor;
+    });
+
+    // left ventricle
+    this.left_ventricle.forEach((lv) => {
+      this._model_engine.models[lv].el_min_scaling_factor =
+        (1.0 / scale_factor) * this.el_min_lv_factor;
+      this._model_engine.models[lv].el_max_scaling_factor =
+        (1.0 / scale_factor) * this.el_max_lv_factor;
+      this._model_engine.models[lv].u_vol_scaling_factor = this.u_vol_lv_factor;
+    });
+
+    // coronaries
+    this.coronaries.forEach((cor) => {
+      this._model_engine.models[cor].el_min_scaling_factor =
+        (1.0 / scale_factor) * this.el_min_cor_factor;
+      this._model_engine.models[cor].el_max_scaling_factor =
+        (1.0 / scale_factor) * this.el_max_cor_factor;
+      this._model_engine.models[cor].u_vol_scaling_factor =
+        this.u_vol_cor_factor;
+    });
+  }
+
+  scale_arteries(scale_factor) {
+    this.arteries.forEach((art) => {
+      this._model_engine.models[art].el_base_scaling_factor =
+        (1.0 / scale_factor) * this.el_base_art_factor;
+      this._model_engine.models[art].u_vol_scaling_factor =
+        this.u_vol_art_factor;
+    });
+  }
+
+  scale_capillaries(scale_factor) {
+    this.capillaries.forEach((cap) => {
+      this._model_engine.models[cap].el_base_scaling_factor =
+        (1.0 / scale_factor) * this.el_base_cap_factor;
+      this._model_engine.models[cap].u_vol_scaling_factor =
+        this.u_vol_cap_factor;
+    });
+  }
+
+  scale_veins(scale_factor) {
+    this.veins.forEach((ven) => {
+      this._model_engine.models[ven].el_base_scaling_factor =
+        (1.0 / scale_factor) * this.el_base_ven_factor;
+      this._model_engine.models[ven].u_vol_scaling_factor =
+        this.u_vol_ven_factor;
+    });
+  }
+
+  scale_blood_connectors(scale_factor) {
+    this.blood_connectors.forEach((con) => {
+      this._model_engine.models[con].r_scaling_factor =
+        (1.0 / scale_factor) * this.res_valve_factor;
+    });
+  }
+
+  scale_heart_valves(scale_factor) {
+    this.heart_valves.forEach((valve) => {
+      this._model_engine.models[valve].r_scaling_factor =
+        (1.0 / scale_factor) * this.res_valve_factor;
+    });
+  }
+
+  scale_pericardium(scale_factor) {
+    this.pericardium.forEach((pc) => {
+      // scale the current volume and unstressed volume
+      this._model_engine.models[pc].vol =
+        this._model_engine.models[pc].vol * scale_factor;
+      this._model_engine.models[pc].u_vol =
+        this._model_engine.models[pc].u_vol * scale_factor;
+
+      // do the additional scaling
+      this._model_engine.models[pc].el_base_scaling_factor =
+        (1.0 / scale_factor) * this.el_base_pericardium_factor;
+      this._model_engine.models[pc].u_vol_scaling_factor =
+        this.u_vol_pericardium_factor;
+    });
+  }
+
+  scale_lungs(scale_factor) {
+    this.lungs.forEach((lung) => {
+      this._model_engine.models[lung].el_base_scaling_factor =
+        (1.0 / scale_factor) * this.el_base_lungs_factor;
+      this._model_engine.models[lung].u_vol_scaling_factor =
+        this.u_vol_lungs_factor;
+    });
+  }
+
+  scale_airways(scale_factor) {
+    this.airways.forEach((aw) => {
+      this._model_engine.models[aw].r_scaling_factor =
+        (1.0 / scale_factor) * this.res_airway_factor;
+    });
+  }
+
+  scale_thorax(scale_factor) {
+    this.thorax.forEach((th) => {
+      // scale the current volume and unstressed volume
+      this._model_engine.models[th].vol =
+        this._model_engine.models[th].vol * scale_factor;
+      this._model_engine.models[th].u_vol =
+        this._model_engine.models[th].u_vol * scale_factor;
+
+      this._model_engine.models[th].el_base_scaling_factor =
+        (1.0 / scale_factor) * this.el_base_thorax_factor;
+      this._model_engine.models[th].u_vol_scaling_factor =
+        this.u_vol_thorax_factor;
+    });
+  }
+
+  scale_metabolism(scale_factor) {}
+
+  scale_mob(scale_factor) {}
 
   get_total_blood_volume() {
     let total_volume = 0.0;
