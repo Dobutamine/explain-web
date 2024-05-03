@@ -75,6 +75,7 @@ export class Scaler {
 
   // general scaler
   scale_factor = 1.0;
+  scale_factor_abs = 1.0;
 
   // scaler based on weight
   scale_factor_weight = 1.0;
@@ -225,7 +226,10 @@ export class Scaler {
   // general scaling function
   scale_patient_by_weight(new_weight, hr_ref, map_ref) {
     // calculate the weight factor
-    this.scale_factor_weight = new_weight / this.weight;
+    this.scale_factor_weight = new_weight / this.reference_weight;
+
+    // absolute volume change
+    this.scale_factor_abs = new_weight / this.weight;
 
     if (this._debug) {
       console.log(
@@ -270,20 +274,12 @@ export class Scaler {
   }
 
   scale_patient() {
-    console.log(this.total_blood_volume);
-    console.log(this.total_gas_volume);
     // determine the current scaling factor
     this.scale_factor =
       1.0 *
       this.scale_factor_weight *
       this.scale_factor_gestational_age *
       this.scale_factor_age;
-
-    // scale the blood volume
-    //this.scale_blood_volume(this.scale_factor);
-
-    // scale the lung volume
-    //this.scale_lung_volume(this.scale_factor);
 
     // scale the baroreflex of the autonomous nervous system
     this.scale_ans(this.hr_ref, this.map_ref);
@@ -295,13 +291,13 @@ export class Scaler {
     this.scale_thorax(this.scale_factor);
 
     // scale the control of breathing model
-    //this.scale_cob();
+    this.scale_cob();
 
     // scale the metabolism
-    //this.scale_metabolism();
+    this.scale_metabolism();
 
     // scale mob
-    //this.scale_mob();
+    this.scale_mob();
 
     // scale the heart
     this.scale_heart(this.scale_factor);
@@ -329,133 +325,6 @@ export class Scaler {
 
     // find blood volume
     this.total_blood_volume = this.get_total_blood_volume();
-    this.total_gas_volume = this.get_total_gas_volume();
-
-    console.log(this.total_blood_volume);
-    console.log(this.total_gas_volume);
-  }
-
-  scale_blood_volume(scale_factor) {
-    // get the current blood volume
-    let current_blood_volume = this.get_total_blood_volume();
-
-    // calculate the new blood volume
-    let new_blood_volume = current_blood_volume * scale_factor;
-
-    if (this._debug) {
-      console.log(
-        `Scale current blood volume from {${current_blood_volume} to ${new_blood_volume}`
-      );
-    }
-
-    // build a list containing all blood containing model components
-    let blood_containing_capacitances = [
-      ...this.left_atrium,
-      ...this.right_atrium,
-      ...this.left_atrium,
-      ...this.left_ventricle,
-      ...this.arteries,
-      ...this.veins,
-      ...this.capillaries,
-      ...this.coronaries,
-    ];
-
-    // define an output message for debugging purposes
-    let output_message = "";
-
-    // scale all blood containing capacitances
-    blood_containing_capacitances.forEach((model_name) => {
-      let model = this._model_engine.models[model_name];
-      if (model.is_enabled) {
-        let current_fraction = model.vol / current_blood_volume;
-        output_message = `${model.name} volume = ${model.vol * 1000.0} ml ->`;
-
-        // calculate the fraction of the unstressed volume of the current volume
-        let fraction_unstressed = 0.0;
-        if (model.vol > 0.0) {
-          fraction_unstressed = model.u_vol / model.vol;
-        }
-
-        // now change the total volume by adding the same fraction of the desired volume change to the blood containing capacitance
-        model.vol +=
-          current_fraction * (new_blood_volume - current_blood_volume);
-
-        // determine how much of this total volume is unstressed volume
-        model.u_vol = model.vol * fraction_unstressed;
-
-        // guard for negative volumes
-        if (model.vol < 0.0) {
-          model.vol = 0.0;
-        }
-
-        // construct output message
-        output_message += `${model.vol * 1000.0} ml = (${
-          current_fraction * 100
-        }% of total blood volume)`;
-        if (this._debug) {
-          console.log(output_message);
-        }
-      }
-    });
-
-    // recalculate the current blood volume
-    this.total_blood_volume = this.get_total_blood_volume();
-  }
-
-  scale_lung_volume(scale_factor) {
-    // get the current gas volume
-    let current_gas_volume = this.get_total_gas_volume();
-
-    // calculate the new gas volume
-    let new_gas_volume = current_gas_volume * scale_factor;
-
-    if (this._debug) {
-      console.log(
-        `Scale current lung volume from {${current_gas_volume} to ${new_gas_volume}`
-      );
-    }
-
-    // build a list containing all blood containing model components
-    let gas_containing_capacitances = [...this.lungs];
-
-    // define an output message for debugging purposes
-    let output_message = "";
-
-    // scale all gas containing capacitances
-    gas_containing_capacitances.forEach((model_name) => {
-      let model = this._model_engine.models[model_name];
-      if (model.is_enabled) {
-        let current_fraction = model.vol / current_gas_volume;
-        output_message = `${model.name} volume = ${model.vol * 1000.0} ml ->`;
-
-        // calculate the fraction of the unstressed volume of the current volume
-        let fraction_unstressed = 0.0;
-        if (model.vol > 0.0) {
-          fraction_unstressed = model.u_vol / model.vol;
-        }
-
-        // now change the total volume by adding the same fraction of the desired volume change to the blood containing capacitance
-        model.vol += current_fraction * (new_gas_volume - current_gas_volume);
-
-        // determine how much of this total volume is unstressed volume
-        model.u_vol = model.vol * fraction_unstressed;
-
-        // guard for negative volumes
-        if (model.vol < 0.0) {
-          model.vol = 0.0;
-        }
-
-        // construct output message
-        output_message += `${model.vol * 1000.0} ml = (${
-          current_fraction * 100
-        }% of total gas volume)`;
-        if (this._debug) {
-          console.log(output_message);
-        }
-      }
-    });
-
-    // recalculate the current gas volume
     this.total_gas_volume = this.get_total_gas_volume();
   }
 
@@ -489,7 +358,7 @@ export class Scaler {
     this.right_atrium.forEach((ra) => {
       // change the current volume
       this._model_engine.models[ra].vol =
-        this._model_engine.models[ra].vol * scale_factor;
+        this._model_engine.models[ra].vol * this.scale_factor_abs;
 
       // change the unstressed volume
       this._model_engine.models[ra].u_vol_scaling_factor =
@@ -525,7 +394,7 @@ export class Scaler {
     this.left_atrium.forEach((la) => {
       // change the current volume
       this._model_engine.models[la].vol =
-        this._model_engine.models[la].vol * scale_factor;
+        this._model_engine.models[la].vol * this.scale_factor_abs;
 
       // change the unstressed volume
       this._model_engine.models[la].u_vol_scaling_factor =
@@ -543,7 +412,7 @@ export class Scaler {
     this.left_ventricle.forEach((lv) => {
       // change the current volume
       this._model_engine.models[lv].vol =
-        this._model_engine.models[lv].vol * scale_factor;
+        this._model_engine.models[lv].vol * this.scale_factor_abs;
 
       // change the unstressed volume
       this._model_engine.models[lv].u_vol_scaling_factor =
@@ -561,7 +430,7 @@ export class Scaler {
     this.coronaries.forEach((cor) => {
       // change the current volume
       this._model_engine.models[cor].vol =
-        this._model_engine.models[cor].vol * scale_factor;
+        this._model_engine.models[cor].vol * this.scale_factor_abs;
 
       // change the unstressed volume
       this._model_engine.models[cor].u_vol_scaling_factor =
@@ -580,7 +449,7 @@ export class Scaler {
     this.arteries.forEach((art) => {
       // change the current volume
       this._model_engine.models[art].vol =
-        this._model_engine.models[art].vol * scale_factor;
+        this._model_engine.models[art].vol * this.scale_factor_abs;
 
       // change the unstressed volume
       this._model_engine.models[art].u_vol_scaling_factor =
@@ -596,7 +465,7 @@ export class Scaler {
     this.capillaries.forEach((cap) => {
       // change the current volume
       this._model_engine.models[cap].vol =
-        this._model_engine.models[cap].vol * scale_factor;
+        this._model_engine.models[cap].vol * this.scale_factor_abs;
 
       // change the unstressed volume
       this._model_engine.models[cap].u_vol_scaling_factor =
@@ -612,7 +481,7 @@ export class Scaler {
     this.veins.forEach((ven) => {
       // change the current volume
       this._model_engine.models[ven].vol =
-        this._model_engine.models[ven].vol * scale_factor;
+        this._model_engine.models[ven].vol * this.scale_factor_abs;
 
       // change the unstressed volume
       this._model_engine.models[ven].u_vol_scaling_factor =
@@ -642,7 +511,7 @@ export class Scaler {
     this.pericardium.forEach((pc) => {
       // change the current volume
       this._model_engine.models[pc].vol =
-        this._model_engine.models[pc].vol * scale_factor;
+        this._model_engine.models[pc].vol * this.scale_factor_abs;
 
       // change the unstressed volume
       this._model_engine.models[pc].u_vol_scaling_factor =
@@ -658,7 +527,7 @@ export class Scaler {
     this.lungs.forEach((lung) => {
       // change the current volume
       this._model_engine.models[lung].vol =
-        this._model_engine.models[lung].vol * scale_factor;
+        this._model_engine.models[lung].vol * this.scale_factor_abs;
 
       // change the unstressed volume
       this._model_engine.models[lung].u_vol_scaling_factor =
@@ -681,7 +550,7 @@ export class Scaler {
     this.thorax.forEach((th) => {
       // change the current volume
       this._model_engine.models[th].vol =
-        this._model_engine.models[th].vol * scale_factor;
+        this._model_engine.models[th].vol * this.scale_factor_abs;
 
       // change the unstressed volume
       this._model_engine.models[th].u_vol_scaling_factor =
