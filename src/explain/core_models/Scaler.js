@@ -83,11 +83,15 @@ export class Scaler {
   right_ventricle = [];
   coronaries = [];
   arteries = [];
-  veins = [];
+  pulmonary_arteries = [];
+  pulmonary_veins = [];
+  systemic_arteries = [];
+  systemic_veins = [];
   capillaries = [];
   heart_valves = [];
   shunts = [];
-  blood_connectors = [];
+  syst_blood_connectors = [];
+  pulm_blood_connectors = [];
   pericardium = [];
   lungs = [];
   airways = [];
@@ -156,19 +160,24 @@ export class Scaler {
   u_vol_pericardium_factor = 1.0;
 
   // arteries
-  el_base_art_factor = 1.0;
-  u_vol_art_factor = 1.0;
+  el_base_syst_art_factor = 1.0;
+  u_vol_syst_art_factor = 1.0;
+  el_base_pulm_art_factor = 1.0;
+  u_vol_pulm_art_factor = 1.0;
 
   // veins
-  el_base_ven_factor = 1.0;
-  u_vol_ven_factor = 1.0;
+  el_base_syst_ven_factor = 1.0;
+  u_vol_syst_ven_factor = 1.0;
+  el_base_pulm_ven_factor = 1.0;
+  u_vol_pulm_ven_factor = 1.0;
 
   // capillaries
   el_base_cap_factor = 1.0;
   u_vol_cap_factor = 1.0;
 
   // blood connectors
-  res_blood_connectors_factor = 1.0;
+  res_syst_blood_connectors_factor = 1.0;
+  res_pulm_blood_connectors_factor = 1.0;
   res_shunts_factor = 1.0;
 
   // lungs
@@ -323,16 +332,19 @@ export class Scaler {
     this.scale_heart(global_scale_factor);
 
     // scale the arteries
-    this.scale_arteries(global_scale_factor);
+    this.scale_systemic_arteries(global_scale_factor);
+    this.scale_pulmonary_arteries(global_scale_factor);
 
     // scale the capillaries
     this.scale_capillaries(global_scale_factor);
 
     // scale the veins
-    this.scale_veins(global_scale_factor);
+    this.scale_systemic_veins(global_scale_factor);
+    this.scale_pulmonary_veins(global_scale_factor);
 
     // scale the blood connectors
-    this.scale_blood_connectors(global_scale_factor);
+    this.scale_syst_blood_connectors(global_scale_factor);
+    this.scale_pulm_blood_connectors(global_scale_factor);
 
     // scale the shunts
     this.scale_shunts(global_scale_factor);
@@ -489,7 +501,12 @@ export class Scaler {
       this._model_engine.models[c].vol =
         this._model_engine.models[c].vol * scale_factor;
     });
-    this.arteries.forEach((c) => {
+    this.systemic_arteries.forEach((c) => {
+      // change the current volume
+      this._model_engine.models[c].vol =
+        this._model_engine.models[c].vol * scale_factor;
+    });
+    this.pulmonary_arteries.forEach((c) => {
       // change the current volume
       this._model_engine.models[c].vol =
         this._model_engine.models[c].vol * scale_factor;
@@ -499,7 +516,12 @@ export class Scaler {
       this._model_engine.models[c].vol =
         this._model_engine.models[c].vol * scale_factor;
     });
-    this.veins.forEach((c) => {
+    this.systemic_veins.forEach((c) => {
+      // change the current volume
+      this._model_engine.models[c].vol =
+        this._model_engine.models[c].vol * scale_factor;
+    });
+    this.pulmonary_veins.forEach((c) => {
       // change the current volume
       this._model_engine.models[c].vol =
         this._model_engine.models[c].vol * scale_factor;
@@ -530,15 +552,26 @@ export class Scaler {
     });
   }
 
-  scale_arteries(scale_factor) {
-    this.arteries.forEach((art) => {
+  scale_systemic_arteries(scale_factor) {
+    this.systemic_arteries.forEach((art) => {
       // change the unstressed volume
       this._model_engine.models[art].u_vol_scaling_factor =
-        scale_factor * this.u_vol_art_factor;
+        scale_factor * this.u_vol_syst_art_factor;
 
       // change baseline elastance
       this._model_engine.models[art].el_base_scaling_factor =
-        (1.0 / scale_factor) * this.el_base_art_factor;
+        (1.0 / scale_factor) * this.el_base_syst_art_factor;
+    });
+  }
+  scale_pulmonary_arteries(scale_factor) {
+    this.pulmonary_arteries.forEach((art) => {
+      // change the unstressed volume
+      this._model_engine.models[art].u_vol_scaling_factor =
+        scale_factor * this.u_vol_pulm_art_factor;
+
+      // change baseline elastance
+      this._model_engine.models[art].el_base_scaling_factor =
+        (1.0 / scale_factor) * this.el_base_pulm_art_factor;
     });
   }
 
@@ -554,29 +587,48 @@ export class Scaler {
     });
   }
 
-  scale_veins(scale_factor) {
-    this.veins.forEach((ven) => {
+  scale_systemic_veins(scale_factor) {
+    this.systemic_veins.forEach((ven) => {
       // change the unstressed volume
       this._model_engine.models[ven].u_vol_scaling_factor =
-        scale_factor * this.u_vol_ven_factor;
+        scale_factor * this.u_vol_syst_ven_factor;
 
       // change baseline elastance
       this._model_engine.models[ven].el_base_scaling_factor =
-        (1.0 / scale_factor) * this.el_base_ven_factor;
+        (1.0 / scale_factor) * this.el_base_syst_ven_factor;
     });
   }
 
-  scale_blood_connectors(scale_factor) {
-    this.blood_connectors.forEach((con) => {
+  scale_pulmonary_veins(scale_factor) {
+    this.pulmonary_veins.forEach((ven) => {
+      // change the unstressed volume
+      this._model_engine.models[ven].u_vol_scaling_factor =
+        scale_factor * this.u_vol_pulm_ven_factor;
+
+      // change baseline elastance
+      this._model_engine.models[ven].el_base_scaling_factor =
+        (1.0 / scale_factor) * this.el_base_pulm_ven_factor;
+    });
+  }
+
+  scale_syst_blood_connectors(scale_factor) {
+    this.syst_blood_connectors.forEach((con) => {
       this._model_engine.models[con].r_scaling_factor =
-        (1.0 / scale_factor) * this.res_valve_factor;
+        (1.0 / scale_factor) * this.res_syst_blood_connectors_factor;
+    });
+  }
+
+  scale_pulm_blood_connectors(scale_factor) {
+    this.pulm_blood_connectors.forEach((con) => {
+      this._model_engine.models[con].r_scaling_factor =
+        (1.0 / scale_factor) * this.res_pulm_blood_connectors_factor;
     });
   }
 
   scale_shunts(scale_factor) {
     this.shunts.forEach((con) => {
       this._model_engine.models[con].r_scaling_factor =
-        (1.0 / scale_factor) * this.res_valve_factor;
+        (1.0 / scale_factor) * this.res_shunts_factor;
     });
   }
 

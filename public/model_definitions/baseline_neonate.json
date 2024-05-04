@@ -6737,18 +6737,18 @@
       "coronaries": [
         "COR"
       ],
-      "arteries": [
+      "pulmonary_arteries": ["PA"],
+      "pulmonary_veins": ["PV"],
+      "systemic_arteries": [
         "AA",
         "AAR",
         "AD",
-        "PA",
         "DA"
       ],
-      "veins": [
+      "systemic_veins": [
         "IVCE",
         "IVCI",
-        "SVC",
-        "PV"
+        "SVC"
       ],
       "capillaries": [
         "INT",
@@ -6771,7 +6771,7 @@
       "shunts": [
         "IPS"
       ],
-      "blood_connectors": [
+      "syst_blood_connectors": [
         "AA_AAR",
         "AAR_AD",
         "AD_LS",
@@ -6790,7 +6790,9 @@
         "BR_SVC",
         "RUB_SVC",
         "SVC_RA",
-        "IVCI_RA",
+        "IVCI_RA"
+      ],
+      "pulm_blood_connectors": [
         "PA_LL",
         "PA_RL",
         "RL_PV",
@@ -6842,13 +6844,18 @@
       "res_valve_factor": 1,
       "el_base_pericardium_factor": 1,
       "u_vol_pericardium_factor": 1,
-      "el_base_art_factor": 1,
-      "u_vol_art_factor": 1,
-      "el_base_ven_factor": 1,
-      "u_vol_ven_factor": 1,
+      "el_base_syst_art_factor": 1,
+      "u_vol_syst_art_factor": 1,
+      "el_base_pulm_art_factor": 1,
+      "u_vol_pulm_art_factor": 1,
+      "el_base_syst_ven_factor": 1,
+      "u_vol_syst_ven_factor": 1,
+      "el_base_pulm_ven_factor": 1,
+      "u_vol_pulm_ven_factor": 1,
       "el_base_cap_factor": 1,
       "u_vol_cap_factor": 1,
-      "res_blood_connectors_factor": 1,
+      "res_syst_blood_connectors_factor": 1,
+      "res_pulm_blood_connectors_factor": 1,
       "res_shunts_factor": 1,
       "el_base_lungs_factor": 1,
       "u_vol_lungs_factor": 1,
