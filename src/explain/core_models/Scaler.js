@@ -285,6 +285,7 @@ export class Scaler {
     }
 
     // set the new weight
+    this.weight = new_weight;
     this._model_engine.weight = new_weight;
 
     // scale the patient
