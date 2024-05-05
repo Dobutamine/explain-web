@@ -797,7 +797,7 @@
       }
     },
     "IS": {
-      "enabled": true,
+      "enabled": false,
       "label": "",
       "models": [
         "IS"
@@ -827,7 +827,7 @@
       }
     },
     "LT": {
-      "enabled": true,
+      "enabled": false,
       "label": "LT",
       "models": [
         "LT"
@@ -857,7 +857,7 @@
       }
     },
     "LD": {
-        "enabled": true,
+        "enabled": false,
         "label": "LD",
         "models": [
           "LD"
@@ -887,7 +887,7 @@
         }
     },
     "IS_LT": {
-      "enabled": true,
+      "enabled": false,
       "label": "IS_LT",
       "models": [
         "IS_LT"
@@ -897,7 +897,7 @@
       "dbcTo": "LT"
     },
     "LT_LD": {
-      "enabled": true,
+      "enabled": false,
       "label": "LT_LD",
       "models": [
         "LT_LD"
@@ -907,7 +907,7 @@
       "dbcTo": "LD"
     },
     "LD_SVC": {
-      "enabled": true,
+      "enabled": false,
       "label": "LD_SVC",
       "models": [
         "LD_SVC"

@@ -392,8 +392,8 @@ export class BloodValve {
       this._flow_counter = 0.0;
 
       this._flow_mov_avg_counter += 1;
-      this._flow_mov_avg_counter += 1;
       if (this._flow_mov_avg_counter > 5) {
+        this._flow_mov_avg_counter = 5;
         this.flow_lmin_avg =
           this._alpha * this.flow_lmin + (1 - this._alpha) * this.flow_lmin_avg;
       }
