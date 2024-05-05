@@ -407,7 +407,7 @@
     },
     "AAR": {
       "enabled": true,
-      "label": "",
+      "label": "AAR",
       "models": [
         "AAR"
       ],
@@ -417,7 +417,7 @@
           "type": "arc",
           "x": 1.5910052049446972,
           "y": 1.1849788549121665,
-          "dgs": 355
+          "dgs": 5
         },
         "morph": {
           "x": 1,
@@ -466,7 +466,7 @@
       }
     },
     "COR": {
-      "enabled": true,
+      "enabled": false,
       "label": "COR",
       "models": [
         "COR"
@@ -747,7 +747,7 @@
         "pos": {
           "type": "rel",
           "x": 0.0,
-          "y": -0.05,
+          "y": 0.1,
           "dgs": 0
         },
         "morph": {
@@ -777,7 +777,7 @@
         "pos": {
           "type": "rel",
           "x": 0.0,
-          "y": 0.1,
+          "y": 0.25,
           "dgs": 0
         },
         "morph": {
@@ -1097,7 +1097,7 @@
       "dbcTo": "AD"
     },
     "AA_COR": {
-      "enabled": true,
+      "enabled": false,
       "label": "AA_COR",
       "models": [
         "AA_COR"
@@ -1107,7 +1107,7 @@
       "dbcTo": "COR"
     },
     "COR_RA": {
-      "enabled": true,
+      "enabled": false,
       "label": "COR_RA",
       "models": [
         "COR_RA"

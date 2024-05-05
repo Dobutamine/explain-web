@@ -34,7 +34,9 @@ import { LymphCapacitance } from "src/explain/ModelIndex";
 let canvas = null;
 export default {
   props: {
-    alive: Boolean
+    alive: Boolean,
+    global_speed: Number,
+    global_scale: Number
   },
   data() {
     return {
@@ -126,6 +128,12 @@ export default {
     };
   },
   methods: {
+    changeGlobalSize() {
+
+    },
+    changeGlobalSpeed() {
+
+    },
     toggleShunts() {
       this.shunt_options.forEach((shunt_option) => {
         this.showOrHideShunt(this.selected_shunts.includes(shunt_option.value), shunt_option.value)

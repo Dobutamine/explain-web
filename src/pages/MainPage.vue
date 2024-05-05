@@ -175,7 +175,8 @@
                 width: '5px',
                 opacity: 0.5
               }">
-                <DiagramComponent :alive="diagram_alive"></DiagramComponent>
+                <DiagramComponent :alive="diagram_alive" :global_scale="diagram_scale" :global_speed="diagram_speed">
+                </DiagramComponent>
               </q-scroll-area>
             </q-tab-panel>
 
@@ -295,6 +296,8 @@ export default defineComponent({
       tab_right: "numerics",
       no_of_modeleditor: 1,
       chart_alive: true,
+      diagram_speed: 1.0,
+      diagram_scale: 1.0,
       ventilator_alive: true,
       heart_alive: false,
       xy_alive: true,
