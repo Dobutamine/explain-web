@@ -3503,14 +3503,8 @@ export default defineComponent({
           },
         }
       },
-      mob_controller: {
-        title: "MYOCARDIAL OXYGEN BALANCE",
-        enabled: true,
-        categories: {},
-        items: {}
-      },
       blood_controller: {
-        title: "BLOOD",
+        title: "BLOOD PROPERTIES",
         enabled: false,
         categories: {
           volume: {
@@ -3761,7 +3755,7 @@ export default defineComponent({
         }
       },
       gas_controller: {
-        title: "GAS",
+        title: "GAS PROPERTIES",
         enabled: false,
         categories: {
           volume: {
@@ -3873,6 +3867,12 @@ export default defineComponent({
           },
 
         }
+      },
+      mob_controller: {
+        title: "MYOCARDIAL OXYGEN BALANCE",
+        enabled: true,
+        categories: {},
+        items: {}
       },
       fluids_controller: {
         title: "FLUIDS",
