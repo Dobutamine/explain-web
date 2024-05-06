@@ -5713,6 +5713,7 @@
       "dependencies": [],
       "total_gas_volume": 0,
       "category": "general_models",
+      "gas_containing_components": ["DS", "ALL", "ALR"],
       "pres_atm": 760,
       "fio2": 0.21,
       "humidity_settings": {

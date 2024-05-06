@@ -79,14 +79,19 @@ export class Gas {
   is_enabled = false;
   dependencies = [];
   total_gas_volume = 0.0;
+  gas_containing_components = [];
 
   // dependent parameters
+  po2_alv = 0.0;
+  pco2_alv = 0.0;
 
   // local parameters
   _model_engine = {};
   _is_initialized = false;
   _t = 0.0005;
   _gas_constant = 62.36367;
+  _update_interval = 2.0;
+  _update_counter = 0.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -133,17 +138,42 @@ export class Gas {
     }
   }
 
-  calc_model() {}
+  calc_model() {
+    if (this._update_counter > this._update_interval) {
+      this._update_counter = 0.0;
+    }
+
+    this._update_counter += this._t;
+  }
+
+  set_total_gas_volume(new_gas_volume) {
+    let current_gas_volume = this.get_total_gas_volume();
+    let gas_volume_change = new_gas_volume / current_gas_volume;
+
+    this.gas_containing_components.forEach((c) => {
+      if (
+        this._model_engine.models[c].is_enabled &&
+        !this._model_engine.models[c].fixed_composition
+      ) {
+        this._model_engine.models[c].vol =
+          this._model_engine.models[c].vol * gas_volume_change;
+        this._model_engine.models[c].u_vol =
+          this._model_engine.models[c].u_vol * gas_volume_change;
+      }
+    });
+    this.total_gas_volume = this.get_total_gas_volume();
+  }
 
   get_total_gas_volume() {
     let total_volume = 0.0;
-    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
-      if (model.model_type === "GasCapacitance") {
-        if (model.is_enabled && !model.fixed_composition) {
-          total_volume += model.vol;
-        }
+    this.gas_containing_components.forEach((c) => {
+      if (
+        this._model_engine.models[c].is_enabled &&
+        !this._model_engine.models[c].fixed_composition
+      ) {
+        total_volume += this._model_engine.models[c].vol;
       }
-    }
+    });
     this.total_gas_volume = total_volume;
 
     return total_volume;
