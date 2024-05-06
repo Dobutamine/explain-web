@@ -5824,13 +5824,14 @@
       "name": "Mob",
       "model_type": "Mob",
       "description": "myocardial oxygen balance model",
-      "is_enabled": false,
+      "is_enabled": true,
       "dependencies": [
         "Heart",
         "AA",
         "AA_COR",
         "COR"
       ],
+      "mob_active": false,
       "heart_model": "Heart",
       "aa_model": "AA",
       "aa_cor_model": "AA_COR",

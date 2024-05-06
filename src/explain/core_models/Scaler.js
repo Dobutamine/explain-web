@@ -35,6 +35,7 @@ export class Scaler {
   airways = [];
   thorax = [];
   ans_active = false;
+  mob_active = false;
   live_update = true;
 
   // preprogrammed scaling factors
@@ -173,6 +174,7 @@ export class Scaler {
     this.resp_q_scaling_factor =
       this._model_engine.models["Metabolism"].resp_q_scaling_factor;
     this.ans_active = this._model_engine.models["Ans"].ans_active;
+    this.mob_active = this._model_engine.models["Mob"].mob_active;
     this.minute_volume_ref_scaling_factor =
       this._model_engine.models["Breathing"].minute_volume_ref_scaling_factor;
     this.vt_rr_ratio_scaling_factor =
@@ -198,6 +200,12 @@ export class Scaler {
     this.ans_active = ans_active;
     // update the activity of the ans
     this._model_engine.models["Ans"].ans_active = this.ans_active;
+  }
+
+  toggle_ans(mob_active) {
+    this.mob_active = mob_active;
+    // update the activity of the ans
+    this._model_engine.models["Mob"].ans_active = this.mob_active;
   }
 
   calc_model() {

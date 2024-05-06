@@ -3035,7 +3035,7 @@ export default defineComponent({
         }
       },
       scaler_controller: {
-        title: "MODEL SCALER",
+        title: "GLOBAL MODEL SCALER",
         enabled: true,
         categories: {
           scaling: {
@@ -3060,6 +3060,11 @@ export default defineComponent({
           },
           coronaries: {
             caption: "Coronaries",
+            enabled: false,
+            advanced: false,
+          },
+          mob: {
+            caption: "Myocardial oxygen balance",
             enabled: false,
             advanced: false,
           },
@@ -3394,6 +3399,21 @@ export default defineComponent({
             min: -10.0,
             max: 10.0,
             step: 0.05
+          },
+          mob_active: {
+            caption: "mob active",
+            category: "mob",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Scaler",
+            prop: "mob_active",
+            type: "boolean",
+            caller: "function",
+            function_name: "toggle_mob",
           },
           pc_el: {
             caption: "elastance",
@@ -3736,7 +3756,7 @@ export default defineComponent({
             step: 0.05
           },
           vo2: {
-            caption: "vo2 factor",
+            caption: "vo2",
             category: "metabolism",
             enabled: true,
             advanced: false,
@@ -3753,7 +3773,7 @@ export default defineComponent({
             step: 0.05
           },
           resp_q: {
-            caption: "respiratory quotient factor",
+            caption: "respiratory quotient",
             category: "metabolism",
             enabled: true,
             advanced: false,
@@ -3770,7 +3790,7 @@ export default defineComponent({
             step: 0.05
           },
           mv_ref: {
-            caption: "ref minute volume factor",
+            caption: "ref minute volume",
             category: "cob",
             enabled: true,
             advanced: false,
@@ -3787,7 +3807,7 @@ export default defineComponent({
             step: 0.05
           },
           vtrr_ref: {
-            caption: "ref vt_rr ratio factor",
+            caption: "ref vt_rr ratio",
             category: "cob",
             enabled: true,
             advanced: false,
