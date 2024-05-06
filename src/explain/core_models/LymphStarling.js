@@ -106,10 +106,10 @@ export class LymphStarling {
     this._model_comp_to.pres_osm = oP2;
 
     // calculate transcapillary flow
-    this.flow = this.L * this.S * (hP1 - hP2 - this.sigma * (oP1 - oP2));
+    this.flow = this.L * this._model_engine.models["Lymph"].S * (hP1 - hP2 - this.sigma * (oP1 - oP2));
 
-    this.flow_h = this.L * this.S * (hP1 - hP2);
-    this.flow_o = -(this.L * this.S * this.sigma * (oP1 - oP2));
+    this.flow_h = this.L * this._model_engine.models["Lymph"].S * (hP1 - hP2);
+    this.flow_o = -(this.L * this._model_engine.models["Lymph"].S * this.sigma * (oP1 - oP2));
 
     // analyze the data
     this.analyze();

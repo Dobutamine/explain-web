@@ -162,25 +162,6 @@
       ],
       "amp": 0
     },
-    "IL": {
-      "name": "IL",
-      "model_type": "LymphCapacitance",
-      "description": "initial lymphatics",
-      "is_enabled": true,
-      "dependencies": [],
-      "fixed_composition": false,
-      "vol": 0.006,
-      "u_vol": 0.005,
-      "el_rest": 5000,
-      "el_base": 5000,
-      "el_k": 0,
-      "pacemaker": false,
-      "activator": "",
-      "ampEXT":2,
-      "durEXT": 2,
-      "phase": 0,
-      "b": 3
-    },    
     "LT": {
       "name": "LT",
       "model_type": "LymphCapacitance",
@@ -244,14 +225,12 @@
       "pres_min": -3.119602169954667,
       "pres_mean": -2.6693257970253286,
       "albumin": 6,
-      "ampINT": 4850,
-      "ampEXT": 0.5,
-      "durEXT": 4,
-      "freqEXT": 5,
+      "ampINT": 5600,
+      "ampEXT": 500,
+      "amp_pres": 0,
+      "freq": 0.5,
       "phase": 0,
-      "el_con": 4388.930560110295,
-      "next_R": "LT_LD",
-      "b": 1
+      "el_con": 4388.930560110295
     },
     "LD": {
       "name": "LD",
@@ -261,7 +240,7 @@
       "dependencies": [],
       "fixed_composition": false,
       "u_vol": 0.005,
-      "el_rest": 9500,
+      "el_rest": 10000,
       "el_base": 17445.16816117453,
       "el_k": 0,
       "solutes": {
@@ -316,13 +295,12 @@
       "pres_min": -0.0019468963630222547,
       "pres_mean": 1.3478225796932868,
       "albumin": 6,
-      "ampINT": 4850,
-      "ampEXT": 0,
-      "durEXT": 2,
-      "freqEXT":0,
+      "ampINT": 5600,
+      "ampEXT": 500,
+      "amp_pres": 0,
+      "freq": 0.5,
       "phase": 0,
-      "el_con": 7445.168161174531,
-      "next_R": "LD_SVC"
+      "el_con": 7445.168161174531
     },
     "LymphIntrinsicPump": {
       "name": "LymphIntrinsicPump",
@@ -348,34 +326,25 @@
       "description": "extrinsic pump",
       "is_enabled": true,
       "dependencies": [],
+      "duration": 8,
+      "amp": 500,
+      "min": 1000,
       "targets": [
-        "IL","LT"
+        "LT",
+        "LD"
       ]
     },
-    "IS_IL": {
-      "name": "IS_IL",
-      "description": "interstitial space to initial lymphatics",
+    "IS_LT": {
+      "name": "IS_LT",
       "model_type": "LymphResistor",
-      "is_enabled": true,
-      "no_flow": false,
-      "no_back_flow": true,
-      "comp_from": "IS",
-      "comp_to": "IL",
-      "r_for": 50,
-      "r_back": 50,
-      "r_k": 0
-    },    
-    "IL_LT": {
-      "name": "IL_LT",
-      "model_type": "LymphResistor",
-      "description": "initial lymphatics to lymphatic trunk",
+      "description": "interstitial space to lymphatic trunk",
       "is_enabled": true,
       "dependencies": [],
       "no_flow": false,
       "no_back_flow": true,
-      "comp_from": "IL",
+      "comp_from": "IS",
       "comp_to": "LT",
-      "r_for": 500,
+      "r_for": 50,
       "r_for_factor": 1,
       "r_back": 50,
       "r_back_factor": 1,
@@ -21179,14 +21148,13 @@
       "is_enabled": true,
       "dependencies": [],
       "model_interface": [],
-      "category": "general_models"        
+      "category": "general_models"
     },
     "Lymph": {
       "name": "Lymph",
       "model_type": "Lymph",
       "description": "lymphatics model",
       "is_enabled": true,
-      "feedback_enabled": false,
       "dependencies": [],
       "interstitium": ["IS"],
       "trunks": ["LT"],
@@ -21201,6 +21169,10 @@
         "LL_IS",
         "RL_IS"
       ],
+      "is_flow": 0.0005069011370046441,
+      "is_lt_flow": 0.0017206742027428372,
+      "lt_ld_flow": 0,
+      "ld_svc_flow": 0.0007170235216669354,
       "model_interface": [],
       "solutes": {
         "na": 138,
@@ -21213,8 +21185,7 @@
       "aboxy": {
         "hco3": 25,
         "albumin": 6
-      },
-      "S": 50.0   
+      }
     },
     "ArtificialWhomb": {
       "name": "ArtificialWhomb",

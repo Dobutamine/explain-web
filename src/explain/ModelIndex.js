@@ -1,3 +1,5 @@
+import { exp } from "@tensorflow/tfjs";
+
 export { Ans } from "./core_models/Ans";
 export { Blood } from "./core_models/Blood";
 export { BloodCapacitance } from "./core_models/BloodCapacitance";
@@ -23,6 +25,7 @@ export { Lungs } from "./core_models/Lungs";
 export { Lymph } from "./core_models/Lymph";
 export { LymphCapacitance } from "./core_models/LymphCapacitance";
 export { LymphIntrinsicPump } from "./core_models/LymphIntrinsicPump";
+export { LymphExtrinsicPump } from "./core_models/LymphExtrinsicPump";
 export { LymphResistor } from "./core_models/LymphResistor";
 export { LymphStarling } from "./core_models/LymphStarling";
 export { Metabolism } from "./core_models/Metabolism";
