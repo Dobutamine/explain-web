@@ -471,7 +471,7 @@ export default defineComponent({
       },
       respiration_controller: {
         title: "RESPIRATORY SYSTEM",
-        enabled: true,
+        enabled: false,
         categories: {
           breathing: {
             caption: "Breathing",
@@ -3419,7 +3419,7 @@ export default defineComponent({
       },
       control_of_breathing_controller: {
         title: "CONTROL OF BREATHING",
-        enabled: true,
+        enabled: false,
         categories: {
           breathing: {
             caption: "Breathing",
@@ -3518,16 +3518,16 @@ export default defineComponent({
             enabled: true,
             advanced: false,
           },
-          solutes: {
-            caption: "Composition",
-            enabled: true,
-            advanced: false,
-          },
           temp: {
             caption: "Temperature",
             enabled: true,
             advanced: false,
           },
+          solutes: {
+            caption: "Composition",
+            enabled: true,
+            advanced: false,
+          }
         },
         items: {
           bv: {
@@ -3762,9 +3762,117 @@ export default defineComponent({
       },
       gas_controller: {
         title: "GAS",
-        enabled: true,
-        categories: {},
-        items: {}
+        enabled: false,
+        categories: {
+          volume: {
+            caption: "Volume",
+            enabled: true,
+            advanced: false,
+          },
+          props: {
+            caption: "Properties",
+            enabled: true,
+            advanced: false,
+          },
+        },
+        items: {
+          gv: {
+            caption: "gas volume (l)",
+            category: "volume",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Gas",
+            prop: "total_gas_volume",
+            type: "number",
+            caller: "function",
+            function_name: "set_total_gas_volume",
+            min: 0.01,
+            max: 0.750,
+            step: 0.005,
+            rounding: 3
+          },
+          atm: {
+            caption: "atmospheric pressure (mmHg)",
+            category: "props",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Gas",
+            prop: "pres_atm",
+            type: "number",
+            caller: "function",
+            function_name: "set_new_atmospheric_pressure",
+            min: 100,
+            max: 1500,
+            step: 1,
+            rounding: 0
+          },
+          fio2: {
+            caption: "fio2",
+            category: "props",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Gas",
+            prop: "fio2",
+            type: "number",
+            caller: "function",
+            function_name: "set_new_fio2",
+            min: 0.21,
+            max: 1,
+            step: 0.01,
+            rounding: 2
+          },
+          temp: {
+            caption: "temperature (dgs C)",
+            category: "props",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Gas",
+            prop: "temp",
+            type: "number",
+            caller: "function",
+            function_name: "set_new_temperature",
+            min: 0,
+            max: 50,
+            step: 0.1,
+            rounding: 1
+          },
+          humidity: {
+            caption: "humidity (0-1)",
+            category: "props",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Gas",
+            prop: "humidity",
+            type: "number",
+            caller: "function",
+            function_name: "set_new_humidity",
+            min: 0,
+            max: 1,
+            step: 0.01,
+            rounding: 2
+          },
+
+        }
       },
       fluids_controller: {
         title: "FLUIDS",

@@ -80,6 +80,24 @@ export class Gas {
   dependencies = [];
   total_gas_volume = 0.0;
   gas_containing_components = [];
+  pres_atm = 760;
+  fio2 = 0.21;
+  humidity = 0.5;
+  temp = 20;
+  humidity_settings = {
+    OUT: 0.5,
+    MOUTH: 0.5,
+    DS: 1,
+    ALL: 1,
+    ALR: 1,
+  };
+  temp_settings = {
+    OUT: 20,
+    MOUTH: 20,
+    DS: 32,
+    ALL: 37,
+    ALR: 37,
+  };
 
   // dependent parameters
   po2_alv = 0.0;
@@ -128,6 +146,9 @@ export class Gas {
       }
     }
 
+    // get the total gas volume
+    this.get_total_gas_volume();
+
     // set the flag to model is initialized
     this._is_initialized = true;
   }
@@ -141,6 +162,11 @@ export class Gas {
   calc_model() {
     if (this._update_counter > this._update_interval) {
       this._update_counter = 0.0;
+
+      this.temp = this._model_engine.models["OUT"].temp;
+      this.humidity = this._model_engine.models["OUT"].humidity;
+
+      this.get_total_gas_volume();
     }
 
     this._update_counter += this._t;
@@ -187,19 +213,28 @@ export class Gas {
   }
 
   set_atmospheric_pressure() {
-    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+    for (let [_, model] of Object.entries(this._model_engine.models)) {
       if (model.model_type === "GasCapacitance") {
         model.pres_atm = this.pres_atm;
       }
     }
   }
 
-  set_new_temperature(new_temp, site) {
+  set_new_temperature(new_temp, sites = ["OUT", "MOUTH"]) {
     if (new_temp >= 0.0 && new_temp <= 100.0) {
-      if (this._model_engine.models[site].model_type == "GasCapacitance") {
-        this._model_engine.models[site].temp = new_temp;
-        this._model_engine.models[site].target_temp = new_temp;
-      }
+      sites.forEach((site) => {
+        if (this._model_engine.models[site].model_type == "GasCapacitance") {
+          this.temp_settings[site] = new_temp;
+          this._model_engine.models[site].temp = new_temp;
+          this._model_engine.models[site].target_temp = new_temp;
+          set_gas_composition(
+            this._model_engine.models[site],
+            this.fio2,
+            new_temp,
+            this._model_engine.models[site].humidity
+          );
+        }
+      });
     }
   }
 
@@ -210,11 +245,36 @@ export class Gas {
     }
   }
 
-  set_new_humidity(new_humdity, site) {
-    if (new_humdity >= 0.0 && new_humdity <= 1.0) {
-      if (this._model_engine.models[site].model_type == "GasCapacitance") {
-        this._model_engine.models[site].humidity = new_humdity;
-      }
+  set_new_fio2(new_fio2, sites = ["OUT", "MOUTH"]) {
+    if (new_fio2 >= 0.2 && new_fio2 <= 1.0) {
+      sites.forEach((site) => {
+        if (this._model_engine.models[site].model_type == "GasCapacitance") {
+          this.fio2 = new_fio2;
+          set_gas_composition(
+            this._model_engine.models[site],
+            this.fio2,
+            this._model_engine.models[site].temp,
+            this._model_engine.models[site].humidity
+          );
+        }
+      });
+    }
+  }
+
+  set_new_humidity(new_humidity, sites = ["OUT", "MOUTH"]) {
+    if (new_humidity >= 0.0 && new_humidity <= 1.0) {
+      sites.forEach((site) => {
+        if (this._model_engine.models[site].model_type == "GasCapacitance") {
+          this.humidity_settings[site] = new_humidity;
+          this._model_engine.models[site].humidity = new_humidity;
+          set_gas_composition(
+            this._model_engine.models[site],
+            this.fio2,
+            this._model_engine.models[site].temp,
+            new_humidity
+          );
+        }
+      });
     }
   }
 
