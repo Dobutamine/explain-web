@@ -3038,6 +3038,11 @@ export default defineComponent({
         title: "SCALER CONTROLLER",
         enabled: true,
         categories: {
+          scaling: {
+            caption: "Scaling",
+            enabled: false,
+            advanced: false,
+          },
           blood_volume: {
             caption: "Blood volume",
             enabled: false,
@@ -3110,6 +3115,25 @@ export default defineComponent({
           }
         },
         items: {
+          weight: {
+            caption: "scale by weight (kg)",
+            category: "scaling",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Scaler",
+            prop: "weight",
+            type: "number",
+            caller: "function",
+            function_name: "scale_weight",
+            min: 0.5,
+            max: 5.0,
+            step: 0.05,
+            rounding: 3
+          },
           blood_volume: {
             caption: "blood volume (l/kg)",
             category: "blood_volume",
@@ -3128,6 +3152,21 @@ export default defineComponent({
             max: 0.15,
             step: 0.001,
             rounding: 3
+          },
+          ans_active: {
+            caption: "ans active",
+            category: "ans",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Scaler",
+            prop: "ans_active",
+            type: "boolean",
+            caller: "function",
+            function_name: "toggle_ans",
           },
           ans_hr: {
             caption: "ref heart rate (bpm)",

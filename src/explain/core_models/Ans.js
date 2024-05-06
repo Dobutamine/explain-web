@@ -10,6 +10,7 @@ export class Ans {
   is_enabled = false;
   dependencies = [];
 
+  ans_active = true;
   baroreceptor_location = "";
   chemoreceptor_location = "";
   baroreceptor_location = "AAR";
@@ -264,7 +265,7 @@ export class Ans {
   }
 
   step_model() {
-    if (this.is_enabled && this._is_initialized) {
+    if (this.is_enabled && this._is_initialized && this.ans_active) {
       this.calc_model();
     }
   }

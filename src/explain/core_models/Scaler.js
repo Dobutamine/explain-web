@@ -498,7 +498,7 @@ export class Scaler {
   lungs = [];
   airways = [];
   thorax = [];
-  ans_enabled = false;
+  ans_active = false;
   live_update = true;
 
   // preprogrammed scaling factors
@@ -652,7 +652,7 @@ export class Scaler {
       this._model_engine.models["Metabolism"].vo2_scaling_factor;
     this.resp_q_scaling_factor =
       this._model_engine.models["Metabolism"].resp_q_scaling_factor;
-    this.ans_enabled = this._model_engine.models["Ans"].is_enabled;
+    this.ans_active = this._model_engine.models["Ans"].ans_active;
     this.minute_volume_ref_scaling_factor =
       this._model_engine.models["Breathing"].minute_volume_ref_scaling_factor;
     this.vt_rr_ratio_scaling_factor =
@@ -672,6 +672,12 @@ export class Scaler {
     if (this.is_enabled && this._is_initialized && this.live_update) {
       this.calc_model();
     }
+  }
+
+  toggle_ans(ans_active) {
+    this.ans_active = ans_active;
+    // update the activity of the ans
+    this._model_engine.models["Ans"].ans_active = this.ans_active;
   }
 
   calc_model() {
@@ -1006,7 +1012,7 @@ export class Scaler {
     }
     this._model_engine.models["Heart"].heart_rate_ref = this.hr_ref;
     this._model_engine.models["Heart"].heart_rate_forced = this.hr_ref;
-    this._model_engine.models["Heart"].heart_rate_override = !this.ans_enabled;
+    this._model_engine.models["Heart"].heart_rate_override = !this.ans_active;
 
     // adjust the baroreceptor
     if (this._debug) {
@@ -1018,6 +1024,8 @@ export class Scaler {
     this._model_engine.models["Ans"].set_map = this.map_ref;
     this._model_engine.models["Ans"].max_map = this.map_ref * 2.0;
     this._model_engine.models["Ans"].init_effectors();
+
+    this._model_engine.models["Ans"].ans_active = this.ans_active;
   }
 
   scale_cob() {
