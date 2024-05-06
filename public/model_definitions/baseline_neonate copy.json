@@ -1426,15 +1426,83 @@
       "pres_mean": 3.027141335742724,
       "category": "veins"
     },
-    "SVC": {
-      "name": "SVC",
+    "SVCI": {
+      "name": "SVCI",
       "model_type": "BloodCapacitance",
-      "description": "superior vena cava",
+      "description": "superior vena cava intrathoracic",
       "is_enabled": true,
       "dependencies": [],
       "scalable": true,
       "fixed_composition": false,
-      "u_vol": 0.039659934586967045,
+      "u_vol": 0.008,
+      "el_base": 1000.0,
+      "el_k": 0,
+      "solutes": {
+        "na": 138,
+        "k": 3.5,
+        "ca": 1,
+        "cl": 108,
+        "lact": 1,
+        "mg": 0.75
+      },
+      "aboxy": {
+        "tco2": 28.472866531384177,
+        "to2": 5.049048906968222,
+        "ph": 7.4,
+        "po2": 0,
+        "pco2": 35,
+        "hco3": 25,
+        "be": 0,
+        "so2": 98,
+        "sid": 35.9,
+        "albumin": 25,
+        "phosphates": 1.64,
+        "uma": 0,
+        "dpg": 5,
+        "hemoglobin": 8,
+        "temp": 37
+      },
+      "drugs": {},
+      "pres_ext": -6.2748969142779165,
+      "pres_cc": 0,
+      "pres_atm": 0,
+      "pres_mus": 0,
+      "act_factor": 0,
+      "ans_activity_factor": 1,
+      "u_vol_factor": 1,
+      "u_vol_ans_factor": 1.0603744561727837,
+      "u_vol_drug_factor": 1,
+      "u_vol_scaling_factor": 1,
+      "el_base_factor": 1,
+      "el_base_ans_factor": 1,
+      "el_base_drug_factor": 1,
+      "el_base_scaling_factor": 1,
+      "el_k_factor": 1,
+      "el_k_ans_factor": 1,
+      "el_k_drug_factor": 1,
+      "el_k_scaling_factor": 1,
+      "vol": 0.01452,
+      "vol_max": 0.0729971385225071,
+      "vol_min": 0.07188890429654488,
+      "vol_sv": 0.0011082342259622208,
+      "pres": 0.7249757772722942,
+      "pres_in": 6.998680260918703,
+      "pres_out": -6.273704483646409,
+      "pres_tm": 13.272384744565112,
+      "pres_max": 3.833426161629288,
+      "pres_min": 3.833426161629288,
+      "pres_mean": 3.8334261616292884,
+      "category": "veins"
+    },
+    "SVCE": {
+      "name": "SVCE",
+      "model_type": "BloodCapacitance",
+      "description": "superior vena cava extrathoracic",
+      "is_enabled": true,
+      "dependencies": [],
+      "scalable": true,
+      "fixed_composition": false,
+      "u_vol": 0.032,
       "el_base": 229.0916784203103,
       "el_k": 0,
       "solutes": {
@@ -1481,7 +1549,7 @@
       "el_k_ans_factor": 1,
       "el_k_drug_factor": 1,
       "el_k_scaling_factor": 1,
-      "vol": 0.07260717511377518,
+      "vol": 0.058,
       "vol_max": 0.0729971385225071,
       "vol_min": 0.07188890429654488,
       "vol_sv": 0.0011082342259622208,
@@ -2681,20 +2749,20 @@
       "p2_ext_factor": 1,
       "category": "blood_connectors"
     },
-    "RUB_SVC": {
-      "name": "RUB_SVC",
+    "RUB_SVCE": {
+      "name": "RUB_SVCE",
       "model_type": "BloodResistor",
       "description": "upper body to superior vena cava",
       "is_enabled": true,
       "dependencies": [
         "RUB",
-        "SVC"
+        "SVCE"
       ],
       "scalable": true,
       "no_flow": false,
       "no_back_flow": true,
       "comp_from": "RUB",
-      "comp_to": "SVC",
+      "comp_to": "SVCE",
       "r_for": 10053.596614950635,
       "r_for_factor": 1,
       "r_back": 10053.596614950635,
@@ -2729,20 +2797,20 @@
       "p2_ext_factor": 1,
       "category": "blood_connectors"
     },
-    "BR_SVC": {
-      "name": "BR_SVC",
+    "BR_SVCE": {
+      "name": "BR_SVCE",
       "model_type": "BloodResistor",
       "description": "BR to superior vena cava",
       "is_enabled": true,
       "dependencies": [
         "BR",
-        "SVC"
+        "SVCE"
       ],
       "scalable": true,
       "no_flow": false,
       "no_back_flow": true,
       "comp_from": "BR",
-      "comp_to": "SVC",
+      "comp_to": "SVCE",
       "r_for": 8936.530324400564,
       "r_for_factor": 1,
       "r_back": 8936.530324400564,
@@ -3065,19 +3133,67 @@
       "p2_ext_factor": 1,
       "category": "blood_connectors"
     },
-    "SVC_RA": {
-      "name": "SVC_RA",
+    "SVCE_SVCI": {
+      "name": "SVCE_SVCI",
+      "model_type": "BloodResistor",
+      "description": "extrahoracic vena cava superior to intrathoracic superior",
+      "is_enabled": true,
+      "dependencies": [
+        "SVCE",
+        "SVCI"
+      ],
+      "scalable": true,
+      "no_flow": false,
+      "no_back_flow": true,
+      "comp_from": "SVCE",
+      "comp_to": "SVCI",
+      "r_for": 13.963328631875882,
+      "r_for_factor": 1,
+      "r_back": 13.963328631875882,
+      "r_back_factor": 1,
+      "r_k": 0,
+      "r_k_factor": 1,
+      "diffusion_enabled": false,
+      "dif_o2": 0.001,
+      "dif_o2_factor": 1,
+      "dif_o2_scaling_factor": 1,
+      "dif_co2": 0.001,
+      "dif_co2_factor": 1,
+      "dif_co2_scaling_factor": 1,
+      "r_mob_factor": 1,
+      "r_ans_factor": 1,
+      "r_drug_factor": 1,
+      "r_scaling_factor": 1,
+      "act_factor": 0,
+      "ans_activity_factor": 0,
+      "flow": 0.009403787110017946,
+      "flow_lmin": 0.3535711823040862,
+      "flow_lmin_avg": 0.3477373297130452,
+      "flow_forward_lmin": 0.3535711823040862,
+      "flow_backward_lmin": 0,
+      "flux_o2": 0,
+      "flux_co2": 0,
+      "p1": 0,
+      "p2": 0,
+      "p1_ext": 0,
+      "p2_ext": 0,
+      "p1_ext_factor": 1,
+      "p2_ext_factor": 1,
+      "category": "blood_connectors"
+    },
+    "SVCI_RA": {
+      "name": "SVCI_RA",
       "model_type": "BloodResistor",
       "description": "superior vena cava inferior to right atrium",
       "is_enabled": true,
       "dependencies": [
-        "SVC",
+        "SVCI",
         "RA"
       ],
       "scalable": true,
       "no_flow": false,
       "no_back_flow": false,
-      "comp_from": "SVC",
+      "comp_from": "SVCI",
       "comp_to": "RA",
       "r_for": 167.55994358251058,
       "r_for_factor": 1,
@@ -4805,7 +4921,7 @@
         "CHEST_L",
         "CHEST_R",
         "IVCI",
-        "SVC",
+        "SVCI",
         "PC",
         "AA",
         "AAR",
@@ -5320,7 +5436,8 @@
       "systemic_veins": [
         "IVCI",
         "IVCE",
-        "SVC"
+        "SVCI",
+        "SVCE"
       ],
       "svr_targets": [
         "AD_INT",
@@ -5338,7 +5455,7 @@
       ],
       "venpool_targets": [
         "IVCE",
-        "SVC"
+        "SVCE"
       ],
       "heart_aorta": [
         "LV_AA"
@@ -5347,7 +5464,7 @@
         "IVCI_RA"
       ],
       "heart_superior_vena_cava": [
-        "SVC_RA"
+        "SVCI_RA"
       ],
       "heart_pulmonary_artery": [
         "RV_PA"
@@ -5506,7 +5623,7 @@
       ],
       "venpool_targets": [
         "IVCE",
-        "SVC"
+        "SVCE"
       ],
       "cont_targets": [
         "LV",
@@ -5644,11 +5761,11 @@
       "blood_containing_components": [
         "AA", "AAR", "AD", "LS", "INT", "KID", "RLB", "IVCE",
         "IVCI", "RA", "RV", "PA", "LL", "RL", "PV", "LA","LV",
-        "BR", "RUB", "SVC", "COR", "DA"],
+        "BR", "RUB", "SVCE", "SVCI", "COR", "DA"],
       "ascending_aorta": "AA",
       "descending_aorta": "AD",
       "inferior_vena_cava": "IVCI",
-      "superior_vena_cava": "SVC",
+      "superior_vena_cava": "SVCI",
       "right_atrium": "RA",
       "total_blood_volume": 0.2831239959543716,
       "ph": 7.432553410956334,
@@ -6020,7 +6137,7 @@
         "RV": 1,
         "AA": 1,
         "AAR": 1,
-        "SVC": 1,
+        "SVCI": 1,
         "IVCI": 1,
         "COR": 1
       },
@@ -6195,7 +6312,8 @@
       "systemic_veins": [
         "IVCE",
         "IVCI",
-        "SVC"
+        "SVCI",
+        "SVCE"
       ],
       "capillaries": [
         "INT",
@@ -6234,9 +6352,10 @@
         "INT_IVCE",
         "RLB_IVCE",
         "IVCE_IVCI",
-        "BR_SVC",
-        "RUB_SVC",
-        "SVC_RA",
+        "BR_SVCE",
+        "RUB_SVCE",
+        "SVCE_SVCI",
+        "SVCI_RA",
         "IVCI_RA"
       ],
       "pulm_blood_connectors": [

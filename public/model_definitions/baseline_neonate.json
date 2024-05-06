@@ -1298,7 +1298,7 @@
       "dependencies": [],
       "scalable": true,
       "fixed_composition": false,
-      "u_vol": 0.012018161996050623,
+      "u_vol": 0.0162,
       "el_base": 776.9196050775741,
       "el_k": 0,
       "solutes": {
@@ -1366,7 +1366,7 @@
       "dependencies": [],
       "scalable": true,
       "fixed_composition": false,
-      "u_vol": 0.06249444237946325,
+      "u_vol": 0.084,
       "el_base": 145.42341325811003,
       "el_k": 0,
       "solutes": {
@@ -1434,7 +1434,7 @@
       "dependencies": [],
       "scalable": true,
       "fixed_composition": false,
-      "u_vol": 0.008,
+      "u_vol": 0.0108,
       "el_base": 1000.0,
       "el_k": 0,
       "solutes": {
@@ -1502,7 +1502,7 @@
       "dependencies": [],
       "scalable": true,
       "fixed_composition": false,
-      "u_vol": 0.032,
+      "u_vol": 0.0432,
       "el_base": 229.0916784203103,
       "el_k": 0,
       "solutes": {
@@ -5761,7 +5761,7 @@
       "blood_containing_components": [
         "AA", "AAR", "AD", "LS", "INT", "KID", "RLB", "IVCE",
         "IVCI", "RA", "RV", "PA", "LL", "RL", "PV", "LA","LV",
-        "BR", "RUB", "SVCE", "SVCI", "COR", "DA"],
+        "BR", "RUB", "SVCE","SVCI", "COR", "DA"],
       "ascending_aorta": "AA",
       "descending_aorta": "AD",
       "inferior_vena_cava": "IVCI",
