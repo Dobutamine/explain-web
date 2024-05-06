@@ -67,8 +67,10 @@ export class Breathing {
   dependencies = [];
   breathing_enabled = true;
   minute_volume_ref = 0.64; // in L/min/kg
+  minute_volume_ref_factor = 1.0;
   minute_volume_ref_scaling_factor = 1.0;
   vt_rr_ratio = 0.03; // in L/bpm/kg
+  vt_rr_ratio_factor = 1.0;
   vt_rr_ratio_scaling_factor = 1.0;
 
   rmp_gain = 2.0;
@@ -150,7 +152,10 @@ export class Breathing {
 
     // calculate the target minute volume
     let _minute_volume_ref =
-      this.minute_volume_ref * this.minute_volume_ref_scaling_factor * _weight;
+      this.minute_volume_ref *
+      this.minute_volume_ref_factor *
+      this.minute_volume_ref_scaling_factor *
+      _weight;
 
     this.target_minute_volume =
       _minute_volume_ref +
@@ -283,7 +288,10 @@ export class Breathing {
     // calculate the spontaneous resp rate depending on the target minute volume (from ANS) and the set vt-rr ratio
     this.resp_rate = Math.sqrt(
       this.target_minute_volume /
-        (this.vt_rr_ratio * this.vt_rr_ratio_scaling_factor * _weight)
+        (this.vt_rr_ratio *
+          this.vt_rr_ratio_factor *
+          this.vt_rr_ratio_scaling_factor *
+          _weight)
     );
 
     // calculate the target tidal volume depending on the target resp rate and target minute volume (from ANS)
