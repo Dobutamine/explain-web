@@ -5760,7 +5760,6 @@
       "exp_tidal_volume": 0.015,
       "insp_tidal_volume": -0.0144,
       "resp_muscle_pressure": 1.2381831542343418,
-      "category": "general_models",
       "mv_factor": 1
     },
     "Metabolism": {
@@ -5784,8 +5783,7 @@
         "AA": 0.005,
         "AD": 0.01,
         "BR": 0.453
-      },
-      "category": "general_models"
+      }
     },
     "Placenta": {
       "name": "Placenta",
