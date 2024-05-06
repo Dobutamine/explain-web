@@ -6,7 +6,7 @@
           <q-tabs v-model="tab_left" dense class="text-white" active-color="primary" indicator-color="primary"
             align="left" narrow-indicator outside-arrows @update:model-value="tabLeftChanged">
             <q-tab name="model_editor"><q-icon name="fa-solid fa-pen-to-square" size="xs"></q-icon><q-tooltip>edit model
-                parameters</q-tooltip>
+                components</q-tooltip>
             </q-tab>
             <q-tab name="circulatory_system"><q-icon name="fa-solid fa-heart" size="xs"></q-icon><q-tooltip>edit heart
                 and circulatory system</q-tooltip>
@@ -14,8 +14,11 @@
             <q-tab name="respiratory_system"><q-icon name="fa-solid fa-lungs" size="xs"></q-icon><q-tooltip>edit
                 respiratory system</q-tooltip>
             </q-tab>
-            <q-tab name="scaling"><q-icon name="fa-solid fa-weight-scale" size="xs"></q-icon><q-tooltip>scale
-                model</q-tooltip>
+            <q-tab name="other_systems"><q-icon name="fa-solid fa-bars" size="xs"></q-icon><q-tooltip>edit
+                other systems</q-tooltip>
+            </q-tab>
+            <q-tab name="scaling"><q-icon name="fa-solid fa-weight-scale" size="xs"></q-icon><q-tooltip>global moddel
+                scaling</q-tooltip>
             </q-tab>
           </q-tabs>
 
@@ -49,7 +52,7 @@
 
                 <NiceController :config="heart_controller"></NiceController>
                 <NiceController :config="circulation_controller"></NiceController>
-                <NiceController :config="pda_controller"></NiceController>
+                <NiceController :config="shunts_controller"></NiceController>
 
               </q-scroll-area>
             </q-tab-panel>
@@ -62,6 +65,28 @@
                 opacity: 0.5
               }">
                 <NiceController :config="respiration_controller"></NiceController>
+                <NiceController :config="control_of_breathing_controller"></NiceController>
+                <NiceController :config="gas_controller"></NiceController>
+
+              </q-scroll-area>
+            </q-tab-panel>
+            <q-tab-panel name="other_systems">
+              <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
+                right: '5px',
+                borderRadius: '5px',
+                background: 'black',
+                width: '5px',
+                opacity: 0.5
+              }">
+                <NiceController :config="baroreflex_controller"></NiceController>
+                <NiceController :config="chemoreflex_controller"></NiceController>
+                <NiceController :config="metabolism_controller"></NiceController>
+                <NiceController :config="fluids_controller"></NiceController>
+                <NiceController :config="blood_controller"></NiceController>
+                <NiceController :config="mob_controller"></NiceController>
+                <NiceController :config="placenta_controller"></NiceController>
+                <NiceController :config="ecls_controller"></NiceController>
+                <NiceController :config="resuscitation_controller"></NiceController>
 
               </q-scroll-area>
             </q-tab-panel>
@@ -74,8 +99,6 @@
                 opacity: 0.5
               }">
                 <NiceController :config="scaler_controller"></NiceController>
-
-
               </q-scroll-area>
             </q-tab-panel>
 
@@ -185,19 +208,10 @@
           <q-tabs v-model="tab_right" dense class="text-white" active-color="primary" indicator-color="primary"
             align="left" narrow-indicator outside-arrows @update:model-value="tabRightChanged">
             <q-tab name="numerics">
-              <q-icon name="fa-solid fa-keyboard" size="xs"></q-icon>
-              <q-tooltip>numerical model parameters</q-tooltip>
+              <q-icon name="fa-solid fa-desktop" size="xs"></q-icon>
+              <q-tooltip>monitoring</q-tooltip>
             </q-tab>
 
-            <q-tab name="heart">
-              <q-icon name="fa-solid fa-heart" size="xs"></q-icon>
-              <q-tooltip>heart monitoring</q-tooltip>
-            </q-tab>
-
-            <q-tab name="respiration">
-              <q-icon name="fa-solid fa-lungs" size="xs"></q-icon>
-              <q-tooltip>respiratory monitoring</q-tooltip>
-            </q-tab>
           </q-tabs>
           <q-tab-panels v-model="tab_right" keep-alive style="background-color: black">
             <q-tab-panel name="numerics">
@@ -210,36 +224,6 @@
               }">
                 <BigNumbersComponent></BigNumbersComponent>
                 <div v-for="(numeric, index) in numerics" :key="index">
-                  <NumericsComponent :title="numeric.title" :collapsed="numeric.collapsed"
-                    :parameters="numeric.parameters"></NumericsComponent>
-                </div>
-              </q-scroll-area>
-            </q-tab-panel>
-
-            <q-tab-panel name="respiration">
-              <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-                right: '5px',
-                borderRadius: '5px',
-                background: 'black',
-                width: '5px',
-                opacity: 0.5
-              }">
-                <div v-for="(numeric, index) in respiration" :key="index">
-                  <NumericsComponent :title="numeric.title" :collapsed="numeric.collapsed"
-                    :parameters="numeric.parameters"></NumericsComponent>
-                </div>
-              </q-scroll-area>
-            </q-tab-panel>
-
-            <q-tab-panel name="heart">
-              <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-                right: '5px',
-                borderRadius: '5px',
-                background: 'black',
-                width: '5px',
-                opacity: 0.5
-              }">
-                <div v-for="(numeric, index) in heart" :key="index">
                   <NumericsComponent :title="numeric.title" :collapsed="numeric.collapsed"
                     :parameters="numeric.parameters"></NumericsComponent>
                 </div>
@@ -300,51 +284,6 @@ export default defineComponent({
       diagram_alive: true,
       screen_offset: 135.0,
       screen_height: 100.0,
-      respiration: {
-        vitals_numerics: {
-          title: "VITALS",
-          collapsed: false,
-          parameters: [
-            { label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"] },
-            { label: "Abp AA", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AA.pres_max", "AA.pres_min"] },
-            { label: "Abp AD", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AD.pres_max", "AD.pres_min"] },
-            { label: "Resp rate", unit: "/min", factor: 1.0, rounding: 0, props: ["Breathing.resp_rate"] },
-            { label: "SpO2(pre)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_pre"] },
-            { label: "SpO2(post)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_post"] },
-            { label: "SpO2(ven)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_ven"] }
-
-          ]
-        },
-        lab_numerics: {
-          title: "LABS",
-          collapsed: true,
-          parameters: [
-            { label: "pH", unit: "", factor: 1.0, rounding: 2, props: ["Blood.ph"] },
-            { label: "pO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.po2"] },
-            { label: "pCO2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Blood.pco2"] },
-            { label: "HCO3", unit: "mmol/l", factor: 1.0, rounding: 0, props: ["Blood.hco3"] },
-            { label: "BE", unit: "mmol/l", factor: 1.0, rounding: 1, props: ["Blood.be"] },
-            { label: "SO2", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2"] },
-          ]
-        },
-        vent_numerics: {
-          title: "VENTILATOR",
-          collapsed: true,
-          parameters: [
-            { label: "Pip", unit: "cmh2o", factor: 1.0, rounding: 0, props: ["Ventilator.pip_cmh2o"] },
-            { label: "Peep", unit: "cmh2o", factor: 1.0, rounding: 0, props: ["Ventilator.peep_cmh2o"] },
-            { label: "Freq", unit: "/min", factor: 1.0, rounding: 0, props: ["Ventilator.vent_rate"] },
-            { label: "Tv", unit: "ml", factor: 1000.0, rounding: 1, props: ["Ventilator.exp_tidal_volume"] },
-            { label: "Mv", unit: "ml/min", factor: 1000.0, rounding: 0, props: ["Ventilator.minute_volume"] },
-            { label: "Comp", unit: "ml/cmh2o", factor: 1.0, rounding: 1, props: ["Ventilator.compliance"] },
-            { label: "Res", unit: "ml/cmh2o", factor: 1.0, rounding: 1, props: ["Ventilator.resistance"] },
-            { label: "Etco2", unit: "kPa", factor: 0.1333, rounding: 1, props: ["Ventilator.etco2"] },
-            { label: "Tv_hfo", unit: "ml", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_tv"] },
-            { label: "Mv_hfo", unit: "ml/min", factor: 1.0, rounding: 0, props: ["Ventilator.hfo_mv"] },
-            { label: "Dco2", unit: "ml^2/s", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_dco2"] },
-          ]
-        }
-      },
       numerics: {
         vitals_numerics: {
           title: "ADDITIONAL VITALS",
@@ -409,15 +348,6 @@ export default defineComponent({
             { label: "Mv", unit: "ml/kg/min", factor: 1000.0, rounding: 0, props: ["Breathing.minute_volume"], weight_based: true },
           ]
         },
-        resp_numerics: {
-          title: "LYMPHATICS",
-          collapsed: true,
-          parameters: [
-            { label: "is flow", unit: "ml/kg/min", factor: 1000, rounding: 2, props: ["Lymph.is_flow"], weight_based: true },
-            { label: "duct flow", unit: "ml/kg/min", factor: 1000.0, rounding: 2, props: ["LD_SVC.flow_lmin"], weight_based: true },
-            { label: "is pres", unit: "mmHg", factor: 1.0, rounding: 1, props: ["IS.pres"], weight_based: false },
-          ]
-        },
         vent_numerics: {
           title: "VENTILATOR",
           collapsed: true,
@@ -434,42 +364,6 @@ export default defineComponent({
             { label: "Mv_hfo", unit: "ml/kg/min", factor: 1.0, rounding: 0, props: ["Ventilator.hfo_mv"], weight_based: true },
             { label: "dco2", unit: "ml^2/s", factor: 1.0, rounding: 1, props: ["Ventilator.hfo_dco2"], weight_based: false },
           ]
-        }
-      },
-      heart: {
-        vitals_numerics: {
-          title: "VITALS",
-          collapsed: false,
-          parameters: [
-            { label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"] },
-            { label: "Abp", unit: "mmHg", factor: 1.0, rounding: 0, props: ["AA.pres_max", "AA.pres_min"] },
-            { label: "Resp rate", unit: "/min", factor: 1.0, rounding: 0, props: ["Breathing.resp_rate"] },
-            { label: "SpO2(pre)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_pre"] },
-            { label: "SpO2(post)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_post"] },
-            { label: "SpO2(ven)", unit: "%", factor: 1.0, rounding: 0, props: ["Blood.so2_ven"] }
-
-          ]
-        },
-        heart_numerics: {
-          title: "HEART",
-          collapsed: false,
-          parameters: [
-            { label: "Heartrate", unit: "/min", factor: 1.0, rounding: 0, props: ["Heart.heart_rate"] },
-            { label: "LVO", unit: "ml/min", factor: 1000.0, rounding: 0, props: ["LV_AA.flow_lmin"] },
-            { label: "RVO", unit: "ml/min", factor: 1000.0, rounding: 0, props: ["RV_PA.flow_lmin"] },
-            { label: "COR", unit: "ml/min", factor: 1000.0, rounding: 1, props: ["COR_RA.flow_lmin"] },
-            { label: "LVP", unit: "mmHg", factor: 1.0, rounding: 1, props: ["LV.pres_max", "LV.pres_min"] },
-            { label: "LVV", unit: "ml", factor: 1000.0, rounding: 1, props: ["LV.vol_max", "LV.vol_min"] },
-            { label: "LV_SV", unit: "ml", factor: 1000.0, rounding: 1, props: ["LV.vol_sv"] },
-            { label: "RVP", unit: "mmHg", factor: 1.0, rounding: 1, props: ["RV.pres_max", "RV.pres_min"] },
-            { label: "RVV", unit: "mL", factor: 1000.0, rounding: 1, props: ["RV.vol_max", "RV.vol_min"] },
-            { label: "RV_SV", unit: "mL", factor: 1000.0, rounding: 1, props: ["RV.vol_sv"] },
-          ]
-        },
-        circulation_numerics: {
-          title: "CIRCULATION",
-          collapsed: true,
-          parameters: []
         }
       },
       circulation_controller: {
@@ -765,308 +659,7 @@ export default defineComponent({
         }
 
       },
-      control_of_breathing_controller: {
-
-      },
-      lymph_controller: {
-        title: "LYMPHATICS",
-        enabled: false,
-        categories: {
-          elastances: {
-            caption: "elastances",
-            enabled: true,
-            advanced: false
-          },
-          u_vols: {
-            caption: "unstressed volumes",
-            enabled: true,
-            advanced: false
-          },
-          resistances: {
-            caption: "resistances",
-            enabled: true,
-            advanced: false
-          },
-          pump: {
-            caption: "intrinsic pump",
-            enabled: true,
-            advanced: false
-          }
-        },
-        items: {
-          enabled: {
-            caption: "lymphatics enabled",
-            category: "elastances",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "boolean",
-            unit: "",
-            caller: "function",
-            function_name: "switch_lymphatics",
-            model: "Lymph",
-            prop: "is_enabled",
-            min: 10.0,
-            max: 10000.0,
-            step: 10.0
-          },
-          is_el_base: {
-            caption: "interstitial space",
-            category: "elastances",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            unit: "mmHg/l",
-            caller: "direct",
-            function_name: "",
-            model: "IS",
-            prop: "el_base",
-            min: 10.0,
-            max: 10000.0,
-            step: 10.0
-          },
-          lt_el_base: {
-            caption: "lymphatic trunks",
-            category: "elastances",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            unit: "mmHg/l",
-            caller: "direct",
-            function_name: "",
-            model: "LT",
-            prop: "el_rest",
-            min: 10.0,
-            max: 100000.0,
-            step: 10.0
-          },
-          ld_el_base: {
-            caption: "lymphatic ducts",
-            category: "elastances",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            unit: "mmHg/l",
-            caller: "direct",
-            function_name: "",
-            model: "LD",
-            prop: "el_rest",
-            min: 10.0,
-            max: 100000.0,
-            step: 10.0
-          },
-          is_u_vol: {
-            caption: "interstitial space",
-            category: "u_vols",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            unit: "l",
-            caller: "direct",
-            function_name: "",
-            model: "IS",
-            prop: "u_vol",
-            rounding: 4,
-            min: 0.0,
-            max: 1.0,
-            step: 0.0001
-          },
-          lt_u_vol: {
-            caption: "lymphatic trunks",
-            category: "u_vols",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            unit: "l",
-            caller: "direct",
-            function_name: "",
-            model: "LT",
-            prop: "u_vol",
-            rounding: 4,
-            min: 0.0,
-            max: 0.1,
-            step: 0.0001
-          },
-          ld_u_vol: {
-            caption: "lymphatic ducts",
-            category: "u_vols",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            unit: "l",
-            caller: "direct",
-            function_name: "",
-            model: "LD",
-            prop: "u_vol",
-            rounding: 4,
-            min: 0.0,
-            max: 0.1,
-            step: 0.0001
-          },
-          ip_freq: {
-            caption: "frequency",
-            category: "pump",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            unit: "/min",
-            caller: "direct",
-            function_name: "",
-            model: "LymphIntrinsicPump",
-            prop: "freq",
-            min: 0.0,
-            max: 50,
-            step: 1
-          },
-          ip_dur: {
-            caption: "duration",
-            category: "pump",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            unit: "s",
-            caller: "direct",
-            function_name: "",
-            model: "LymphIntrinsicPump",
-            prop: "duration",
-            min: 1,
-            max: 10,
-            step: 1
-          },
-          lt_amp: {
-            caption: "lymphatic trunks amp",
-            category: "pump",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            unit: "",
-            caller: "direct",
-            function_name: "",
-            model: "LT",
-            prop: "amp",
-            min: 0,
-            max: 6500,
-            step: 100
-          },
-          ld_amp: {
-            caption: "lymphatic ducts amp",
-            category: "pump",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            unit: "",
-            caller: "direct",
-            function_name: "",
-            model: "LD",
-            prop: "amp",
-            min: 0,
-            max: 6500,
-            step: 100
-          },
-          is_lt_res: {
-            caption: "IS_LT resistance",
-            category: "resistances",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            unit: "mmHg*s/l",
-            caller: "direct",
-            function_name: "",
-            model: "IS_LT",
-            prop: "r_for",
-            min: 0,
-            max: 10000,
-            step: 10
-          },
-          lt_ld_res: {
-            caption: "LT_LD resistance",
-            category: "resistances",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            unit: "mmHg*s/l",
-            caller: "direct",
-            function_name: "",
-            model: "LT_LD",
-            prop: "r_for",
-            min: 0,
-            max: 10000,
-            step: 10
-          },
-          ld_svc_res: {
-            caption: "LD_SVC resistance",
-            category: "resistances",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            unit: "mmHg*s/l",
-            caller: "direct",
-            function_name: "",
-            model: "LD_SVC",
-            prop: "r_for",
-            min: 0,
-            max: 10000,
-            step: 10
-          },
-        }
-
-      },
-      pda_controller: {
+      shunts_controller: {
         title: "SHUNTS",
         enabled: true,
         categories: {
@@ -2809,7 +2402,6 @@ export default defineComponent({
           }
         }
       },
-      mob_controller: {},
       placenta_controller: {
         title: "PLACENTA",
         enabled: false,
@@ -3824,7 +3416,43 @@ export default defineComponent({
             step: 0.05
           },
         }
-      }
+      },
+      control_of_breathing_controller: {
+        title: "CONTROL OF BREATHING",
+        enabled: true,
+        categories: {},
+        items: {}
+      },
+      mob_controller: {
+        title: "MYOCARDIAL OXYGEN BALANCE",
+        enabled: true,
+        categories: {},
+        items: {}
+      },
+      blood_controller: {
+        title: "BLOOD",
+        enabled: true,
+        categories: {},
+        items: {}
+      },
+      gas_controller: {
+        title: "GAS",
+        enabled: true,
+        categories: {},
+        items: {}
+      },
+      fluids_controller: {
+        title: "FLUIDS",
+        enabled: true,
+        categories: {},
+        items: {}
+      },
+      ecls_controller: {
+        title: "ECLS",
+        enabled: true,
+        categories: {},
+        items: {}
+      },
     }
   },
   methods: {
@@ -3891,16 +3519,6 @@ export default defineComponent({
       explain.watchModelPropsSlow(["Heart.heart_rate", "Blood.so2_pre", "Blood.so2_post", "AD.pres_max", "AD.pres_min", "AD.pres_mean", "Breathing.resp_rate", "Ventilator.vent_rate"])
 
       Object.keys(this.numerics).forEach(numeric => {
-        this.numerics[numeric].parameters.forEach((p) => {
-          explain.watchModelPropsSlow([...p.props])
-        })
-      })
-      Object.keys(this.respiration).forEach(numeric => {
-        this.numerics[numeric].parameters.forEach((p) => {
-          explain.watchModelPropsSlow([...p.props])
-        })
-      })
-      Object.keys(this.heart).forEach(numeric => {
         this.numerics[numeric].parameters.forEach((p) => {
           explain.watchModelPropsSlow([...p.props])
         })
