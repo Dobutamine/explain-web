@@ -51,6 +51,7 @@ export class Metabolism {
   vo2_factor = 1.0;
   vo2_scaling_factor = 1.0;
   resp_q = 0.6;
+  resp_q_scaling_factor = 1.0;
   body_temp = 37;
   metabolic_active_models = {};
 
@@ -119,7 +120,7 @@ export class Metabolism {
       }
 
       // calculate the change in co2 concentration in this step
-      let dtco2 = vo2_step * fvo2 * this.resp_q;
+      let dtco2 = vo2_step * fvo2 * this.resp_q * this.resp_q_scaling_factor;
 
       // calculate the new co2 concentration in blood
       let new_tco2 = (tco2 * vol + dtco2) / vol;

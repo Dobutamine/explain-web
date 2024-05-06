@@ -5767,6 +5767,7 @@
       "vo2_factor": 1,
       "vo2_scaling_factor": 1,
       "resp_q": 0.8,
+      "resp_q_scaling_factor": 1.0,
       "body_temp": 37,
       "metabolic_active_models": {
         "RLB": 0.15,
@@ -6180,7 +6181,6 @@
       "coronaries": [
         "COR"
       ],
-      "arteries": [],
       "pulmonary_arteries": [
         "PA"
       ],
