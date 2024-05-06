@@ -169,7 +169,7 @@ export class Blood {
       });
       return;
     }
-    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+    for (let [_, model] of Object.entries(this._model_engine.models)) {
       if (
         model.model_type === "BloodCapacitance" ||
         model.model_type === "BloodTimeVaryingElastance"
@@ -189,7 +189,7 @@ export class Blood {
       });
       return;
     }
-    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
+    for (let [_, model] of Object.entries(this._model_engine.models)) {
       if (
         model.model_type === "BloodCapacitance" ||
         model.model_type === "BloodTimeVaryingElastance"
