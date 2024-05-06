@@ -1,467 +1,6 @@
 export class Scaler {
   static model_type = "Scaler";
-  static model_interface = [
-    {
-      target: "scale_weight_and_volumes",
-      caption: "scale volumes",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "weight",
-          caption: "weight (grams)",
-          type: "number",
-          factor: 1000,
-          delta: 10,
-          rounding: 0,
-          ul: 100000.0,
-          ll: 10.0,
-        },
-        {
-          target: "blood_volume_kg",
-          caption: "blood volume (ml/kg)",
-          type: "number",
-          factor: 1000,
-          delta: 1,
-          rounding: 0,
-          ul: 300.0,
-          ll: 10.0,
-        },
-        {
-          target: "gas_volume_kg",
-          caption: "lung volume (ml/kg)",
-          type: "number",
-          factor: 1000,
-          delta: 1,
-          rounding: 0,
-          ul: 300.0,
-          ll: 10.0,
-        },
-      ],
-    },
-    {
-      target: "adjust_ans",
-      caption: "scale autonomic nervous system",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "hr_ref",
-          caption: "ref heartrate (bpm)",
-          type: "number",
-          factor: 1,
-          delta: 1,
-          rounding: 0,
-          ul: 300.0,
-          ll: 10.0,
-        },
-        {
-          target: "map_ref",
-          caption: "ref mean arterial pressure (mmHg)",
-          type: "number",
-          factor: 1,
-          delta: 1,
-          rounding: 0,
-          ul: 300.0,
-          ll: 10.0,
-        },
-      ],
-    },
-    {
-      target: "adjust_heart_scaling",
-      caption: "adjust heart scaling",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "el_min_ra_factor",
-          caption: "atrial minimal elastance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "el_max_ra_factor",
-          caption: "atrial maximal elastance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "el_min_rv_factor",
-          caption: "ventricular minimal elastance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "el_max_rv_factor",
-          caption: "ventricular maximal elastance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "el_min_cor_factor",
-          caption: "coronaries minimal elastance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "el_max_cor_factor",
-          caption: "coronaries maximal elastance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "u_vol_la_factor",
-          caption: "atrial unstressed volume factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "u_vol_lv_factor",
-          caption: "ventricular unstressed volume factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "u_vol_cor_factor",
-          caption: "coronaries unstressed volume factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-      ],
-    },
-    {
-      target: "adjust_heart_valves",
-      caption: "adjust heart valves",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "res_valve_factor",
-          caption: "resistance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-      ],
-    },
-    {
-      target: "adjust_systemic_arteries",
-      caption: "adjust systemic arteries scaling",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "el_base_syst_art_factor",
-          caption: "elastance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "u_vol_syst_art_factor",
-          caption: "unstressed volume factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-      ],
-    },
-    {
-      target: "adjust_systemic_connectors",
-      caption: "adjust systemic blood connectors",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "res_syst_blood_connectors_factor",
-          caption: "resistance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-      ],
-    },
-    {
-      target: "adjust_pulmonary_arteries",
-      caption: "adjust pulmonary arteries scaling",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "el_base_pulm_art_factor",
-          caption: "elastance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "u_vol_pulm_art_factor",
-          caption: "unstressed volume factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-      ],
-    },
-    {
-      target: "adjust_pulmonary_connectors",
-      caption: "adjust pulmonary blood connectors",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "res_pulm_blood_connectors_factor",
-          caption: "resistance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-      ],
-    },
-    {
-      target: "adjust_systemic_veins",
-      caption: "adjust systemic veins scaling",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "el_base_syst_ven_factor",
-          caption: "elastance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "u_vol_syst_ven_factor",
-          caption: "unstressed volume factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-      ],
-    },
-    {
-      target: "adjust_pulmonary_veins",
-      caption: "adjust pulmonary veins scaling",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "el_base_pulm_ven_factor",
-          caption: "elastance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "u_vol_pulm_ven_factor",
-          caption: "unstressed volume factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-      ],
-    },
-    {
-      target: "adjust_capillaries",
-      caption: "adjust capillaries scaling",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "el_base_cap_factor",
-          caption: "elastance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "u_vol_cap_factor",
-          caption: "unstressed volume factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-      ],
-    },
-    {
-      target: "adjust_pericardium",
-      caption: "adjust pericardium scaling",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "el_base_pericardium_factor",
-          caption: "elastance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "u_vol_pericardium_factor",
-          caption: "unstressed volume factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-      ],
-    },
-    {
-      target: "adjust_thorax",
-      caption: "adjust thorax scaling",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "el_base_thorax_factor",
-          caption: "elastance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "u_vol_thorax_factor",
-          caption: "unstressed volume factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-      ],
-    },
-    {
-      target: "adjust_lungs",
-      caption: "adjust lungs scaling",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "el_base_lungs_factor",
-          caption: "elastance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-        {
-          target: "u_vol_lungs_factor",
-          caption: "unstressed volume factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-      ],
-    },
-    {
-      target: "adjust_airways",
-      caption: "adjust airway connectors",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "res_airway_factor",
-          caption: "resistance factor",
-          type: "number",
-          factor: 1,
-          delta: 0.1,
-          rounding: 1,
-          ul: 100000.0,
-          ll: 0.0,
-        },
-      ],
-    },
-  ];
+  static model_interface = [];
 
   // independent parameters
   name = "";
@@ -470,14 +9,11 @@ export class Scaler {
   is_enabled = false;
   dependencies = [];
   reference_weight = 3.545;
-  reference_gestational_age = 40.0;
-  reference_age = 0.0;
   weight = 3.5;
   age = 0.0;
   gestational_age = 40.0;
   map_ref = 40.0;
   hr_ref = 140.0;
-
   heart = ["Heart"];
   left_atrium = [];
   right_atrium = [];
@@ -540,22 +76,6 @@ export class Scaler {
 
   u_vol_atrial_factor = 1.0;
   u_vol_ventricular_factor = 1.0;
-
-  el_min_ra_factor = 1.0;
-  el_max_ra_factor = 1.0;
-  u_vol_ra_factor = 1.0;
-
-  el_min_rv_factor = 1.0;
-  el_max_rv_factor = 1.0;
-  u_vol_rv_factor = 1.0;
-
-  el_min_la_factor = 1.0;
-  el_min_lv_factor = 1.0;
-  u_vol_la_factor = 1.0;
-
-  el_max_la_factor = 1.0;
-  el_max_lv_factor = 1.0;
-  u_vol_lv_factor = 1.0;
 
   // coronary scalers
   el_min_cor_factor = 1.0;
@@ -738,170 +258,7 @@ export class Scaler {
     this._update_counter += this._t;
   }
 
-  adjust_ans(hr_ref, map_ref) {
-    this.hr_ref = hr_ref;
-    this.map_ref = map_ref;
-    this.scale_ans(this.hr_ref, this.map_ref);
-  }
-
-  adjust_systemic_arteries(el_base_correction, u_vol_correction) {
-    this.el_base_syst_art_factor = el_base_correction;
-    this.u_vol_syst_art_factor = u_vol_correction;
-    this.scale_systemic_arteries();
-  }
-
-  adjust_systemic_veins(el_base_correction, u_vol_correction) {
-    this.el_base_syst_ven_factor = el_base_correction;
-    this.u_vol_syst_ven_factor = u_vol_correction;
-    this.scale_systemic_veins();
-  }
-
-  adjust_systemic_connectors(res_factor) {
-    this.res_syst_blood_connectors_factor = res_factor;
-    this.scale_syst_blood_connectors();
-  }
-
-  adjust_pulmonary_arteries(el_base_correction, u_vol_correction) {
-    this.el_base_pulm_art_factor = el_base_correction;
-    this.u_vol_pulm_art_factor = u_vol_correction;
-    this.scale_pulmonary_arteries();
-  }
-
-  adjust_pulmonary_veins(el_base_correction, u_vol_correction) {
-    this.el_base_pulm_ven_factor = el_base_correction;
-    this.u_vol_pulm_ven_factor = u_vol_correction;
-    this.scale_pulmonary_veins();
-  }
-
-  adjust_pulmonary_connectors(res_factor) {
-    this.res_pulm_blood_connectors_factor = res_factor;
-    this.scale_pulm_blood_connectors();
-  }
-
-  adjust_heart_valves(res_factor) {
-    this.res_valve_factor = res_factor;
-    this.scale_heart_valves();
-  }
-
-  adjust_capillaries(el_base_correction, u_vol_correction) {
-    this.el_base_cap_factor = el_base_correction;
-    this.u_vol_cap_factor = u_vol_correction;
-    this.scale_capillaries();
-  }
-
-  adjust_pericardium(el_base_correction, u_vol_correction) {
-    this.el_base_pericardium_factor = el_base_correction;
-    this.u_vol_pericardium_factor = u_vol_correction;
-    this.scale_pericardium();
-  }
-
-  adjust_thorax(el_base_correction, u_vol_correction) {
-    this.el_base_thorax_factor = el_base_correction;
-    this.u_vol_thorax_factor = u_vol_correction;
-    this.scale_thorax();
-  }
-
-  adjust_lungs(el_base_correction, u_vol_correction) {
-    this.el_base_lungs_factor = el_base_correction;
-    this.u_vol_lungs_factor = u_vol_correction;
-    this.scale_lungs();
-  }
-
-  adjust_airways(res_factor) {
-    this.res_airway_factor = res_factor;
-    this.scale_airways();
-  }
-
-  adjust_heart_scaling(
-    el_min_atrial_factor,
-    el_max_atrial_factor,
-    el_min_vent_factor,
-    el_max_vent_factor,
-    el_min_cor_factor,
-    el_max_cor_factor,
-    u_vol_atrial_factor,
-    u_vol_vent_factor,
-    u_vol_cor_factor
-  ) {
-    this.el_min_ra_factor = el_min_atrial_factor;
-    this.el_min_la_factor = el_min_atrial_factor;
-
-    this.el_max_ra_factor = el_max_atrial_factor;
-    this.el_max_la_factor = el_max_atrial_factor;
-
-    this.el_min_rv_factor = el_min_vent_factor;
-    this.el_min_lv_factor = el_min_vent_factor;
-
-    this.el_max_rv_factor = el_max_vent_factor;
-    this.el_max_lv_factor = el_max_vent_factor;
-
-    this.u_vol_ra_factor = u_vol_atrial_factor;
-    this.u_vol_rv_factor = u_vol_vent_factor;
-
-    this.u_vol_la_factor = u_vol_atrial_factor;
-    this.u_vol_lv_factor = u_vol_vent_factor;
-
-    this.el_max_cor_factor = el_max_cor_factor;
-    this.el_min_cor_factor = el_min_cor_factor;
-
-    this.u_vol_cor_factor = u_vol_cor_factor;
-
-    this.scale_heart();
-  }
-
   // scale by weight function where the global scaler is dependent on the weight change
-  scale_weight_and_volumes(
-    new_weight,
-    target_blood_volume_kg,
-    target_gas_volume_kg
-  ) {
-    // calculate the scaling factor based on the weight. This factor is relative to the baseline neonate
-    this.global_scale_factor = new_weight / this.reference_weight;
-
-    if (this._debug) {
-      console.log(
-        `Scaling weight from ${(this.weight * 1000).toFixed(0)} grams to ${(
-          new_weight * 1000
-        ).toFixed(0)} grams`
-      );
-      console.log(
-        `Scaling blood volume from ${(
-          this.blood_volume_kg *
-          this.weight *
-          1000
-        ).toFixed(0)} ml to ${(
-          target_blood_volume_kg *
-          new_weight *
-          1000
-        ).toFixed(1)} ml`
-      );
-      console.log(
-        `Scaling gas volume from ${(
-          this.gas_volume_kg *
-          this.weight *
-          1000
-        ).toFixed(0)} ml to ${(
-          target_gas_volume_kg *
-          new_weight *
-          1000
-        ).toFixed(1)} ml`
-      );
-    }
-
-    // set the target blood volume per kg into the scaler
-    this.blood_volume_kg = target_blood_volume_kg;
-
-    // set the target lung volume per kg into the scaler
-    this.gas_volume_kg = target_gas_volume_kg;
-
-    // set the new weight
-    this.weight = new_weight;
-    this._model_engine.weight = new_weight;
-
-    // scale whole patient
-    this.scale_patient();
-  }
-
   scale_weight(new_weight) {
     if (this._debug) {
       console.log(
@@ -920,75 +277,6 @@ export class Scaler {
 
     // scale whole patient
     this.scale_patient();
-  }
-
-  scale_patient() {
-    // scale total blood volume
-    this.scale_total_blood_volume(this.blood_volume_kg);
-
-    // scale total lung volume
-    this.scale_total_lung_volume(this.gas_volume_kg);
-
-    // scale pericardium
-    this.scale_pericardium();
-
-    // scale the thorax
-    this.scale_thorax();
-
-    // scale the baroreflex of the autonomous nervous system
-    this.scale_ans(this.hr_ref, this.map_ref);
-
-    // scale the control of breathing model
-    this.scale_cob();
-
-    // scale the metabolism
-    this.scale_metabolism();
-
-    // scale mob
-    this.scale_mob();
-
-    // scale the heart
-    this.scale_heart();
-
-    // scale the systemic arteries
-    this.scale_systemic_arteries();
-
-    // scale the pulmonary arteries
-    this.scale_pulmonary_arteries();
-
-    // scale the capillaries
-    this.scale_capillaries();
-
-    // scale the systemic veins
-    this.scale_systemic_veins();
-
-    // scale the pulmonary veins
-    this.scale_pulmonary_veins();
-
-    // scale the systemic blood connectors
-    this.scale_syst_blood_connectors();
-
-    // scale the pulmonary blood connectors
-    this.scale_pulm_blood_connectors();
-
-    // scale the shunts
-    this.scale_shunts();
-
-    // scale the valves
-    this.scale_heart_valves();
-
-    // scale the lung
-    this.scale_lungs();
-
-    // scale the airways
-    this.scale_airways();
-
-    // get the current total blood and gas volume in l/kg
-    this.blood_volume_kg =
-      this.get_total_blood_volume() / this._model_engine.weight;
-
-    this.gas_volume_kg =
-      this.get_total_gas_volume() / this._model_engine.weight;
   }
 
   scale_ans_hr(hr_ref) {
@@ -1041,116 +329,56 @@ export class Scaler {
     this.right_atrium.forEach((ra) => {
       // change the unstressed volume
       this._model_engine.models[ra].u_vol_scaling_factor =
-        this.global_scale_factor *
-        this.u_vol_ra_factor *
-        this.u_vol_atrial_factor;
+        this.global_scale_factor * this.u_vol_atrial_factor;
 
       // change the minimal and maximal elastance
       this._model_engine.models[ra].el_min_scaling_factor =
-        (1.0 / this.global_scale_factor) *
-        this.el_min_ra_factor *
-        this.el_min_atrial_factor;
+        (1.0 / this.global_scale_factor) * this.el_min_atrial_factor;
 
       this._model_engine.models[ra].el_max_scaling_factor =
-        (1.0 / this.global_scale_factor) *
-        this.el_max_ra_factor *
-        this.el_max_atrial_factor;
-
-      if (this._debug) {
-        console.log(
-          `Adjusted right atrial minimal elastance scaling factor to ${this._model_engine.models[ra].el_min_scaling_factor}`
-        );
-        console.log(
-          `Adjusted right atrial maximal elastance scaling factor to ${this._model_engine.models[ra].el_max_scaling_factor}`
-        );
-      }
+        (1.0 / this.global_scale_factor) * this.el_max_atrial_factor;
     });
 
     // right ventricle
     this.right_ventricle.forEach((rv) => {
       // change the unstressed volume
       this._model_engine.models[rv].u_vol_scaling_factor =
-        this.global_scale_factor *
-        this.u_vol_rv_factor *
-        this.u_vol_ventricular_factor;
+        this.global_scale_factor * this.u_vol_ventricular_factor;
 
       // change the minimal and maximal elastance
       this._model_engine.models[rv].el_min_scaling_factor =
-        (1.0 / this.global_scale_factor) *
-        this.el_min_rv_factor *
-        this.el_min_ventricular_factor;
+        (1.0 / this.global_scale_factor) * this.el_min_ventricular_factor;
 
       this._model_engine.models[rv].el_max_scaling_factor =
-        (1.0 / this.global_scale_factor) *
-        this.el_max_rv_factor *
-        this.el_max_ventricular_factor;
-
-      if (this._debug) {
-        console.log(
-          `Adjusted right ventricular minimal elastance scaling factor to ${this._model_engine.models[rv].el_min_scaling_factor}`
-        );
-        console.log(
-          `Adjusted right ventricular maximal elastance scaling factor to ${this._model_engine.models[rv].el_max_scaling_factor}`
-        );
-      }
+        (1.0 / this.global_scale_factor) * this.el_max_ventricular_factor;
     });
 
     // left atrium
     this.left_atrium.forEach((la) => {
       // change the unstressed volume
       this._model_engine.models[la].u_vol_scaling_factor =
-        this.global_scale_factor *
-        this.u_vol_la_factor *
-        this.u_vol_atrial_factor;
+        this.global_scale_factor * this.u_vol_atrial_factor;
 
       // change the minimal and maximal elastance
       this._model_engine.models[la].el_min_scaling_factor =
-        (1.0 / this.global_scale_factor) *
-        this.el_min_la_factor *
-        this.el_min_atrial_factor;
+        (1.0 / this.global_scale_factor) * this.el_min_atrial_factor;
 
       this._model_engine.models[la].el_max_scaling_factor =
-        (1.0 / this.global_scale_factor) *
-        this.el_max_la_factor *
-        this.el_max_atrial_factor;
-
-      if (this._debug) {
-        console.log(
-          `Adjusted left atrial minimal elastance scaling factor to ${this._model_engine.models[la].el_min_scaling_factor}`
-        );
-        console.log(
-          `Adjusted left atrial maximal elastance scaling factor to ${this._model_engine.models[la].el_max_scaling_factor}`
-        );
-      }
+        (1.0 / this.global_scale_factor) * this.el_max_atrial_factor;
     });
 
     // left ventricle
     this.left_ventricle.forEach((lv) => {
       // change the unstressed volume
       this._model_engine.models[lv].u_vol_scaling_factor =
-        this.global_scale_factor *
-        this.u_vol_lv_factor *
-        this.u_vol_ventricular_factor;
+        this.global_scale_factor * this.u_vol_ventricular_factor;
 
       // change the minimal and maximal elastance
       this._model_engine.models[lv].el_min_scaling_factor =
-        (1.0 / this.global_scale_factor) *
-        this.el_min_lv_factor *
-        this.el_min_ventricular_factor;
+        (1.0 / this.global_scale_factor) * this.el_min_ventricular_factor;
 
       this._model_engine.models[lv].el_max_scaling_factor =
-        (1.0 / this.global_scale_factor) *
-        this.el_max_lv_factor *
-        this.el_max_ventricular_factor;
-
-      if (this._debug) {
-        console.log(
-          `Adjusted left ventricular minimal elastance scaling factor to ${this._model_engine.models[lv].el_min_scaling_factor}`
-        );
-        console.log(
-          `Adjusted left ventricular maximal elastance scaling factor to ${this._model_engine.models[lv].el_max_scaling_factor}`
-        );
-      }
+        (1.0 / this.global_scale_factor) * this.el_max_ventricular_factor;
     });
 
     // coronaries
@@ -1403,6 +631,75 @@ export class Scaler {
   }
 
   scale_mob() {}
+
+  scale_patient() {
+    // scale total blood volume
+    this.scale_total_blood_volume(this.blood_volume_kg);
+
+    // scale total lung volume
+    this.scale_total_lung_volume(this.gas_volume_kg);
+
+    // scale pericardium
+    this.scale_pericardium();
+
+    // scale the thorax
+    this.scale_thorax();
+
+    // scale the baroreflex of the autonomous nervous system
+    this.scale_ans(this.hr_ref, this.map_ref);
+
+    // scale the control of breathing model
+    this.scale_cob();
+
+    // scale the metabolism
+    this.scale_metabolism();
+
+    // scale mob
+    this.scale_mob();
+
+    // scale the heart
+    this.scale_heart();
+
+    // scale the systemic arteries
+    this.scale_systemic_arteries();
+
+    // scale the pulmonary arteries
+    this.scale_pulmonary_arteries();
+
+    // scale the capillaries
+    this.scale_capillaries();
+
+    // scale the systemic veins
+    this.scale_systemic_veins();
+
+    // scale the pulmonary veins
+    this.scale_pulmonary_veins();
+
+    // scale the systemic blood connectors
+    this.scale_syst_blood_connectors();
+
+    // scale the pulmonary blood connectors
+    this.scale_pulm_blood_connectors();
+
+    // scale the shunts
+    this.scale_shunts();
+
+    // scale the valves
+    this.scale_heart_valves();
+
+    // scale the lung
+    this.scale_lungs();
+
+    // scale the airways
+    this.scale_airways();
+
+    // get the current total blood and gas volume in l/kg
+    this.blood_volume_kg =
+      this.get_total_blood_volume() / this._model_engine.weight;
+
+    this.gas_volume_kg =
+      this.get_total_gas_volume() / this._model_engine.weight;
+  }
 
   get_total_blood_volume() {
     let total_volume = 0.0;

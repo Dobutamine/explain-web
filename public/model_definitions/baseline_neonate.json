@@ -6164,12 +6164,8 @@
       "gestational_age": 40,
       "map_ref": 50,
       "hr_ref": 125,
-      "heart": [
-        "Heart"
-      ],
-      "left_atrium": [
-        "LA"
-      ],
+      "heart": ["Heart"],
+      "left_atrium": ["LA"],
       "right_atrium": [
         "RA"
       ],
@@ -6263,60 +6259,7 @@
       "thorax": [
         "THORAX"
       ],
-      "patients": {},
-      "global_scale_factor": 1,
-      "blood_volume_ml_kg": 0.07986572523395531,
-      "gas_volume_ml_kg": 0.03689075825654558,
-      "resp_rate_ref": -1,
-      "vt_rr_ratio": -1,
-      "mv_ref": -1,
-      "vo2": -1,
-      "resp_q": -1,
-      "el_min_ra_factor": 1,
-      "el_max_ra_factor": 1,
-      "u_vol_ra_factor": 1,
-      "el_min_rv_factor": 1,
-      "el_max_rv_factor": 1,
-      "u_vol_rv_factor": 1,
-      "el_min_la_factor": 1,
-      "el_min_lv_factor": 1,
-      "u_vol_la_factor": 1,
-      "el_max_la_factor": 1,
-      "el_max_lv_factor": 1,
-      "u_vol_lv_factor": 1,
-      "el_min_cor_factor": 1,
-      "el_max_cor_factor": 1,
-      "u_vol_cor_factor": 1,
-      "res_valve_factor": 1,
-      "el_base_pericardium_factor": 1,
-      "u_vol_pericardium_factor": 1,
-      "el_base_syst_art_factor": 1,
-      "u_vol_syst_art_factor": 1,
-      "el_base_pulm_art_factor": 1,
-      "u_vol_pulm_art_factor": 1,
-      "el_base_syst_ven_factor": 1,
-      "u_vol_syst_ven_factor": 1,
-      "el_base_pulm_ven_factor": 1,
-      "u_vol_pulm_ven_factor": 1,
-      "el_base_cap_factor": 1,
-      "u_vol_cap_factor": 1,
-      "res_syst_blood_connectors_factor": 1,
-      "res_pulm_blood_connectors_factor": 1,
-      "res_shunts_factor": 1,
-      "el_base_lungs_factor": 1,
-      "u_vol_lungs_factor": 1,
-      "res_airway_factor": 1,
-      "el_base_thorax_factor": 1,
-      "u_vol_thorax_factor": 1,
-      "total_blood_volume": 0.923615487112559,
-      "total_gas_volume": 0.3035066317938907,
-      "scale_factor": 1,
-      "scale_factor_weight": 1,
-      "scale_factor_gestational_age": 1,
-      "scale_factor_age": 1,
-      "blood_volume": 0.08,
-      "lung_volume": 0.03,
-      "category": "general_models"
+      "patients": {}
     }
   }
 }

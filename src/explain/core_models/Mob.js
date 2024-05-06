@@ -214,6 +214,7 @@ export class Mob {
   description = "";
   is_enabled = false;
   dependencies = [];
+  mob_active = true;
 
   heart_model = "Heart";
   aa_model = "AA";
@@ -349,7 +350,7 @@ export class Mob {
   }
 
   step_model() {
-    if (this.is_enabled && this._is_initialized) {
+    if (this.is_enabled && this._is_initialized && this.mob_active) {
       this.calc_model();
     }
   }

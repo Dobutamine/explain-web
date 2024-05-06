@@ -14,8 +14,8 @@
             <q-tab name="respiratory_system"><q-icon name="fa-solid fa-lungs" size="xs"></q-icon><q-tooltip>edit
                 respiratory system</q-tooltip>
             </q-tab>
-            <q-tab name="other_systems"><q-icon name="fa-solid fa-bars-staggered" size="xs"></q-icon><q-tooltip>edit
-                respiratory system</q-tooltip>
+            <q-tab name="scaling"><q-icon name="fa-solid fa-weight-scale" size="xs"></q-icon><q-tooltip>scale
+                model</q-tooltip>
             </q-tab>
           </q-tabs>
 
@@ -65,7 +65,7 @@
 
               </q-scroll-area>
             </q-tab-panel>
-            <q-tab-panel name="other_systems">
+            <q-tab-panel name="scaling">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
                 right: '5px',
                 borderRadius: '5px',
@@ -287,7 +287,7 @@ export default defineComponent({
   },
   data() {
     return {
-      tab_left: "circulatory_system",
+      tab_left: "scaling",
       tab_center: "diagram",
       tab_right: "numerics",
       no_of_modeleditor: 1,
@@ -3035,12 +3035,12 @@ export default defineComponent({
         }
       },
       scaler_controller: {
-        title: "SCALER CONTROLLER",
+        title: "MODEL SCALER",
         enabled: true,
         categories: {
           scaling: {
             caption: "Scaling",
-            enabled: false,
+            enabled: true,
             advanced: false,
           },
           blood_volume: {
