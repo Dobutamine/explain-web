@@ -377,7 +377,7 @@ export default defineComponent({
             { label: "LVO", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["LV_AA.flow_lmin_avg"], weight_based: true },
             { label: "RVO", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["RV_PA.flow_lmin_avg"], weight_based: true },
             { label: "fCOR", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["COR_RA.flow_lmin_avg"], weight_based: true },
-            { label: "fSVC", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["SVC_RA.flow_lmin_avg"], weight_based: true },
+            { label: "fSVC", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["SVCI_RA.flow_lmin_avg"], weight_based: true },
             { label: "fIVC", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["IVCI_RA.flow_lmin_avg"], weight_based: true },
             { label: "fDAo", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["AAR_AD.flow_lmin_avg"], weight_based: true },
             { label: "fPda", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["DA_OUT.flow_lmin_avg"], weight_based: true },

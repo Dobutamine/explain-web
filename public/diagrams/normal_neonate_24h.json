@@ -615,11 +615,41 @@
         }
       }
     },
-    "SVC": {
+    "SVCI": {
       "enabled": true,
-      "label": "SVC",
+      "label": "SVCI",
       "models": [
-        "SVC"
+        "SVCI"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": -0.7,
+          "y": -0.25,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "SVCE": {
+      "enabled": true,
+      "label": "SVCE",
+      "models": [
+        "SVCE"
       ],
       "compType": "BloodCompartment",
       "layout": {
@@ -906,15 +936,15 @@
       "dbcFrom": "LT",
       "dbcTo": "LD"
     },
-    "LD_SVC": {
+    "LD_SVCI": {
       "enabled": false,
-      "label": "LD_SVC",
+      "label": "LD_SVCI",
       "models": [
-        "LD_SVC"
+        "LD_SVCI"
       ],
       "compType": "LymphConnector",
       "dbcFrom": "LD",
-      "dbcTo": "SVC"
+      "dbcTo": "SVCI"
     },
     "AD_RLB": {
       "enabled": true,
@@ -1016,35 +1046,45 @@
       "dbcFrom": "IVCI",
       "dbcTo": "RA"
     },
-    "SVC_RA": {
+    "SVCE_SVCI": {
       "enabled": true,
-      "label": "SVC_RA",
+      "label": "SVCE_SVCE",
       "models": [
-        "SVC_RA"
+        "SVCE_SVCI"
       ],
       "compType": "BloodConnector",
-      "dbcFrom": "SVC",
+      "dbcFrom": "SVCE",
+      "dbcTo": "SVCI"
+    },
+    "SVCI_RA": {
+      "enabled": true,
+      "label": "SVCI_RA",
+      "models": [
+        "SVCI_RA"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "SVCI",
       "dbcTo": "RA"
     },
-    "BR_SVC": {
+    "BR_SVCE": {
       "enabled": true,
-      "label": "BR_SVC",
+      "label": "BR_SVCE",
       "models": [
-        "BR_SVC"
+        "BR_SVCE"
       ],
       "compType": "BloodConnector",
       "dbcFrom": "BR",
-      "dbcTo": "SVC"
+      "dbcTo": "SVCE"
     },
-    "RUB_SVC": {
+    "RUB_SVCE": {
       "enabled": true,
-      "label": "RUB_SVC",
+      "label": "RUB_SVCE",
       "models": [
-        "RUB_SVC"
+        "RUB_SVCE"
       ],
       "compType": "BloodConnector",
       "dbcFrom": "RUB",
-      "dbcTo": "SVC"
+      "dbcTo": "SVCE"
     },
     "AA_RUB": {
       "enabled": true,
