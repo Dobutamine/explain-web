@@ -33,6 +33,7 @@ export class Blood {
   superior_vena_cava = "SVC";
   right_atrium = "RA";
   total_blood_volume = 0.0;
+  blood_containing_components = [];
 
   // dependent parameters
   ph = 0.0;
@@ -70,7 +71,7 @@ export class Blood {
   _model_engine = {};
   _is_initialized = false;
   _t = 0.0005;
-  _update_interval = 1.0;
+  _update_interval = 2.0;
   _update_counter = 0.0;
   _aa = {};
   _ad = {};
@@ -134,48 +135,27 @@ export class Blood {
 
   set_total_blood_volume(new_blood_volume) {
     let current_blood_volume = this.get_total_blood_volume();
-    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
-      if (
-        model.model_type === "BloodCapacitance" ||
-        model.model_type === "BloodTimeVaryingElastance"
-      ) {
-        if (model.is_enabled && model.name !== "PLM" && model.name !== "PLF") {
-          // calculate the current fraction of the blood volume in this blood containing capacitance
-          let current_fraction = model.vol / current_blood_volume;
-          // calculate the current uvol/vol fraction
-          let f = 0.0;
-          if (model.vol > 0.0) {
-            f = model.u_vol / model.vol;
-          }
-          // add the same fraction of the desired volume change to the blood containing capacitance
-          model.vol +=
-            current_fraction * (new_blood_volume - current_blood_volume);
+    let blood_volume_change = new_blood_volume / current_blood_volume;
 
-          // change the unstressed volume
-          model.u_vol = model.vol * f;
-
-          // guard for negative volumes
-          if (model.vol < 0.0) {
-            model.vol = 0.0;
-          }
-        }
+    this.blood_containing_components.forEach((c) => {
+      if (this._model_engine.models[c].is_enabled) {
+        this._model_engine.models[c].vol =
+          this._model_engine.models[c].vol * blood_volume_change;
+        this._model_engine.models[c].u_vol =
+          this._model_engine.models[c].u_vol * blood_volume_change;
       }
-    }
+    });
     this.total_blood_volume = this.get_total_blood_volume();
   }
 
   get_total_blood_volume() {
     let total_volume = 0.0;
-    for (let [model_name, model] of Object.entries(this._model_engine.models)) {
-      if (
-        model.model_type === "BloodCapacitance" ||
-        model.model_type === "BloodTimeVaryingElastance"
-      ) {
-        if (model.is_enabled && model.name !== "PLM" && model.name !== "PLF") {
-          total_volume += model.vol;
-        }
+
+    this.blood_containing_components.forEach((c) => {
+      if (this._model_engine.models[c].is_enabled) {
+        total_volume += this._model_engine.models[c].vol;
       }
-    }
+    });
     this.total_blood_volume = total_volume;
 
     return total_volume;
@@ -224,6 +204,7 @@ export class Blood {
   calc_model() {
     if (this._update_counter > this._update_interval) {
       this._update_counter = 0;
+
       set_blood_composition(this._aa);
       set_blood_composition(this._ad);
       set_blood_composition(this._ra);
@@ -255,6 +236,8 @@ export class Blood {
       this.hco3_ven = this._ra.aboxy.hco3;
       this.be_ven = this._ra.aboxy.be;
       this.so2_ven = this._ra.aboxy.so2;
+
+      this.total_blood_volume = this.get_total_blood_volume();
     }
     this._update_counter += this._t;
   }

@@ -5641,6 +5641,10 @@
       "description": "blood model",
       "is_enabled": true,
       "dependencies": [],
+      "blood_containing_components": [
+        "AA", "AAR", "AD", "LS", "INT", "KID", "RLB", "IVCE",
+        "IVCI", "RA", "RV", "PA", "LL", "RL", "PV", "LA","LV",
+        "BR", "RUB", "SVC", "COR", "DA"],
       "ascending_aorta": "AA",
       "descending_aorta": "AD",
       "inferior_vena_cava": "IVCI",
