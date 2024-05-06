@@ -5611,7 +5611,7 @@
       "description": "autonomic nervous system model",
       "is_enabled": true,
       "dependencies": [],
-      "ans_active": false,
+      "ans_active": true,
       "baroreceptor_location": "AAR",
       "chemoreceptor_location": "AAR",
       "chemoreceptor_locatio": "AAR",
