@@ -21,9 +21,6 @@ export class Coronaries {
   res_out_factor = 1.0;
 
   act_factor = 0.0;
-  act_factor_vaf = 0.0;
-  act_factor_aaf = 0.0;
-  act_factor_factor = 1.0;
 
   // dependent parameters
 
@@ -78,13 +75,10 @@ export class Coronaries {
   calc_model() {
     this._cor.el_min = this.el_min_cor * this.el_min_cor_factor;
     this._cor.el_max = this.el_max_cor * this.el_max_cor_factor;
-    this._cor.act_factor = this.act_factor_vaf * this.act_factor_factor;
+    this._cor.act_factor = this.act_factor;
 
-    let f_vaf = 1 + this.act_factor_vaf;
-    let f_aaf = 1 + this.act_factor_aaf;
-
-    this._aa_cor.r_for = this.res_in * this.res_in_factor * f_vaf;
-    this._aa_cor.r_back = this.res_in * this.res_in_factor * f_vaf;
+    this._aa_cor.r_for = this.res_in * this.res_in_factor;
+    this._aa_cor.r_back = this.res_in * this.res_in_factor;
 
     this._cor_ra.r_for = this.res_out * this.res_out_factor;
     this._cor_ra.r_back = this.res_out * this.res_out_factor;

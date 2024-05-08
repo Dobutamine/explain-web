@@ -260,15 +260,26 @@ export default {
       presetNames: [],
       newPresetName: "",
       presets: {
-        "Coronaries": {
-          props: ["AA_COR.flow", "COR_RA.flow", "LV.pres"],
+        "Coronaries Out flow": {
+          props: ["COR_AA.flow", "AA.pres", "LV.pres"],
           autoscale: false,
-          y_min: 0.0,
+          y_min: -5.0,
           y_max: 70,
           factors: true,
           fill: false,
           chart1_factor: 50000,
-          chart2_factor: 50000,
+          chart2_factor: 1,
+          chart3_factor: 1.0
+        },
+        "Coronaries In flow": {
+          props: ["AA_COR.flow", "AA.pres", "LV.pres"],
+          autoscale: false,
+          y_min: -5.0,
+          y_max: 70,
+          factors: true,
+          fill: false,
+          chart1_factor: 50000,
+          chart2_factor: 1,
           chart3_factor: 1.0
         },
         "Left ventricle": {

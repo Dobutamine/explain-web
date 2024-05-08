@@ -5960,14 +5960,17 @@
       "coronary_artery": "AA_COR",
       "el_min_cor": 30000,
       "el_min_cor_factor": 1.0,
-      "el_max_cor": 30000,
+      "el_max_cor": 90000,
       "el_max_cor_factor" : 1.0,
       "res_in": 60000,
       "res_in_factor": 1.0,
       "res_out": 15000,
       "res_out_factor": 1.0,
-      "act_factor": 0.0,
-      "act_factor_factor": 1.0
+      "act_factor_el": 1.0,
+      "act_factor_vaf": 0.0,
+      "act_factor_vaf_factor": 1.0,
+      "act_factor_aaf": 0.0,
+      "act_factor_aaf_factor": 1.0
     },
     "Mob": {
       "name": "Mob",

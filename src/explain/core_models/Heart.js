@@ -1252,8 +1252,8 @@ export class Heart {
     this._rv.act_factor = this.vaf;
 
     if (this._cor) {
-      this._cor.act_factor_vaf = this.vaf;
-      this._cor.act_factor_aaf = this.aaf;
+      // transfer the activation factor to the heart components
+      this._cor.act_factor = this.vaf;
     }
   }
 

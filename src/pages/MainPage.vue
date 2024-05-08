@@ -3920,7 +3920,7 @@ export default defineComponent({
             min: -10.0,
             max: 10.0,
             step: 0.1,
-            rounding: 1
+            rounding: 2
           },
           el_max: {
             caption: "el_max elastance",
@@ -3939,7 +3939,7 @@ export default defineComponent({
             min: -10.0,
             max: 10.0,
             step: 0.1,
-            rounding: 1
+            rounding: 2
           },
           res_in: {
             caption: "coronary artery resistance",
@@ -3958,7 +3958,7 @@ export default defineComponent({
             min: -10.0,
             max: 10.0,
             step: 0.1,
-            rounding: 1
+            rounding: 2
           },
           res_out: {
             caption: "coronary sinus resistance",
@@ -3977,10 +3977,10 @@ export default defineComponent({
             min: -10.0,
             max: 10.0,
             step: 0.1,
-            rounding: 1
+            rounding: 2
           },
-          act: {
-            caption: "activation",
+          act_el: {
+            caption: "el activation",
             category: "activation",
             enabled: true,
             advanced: false,
@@ -3989,14 +3989,52 @@ export default defineComponent({
             linked_caption: "",
             linked_to: "",
             model: "Coronaries",
-            prop: "act_factor_factor",
+            prop: "act_factor_el",
             type: "factor",
             caller: "direct",
             function_name: "",
             min: -10.0,
             max: 1.0,
             step: 0.1,
-            rounding: 1
+            rounding: 2
+          },
+          act_aaf: {
+            caption: "aaf activation",
+            category: "activation",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Coronaries",
+            prop: "act_factor_aaf_factor",
+            type: "factor",
+            caller: "direct",
+            function_name: "",
+            min: -10.0,
+            max: 1.0,
+            step: 0.1,
+            rounding: 2
+          },
+          act_vaf: {
+            caption: "vaf activation",
+            category: "activation",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Coronaries",
+            prop: "act_factor_vaf_factor",
+            type: "factor",
+            caller: "direct",
+            function_name: "",
+            min: -10.0,
+            max: 1.0,
+            step: 0.1,
+            rounding: 2
           },
         }
       },
