@@ -1031,6 +1031,8 @@ export class Heart {
   pq_time = 0.1;
   qrs_time = 0.075;
   qt_time = 0.25;
+  av_delay = 0.0005;
+
   hr_ans_factor = 1.0;
   hr_mob_factor = 1.0;
   hr_temp_factor = 1.0;
@@ -1057,11 +1059,12 @@ export class Heart {
   _pv = {};
   _cor = {};
   _pc = {};
-  _cor_ra = {};
   _sa_node_interval = 0.0;
   _sa_node_timer = 0.0;
   _pq_running = false;
   _pq_timer = 0.0;
+  _av_delay_running = false;
+  _av_delay_timer = 0.0;
   _qrs_running = false;
   _qrs_timer = 0.0;
   _qt_running = false;
@@ -1099,14 +1102,11 @@ export class Heart {
     this._tv = this._model_engine.models[this.tricuspid_valve];
     this._pv = this._model_engine.models[this.pulmonary_valve];
 
-    // get a reference to the coronaries
-    this._cor = this._model_engine.models[this.coronaries];
-
-    // get a reference to the coronary sinus
-    this._cor_ra = this._model_engine.models[this.coronary_sinus];
-
     // get a reference to the pericardium
     this._pc = this._model_engine.models[this.pericardium];
+
+    // get a reference to the coronaries model
+    this._cor = this._model_engine.models[this.coronaries];
 
     // set the modeling step size
     this._t = this._model_engine.modeling_stepsize;
@@ -1156,8 +1156,18 @@ export class Heart {
     if (this._pq_timer > this.pq_time) {
       // reset the pq timer
       this._pq_timer = 0.0;
-      // signal that the pq timer has stopped
+      // signal that pq timer has stopped
       this._pq_running = false;
+      // signal that the av delay timer has started
+      this._av_delay_running = true;
+    }
+
+    // has the av delay time elasped
+    if (this._av_delay_timer > this.av_delay) {
+      // reset the av delay timer
+      this._av_delay_timer = 0.0;
+      // signal that the av delay has stopped
+      this._av_delay_running = false;
       // check whether the ventricles are in a refractory state
       if (!this._ventricle_is_refractory) {
         // signal that the qrs time starts running
@@ -1194,6 +1204,9 @@ export class Heart {
 
     if (this._pq_running) {
       this._pq_timer += this._t;
+    }
+    if (this._av_delay_running) {
+      this._av_delay_timer += this._t;
     }
     if (this._qrs_running) {
       this._qrs_timer += this._t;
@@ -1237,8 +1250,10 @@ export class Heart {
     this._ra.act_factor = this.aaf;
     this._lv.act_factor = this.vaf;
     this._rv.act_factor = this.vaf;
+
     if (this._cor) {
-      this._cor.act_factor = this.vaf;
+      this._cor.act_factor_vaf = this.vaf;
+      this._cor.act_factor_aaf = this.aaf;
     }
   }
 

@@ -356,8 +356,10 @@ export class Mob {
   }
 
   calc_model() {
-    // set the heart weight
+    // set the heart weight -> at 3.545 ths is 23 grams
     this.hw = 7.799 + 0.004296 * this._model_engine.weight * 1000.0;
+
+    // desried myocardial flow = 1.8 ml/min/gm tissue => 41.4 ml/min = 0.0414 l/min = 0.00069 l/s = 11,6 ml/kg/min
 
     // inflow of oxygen
     let to2_in = this._aa.aboxy["to2"] * this._aa_cor.flow; // mmol o2 per second

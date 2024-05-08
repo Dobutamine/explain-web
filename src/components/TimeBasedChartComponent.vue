@@ -260,50 +260,29 @@ export default {
       presetNames: [],
       newPresetName: "",
       presets: {
-        "Lymph volumes": {
-          props: ["LD.vol", "LT.vol"],
-          autoscale: true,
-          y_min: 0.05,
-          y_max: 0.20,
-          factors: false,
+        "Coronaries": {
+          props: ["AA_COR.flow", "COR_RA.flow", "LV.pres"],
+          autoscale: false,
+          y_min: 0.0,
+          y_max: 70,
+          factors: true,
+          fill: false,
+          chart1_factor: 50000,
+          chart2_factor: 50000,
+          chart3_factor: 1.0
+        },
+        "Left ventricle": {
+          props: ["LA.pres", "LV.pres", "LA_LV.flow"],
+          autoscale: false,
+          y_min: -5.0,
+          y_max: 70.0,
+          factors: true,
           fill: false,
           chart1_factor: 1.0,
           chart2_factor: 1.0,
-          chart3_factor: 1.0
+          chart3_factor: 500.0
         },
-        "Lymph flows": {
-          props: ["Lymph.is_flow", "Lymph.is_lt_flow"],
-          autoscale: true,
-          y_min: 0.05,
-          y_max: 0.20,
-          factors: false,
-          fill: false,
-          chart1_factor: 1.0,
-          chart2_factor: 1.0,
-          chart3_factor: 1.0
-        },
-        "SVC/LD pressures 2": {
-          props: ["SVC.pres", "LD.pres"],
-          autoscale: true,
-          y_min: 1,
-          y_max: -4,
-          factors: false,
-          fill: false,
-          chart1_factor: 1.0,
-          chart2_factor: 1.0,
-          chart3_factor: 1.0
-        },
-        "Lymph pressures": {
-          props: ["IS.pres", "LT.pres", "LD.pres"],
-          autoscale: true,
-          y_min: 1,
-          y_max: -4,
-          factors: false,
-          fill: false,
-          chart1_factor: 1.0,
-          chart2_factor: 1.0,
-          chart3_factor: 1.0
-        },
+
         "Brain flow": {
           props: ["AA_BR.flow_lmin_avg"],
           autoscale: false,

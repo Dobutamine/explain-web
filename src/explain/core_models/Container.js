@@ -189,6 +189,9 @@ export class Container {
 
     // get the current volume from all contained models
     for (const c of this.contained_components) {
+      // if (isNaN(this._model_engine.models[c].vol)) {
+      //   console.log(this._model_engine.models[c].name);
+      // }
       this.vol += this._model_engine.models[c].vol;
     }
 

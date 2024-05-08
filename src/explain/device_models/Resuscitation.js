@@ -132,11 +132,11 @@ export class Resuscitation {
         10.0
       );
       this._model_engine.models["Ventilator"].vent_sync = true;
-      for (let [comp_target, force] of Object.entries(
-        this.chest_comp_targets
-      )) {
-        this._model_engine.models[comp_target].pres_cc = 0.0;
-      }
+      // for (let [comp_target, force] of Object.entries(
+      //   this.chest_comp_targets
+      // )) {
+      //   this._model_engine.models[comp_target].pres_cc = 0.0;
+      // }
     }
   }
   calc_model() {

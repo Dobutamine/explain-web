@@ -332,6 +332,7 @@ export class BloodTimeVaryingElastance {
 
     // return id the volume is zero or lower
     if (this.vol <= 0) {
+      console.log("errrrr");
       return;
     }
 

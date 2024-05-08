@@ -466,7 +466,7 @@
       }
     },
     "COR": {
-      "enabled": false,
+      "enabled": true,
       "label": "COR",
       "models": [
         "COR"
@@ -1137,7 +1137,7 @@
       "dbcTo": "AD"
     },
     "AA_COR": {
-      "enabled": false,
+      "enabled": true,
       "label": "AA_COR",
       "models": [
         "AA_COR"
@@ -1147,7 +1147,7 @@
       "dbcTo": "COR"
     },
     "COR_RA": {
-      "enabled": false,
+      "enabled": true,
       "label": "COR_RA",
       "models": [
         "COR_RA"

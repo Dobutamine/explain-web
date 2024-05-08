@@ -202,10 +202,10 @@ export class Scaler {
     this._model_engine.models["Ans"].ans_active = this.ans_active;
   }
 
-  toggle_ans(mob_active) {
+  toggle_mob(mob_active) {
     this.mob_active = mob_active;
     // update the activity of the ans
-    this._model_engine.models["Mob"].ans_active = this.mob_active;
+    this._model_engine.models["Mob"].mob_active = this.mob_active;
   }
 
   calc_model() {
@@ -308,6 +308,7 @@ export class Scaler {
     }
     this._model_engine.models["Heart"].heart_rate_ref = this.hr_ref;
     this._model_engine.models["Heart"].heart_rate_forced = this.hr_ref;
+    console.log(this.ans_active);
     this._model_engine.models["Heart"].heart_rate_override = !this.ans_active;
 
     // adjust the baroreceptor

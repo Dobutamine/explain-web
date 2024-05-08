@@ -9,6 +9,7 @@ export { BloodValve } from "./core_models/BloodValve";
 export { Brain } from "./core_models/Brain";
 export { Breathing } from "./core_models/Breathing";
 export { Circulation } from "./core_models/Circulation";
+export { Coronaries } from "./core_models/Coronaries";
 export { Container } from "./core_models/Container";
 export { Drugs } from "./core_models/Drugs";
 export { Fluids } from "./core_models/Fluids";

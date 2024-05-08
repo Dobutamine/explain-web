@@ -14,6 +14,9 @@
             <q-tab name="respiratory_system"><q-icon name="fa-solid fa-lungs" size="xs"></q-icon><q-tooltip>edit
                 respiratory system</q-tooltip>
             </q-tab>
+            <q-tab name="brain"><q-icon name="fa-solid fa-brain" size="xs"></q-icon><q-tooltip>edit
+                nervous system</q-tooltip>
+            </q-tab>
             <q-tab name="other_systems"><q-icon name="fa-solid fa-bars" size="xs"></q-icon><q-tooltip>edit
                 other systems</q-tooltip>
             </q-tab>
@@ -51,8 +54,11 @@
               }">
 
                 <NiceController :config="heart_controller"></NiceController>
+                <NiceController :config="coronaries_controller"></NiceController>
                 <NiceController :config="circulation_controller"></NiceController>
                 <NiceController :config="shunts_controller"></NiceController>
+                <NiceController :config="blood_controller"></NiceController>
+                <NiceController :config="fluids_controller"></NiceController>
 
               </q-scroll-area>
             </q-tab-panel>
@@ -70,7 +76,7 @@
 
               </q-scroll-area>
             </q-tab-panel>
-            <q-tab-panel name="other_systems">
+            <q-tab-panel name="brain">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
                 right: '5px',
                 borderRadius: '5px',
@@ -80,9 +86,17 @@
               }">
                 <NiceController :config="baroreflex_controller"></NiceController>
                 <NiceController :config="chemoreflex_controller"></NiceController>
+              </q-scroll-area>
+            </q-tab-panel>
+            <q-tab-panel name="other_systems">
+              <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
+                right: '5px',
+                borderRadius: '5px',
+                background: 'black',
+                width: '5px',
+                opacity: 0.5
+              }">
                 <NiceController :config="metabolism_controller"></NiceController>
-                <NiceController :config="fluids_controller"></NiceController>
-                <NiceController :config="blood_controller"></NiceController>
                 <NiceController :config="mob_controller"></NiceController>
                 <NiceController :config="placenta_controller"></NiceController>
                 <NiceController :config="ecls_controller"></NiceController>
@@ -271,7 +285,7 @@ export default defineComponent({
   },
   data() {
     return {
-      tab_left: "scaling",
+      tab_left: "other_systems",
       tab_center: "diagram",
       tab_right: "numerics",
       no_of_modeleditor: 1,
@@ -1274,7 +1288,7 @@ export default defineComponent({
       },
       resuscitation_controller: {
         title: "RESUSCITATION",
-        enabled: false,
+        enabled: true,
         categories: {
           hr: {
             caption: "Heartrate",
@@ -3866,6 +3880,124 @@ export default defineComponent({
             rounding: 2
           },
 
+        }
+      },
+      coronaries_controller: {
+        title: "CORONARIES",
+        enabled: true,
+        categories: {
+          elastance: {
+            caption: "Elastance ",
+            enabled: true,
+            advanced: false,
+          },
+          resistance: {
+            caption: "Resistance ",
+            enabled: true,
+            advanced: false,
+          },
+          activation: {
+            caption: "Activation ",
+            enabled: true,
+            advanced: false,
+          },
+        },
+        items: {
+          el_min: {
+            caption: "el_min elastance",
+            category: "elastance",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Coronaries",
+            prop: "el_min_cor_factor",
+            type: "factor",
+            caller: "direct",
+            function_name: "",
+            min: -10.0,
+            max: 10.0,
+            step: 0.1,
+            rounding: 1
+          },
+          el_max: {
+            caption: "el_max elastance",
+            category: "elastance",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Coronaries",
+            prop: "el_max_cor_factor",
+            type: "factor",
+            caller: "direct",
+            function_name: "",
+            min: -10.0,
+            max: 10.0,
+            step: 0.1,
+            rounding: 1
+          },
+          res_in: {
+            caption: "coronary artery resistance",
+            category: "resistance",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Coronaries",
+            prop: "res_in_factor",
+            type: "factor",
+            caller: "direct",
+            function_name: "",
+            min: -10.0,
+            max: 10.0,
+            step: 0.1,
+            rounding: 1
+          },
+          res_out: {
+            caption: "coronary sinus resistance",
+            category: "resistance",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Coronaries",
+            prop: "res_out_factor",
+            type: "factor",
+            caller: "direct",
+            function_name: "",
+            min: -10.0,
+            max: 10.0,
+            step: 0.1,
+            rounding: 1
+          },
+          act: {
+            caption: "activation",
+            category: "activation",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Coronaries",
+            prop: "act_factor_factor",
+            type: "factor",
+            caller: "direct",
+            function_name: "",
+            min: -10.0,
+            max: 1.0,
+            step: 0.1,
+            rounding: 1
+          },
         }
       },
       mob_controller: {
