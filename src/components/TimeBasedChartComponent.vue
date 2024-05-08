@@ -260,53 +260,19 @@ export default {
       presetNames: [],
       newPresetName: "",
       presets: {
-        "Coronaries Out flow": {
-          props: ["COR_AA.flow", "AA.pres", "LV.pres"],
+        "Brain and coronary avg flow": {
+          props: ["AA_BR.flow_lmin_avg", "AA_COR.flow_lmin_avg"],
           autoscale: false,
-          y_min: -5.0,
-          y_max: 70,
-          factors: true,
-          fill: false,
-          chart1_factor: 50000,
-          chart2_factor: 1,
-          chart3_factor: 1.0
-        },
-        "Coronaries In flow": {
-          props: ["AA_COR.flow", "AA.pres", "LV.pres"],
-          autoscale: false,
-          y_min: -5.0,
-          y_max: 70,
-          factors: true,
-          fill: false,
-          chart1_factor: 50000,
-          chart2_factor: 1,
-          chart3_factor: 1.0
-        },
-        "Left ventricle": {
-          props: ["LA.pres", "LV.pres", "LA_LV.flow"],
-          autoscale: false,
-          y_min: -5.0,
-          y_max: 70.0,
-          factors: true,
-          fill: false,
-          chart1_factor: 1.0,
-          chart2_factor: 1.0,
-          chart3_factor: 500.0
-        },
-
-        "Brain flow": {
-          props: ["AA_BR.flow_lmin_avg"],
-          autoscale: false,
-          y_min: 0.05,
-          y_max: 0.20,
+          y_min: 0.0,
+          y_max: 0.3,
           factors: false,
           fill: false,
           chart1_factor: 1.0,
           chart2_factor: 1.0,
           chart3_factor: 1.0
         },
-        "Coronary flow": {
-          props: ["COR_RA.flow_lmin_avg"],
+        "Brain and coronary instant flow": {
+          props: ["AA_BR.flow", "AA_COR.flow"],
           autoscale: false,
           y_min: 0.005,
           y_max: 0.0001,

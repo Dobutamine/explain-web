@@ -73,6 +73,7 @@ export class Coronaries {
   }
 
   calc_model() {
+    // set coronary circulation properties
     this._cor.el_min = this.el_min_cor * this.el_min_cor_factor;
     this._cor.el_max = this.el_max_cor * this.el_max_cor_factor;
     this._cor.act_factor = this.act_factor;
