@@ -25,9 +25,11 @@ import BloodCompartment from "./ui_elements/BloodCompartment";
 import LymphCompartment from "./ui_elements/LymphCompartment";
 import GasCompartment from "./ui_elements/GasCompartment";
 import BloodConnector from "./ui_elements/BloodConnector";
+import BloodPump from "./ui_elements/BloodPump";
 import LymphConnector from "./ui_elements/LymphConnector";
 import GasConnector from "./ui_elements/GasConnector";
 import GasExchanger from "./ui_elements/GasExchanger";
+import Oxygenator from "./ui_elements/Oxygenator";
 import Shunt from "./ui_elements/Shunt";
 import { LymphCapacitance } from "src/explain/ModelIndex";
 
@@ -53,11 +55,15 @@ export default {
       skeletonGraphics: null,
       shortTimer: null,
       rt_running: false,
-      conditions: ["normal neonate at 24h", "fetus at term", "coarctatio aortae", "pulmonary atresia", "hypoplastic left heart syndrome", "transposition of the great arteries", "total anomalous pulmonary venous connection", "mitral valve atresia", "tricuspid valve atresia", "fontan-1-norwood", "fontan-2-glenn", "fontan-3"],
+      conditions: ["normal neonate at 24h", "ecls", "fetus at term", "coarctatio aortae", "pulmonary atresia", "hypoplastic left heart syndrome", "transposition of the great arteries", "total anomalous pulmonary venous connection", "mitral valve atresia", "tricuspid valve atresia", "fontan-1-norwood", "fontan-2-glenn", "fontan-3"],
       condition_filenames: [
         {
           name: "normal neonate at 24h",
           filename: "normal_neonate_24h"
+        },
+        {
+          name: "ecls",
+          filename: "ecls"
         },
         {
           name: "fetus at term",
@@ -380,6 +386,12 @@ export default {
                 component.compPicto,
                 global_scaling
               );
+              let watched_models_oxy = []
+              component.models.forEach(m => {
+                watched_models_oxy.push(m + ".vol")
+                watched_models_oxy.push(m + ".aboxy.to2")
+              })
+              explain.watchModelProps(watched_models_oxy)
               break;
             case "BloodPump":
               this.diagramComponents[key] = new BloodPump(
@@ -396,6 +408,13 @@ export default {
                 component.compPicto,
                 global_scaling
               );
+              let watched_models_pump = []
+              component.models.forEach(m => {
+                watched_models_pump.push(m + ".vol")
+                watched_models_pump.push(m + ".aboxy.to2")
+                watched_models_pump.push(m + ".pump_rpm")
+              })
+              explain.watchModelProps(watched_models_pump)
               break;
             case "LymphCompartment":
               this.diagramComponents[key] = new LymphCompartment(

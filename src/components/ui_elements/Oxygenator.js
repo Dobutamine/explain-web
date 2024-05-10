@@ -131,9 +131,9 @@ export default class Oxygenator {
     let volumes = [];
     let to2s = [];
     this.models.forEach((model) => {
-      volume += data[model + ".Vol"];
-      volumes.push(data[model + ".Vol"]);
-      to2s.push(data[model + ".To2"]);
+      volume += data[model + ".vol"];
+      volumes.push(data[model + ".vol"]);
+      to2s.push(data[model + ".aboxy.to2"]);
     });
     // calculate factors
     this.to2 = 0;

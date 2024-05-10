@@ -1,4 +1,5 @@
 import { set_gas_composition } from "../helpers/GasComposition";
+import { set_blood_composition } from "../helpers/BloodComposition";
 
 export class Ecls {
   static model_type = "Ecls";
@@ -31,7 +32,9 @@ export class Ecls {
   pump_volume = 0.8;
   oxy_volume = 0.8;
   inlet_res = 20000.0;
+  inlet_res_factor = 1.0;
   outlet_res = 20000.0;
+  outlet_res_factor = 1.0;
   pump_rpm = 0.0;
 
   // dependent parameters
@@ -119,11 +122,13 @@ export class Ecls {
       this.tubing_diameter
     );
 
+    console.log(tubing_in_uvol);
+
     this._tubing_in.init_model([
       { key: "is_enabled", value: false },
       { key: "fixed_composition", value: false },
-      { key: "vol", value: tubing_in_uvol },
-      { key: "u_vol", value: tubing_in_uvol },
+      { key: "vol", value: tubing_in_uvol / 1000.0 },
+      { key: "u_vol", value: tubing_in_uvol / 1000.0 },
       { key: "el_base", value: this.tubing_elastance },
     ]);
 
@@ -137,6 +142,7 @@ export class Ecls {
     // add the tubing in to the ecls parts list
     this._ecls_parts.push(this._tubing_in);
   }
+
   build_tubing_out() {
     // define a blood capacitance which represents the tubing on the inlet side
     this._tubing_out = this._model_engine.models["ECLS_TUBOUT"];
@@ -148,8 +154,8 @@ export class Ecls {
     this._tubing_out.init_model([
       { key: "is_enabled", value: false },
       { key: "fixed_composition", value: false },
-      { key: "vol", value: tubing_out_uvol },
-      { key: "u_vol", value: tubing_out_uvol },
+      { key: "vol", value: tubing_out_uvol / 1000.0 },
+      { key: "u_vol", value: tubing_out_uvol / 1000.0 },
       { key: "el_base", value: this.tubing_elastance },
     ]);
 
@@ -163,6 +169,7 @@ export class Ecls {
     // add the tubing in to the ecls parts list
     this._ecls_parts.push(this._tubing_out);
   }
+
   build_oxy() {
     // define a blood capacitance which represents the tubing on the inlet side
     this._oxy = this._model_engine.models["ECLS_OXY"];
@@ -214,8 +221,8 @@ export class Ecls {
     this._pump = this._model_engine.models["ECLS_PUMP"];
 
     // calculate the resistance of this cannula depending on the length and diameter
-    let drainage_res = this.inlet_res;
-    let return_res = this.outlet_res;
+    let drainage_res = this.inlet_res * this.inlet_res_factor;
+    let return_res = this.outlet_res * this.outlet_res_factor;
 
     // connect the parts
     this._drainage_cannula = this._model_engine.models["ECLS_DR"];
@@ -300,6 +307,19 @@ export class Ecls {
     // initialize the pump
     this.init_pump();
   }
+
+  set_fio2(new_fio2) {
+    this.fio2_gas = new_fio2;
+    set_gas_composition(
+      this._gas_in,
+      this.fio2_gas,
+      this.temp_gas,
+      this.humidity_gas
+    );
+    console.log(this.fio2_gas);
+  }
+
+  set_fico2(new_fico2) {}
 
   build_gas_part() {
     this._gas_in = this._model_engine.models["ECLS_GASIN"];
@@ -404,19 +424,26 @@ export class Ecls {
   }
 
   step_model() {
-    if (this.is_enabled && this._is_initialized) {
+    if (this.is_enabled && this._is_initialized && this.ecls_running) {
       this.calc_model();
     }
+  }
+
+  toggle_ecls(state) {
+    this.ecls_running = state;
+    this._ecls_parts.forEach((ecls_part) => {
+      ecls_part.is_enabled = true;
+    });
   }
 
   calc_model() {
     this._pump.pump_rpm = this.pump_rpm;
 
-    this._drainage_cannula.r_for = this.inlet_res;
-    this._drainage_cannula.r_back = this.inlet_res;
+    this._drainage_cannula.r_for = this.inlet_res * this.inlet_res_factor;
+    this._drainage_cannula.r_back = this.inlet_res * this.inlet_res_factor;
 
-    this._return_cannula.r_for = this.outlet_res;
-    this._return_cannula.r_back = this.outlet_res;
+    this._return_cannula.r_for = this.outlet_res * this.outlet_res_factor;
+    this._return_cannula.r_back = this.outlet_res * this.outlet_res_factor;
 
     // set the resistance of the inspiration valve
     this._gas_in_oxy.r_for =

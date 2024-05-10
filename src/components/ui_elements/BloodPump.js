@@ -132,14 +132,18 @@ export default class BloodPump {
     let volumes = [];
     let to2s = [];
     let rot = 0;
-
     this.models.forEach((model) => {
-      volume += data[model + ".Vol"];
-      volumes.push(data[model + ".Vol"]);
-      to2s.push(data[model + ".To2"]);
-      rot += data[model + ".Rpm"];
+      volume += data[model + ".vol"];
+      volumes.push(data[model + ".vol"]);
+      to2s.push(data[model + ".aboxy.to2"]);
+      rot += data[model + ".pump_rpm"];
     });
-
+    // calculate factors
+    this.to2 = 0;
+    for (let i = 0; i < volumes.length; i++) {
+      let factor = volumes[i] / volume;
+      this.to2 += factor * to2s[i];
+    }
     // calculate factors
     if (rot) {
       this.rotationFlow += rot / this.models.length / 25000.0;
@@ -148,11 +152,8 @@ export default class BloodPump {
       }
     }
 
-    // calculate factors
-    this.to2 = 0;
-    for (let i = 0; i < volumes.length; i++) {
-      let factor = volumes[i] / volume;
-      this.to2 += factor * to2s[i];
+    if (isNaN(this.rotationFlow)) {
+      this.rotationFlow = 0.0;
     }
 
     if (isNaN(volume)) {
@@ -165,7 +166,6 @@ export default class BloodPump {
       this.volume * this.layout.scale.x * this.global_scaling,
       this.volume * this.layout.scale.y * this.global_scaling
     );
-
     let scaleFont = this.volume * this.layout.text.size * this.global_scaling;
     if (scaleFont > 1.1) {
       scaleFont = 1.1;
@@ -181,6 +181,7 @@ export default class BloodPump {
     }
     this.sprite.tint = this.calculateColor(this.to2);
   }
+
   setEditingMode(newMode) {
     this.editingMode = newMode;
   }

@@ -1,0 +1,1440 @@
+{
+  "settings": {
+    "name": "default",
+    "owner": "Timothy Antonius",
+    "type": "explain_diagram",
+    "model_filename": "baseline_neonate",
+    "backgroundColor": 3355443,
+    "editingMode": 1,
+    "scaling": 1.0,
+    "grid": false,
+    "gridSize": 10,
+    "snapToGrid": true,
+    "skeleton": true,
+    "skeletonColor": 4473924,
+    "pathColor": 4473924,
+    "radius": 0.6,
+    "xOffset": 0.0,
+    "yOffset": 20.0,
+    "shuntOptionsVisible": true
+  },
+  "components": {
+    "ALL": {
+      "enabled": true,
+      "label": "",
+      "models": [
+        "ALL"
+      ],
+      "compType": "GasCompartment",
+      "compPicto": "gas_container.png",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 1.0,
+          "y": 0.29,
+          "dgs": 270
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "level": 1,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "ALR": {
+      "enabled": true,
+      "label": "",
+      "models": [
+        "ALR"
+      ],
+      "compType": "GasCompartment",
+      "compPicto": "gas_container.png",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.0,
+          "y": -0.78,
+          "dgs": 270
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "level": 1,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "LV": {
+      "enabled": true,
+      "label": "LV",
+      "models": [
+        "LV"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 1,
+          "y": 1,
+          "dgs": 330
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "LA": {
+      "enabled": true,
+      "label": "LA",
+      "models": [
+        "LA"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 1,
+          "y": 0,
+          "dgs": 317
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "RA": {
+      "enabled": true,
+      "label": "RA",
+      "models": [
+        "RA"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 1,
+          "y": 1,
+          "dgs": 210
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "RV": {
+      "enabled": true,
+      "label": "RV",
+      "models": [
+        "RV"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 0.42652188455657486,
+          "y": 0.7404115698267074,
+          "dgs": 223
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "PA": {
+      "enabled": true,
+      "label": "PA",
+      "models": [
+        "PA"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 0,
+          "y": 0,
+          "dgs": 243
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "LL": {
+      "enabled": true,
+      "label": "LL",
+      "models": [
+        "LL"
+      ],
+      "compType": "BloodCompartment",
+      "compPicto": "container.png",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 1.0,
+          "y": 0.2,
+          "dgs": 270
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "RL": {
+      "enabled": true,
+      "label": "RL",
+      "models": [
+        "RL"
+      ],
+      "compType": "BloodCompartment",
+      "compPicto": "container.png",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.0,
+          "y": -0.78,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "PV": {
+      "enabled": true,
+      "label": "PV",
+      "models": [
+        "PV"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 0,
+          "y": 0,
+          "dgs": 297
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "PA_LL": {
+      "enabled": true,
+      "label": "PA_LL",
+      "models": [
+        "PA_LL"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "PA",
+      "dbcTo": "LL"
+    },
+    "PA_RL": {
+      "enabled": true,
+      "label": "PA_RL",
+      "models": [
+        "PA_RL"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "PA",
+      "dbcTo": "RL"
+    },
+    "LL_PV": {
+      "enabled": true,
+      "label": "LL_PV",
+      "models": [
+        "LL_PV"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "LL",
+      "dbcTo": "PV"
+    },
+    "PV_LA": {
+      "enabled": true,
+      "label": "PV_LA",
+      "models": [
+        "PV_LA"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "PV",
+      "dbcTo": "LA"
+    },
+    "RV_PA": {
+      "enabled": true,
+      "label": "RV_PA",
+      "models": [
+        "RV_PA"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "RV",
+      "dbcTo": "PA"
+    },
+    "RL_PV": {
+      "enabled": true,
+      "label": "RL_PV",
+      "models": [
+        "RL_PV"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "RL",
+      "dbcTo": "PV"
+    },
+    "RA_RV": {
+      "enabled": true,
+      "label": "RA_RV",
+      "models": [
+        "RA_RV"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "RA",
+      "dbcTo": "RV"
+    },
+    "LA_LV": {
+      "enabled": true,
+      "label": "LA_LV",
+      "models": [
+        "LA_LV"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "LA",
+      "dbcTo": "LV"
+    },
+    "AAR": {
+      "enabled": true,
+      "label": "AAR",
+      "models": [
+        "AAR"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 1.5910052049446972,
+          "y": 1.1849788549121665,
+          "dgs": 5
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "AA": {
+      "enabled": true,
+      "label": "AA",
+      "models": [
+        "AA"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 1.5910052049446972,
+          "y": 1.1849788549121665,
+          "dgs": 350
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "COR": {
+      "enabled": true,
+      "label": "COR",
+      "models": [
+        "COR"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.0,
+          "y": -0.2,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "AD": {
+      "enabled": true,
+      "label": "AD",
+      "models": [
+        "AD"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 1.4534198113207546,
+          "y": 1.5342523313814789,
+          "dgs": 30
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "RLB": {
+      "enabled": true,
+      "label": "RLB",
+      "models": [
+        "RLB"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 1.02,
+          "y": 1.79,
+          "dgs": 90
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "IVCE": {
+      "enabled": true,
+      "label": "IVCE",
+      "models": [
+        "IVCE"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 0.6565908137583892,
+          "y": 1.672329418344519,
+          "dgs": 150
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "IVCI": {
+      "enabled": true,
+      "label": "IVCI",
+      "models": [
+        "IVCI"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "arc",
+          "x": 0.44486682046979864,
+          "y": 1.2985994593586874,
+          "dgs": 190
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "SVCI": {
+      "enabled": true,
+      "label": "SVCI",
+      "models": [
+        "SVCI"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": -0.7,
+          "y": -0.25,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "SVCE": {
+      "enabled": true,
+      "label": "SVCE",
+      "models": [
+        "SVCE"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": -0.5,
+          "y": -0.025,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "INT": {
+      "enabled": true,
+      "label": "INT",
+      "models": [
+        "INT"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.0,
+          "y": 0.7,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "KID": {
+      "enabled": true,
+      "label": "KID",
+      "models": [
+        "KID"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.0,
+          "y": 0.85,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "LS": {
+      "enabled": true,
+      "label": "LS",
+      "models": [
+        "LS"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.0,
+          "y": 0.55,
+          "dgs": 0.0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "BR": {
+      "enabled": true,
+      "label": "BR",
+      "models": [
+        "BR"
+      ],
+      "compType": "BloodCompartment",
+      "compPicto": "container.png",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.0,
+          "y": 0.1,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "RUB": {
+      "enabled": true,
+      "label": "RUB",
+      "models": [
+        "RUB"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.0,
+          "y": 0.25,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1,
+          "y": 1
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "ECLS_TUBIN": {
+      "enabled": true,
+      "label": "TUBIN",
+      "models": [
+        "ECLS_TUBIN"
+      ],
+      "compType": "BloodCompartment",
+      "compPicto": "container.png",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 1.4,
+          "y": -0.9,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.3,
+          "y": 0.3
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "ECLS_OXY": {
+      "enabled": true,
+      "label": "OXY",
+      "models": [
+        "ECLS_OXY"
+      ],
+      "compType": "Oxygenator",
+      "compPicto": "container.png",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 1.4,
+          "y": 0,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.3,
+          "y": 0.3
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "ECLS_PUMP": {
+      "enabled": true,
+      "label": "PUMP",
+      "models": [
+        "ECLS_PUMP"
+      ],
+      "compType": "BloodPump",
+      "compPicto": "pump.png",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 1.4,
+          "y": -0.5,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.3,
+          "y": 0.3
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "ECLS_TUBOUT": {
+      "enabled": true,
+      "label": "TUBOUT",
+      "models": [
+        "ECLS_TUBOUT"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 1.4,
+          "y": 0.5,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.3,
+          "y": 0.3
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "ECLS_DR": {
+      "enabled": true,
+      "label": "",
+      "models": [
+        "ECLS_DR"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "RA",
+      "dbcTo": "ECLS_TUBIN"
+    },
+    "ECLS_TUBIN_PUMP": {
+      "enabled": true,
+      "label": "",
+      "models": [
+        "ECLS_TUBIN_PUMP"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "ECLS_TUBIN",
+      "dbcTo": "ECLS_PUMP"
+    },
+    "ECLS_PUMP_OXY": {
+      "enabled": true,
+      "label": "",
+      "models": [
+        "ECLS_PUMP_OXY"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "ECLS_PUMP",
+      "dbcTo": "ECLS_OXY"
+    },
+    "ECLS_OXY_TUBOUT": {
+      "enabled": true,
+      "label": "",
+      "models": [
+        "ECLS_OXY_TUBOUT"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "ECLS_OXY",
+      "dbcTo": "ECLS_TUBOUT"
+    },
+    "ECLS_RE": {
+      "enabled": true,
+      "label": "",
+      "models": [
+        "ECLS_RE"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "ECLS_TUBOUT",
+      "dbcTo": "AAR"
+    },
+    "IS": {
+      "enabled": false,
+      "label": "",
+      "models": [
+        "IS"
+      ],
+      "compType": "LymphCompartment",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.0,
+          "y": 0.775,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "LT": {
+      "enabled": false,
+      "label": "LT",
+      "models": [
+        "LT"
+      ],
+      "compType": "LymphCompartment",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": -0.37,
+          "y": 0.43,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "LD": {
+        "enabled": false,
+        "label": "LD",
+        "models": [
+          "LD"
+        ],
+        "compType": "LymphCompartment",
+        "layout": {
+          "pos": {
+            "type": "rel",
+            "x": -0.45,
+            "y": 0.25,
+            "dgs": 0
+          },
+          "morph": {
+            "x": 1,
+            "y": 1
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0
+          },
+          "rotation": 0,
+          "text": {
+            "x": 0,
+            "y": 0,
+            "size": 10
+          }
+        }
+    },
+    "IS_LT": {
+      "enabled": false,
+      "label": "IS_LT",
+      "models": [
+        "IS_LT"
+      ],
+      "compType": "LymphConnector",
+      "dbcFrom": "IS",
+      "dbcTo": "LT"
+    },
+    "LT_LD": {
+      "enabled": false,
+      "label": "LT_LD",
+      "models": [
+        "LT_LD"
+      ],
+      "compType": "LymphConnector",
+      "dbcFrom": "LT",
+      "dbcTo": "LD"
+    },
+    "LD_SVCI": {
+      "enabled": false,
+      "label": "LD_SVCI",
+      "models": [
+        "LD_SVCI"
+      ],
+      "compType": "LymphConnector",
+      "dbcFrom": "LD",
+      "dbcTo": "SVCI"
+    },
+    "AD_RLB": {
+      "enabled": true,
+      "label": "AD_RLB",
+      "models": [
+        "AD_RLB"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "AD",
+      "dbcTo": "RLB"
+    },
+    "AD_KID": {
+      "enabled": true,
+      "label": "AD_KID",
+      "models": [
+        "AD_KID"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "AD",
+      "dbcTo": "KID"
+    },
+    "AD_INT": {
+      "enabled": true,
+      "label": "AD_INT",
+      "models": [
+        "AD_INT"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "AD",
+      "dbcTo": "INT"
+    },
+    "AD_LS": {
+      "enabled": true,
+      "label": "AD_LS",
+      "models": [
+        "AD_LS"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "AD",
+      "dbcTo": "LS"
+    },
+    "LS_IVCE": {
+      "enabled": true,
+      "label": "LS_IVCE",
+      "models": [
+        "LS_IVCE"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "LS",
+      "dbcTo": "IVCE"
+    },
+    "INT_IVCE": {
+      "enabled": true,
+      "label": "INT_IVCE",
+      "models": [
+        "INT_IVCE"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "INT",
+      "dbcTo": "IVCE"
+    },
+    "KID_IVCE": {
+      "enabled": true,
+      "label": "KID_IVCE",
+      "models": [
+        "KID_IVCE"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "KID",
+      "dbcTo": "IVCE"
+    },
+    "RLB_IVCE": {
+      "enabled": true,
+      "label": "RLB_IVCE",
+      "models": [
+        "RLB_IVCE"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "RLB",
+      "dbcTo": "IVCE"
+    },
+    "IVCE_IVCI": {
+      "enabled": true,
+      "label": "IVCE_IVCE",
+      "models": [
+        "IVCE_IVCI"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "IVCE",
+      "dbcTo": "IVCI"
+    },
+    "IVCI_RA": {
+      "enabled": true,
+      "label": "IVCI_RA",
+      "models": [
+        "IVCI_RA"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "IVCI",
+      "dbcTo": "RA"
+    },
+    "SVCE_SVCI": {
+      "enabled": true,
+      "label": "SVCE_SVCE",
+      "models": [
+        "SVCE_SVCI"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "SVCE",
+      "dbcTo": "SVCI"
+    },
+    "SVCI_RA": {
+      "enabled": true,
+      "label": "SVCI_RA",
+      "models": [
+        "SVCI_RA"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "SVCI",
+      "dbcTo": "RA"
+    },
+    "BR_SVCE": {
+      "enabled": true,
+      "label": "BR_SVCE",
+      "models": [
+        "BR_SVCE"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "BR",
+      "dbcTo": "SVCE"
+    },
+    "RUB_SVCE": {
+      "enabled": true,
+      "label": "RUB_SVCE",
+      "models": [
+        "RUB_SVCE"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "RUB",
+      "dbcTo": "SVCE"
+    },
+    "AA_RUB": {
+      "enabled": true,
+      "label": "AA_RUB",
+      "models": [
+        "AA_RUB"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "AA",
+      "dbcTo": "RUB"
+    },
+    "AA_BR": {
+      "enabled": true,
+      "label": "AA_BR",
+      "models": [
+        "AA_BR"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "AA",
+      "dbcTo": "BR"
+    },
+    "LV_AA": {
+      "enabled": true,
+      "label": "LV_AA",
+      "models": [
+        "LV_AA"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "LV",
+      "dbcTo": "AA"
+    },
+    "AA_AAR": {
+      "enabled": true,
+      "label": "AA_AAR",
+      "models": [
+        "AA_AAR"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "AA",
+      "dbcTo": "AAR"
+    },
+    "AAR_AD": {
+      "enabled": true,
+      "label": "AAR_AD",
+      "models": [
+        "AAR_AD"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "AAR",
+      "dbcTo": "AD"
+    },
+    "AA_COR": {
+      "enabled": true,
+      "label": "AA_COR",
+      "models": [
+        "AA_COR"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "AA",
+      "dbcTo": "COR"
+    },
+    "COR_RA": {
+      "enabled": true,
+      "label": "COR_RA",
+      "models": [
+        "COR_RA"
+      ],
+      "compType": "BloodConnector",
+      "dbcFrom": "COR",
+      "dbcTo": "RA"
+    },
+    "IPS": {
+      "enabled": true,
+      "label": "IPS",
+      "models": [
+        "IPS"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "PA",
+      "dbcTo": "PV"
+    },
+    "DA": {
+      "enabled": true,
+      "label": "DA",
+      "models": [
+        "DA_OUT"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "AAR",
+      "dbcTo": "PA"
+    },
+    "FO": {
+      "enabled": true,
+      "label": "FO",
+      "models": [
+        "FO"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "RA",
+      "dbcTo": "LA"
+    },
+    "VSD": {
+      "enabled": false,
+      "label": "VSD",
+      "models": [
+        "VSD"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "LV",
+      "dbcTo": "RV"
+    },
+
+    "GASEX_LL": {
+      "enabled": true,
+      "label": "O2",
+      "models": [
+        "GASEX_LL"
+      ],
+      "compType": "GasExchanger",
+      "compPicto": "exchange.png",
+      "gas": "o2",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.0,
+          "y": -1.08,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.15,
+          "y": 0.15
+        },
+        "rotation": 0,
+        "level": 7,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 6
+        }
+      }
+    },
+    "GASEX_RL": {
+      "enabled": true,
+      "label": "O2",
+      "models": [
+        "GASEX_RL"
+      ],
+      "compType": "GasExchanger",
+      "compPicto": "exchange.png",
+      "gas": "o2",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 0.0,
+          "y": -0.70,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.15,
+          "y": 0.15
+        },
+        "rotation": 0,
+        "level": 7,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 6
+        }
+      }
+    }
+  }
+}
