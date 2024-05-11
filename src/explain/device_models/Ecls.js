@@ -122,8 +122,6 @@ export class Ecls {
       this.tubing_diameter
     );
 
-    console.log(tubing_in_uvol);
-
     this._tubing_in.init_model([
       { key: "is_enabled", value: false },
       { key: "fixed_composition", value: false },
@@ -430,10 +428,16 @@ export class Ecls {
   }
 
   toggle_ecls(state) {
-    this.ecls_running = state;
+    // turn all on
     this._ecls_parts.forEach((ecls_part) => {
-      ecls_part.is_enabled = true;
+      ecls_part.is_enabled = state;
     });
+
+    // turn ecls on
+    this.ecls_running = state;
+
+    this._drainage_cannula.no_flow = !state;
+    this._return_cannula.no_flow = !state;
   }
 
   calc_model() {

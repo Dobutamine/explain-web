@@ -826,6 +826,179 @@
         }
       }
     },
+    "ECLS_TUBIN": {
+      "enabled": false,
+      "label": "TUBIN",
+      "models": [
+        "ECLS_TUBIN"
+      ],
+      "compType": "BloodCompartment",
+      "compPicto": "container.png",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 1.4,
+          "y": -0.9,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.3,
+          "y": 0.3
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "ECLS_OXY": {
+      "enabled": false,
+      "label": "OXY",
+      "models": [
+        "ECLS_OXY"
+      ],
+      "compType": "Oxygenator",
+      "compPicto": "container.png",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 1.4,
+          "y": 0,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.3,
+          "y": 0.3
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "ECLS_PUMP": {
+      "enabled": false,
+      "label": "PUMP",
+      "models": [
+        "ECLS_PUMP"
+      ],
+      "compType": "BloodPump",
+      "compPicto": "pump.png",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 1.4,
+          "y": -0.5,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.3,
+          "y": 0.3
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "ECLS_TUBOUT": {
+      "enabled": false,
+      "label": "TUBOUT",
+      "models": [
+        "ECLS_TUBOUT"
+      ],
+      "compType": "BloodCompartment",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 1.4,
+          "y": 0.5,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.3,
+          "y": 0.3
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+    "ECLS_DR": {
+      "enabled": false,
+      "label": "",
+      "models": [
+        "ECLS_DR"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "RA",
+      "dbcTo": "ECLS_TUBIN"
+    },
+    "ECLS_TUBIN_PUMP": {
+      "enabled": false,
+      "label": "",
+      "models": [
+        "ECLS_TUBIN_PUMP"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "ECLS_TUBIN",
+      "dbcTo": "ECLS_PUMP"
+    },
+    "ECLS_PUMP_OXY": {
+      "enabled": false,
+      "label": "",
+      "models": [
+        "ECLS_PUMP_OXY"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "ECLS_PUMP",
+      "dbcTo": "ECLS_OXY"
+    },
+    "ECLS_OXY_TUBOUT": {
+      "enabled": false,
+      "label": "",
+      "models": [
+        "ECLS_OXY_TUBOUT"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "ECLS_OXY",
+      "dbcTo": "ECLS_TUBOUT"
+    },
+    "ECLS_RE": {
+      "enabled": false,
+      "label": "",
+      "models": [
+        "ECLS_RE"
+      ],
+      "compType": "Shunt",
+      "dbcFrom": "ECLS_TUBOUT",
+      "dbcTo": "AAR"
+    },
     "IS": {
       "enabled": false,
       "label": "",

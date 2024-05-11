@@ -1,7 +1,8 @@
 import { PIXI } from "src/boot/pixi.js";
 
-export default class Oxygenator {
-  compType = "BloodCompartment";
+export default class BloodCompartment {
+  compType = "Oxygenator";
+  compPicto = "container.png";
   pixiApp = {};
   key = "";
   label = "";
@@ -61,10 +62,8 @@ export default class Oxygenator {
     this.global_scaling = scaling;
 
     if (!this.compPicto) {
-      this.compPicto = "gas_container.png";
+      this.compPicto = "container.png";
     }
-
-    this.edit_comp_event = new CustomEvent("edit_comp", { detail: this.key });
 
     // this is a blood compartment sprite which uses
     this.sprite = PIXI.Sprite.from(this.compPicto);
@@ -116,8 +115,9 @@ export default class Oxygenator {
       fontFamily: "Arial",
       strokeThickness: 0,
     });
-    this.text["name_text"] = key;
+
     this.text = new PIXI.Text(this.label, this.textStyle);
+    this.text["name_text"] = key;
     this.text.anchor = { x: 0.5, y: 0.5 };
     this.text.x = this.sprite.x + this.layout.text.x;
     this.text.y = this.sprite.y + this.layout.text.y;
@@ -141,6 +141,7 @@ export default class Oxygenator {
       let factor = volumes[i] / volume;
       this.to2 += factor * to2s[i];
     }
+
     if (isNaN(volume)) {
       this.volume = (0.15 / this.layout.scale.x) * this.global_scaling;
     } else {
@@ -160,12 +161,15 @@ export default class Oxygenator {
     this.text.rotation = this.layout.rotation;
 
     this.text.scale.set(scaleFont, scaleFont);
+    this.text.alpha = 1.0;
+    if (isNaN(this.to2)) {
+      this.text.alpha = 0.1;
+    }
     this.sprite.tint = this.calculateColor(this.to2);
   }
   setEditingMode(newMode) {
     this.editingMode = newMode;
   }
-
   redrawConnectors() {
     Object.values(this.connectors).forEach((connector) => connector.drawPath());
   }

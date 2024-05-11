@@ -31,7 +31,7 @@ import GasConnector from "./ui_elements/GasConnector";
 import GasExchanger from "./ui_elements/GasExchanger";
 import Oxygenator from "./ui_elements/Oxygenator";
 import Shunt from "./ui_elements/Shunt";
-import { LymphCapacitance } from "src/explain/ModelIndex";
+
 
 let canvas = null;
 export default {
@@ -113,20 +113,34 @@ export default {
       selected_diagram: 'normal neonate at 24h',
       selected_shunts: [],
       shunt_options: [{
-        label: 'ductus arteriosus',
-        value: 'DA'
+        label: 'PDA',
+        value: 'DA',
+        description: 'ductus arteriosus',
+        models: ['DA']
       },
       {
-        label: 'foramen ovale',
-        value: 'FO'
+        label: 'FO',
+        value: 'FO',
+        description: 'foramen ovale',
+        models: ['FO']
       },
       {
-        label: 'ventricular septal defect',
-        value: 'VSD'
+        label: 'VSD',
+        value: 'VSD',
+        description: 'ventricular septal defect',
+        models: ['VSD']
       },
       {
-        label: 'intrapulmonary shunt',
-        value: 'IPS'
+        label: 'IPS',
+        value: 'IPS',
+        description: 'intra-pulmonary shunt',
+        models: ['IPS']
+      },
+      {
+        label: 'ECLS',
+        value: 'ECLS',
+        description: 'ecls',
+        models: ['ECLS_TUBIN', 'ECLS_OXY', 'ECLS_PUMP', 'ECLS_TUBOUT', 'ECLS_DR', 'ECLS_TUBIN_PUMP', 'ECLS_PUMP_OXY', 'ECLS_OXY_TUBOUT', 'ECLS_RE']
       }
       ],
       shuntOptionsVisible: true
@@ -142,25 +156,29 @@ export default {
     },
     toggleShunts() {
       this.shunt_options.forEach((shunt_option) => {
-        this.showOrHideShunt(this.selected_shunts.includes(shunt_option.value), shunt_option.value)
+        this.showOrHideShunt(this.selected_shunts.includes(shunt_option.value), shunt_option.models)
       })
 
     },
-    showOrHideShunt(state, shunt) {
+    showOrHideShunt(state, shunts) {
       if (state) {
         // show the shunt if not already shown
-        const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == shunt);
-        if (index_sprite < 0) {
-          // not shown already so add it
-          this.addDiagramComponent(shunt)
-        }
+        shunts.forEach(shunt => {
+          const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == shunt);
+          if (index_sprite < 0) {
+            // not shown already so add it
+            this.addDiagramComponent(shunt)
+          }
+        })
       } else {
         // hide the shunt
-        const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == shunt);
-        if (index_sprite > 0) {
-          // it is present so hide it
-          this.removeDiagramComponent(shunt)
-        }
+        shunts.forEach(shunt => {
+          const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == shunt);
+          if (index_sprite > 0) {
+            // it is present so hide it
+            this.removeDiagramComponent(shunt)
+          }
+        })
       }
 
     },
@@ -647,7 +665,9 @@ export default {
       if (this.shuntOptionsVisible) {
         try {
           if (this.diagram.components['DA'].enabled) {
+            console.log('tim')
             this.selected_shunts.push('DA')
+            this.showOrHideShunt(true, ['DA'])
           }
           if (this.diagram.components['FO'].enabled) {
             this.selected_shunts.push('FO')
@@ -658,6 +678,7 @@ export default {
           if (this.diagram.components['VSD'].enabled) {
             this.selected_shunts.push('VSD')
           }
+
         } catch { }
       }
     }
