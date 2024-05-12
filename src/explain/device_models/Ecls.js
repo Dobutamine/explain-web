@@ -28,7 +28,9 @@ export class Ecls {
   tubing_in_length = 1.0;
   tubing_out_length = 1.0;
   diff_o2 = 0.001;
+  diff_o2_factor = 1.0;
   diff_co2 = 0.001;
+  diff_co2_factor = 1.0;
   pump_volume = 0.8;
   oxy_volume = 0.8;
   inlet_res = 20000.0;
@@ -55,6 +57,7 @@ export class Ecls {
   ven_pres = 0.0;
   pre_oxy_pres = 0.0;
   post_oxy_pres = 0.0;
+  tmp_pres = 0.0;
   flow = 0.0;
   gas_flow = 0.0;
 
@@ -81,6 +84,9 @@ export class Ecls {
 
   _gasex = {}; // gasexchanger
   _ecls_parts = [];
+
+  _update_counter = 0.0;
+  _update_interval = 1.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -470,15 +476,43 @@ export class Ecls {
     this._return_cannula.r_back = this.outlet_res * this.outlet_res_factor;
 
     // set the resistance of the inspiration valve
-    this._gas_in_oxy.r_for =
-      (this._gas_in.pres - this.pres_atm) / (this.sweep_gas / 60.0);
-
-    // do the model step of the ventilator parts
-    //this._ecls_parts.forEach((_ecls_part) => _ecls_part.step_model());
+    if (this.sweep_gas > 0.0) {
+      this._gas_in_oxy.r_for =
+        (this._gas_in.pres - this.pres_atm) / (this.sweep_gas / 60.0);
+    }
 
     // get the dependent parameters
-    this.flow = this._oxy_tubing_out.flow * 60.0;
+    this.flow = this._oxy_tubing_out.flow_lmin_avg;
     this.gas_flow = this._gas_oxy_out.flow * 60.0;
+    this.ven_pres = this._tubing_in.pres;
+    this.pre_oxy_pres = this._oxy.pres;
+    this.post_oxy_pres = this._tubing_out.pres;
+    this.tmp_pres = this.pre_oxy_pres - this.post_oxy_pres;
+
+    this._gasex.dif_o2 = this.diff_o2 * this.diff_o2_factor;
+    this._gasex.dif_co2 = this.diff_co2 * this.diff_co2_factor;
+
+    // calculate the pre and post oxygenator bloodgasses
+    if (this._update_counter > this._update_interval) {
+      this._update_counter = 0.0;
+      set_blood_composition(this._tubing_in);
+      set_blood_composition(this._tubing_out);
+
+      this.pre_oxy_ph = this._tubing_in.aboxy.ph;
+      this.pre_oxy_po2 = this._tubing_in.aboxy.po2;
+      this.pre_oxy_pco2 = this._tubing_in.aboxy.pco2;
+      this.pre_oxy_hco3 = this._tubing_in.aboxy.hco3;
+      this.pre_oxy_be = this._tubing_in.aboxy.be;
+      this.pre_oxy_so2 = this._tubing_in.aboxy.so2;
+
+      this.post_oxy_ph = this._tubing_out.aboxy.ph;
+      this.post_oxy_po2 = this._tubing_out.aboxy.po2;
+      this.post_oxy_pco2 = this._tubing_out.aboxy.pco2;
+      this.post_oxy_hco3 = this._tubing_out.aboxy.hco3;
+      this.post_oxy_be = this._tubing_out.aboxy.be;
+      this.post_oxy_so2 = this._tubing_out.aboxy.so2;
+    }
+    this._update_counter += this._t;
   }
 
   calc_volume(length, diameter) {
