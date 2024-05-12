@@ -857,37 +857,6 @@
         }
       }
     },
-    "ECLS_OXY": {
-      "enabled": false,
-      "label": "OXY",
-      "models": [
-        "ECLS_OXY"
-      ],
-      "compType": "Oxygenator",
-      "compPicto": "container.png",
-      "layout": {
-        "pos": {
-          "type": "rel",
-          "x": 1.4,
-          "y": 0,
-          "dgs": 0
-        },
-        "morph": {
-          "x": 1,
-          "y": 1
-        },
-        "scale": {
-          "x": 0.3,
-          "y": 0.3
-        },
-        "rotation": 0,
-        "text": {
-          "x": 0,
-          "y": 0,
-          "size": 10
-        }
-      }
-    },
     "ECLS_PUMP": {
       "enabled": false,
       "label": "PUMP",
@@ -900,7 +869,7 @@
         "pos": {
           "type": "rel",
           "x": 1.4,
-          "y": -0.5,
+          "y": -0.55,
           "dgs": 0
         },
         "morph": {
@@ -919,6 +888,38 @@
         }
       }
     },
+    "ECLS_OXY": {
+      "enabled": false,
+      "label": "OXY",
+      "models": [
+        "ECLS_OXY"
+      ],
+      "compType": "Oxygenator",
+      "compPicto": "container.png",
+      "layout": {
+        "pos": {
+          "type": "rel",
+          "x": 1.4,
+          "y": -0.25,
+          "dgs": 0
+        },
+        "morph": {
+          "x": 1,
+          "y": 1
+        },
+        "scale": {
+          "x": 0.3,
+          "y": 0.3
+        },
+        "rotation": 0,
+        "text": {
+          "x": 0,
+          "y": 0,
+          "size": 10
+        }
+      }
+    },
+
     "ECLS_TUBOUT": {
       "enabled": false,
       "label": "TUBOUT",
@@ -930,7 +931,7 @@
         "pos": {
           "type": "rel",
           "x": 1.4,
-          "y": 0.5,
+          "y": 0.075,
           "dgs": 0
         },
         "morph": {

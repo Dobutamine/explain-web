@@ -375,6 +375,14 @@ export default {
         this.drawComponents(component)
       }
     },
+    update_component(comp_name) {
+      // first remove diagram component from canvas and disable it in the list
+      this.removeDiagramComponent(comp_name)
+
+      // add diagram component
+      this.addDiagramComponent(comp_name)
+
+    },
     drawComponents(component_list) {
       // get the layout properties
       const xCenter = (this.pixiApp.renderer.width / 4)
@@ -795,6 +803,19 @@ export default {
     this.$bus.on('rt_start', () => this.rt_running = true)
     this.$bus.on('rt_stop', () => this.rt_running = false)
     this.$bus.on("update_watchlist", () => this.update_watchlist())
+    this.$bus.on("update_drainage_site", (new_site) => {
+      try {
+        this.diagram.components['ECLS_DR'].dbcFrom = new_site
+        this.update_component('ECLS_DR')
+      } catch { }
+    })
+    this.$bus.on("update_return_site", (new_site) => {
+      try {
+        this.diagram.components['ECLS_RE'].dbcTo = new_site
+        this.update_component('ECLS_RE')
+      } catch { }
+
+    })
   },
 };
 

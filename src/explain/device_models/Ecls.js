@@ -318,6 +318,24 @@ export class Ecls {
 
   set_fico2(new_fico2) {}
 
+  reconnect_drainage(comp) {
+    if (this._model_engine.models[comp]) {
+      this.drainage_site = comp;
+      this._drainage_cannula.reconnect(comp, "ECLS_TUBIN");
+    } else {
+      console.log(`${comp} cannot be found in the model list`);
+    }
+  }
+
+  reconnect_return(comp) {
+    if (this._model_engine.models[comp]) {
+      this.return_site = comp;
+      this._return_cannula.reconnect("ECLS_TUBOUT", comp);
+    } else {
+      console.log(`${comp} cannot be found in the model list`);
+    }
+  }
+
   build_gas_part() {
     this._gas_in = this._model_engine.models["ECLS_GASIN"];
     this._gas_in.init_model([

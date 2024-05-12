@@ -4094,6 +4094,30 @@ export default defineComponent({
             step: 0.01,
             rounding: 2
           },
+          drainage: {
+            caption: "drainage site",
+            category: "general",
+            enabled: true,
+            advanced: true,
+            model: "Ecls",
+            prop: "drainage_site",
+            type: "string",
+            caller: "function",
+            function_name: "reconnect_drainage",
+            bus_message: "update_drainage_site"
+          },
+          return: {
+            caption: "return site",
+            category: "general",
+            enabled: true,
+            advanced: true,
+            model: "Ecls",
+            prop: "return_site",
+            type: "string",
+            caller: "function",
+            function_name: "reconnect_return",
+            bus_message: "update_return_site"
+          },
         }
       },
     }

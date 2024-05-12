@@ -67,6 +67,16 @@
                 </div>
               </div>
             </div>
+            <div v-if="controller.type == 'string'">
+              <div v-if="controller.category == category_name && !controller.advanced">
+                <div v-if="category.enabled">
+                  <div class="q-mr-lg q-ml-lg q-mt-sm justify-center">
+                    <q-input class="q-ml-sm" :label="controller.caption" v-model="controller.model_value" dense
+                      debounce="1000" @update:model-value="changeValue(controller)"></q-input>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -120,6 +130,16 @@
                           @update:model-value="changeValue(controller)"></q-toggle>
                       </div>
                     </q-badge>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-if="controller.type == 'string'">
+              <div v-if="controller.category == category_name">
+                <div v-if="category.enabled">
+                  <div class="q-mr-lg q-ml-lg q-mt-sm justify-center">
+                    <q-input class="q-ml-sm" :label="controller.caption" v-model="controller.model_value" dense
+                      debounce="1000" @update:model-value="changeValue(controller)"></q-input>
                   </div>
                 </div>
               </div>
@@ -301,6 +321,21 @@ export default {
           // as is_enabled changes the execution list and watchlist
           this.$bus.emit("update_watchlist")
           break;
+
+        case "string":
+          let target_string = controller.model + "." + controller.prop
+          if (controller.caller == 'direct') {
+            explain.setPropValue(target_string, controller.model_value)
+          }
+          if (controller.caller == 'function') {
+            let target_function = controller.model + "." + controller.function_name
+            explain.callModelFunction(target_function, [controller.model_value])
+          }
+          if (controller.bus_message) {
+            this.$bus.emit(controller.bus_message, controller.model_value)
+          }
+          break;
+
       }
     },
     increaseValue(controller) {
@@ -359,6 +394,11 @@ export default {
               controller.model_value = explain.modelState.models[controller.model][controller.prop]
               controller.slider_value = controller.model_value
               controller.display_value = controller.model_value.toFixed(controller.rounding)
+              break;
+            case 'string':
+              controller.model_value = explain.modelState.models[controller.model][controller.prop]
+              controller.slider_value = controller.model_value
+              controller.display_value = controller.model_value
               break;
             case 'boolean':
               controller.model_value = explain.modelState.models[controller.model][controller.prop]
