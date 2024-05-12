@@ -203,8 +203,6 @@ export default class DataCollector {
     disabledModels.forEach((dm) => {
       delete this.watch_list[dm];
     });
-
-    console.log("Watchlist cleaned up.");
   }
 
   clean_up_slow() {

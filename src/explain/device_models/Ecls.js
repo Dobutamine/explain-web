@@ -314,7 +314,6 @@ export class Ecls {
       this.temp_gas,
       this.humidity_gas
     );
-    console.log(this.fio2_gas);
   }
 
   set_fico2(new_fico2) {}

@@ -352,7 +352,6 @@ const build_execution_list = function () {
       model.execution_list[key] = model_comp;
     }
   });
-  console.log("Execution llist is rebuild");
   rebuildExecutionList = false;
 
   // reset model execution list flaf

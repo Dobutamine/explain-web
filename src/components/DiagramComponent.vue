@@ -618,7 +618,6 @@ export default {
       });
     },
     update_watchlist() {
-      console.log('Rebuild watchlist')
       Object.entries(this.diagram.components).forEach(([key, component]) => {
         // inject the offsets
         if (component.enabled) {

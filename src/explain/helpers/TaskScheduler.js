@@ -42,7 +42,7 @@ export default class TaskScheduler {
       if (index > -1) {
         //console.log("Removed completed task with id: ", this.tasks[index].id);
         let removed_task = this.tasks.splice(index, 1);
-        console.log("Removed task: ", removed_task[0].id);
+        // console.log("Removed task: ", removed_task[0].id);
       }
     });
   }
@@ -84,7 +84,7 @@ export default class TaskScheduler {
                 task.m[task.p] = task.v;
                 if (task.p == "is_enabled") {
                   this._model_engine.rebuildExecutionList = true;
-                  console.log("rebuild execution list");
+                  //console.log("rebuild execution list");
                 }
                 this._completed_tasks.push(task.id);
               }
@@ -181,7 +181,7 @@ export default class TaskScheduler {
     }
 
     // push the task onto the list
-    console.log("Added new task: ", new_task);
+    //console.log("Added new task: ", new_task);
     this.tasks.push(new_task);
   }
 }

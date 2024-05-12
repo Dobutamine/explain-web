@@ -285,7 +285,6 @@ export default {
           }
           if (controller.caller == 'function') {
             let target_function = controller.model + "." + controller.function_name
-            console.log(target_function)
             explain.callModelFunction(target_function, [controller.model_value])
           }
           break;
@@ -299,6 +298,7 @@ export default {
             let target_function = controller.model + "." + controller.function_name
             explain.callModelFunction(target_function, [controller.model_value])
           }
+          // as is_enabled changes the execution list and watchlist
           this.$bus.emit("update_watchlist")
           break;
       }
