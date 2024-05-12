@@ -433,6 +433,9 @@ export class Ecls {
       ecls_part.is_enabled = state;
     });
 
+    // rebuild execution list
+    this._model_engine.rebuildExecutionListFlag = true;
+
     // turn ecls on
     this.ecls_running = state;
 
@@ -454,7 +457,7 @@ export class Ecls {
       (this._gas_in.pres - this.pres_atm) / (this.sweep_gas / 60.0);
 
     // do the model step of the ventilator parts
-    this._ecls_parts.forEach((_ecls_part) => _ecls_part.step_model());
+    //this._ecls_parts.forEach((_ecls_part) => _ecls_part.step_model());
 
     // get the dependent parameters
     this.flow = this._oxy_tubing_out.flow * 60.0;

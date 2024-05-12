@@ -299,6 +299,7 @@ export default {
             let target_function = controller.model + "." + controller.function_name
             explain.callModelFunction(target_function, [controller.model_value])
           }
+          this.$bus.emit("update_watchlist")
           break;
       }
     },

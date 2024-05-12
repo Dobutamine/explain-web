@@ -237,6 +237,7 @@ const process_model_definition = function (model_definition) {
   // clear the current model object
   model = {
     models: {},
+    rebuildExecutionListFlag: false,
     execution_list: {},
     dependency_list: [],
   };
@@ -353,6 +354,9 @@ const build_execution_list = function () {
   });
   console.log("Execution llist is rebuild");
   rebuildExecutionList = false;
+
+  // reset model execution list flaf
+  model.rebuildExecutionListFlag = false;
 };
 // prepare for a model run
 const prepare_for_execution = function () {
@@ -440,9 +444,6 @@ const calculate = function (time_to_calculate) {
     return;
   }
 
-  // clean up the datacollector
-  model.DataCollector.clean_up();
-
   // calculate a number of seconds of the model
   if (model_initialized) {
     let noOfSteps = time_to_calculate / model.modeling_stepsize;
@@ -476,6 +477,9 @@ const calculate = function (time_to_calculate) {
       payload: [],
     });
   }
+
+  // clean up the datacollector
+  model.DataCollector.clean_up();
 };
 
 // do a single model step
@@ -497,7 +501,7 @@ const model_step = function () {
 
 const model_step_rt = function () {
   // does the execution list need a rebuild
-  if (rebuildExecutionList) {
+  if (rebuildExecutionList || model.rebuildExecutionListFlag) {
     build_execution_list();
   }
   // so the rt_interval determines how often the model is calculated

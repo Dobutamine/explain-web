@@ -203,6 +203,8 @@ export default class DataCollector {
     disabledModels.forEach((dm) => {
       delete this.watch_list[dm];
     });
+
+    console.log("Watchlist cleaned up.");
   }
 
   clean_up_slow() {
@@ -235,6 +237,10 @@ export default class DataCollector {
 
         if (fast_item.prop2) {
           value = fast_item.model[fast_item.prop1][fast_item.prop2];
+        }
+
+        if (!fast_item.model["is_enabled"]) {
+          value = NaN;
         }
 
         // complete the data_object

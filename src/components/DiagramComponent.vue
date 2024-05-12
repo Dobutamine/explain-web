@@ -374,7 +374,6 @@ export default {
         component[comp_name] = this.diagram.components[comp_name]
         this.drawComponents(component)
       }
-
     },
     drawComponents(component_list) {
       // get the layout properties
@@ -618,6 +617,110 @@ export default {
         }
       });
     },
+    update_watchlist() {
+      console.log('Rebuild watchlist')
+      Object.entries(this.diagram.components).forEach(([key, component]) => {
+        // inject the offsets
+        if (component.enabled) {
+          switch (component.compType) {
+            case "Oxygenator":
+              let watched_models_oxy = []
+              component.models.forEach(m => {
+                watched_models_oxy.push(m + ".vol")
+                watched_models_oxy.push(m + ".aboxy.to2")
+              })
+              explain.watchModelProps(watched_models_oxy)
+              break;
+            case "BloodPump":
+              let watched_models_pump = []
+              component.models.forEach(m => {
+                watched_models_pump.push(m + ".vol")
+                watched_models_pump.push(m + ".aboxy.to2")
+                watched_models_pump.push(m + ".pump_rpm")
+              })
+              explain.watchModelProps(watched_models_pump)
+              break;
+            case "LymphCompartment":
+              let watched_models_lc = []
+              component.models.forEach(m => {
+                watched_models_lc.push(m + ".vol")
+              })
+              explain.watchModelProps(watched_models_lc)
+              break;
+            case "BloodCompartment":
+              let watched_models_bc = []
+              component.models.forEach(m => {
+                watched_models_bc.push(m + ".vol")
+                watched_models_bc.push(m + ".aboxy.to2")
+              })
+              explain.watchModelProps(watched_models_bc)
+              break;
+            case "GasCompartment":
+              let watched_models_gc = []
+              component.models.forEach(m => {
+                watched_models_gc.push(m + ".vol")
+                watched_models_gc.push(m + ".po2")
+              })
+              explain.watchModelProps(watched_models_gc)
+              break;
+            case "BloodConnector":
+              let watched_models_bcon = []
+              component.models.forEach(m => {
+                watched_models_bcon.push(m + ".flow")
+              })
+              explain.watchModelProps(watched_models_bcon)
+              break;
+            case "LymphConnector":
+              let watched_models_lcon = []
+              component.models.forEach(m => {
+                watched_models_lcon.push(m + ".flow")
+              })
+              explain.watchModelProps(watched_models_lcon)
+              break;
+            case "Shunt":
+              let watched_models_shunt = []
+              component.models.forEach(m => {
+                watched_models_shunt.push(m + ".flow")
+              })
+              explain.watchModelProps(watched_models_shunt)
+              break;
+            case "Container":
+              let watched_models_cont = []
+              component.models.forEach(m => {
+                watched_models_cont.push(m + ".vol")
+              })
+              explain.watchModelProps(watched_models_cont)
+              break;
+            case "GasConnector":
+              this.diagramComponents[key] = new GasConnector(
+                this.pixiApp,
+                key,
+                component.label,
+                component.models,
+                this.diagramComponents[component.dbcFrom],
+                this.diagramComponents[component.dbcTo],
+                {},
+                component.compPicto,
+                global_scaling
+              );
+              let watched_models_gascon = []
+              component.models.forEach(m => {
+                watched_models_gascon.push(m + ".flow")
+              })
+              explain.watchModelProps(watched_models_gascon)
+              break;
+            case "GasExchanger":
+              let watched_models_gasex = []
+              component.models.forEach(m => {
+                watched_models_gasex.push(m + ".flux_" + component.gas)
+              })
+              explain.watchModelProps(watched_models_gasex)
+              break;
+          }
+        }
+      });
+
+    },
     processStateChanged() {
       if (!this.rt_running) {
         if (this.alive) {
@@ -665,7 +768,7 @@ export default {
       if (this.shuntOptionsVisible) {
         try {
           if (this.diagram.components['DA'].enabled) {
-            console.log('tim')
+
             this.selected_shunts.push('DA')
             this.showOrHideShunt(true, ['DA'])
           }
@@ -692,6 +795,7 @@ export default {
     this.$bus.on('reset', () => this.buildDiagram())
     this.$bus.on('rt_start', () => this.rt_running = true)
     this.$bus.on('rt_stop', () => this.rt_running = false)
+    this.$bus.on("update_watchlist", () => this.update_watchlist())
   },
 };
 
