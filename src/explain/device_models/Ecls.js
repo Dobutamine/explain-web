@@ -12,8 +12,11 @@ export class Ecls {
   dependencies = [];
   pres_atm = 760.0;
   ecls_running = false;
+  fio2_gas_baseline = 0.205;
   fio2_gas = 0.205;
-  fico2_gas = 0.0004;
+  fico2_gas_baseline = 0.000392;
+  fico2_gas = 0.000392;
+  co2_gas_flow = 0.4;
   temp_gas = 37.0;
   humidity_gas = 1.0;
   sweep_gas = 1.0;
@@ -322,7 +325,30 @@ export class Ecls {
     );
   }
 
-  set_fico2(new_fico2) {}
+  set_co2_flow(new_co2_flow) {
+    if (new_co2_flow > 0.0) {
+      this.co2_gas_flow = new_co2_flow;
+      this.fico2_gas = (new_co2_flow * 0.001) / this.sweep_gas;
+    } else {
+      this.co2_gas_flow = this.fico2_gas_baseline * 1000;
+      this.fico2_gas = this.fico2_gas_baseline;
+    }
+    set_gas_composition(
+      this._gas_in,
+      this.fio2_gas,
+      this.temp_gas,
+      this.humidity_gas,
+      this.fico2_gas
+    );
+  }
+
+  set_fico2(new_fico2) {
+    // calculate the co2 with normal fico2 of 0.000392
+    // when sweep gas is 1 l/min then the co2_flow is = 0.000392 * 1 = 0.000392 l/min
+
+    // calculate the ml
+    this.fico2_gas = new_fico2;
+  }
 
   reconnect_drainage(comp) {
     if (this._model_engine.models[comp]) {

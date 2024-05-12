@@ -4131,8 +4131,8 @@ export default defineComponent({
             step: 0.01,
             rounding: 2
           },
-          fico2: {
-            caption: "fico2",
+          co2_flow: {
+            caption: "co2 flow (ml/min)",
             category: "oxygenator",
             enabled: true,
             advanced: true,
@@ -4141,14 +4141,14 @@ export default defineComponent({
             linked_caption: "",
             linked_to: "",
             model: "Ecls",
-            prop: "fico2_gas",
+            prop: "co2_gas_flow",
             type: "number",
             caller: "function",
-            function_name: "set_fico2",
-            min: 0.21,
-            max: 1.0,
-            step: 0.01,
-            rounding: 2
+            function_name: "set_co2_flow",
+            min: 0.4,
+            max: 100.0,
+            step: 0.1,
+            rounding: 1
           },
           sweep: {
             caption: "sweep gas (l/min)",
