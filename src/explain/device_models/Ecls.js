@@ -141,8 +141,8 @@ export class Ecls {
     this._tubing_in.init_model([
       { key: "is_enabled", value: false },
       { key: "fixed_composition", value: false },
-      { key: "vol", value: tubing_in_uvol / 1000.0 },
-      { key: "u_vol", value: tubing_in_uvol / 1000.0 },
+      { key: "vol", value: tubing_in_uvol },
+      { key: "u_vol", value: tubing_in_uvol },
       { key: "el_base", value: this.tubing_elastance },
     ]);
 
@@ -266,6 +266,9 @@ export class Ecls {
       this.drainage_cannula_diameter,
       this.drainage_cannula_length
     );
+
+    // 1 Fr is 0.33 mm
+
     console.log("tubing in resistance", temp_res);
 
     // connect the parts
@@ -604,6 +607,8 @@ export class Ecls {
   }
 
   calc_resistance_tube(diameter, length, viscosity = 6.0) {
+    // 1 Fr= 0.33 mm
+
     // resistance is calculated using Poiseuille's Law : R = (8 * n * L) / (PI * r^4)
 
     // we have to watch the units carefully where we have to make sure that the units in the formula are
