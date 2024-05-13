@@ -16,6 +16,7 @@ export class Blood {
   superior_vena_cava = "SVC";
   right_atrium = "RA";
   total_blood_volume = 0.0;
+  viscosity = 6.0;
   blood_containing_components = [];
 
   // dependent parameters

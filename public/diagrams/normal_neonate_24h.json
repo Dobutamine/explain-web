@@ -869,7 +869,8 @@
         "pos": {
           "type": "rel",
           "x": 1.4,
-          "y": -0.55,
+          "y": -0.55
+          ,
           "dgs": 0
         },
         "morph": {
@@ -974,7 +975,7 @@
       "enabled": false,
       "label": "",
       "models": [
-        "ECLS_PUMP_OXY"
+        "ECLS_BRIDGE_OXY"
       ],
       "compType": "Shunt",
       "dbcFrom": "ECLS_PUMP",

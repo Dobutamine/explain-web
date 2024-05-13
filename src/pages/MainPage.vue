@@ -285,7 +285,7 @@ export default defineComponent({
   },
   data() {
     return {
-      tab_left: "other_systems",
+      tab_left: "circulatory_system",
       tab_center: "diagram",
       tab_right: "numerics",
       no_of_modeleditor: 1,
@@ -364,19 +364,19 @@ export default defineComponent({
         },
         ecls_numerics: {
           title: "ECLS",
-          collapsed: false,
+          collapsed: true,
           parameters: [
             { label: "Flow", unit: "l/min", factor: 1.0, rounding: 3, props: ["Ecls.flow"], weight_based: false },
-            { label: "Inlet pres", unit: "mmHg", factor: 1.0, rounding: 1, props: ["Ecls.ven_pres"], weight_based: false },
-            { label: "Pre-oxy pres", unit: "mmHg", factor: 1.0, rounding: 1, props: ["Ecls.pre_oxy_pres"], weight_based: false },
-            { label: "Post-oxy pres", unit: "mmHg", factor: 1.0, rounding: 1, props: ["Ecls.post_oxy_pres"], weight_based: false },
+            { label: "Ven pres", unit: "mmHg", factor: 1.0, rounding: 1, props: ["Ecls.ven_pres"], weight_based: false },
+            { label: "Pre pres", unit: "mmHg", factor: 1.0, rounding: 1, props: ["Ecls.pre_oxy_pres"], weight_based: false },
+            { label: "Post pres", unit: "mmHg", factor: 1.0, rounding: 1, props: ["Ecls.post_oxy_pres"], weight_based: false },
             { label: "Tmp", unit: "mmHg", factor: 1.0, rounding: 1, props: ["Ecls.tmp_pres"], weight_based: false },
             { label: "SvO2", unit: "%", factor: 1, rounding: 1, props: ["Ecls.pre_oxy_so2"], weight_based: false },
-            { label: "Pre-oxy po2", unit: "kPa", factor: 0.133, rounding: 1, props: ["Ecls.pre_oxy_po2"], weight_based: false },
-            { label: "Pre-oxy pco2", unit: "kPa", factor: 0.133, rounding: 1, props: ["Ecls.pre_oxy_pco2"], weight_based: false },
+            { label: "Pre po2", unit: "kPa", factor: 0.133, rounding: 1, props: ["Ecls.pre_oxy_po2"], weight_based: false },
+            { label: "Pre pco2", unit: "kPa", factor: 0.133, rounding: 1, props: ["Ecls.pre_oxy_pco2"], weight_based: false },
             { label: "SaO2", unit: "%", factor: 1, rounding: 1, props: ["Ecls.post_oxy_so2"], weight_based: false },
-            { label: "Post-oxy po2", unit: "kPa", factor: 0.133, rounding: 1, props: ["Ecls.post_oxy_po2"], weight_based: false },
-            { label: "Post-oxy pco2", unit: "kPa", factor: 0.133, rounding: 1, props: ["Ecls.post_oxy_pco2"], weight_based: false },
+            { label: "Post po2", unit: "kPa", factor: 0.133, rounding: 1, props: ["Ecls.post_oxy_po2"], weight_based: false },
+            { label: "Post pco2", unit: "kPa", factor: 0.133, rounding: 1, props: ["Ecls.post_oxy_pco2"], weight_based: false },
           ]
         },
         vent_numerics: {
@@ -3901,7 +3901,7 @@ export default defineComponent({
       },
       coronaries_controller: {
         title: "CORONARIES",
-        enabled: true,
+        enabled: false,
         categories: {
           elastance: {
             caption: "Elastance ",
@@ -4113,7 +4113,7 @@ export default defineComponent({
             rounding: 0
           },
           fio2: {
-            caption: "fio2",
+            caption: "fio2 blender (%)",
             category: "oxygenator",
             enabled: true,
             advanced: false,
@@ -4135,7 +4135,7 @@ export default defineComponent({
             caption: "co2 flow (ml/min)",
             category: "oxygenator",
             enabled: true,
-            advanced: true,
+            advanced: false,
             linked: false,
             link_button: false,
             linked_caption: "",
@@ -4166,6 +4166,25 @@ export default defineComponent({
             function_name: "set_fico2",
             min: 0.1,
             max: 5.0,
+            step: 0.1,
+            rounding: 1
+          },
+          oxy_res: {
+            caption: "oxy resistance factor",
+            category: "oxygenator",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            model: "Ecls",
+            prop: "oxy_resistance_factor",
+            type: "factor",
+            caller: "direct",
+            function_name: "",
+            min: -10,
+            max: 10,
             step: 0.1,
             rounding: 1
           },

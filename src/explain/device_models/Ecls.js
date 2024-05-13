@@ -36,6 +36,8 @@ export class Ecls {
   diff_co2_factor = 1.0;
   pump_volume = 0.8;
   oxy_volume = 0.8;
+  oxy_resistance = 1000;
+  oxy_resistance_factor = 1.0;
   inlet_res = 20000.0;
   inlet_res_factor = 1.0;
   outlet_res = 20000.0;
@@ -73,7 +75,9 @@ export class Ecls {
   _tubing_in = {}; // bloodcapacitance
   _tubing_in_pump = {}; // bloodresistor
   _pump = {}; // bloodpump
-  _pump_oxy = {}; // bloodresistor
+  _pump_bridge = {}; // bloodresistor
+  _bridge = {};
+  _bridge_oxy = {}; // bloodresistor
   _oxy = {}; // bloodcapacitance
   _oxy_tubing_out = {}; // bloodresistor
   _tubing_out = {}; // bloodcapacitance
@@ -130,6 +134,9 @@ export class Ecls {
       this.tubing_in_length,
       this.tubing_diameter
     );
+    console.log(this.tubing_in_length);
+    console.log(this.tubing_diameter);
+    console.log("tubing in volume", tubing_in_uvol);
 
     this._tubing_in.init_model([
       { key: "is_enabled", value: false },
@@ -178,6 +185,30 @@ export class Ecls {
   }
 
   build_oxy() {
+    let bridge_uvol = this.calc_volume(
+      this.tubing_in_length / 2.0,
+      this.tubing_diameter
+    );
+
+    // define a blood capacitance which represents the tubing on the inlet side
+    this._bridge = this._model_engine.models["ECLS_BRIDGE"];
+    this._bridge.init_model([
+      { key: "is_enabled", value: false },
+      { key: "fixed_composition", value: false },
+      { key: "vol", value: bridge_uvol },
+      { key: "u_vol", value: bridge_uvol },
+      { key: "el_base", value: this.tubing_elastance },
+    ]);
+
+    // set the electrolytes
+    this._bridge.solutes = { ...this._model_engine.models["AA"].solutes };
+    this._bridge.aboxy = { ...this._model_engine.models["AA"].aboxy };
+
+    // calculate the starting pressure
+    this._bridge.calc_model();
+    // add the tubing in to the ecls parts list
+    this._ecls_parts.push(this._bridge);
+
     // define a blood capacitance which represents the tubing on the inlet side
     this._oxy = this._model_engine.models["ECLS_OXY"];
     this._oxy.init_model([
@@ -231,6 +262,12 @@ export class Ecls {
     let drainage_res = this.inlet_res * this.inlet_res_factor;
     let return_res = this.outlet_res * this.outlet_res_factor;
 
+    let temp_res = this.calc_resistance_tube(
+      this.drainage_cannula_diameter,
+      this.drainage_cannula_length
+    );
+    console.log("tubing in resistance", temp_res);
+
     // connect the parts
     this._drainage_cannula = this._model_engine.models["ECLS_DR"];
     this._drainage_cannula.init_model([
@@ -265,12 +302,27 @@ export class Ecls {
     // add the resistor to the list
     this._ecls_parts.push(this._tubing_in_pump);
 
-    this._pump_oxy = this._model_engine.models["ECLS_PUMP_OXY"];
-    this._pump_oxy.init_model([
+    this._pump_bridge = this._model_engine.models["ECLS_PUMP_BRIDGE"];
+    this._pump_bridge.init_model([
       { key: "is_enabled", value: false },
       { key: "no_flow", value: false },
       { key: "no_back_flow", value: false },
       { key: "comp_from", value: this._pump },
+      { key: "comp_to", value: this._bridge },
+      { key: "r_for", value: 50.0 },
+      { key: "r_back", value: 50.0 },
+      { key: "r_k", value: 0.0 },
+    ]);
+
+    // add the resistor to the list
+    this._ecls_parts.push(this._pump_bridge);
+
+    this._bridge_oxy = this._model_engine.models["ECLS_BRIDGE_OXY"];
+    this._bridge_oxy.init_model([
+      { key: "is_enabled", value: false },
+      { key: "no_flow", value: false },
+      { key: "no_back_flow", value: false },
+      { key: "comp_from", value: this._bridge },
       { key: "comp_to", value: this._oxy },
       { key: "r_for", value: 50.0 },
       { key: "r_back", value: 50.0 },
@@ -278,7 +330,7 @@ export class Ecls {
     ]);
 
     // add the resistor to the list
-    this._ecls_parts.push(this._pump_oxy);
+    this._ecls_parts.push(this._bridge_oxy);
 
     this._oxy_tubing_out = this._model_engine.models["ECLS_OXY_TUBOUT"];
     this._oxy_tubing_out.init_model([
@@ -498,6 +550,11 @@ export class Ecls {
     this._drainage_cannula.r_for = this.inlet_res * this.inlet_res_factor;
     this._drainage_cannula.r_back = this.inlet_res * this.inlet_res_factor;
 
+    this._oxy_tubing_out.r_for =
+      this.oxy_resistance * this.oxy_resistance_factor;
+    this._oxy_tubing_out.r_back =
+      this.oxy_resistance * this.oxy_resistance_factor;
+
     this._return_cannula.r_for = this.outlet_res * this.outlet_res_factor;
     this._return_cannula.r_back = this.outlet_res * this.outlet_res_factor;
 
@@ -511,7 +568,7 @@ export class Ecls {
     this.flow = this._oxy_tubing_out.flow_lmin_avg;
     this.gas_flow = this._gas_oxy_out.flow * 60.0;
     this.ven_pres = this._tubing_in.pres;
-    this.pre_oxy_pres = this._oxy.pres;
+    this.pre_oxy_pres = this._bridge.pres;
     this.post_oxy_pres = this._tubing_out.pres;
     this.tmp_pres = this.pre_oxy_pres - this.post_oxy_pres;
 
@@ -543,6 +600,33 @@ export class Ecls {
 
   calc_volume(length, diameter) {
     // return the volume in liters
-    return Math.PI * (0.5 * diameter) * length * 1000.0;
+    return Math.PI * Math.pow(0.5 * diameter, 2) * length * 1000.0;
+  }
+
+  calc_resistance_tube(diameter, length, viscosity = 6.0) {
+    // resistance is calculated using Poiseuille's Law : R = (8 * n * L) / (PI * r^4)
+
+    // we have to watch the units carefully where we have to make sure that the units in the formula are
+    // resistance is in mmHg * s / l
+    // L = length in meters from millimeters
+    // r = radius in meters from millimeters
+    // n = viscosity in centiPoise
+
+    // convert viscosity from centiPoise to Pa * s
+    let n_pas = viscosity / 1000.0;
+
+    // convert the length to meters
+    let length_meters = length;
+
+    // calculate radius in meters
+    let radius_meters = diameter / 2;
+
+    // calculate the resistance    Pa *  / m3
+    let res =
+      (8.0 * n_pas * length_meters) / (Math.PI * Math.pow(radius_meters, 4));
+
+    // convert resistance of Pa/m3 to mmHg/l
+    res = res * 0.00000750062;
+    return res;
   }
 }
