@@ -12,6 +12,7 @@ export class Ecls {
   dependencies = [];
   pres_atm = 760.0;
   ecls_running = false;
+  ecls_clamped = false;
   fio2_gas_baseline = 0.205;
   fio2_gas = 0.205;
   fico2_gas_baseline = 0.000392;
@@ -565,6 +566,9 @@ export class Ecls {
     this._return_cannula.no_flow = !state;
   }
 
+  toggle_clamp(state) {
+    this.ecls_clamped = state;
+  }
   calc_model() {
     // set the number of rotations of the pump
     this._pump.pump_rpm = this.pump_rpm;
@@ -596,6 +600,10 @@ export class Ecls {
       this.post_oxy_hco3 = this._tubing_out.aboxy.hco3;
       this.post_oxy_be = this._tubing_out.aboxy.be;
       this.post_oxy_so2 = this._tubing_out.aboxy.so2;
+
+      // check if ecls is clamped
+      this._drainage_cannula.no_flow = this.ecls_clamped;
+      this._return_cannula.no_flow = this.ecls_clamped;
 
       // calculate the tubing diameter from the tubing size
       this.tubing_diameter = this.tubing_size * 0.0254;
