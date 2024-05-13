@@ -788,6 +788,9 @@ export default {
           if (this.diagram.components['VSD'].enabled) {
             this.selected_shunts.push('VSD')
           }
+          if (this.diagram.components['ECLS'].enabled) {
+            this.selected_shunts.push('ECLS')
+          }
 
         } catch { }
       }

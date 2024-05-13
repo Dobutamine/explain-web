@@ -573,6 +573,10 @@ export class Ecls {
     // set the number of rotations of the pump
     this._pump.pump_rpm = this.pump_rpm;
 
+    // check if ecls is clamped
+    this._drainage_cannula.no_flow = this.ecls_clamped;
+    this._return_cannula.no_flow = this.ecls_clamped;
+
     // get the dependent parameters
     this.flow = this._oxy_tubing_out.flow_lmin_avg;
     this.gas_flow = this._gas_oxy_out.flow * 60.0;
@@ -600,10 +604,6 @@ export class Ecls {
       this.post_oxy_hco3 = this._tubing_out.aboxy.hco3;
       this.post_oxy_be = this._tubing_out.aboxy.be;
       this.post_oxy_so2 = this._tubing_out.aboxy.so2;
-
-      // check if ecls is clamped
-      this._drainage_cannula.no_flow = this.ecls_clamped;
-      this._return_cannula.no_flow = this.ecls_clamped;
 
       // calculate the tubing diameter from the tubing size
       this.tubing_diameter = this.tubing_size * 0.0254;
