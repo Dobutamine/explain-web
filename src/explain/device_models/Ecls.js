@@ -23,9 +23,12 @@ export class Ecls {
   drainage_site = "RA";
   return_site = "AAR";
   drainage_cannula_length = 0.011;
+  drainage_cannula_size = 12;
   drainage_cannula_diameter = 0.3;
   return_cannula_length = 0.011;
+  return_cannula_size = 10;
   return_cannula_diameter = 0.3;
+  tubing_size = 0.25;
   tubing_elastance = 11600;
   tubing_diameter = 0.3;
   tubing_in_length = 1.0;
@@ -129,14 +132,14 @@ export class Ecls {
     // define a blood capacitance which represents the tubing on the inlet side
     this._tubing_in = this._model_engine.models["ECLS_TUBIN"];
 
+    // calculate the tubing diameter from the tubing size
+    this.tubing_diameter = this.tubing_size * 0.0254;
+
     // we need to calculate the unstressed volume of the tubing depending on the length and diameter
     let tubing_in_uvol = this.calc_volume(
       this.tubing_in_length,
       this.tubing_diameter
     );
-    console.log(this.tubing_in_length);
-    console.log(this.tubing_diameter);
-    console.log("tubing in volume", tubing_in_uvol);
 
     this._tubing_in.init_model([
       { key: "is_enabled", value: false },
@@ -160,6 +163,10 @@ export class Ecls {
   build_tubing_out() {
     // define a blood capacitance which represents the tubing on the inlet side
     this._tubing_out = this._model_engine.models["ECLS_TUBOUT"];
+
+    // calculate the tubing diameter from the tubing size
+    this.tubing_diameter = this.tubing_size * 0.0254;
+
     // we need to calculate the unstressed volume of the tubing depending on the length and diameter
     let tubing_out_uvol = this.calc_volume(
       this.tubing_out_length,
@@ -168,8 +175,8 @@ export class Ecls {
     this._tubing_out.init_model([
       { key: "is_enabled", value: false },
       { key: "fixed_composition", value: false },
-      { key: "vol", value: tubing_out_uvol / 1000.0 },
-      { key: "u_vol", value: tubing_out_uvol / 1000.0 },
+      { key: "vol", value: tubing_out_uvol },
+      { key: "u_vol", value: tubing_out_uvol },
       { key: "el_base", value: this.tubing_elastance },
     ]);
 
@@ -185,13 +192,19 @@ export class Ecls {
   }
 
   build_oxy() {
+    // define a blood capacitance which represents the tubing between the pump and oxygenator
+    this._bridge = this._model_engine.models["ECLS_BRIDGE"];
+
+    // calculate the tubing diameter from the tubing size
+    this.tubing_diameter = this.tubing_size * 0.0254;
+
+    // we need to calculate the unstressed volume of the tubing depending on the length and diameter
     let bridge_uvol = this.calc_volume(
       this.tubing_in_length / 2.0,
       this.tubing_diameter
     );
 
-    // define a blood capacitance which represents the tubing on the inlet side
-    this._bridge = this._model_engine.models["ECLS_BRIDGE"];
+    // define a blood capacitance which represents the tubing between the pump and oxygenator
     this._bridge.init_model([
       { key: "is_enabled", value: false },
       { key: "fixed_composition", value: false },
@@ -258,18 +271,23 @@ export class Ecls {
     // define a blood pump but don't initialize it because the connectors have not been built yet
     this._pump = this._model_engine.models["ECLS_PUMP"];
 
-    // calculate the resistance of this cannula depending on the length and diameter
-    let drainage_res = this.inlet_res * this.inlet_res_factor;
-    let return_res = this.outlet_res * this.outlet_res_factor;
+    // calculate the drainage cannula diameter
+    this.drainage_cannula_diameter =
+      (this.drainage_cannula_size * 0.33) / 1000.0;
 
-    let temp_res = this.calc_resistance_tube(
+    // calculate the return cannula diameter (1 Fr is 0.33 mm)
+    this.return_cannula_diameter = (this.return_cannula_size * 0.33) / 1000.0;
+
+    // calculate the resistance of this cannula depending on the length and diameter
+    let drainage_res = this.calc_resistance_tube(
       this.drainage_cannula_diameter,
       this.drainage_cannula_length
     );
 
-    // 1 Fr is 0.33 mm
-
-    console.log("tubing in resistance", temp_res);
+    let return_res = this.calc_resistance_tube(
+      this.return_cannula_diameter,
+      this.return_cannula_length
+    );
 
     // connect the parts
     this._drainage_cannula = this._model_engine.models["ECLS_DR"];
@@ -548,24 +566,8 @@ export class Ecls {
   }
 
   calc_model() {
+    // set the number of rotations of the pump
     this._pump.pump_rpm = this.pump_rpm;
-
-    this._drainage_cannula.r_for = this.inlet_res * this.inlet_res_factor;
-    this._drainage_cannula.r_back = this.inlet_res * this.inlet_res_factor;
-
-    this._oxy_tubing_out.r_for =
-      this.oxy_resistance * this.oxy_resistance_factor;
-    this._oxy_tubing_out.r_back =
-      this.oxy_resistance * this.oxy_resistance_factor;
-
-    this._return_cannula.r_for = this.outlet_res * this.outlet_res_factor;
-    this._return_cannula.r_back = this.outlet_res * this.outlet_res_factor;
-
-    // set the resistance of the inspiration valve
-    if (this.sweep_gas > 0.0) {
-      this._gas_in_oxy.r_for =
-        (this._gas_in.pres - this.pres_atm) / (this.sweep_gas / 60.0);
-    }
 
     // get the dependent parameters
     this.flow = this._oxy_tubing_out.flow_lmin_avg;
@@ -574,9 +576,6 @@ export class Ecls {
     this.pre_oxy_pres = this._bridge.pres;
     this.post_oxy_pres = this._tubing_out.pres;
     this.tmp_pres = this.pre_oxy_pres - this.post_oxy_pres;
-
-    this._gasex.dif_o2 = this.diff_o2 * this.diff_o2_factor;
-    this._gasex.dif_co2 = this.diff_co2 * this.diff_co2_factor;
 
     // calculate the pre and post oxygenator bloodgasses
     if (this._update_counter > this._update_interval) {
@@ -597,6 +596,49 @@ export class Ecls {
       this.post_oxy_hco3 = this._tubing_out.aboxy.hco3;
       this.post_oxy_be = this._tubing_out.aboxy.be;
       this.post_oxy_so2 = this._tubing_out.aboxy.so2;
+
+      // calculate the tubing diameter from the tubing size
+      this.tubing_diameter = this.tubing_size * 0.0254;
+
+      // calculate the drainage cannula diameter
+      this.drainage_cannula_diameter =
+        (this.drainage_cannula_size * 0.33) / 1000.0;
+
+      // calculate the return cannula diameter (1 Fr is 0.33 mm)
+      this.return_cannula_diameter = (this.return_cannula_size * 0.33) / 1000.0;
+
+      // calculate the resistance of these cannulas depending on the length and diameter
+      let drainage_res = this.calc_resistance_tube(
+        this.drainage_cannula_diameter,
+        this.drainage_cannula_length
+      );
+
+      this._drainage_cannula.r_for = drainage_res * this.inlet_res_factor;
+      this._drainage_cannula.r_back = drainage_res * this.inlet_res_factor;
+
+      let return_res = this.calc_resistance_tube(
+        this.return_cannula_diameter,
+        this.return_cannula_length
+      );
+
+      this._return_cannula.r_for = return_res * this.outlet_res_factor;
+      this._return_cannula.r_back = return_res * this.outlet_res_factor;
+
+      // calculate the oxgenator resistance
+      this._oxy_tubing_out.r_for =
+        this.oxy_resistance * this.oxy_resistance_factor;
+      this._oxy_tubing_out.r_back =
+        this.oxy_resistance * this.oxy_resistance_factor;
+
+      // set the resistance of the inspiration valve for the sweep gas flow
+      if (this.sweep_gas > 0.0) {
+        this._gas_in_oxy.r_for =
+          (this._gas_in.pres - this.pres_atm) / (this.sweep_gas / 60.0);
+      }
+
+      // set the diffusion coeeficients of the oxygenator
+      this._gasex.dif_o2 = this.diff_o2 * this.diff_o2_factor;
+      this._gasex.dif_co2 = this.diff_co2 * this.diff_co2_factor;
     }
     this._update_counter += this._t;
   }
