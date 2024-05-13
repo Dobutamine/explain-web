@@ -920,7 +920,6 @@
         }
       }
     },
-
     "ECLS_TUBOUT": {
       "enabled": false,
       "label": "TUBOUT",
@@ -1000,126 +999,6 @@
       "compType": "Shunt",
       "dbcFrom": "ECLS_TUBOUT",
       "dbcTo": "AAR"
-    },
-    "IS": {
-      "enabled": false,
-      "label": "",
-      "models": [
-        "IS"
-      ],
-      "compType": "LymphCompartment",
-      "layout": {
-        "pos": {
-          "type": "rel",
-          "x": 0.0,
-          "y": 0.775,
-          "dgs": 0
-        },
-        "morph": {
-          "x": 1,
-          "y": 1
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0
-        },
-        "rotation": 0,
-        "text": {
-          "x": 0,
-          "y": 0,
-          "size": 10
-        }
-      }
-    },
-    "LT": {
-      "enabled": false,
-      "label": "LT",
-      "models": [
-        "LT"
-      ],
-      "compType": "LymphCompartment",
-      "layout": {
-        "pos": {
-          "type": "rel",
-          "x": -0.37,
-          "y": 0.43,
-          "dgs": 0
-        },
-        "morph": {
-          "x": 1,
-          "y": 1
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0
-        },
-        "rotation": 0,
-        "text": {
-          "x": 0,
-          "y": 0,
-          "size": 10
-        }
-      }
-    },
-    "LD": {
-        "enabled": false,
-        "label": "LD",
-        "models": [
-          "LD"
-        ],
-        "compType": "LymphCompartment",
-        "layout": {
-          "pos": {
-            "type": "rel",
-            "x": -0.45,
-            "y": 0.25,
-            "dgs": 0
-          },
-          "morph": {
-            "x": 1,
-            "y": 1
-          },
-          "scale": {
-            "x": 1.0,
-            "y": 1.0
-          },
-          "rotation": 0,
-          "text": {
-            "x": 0,
-            "y": 0,
-            "size": 10
-          }
-        }
-    },
-    "IS_LT": {
-      "enabled": false,
-      "label": "IS_LT",
-      "models": [
-        "IS_LT"
-      ],
-      "compType": "LymphConnector",
-      "dbcFrom": "IS",
-      "dbcTo": "LT"
-    },
-    "LT_LD": {
-      "enabled": false,
-      "label": "LT_LD",
-      "models": [
-        "LT_LD"
-      ],
-      "compType": "LymphConnector",
-      "dbcFrom": "LT",
-      "dbcTo": "LD"
-    },
-    "LD_SVCI": {
-      "enabled": false,
-      "label": "LD_SVCI",
-      "models": [
-        "LD_SVCI"
-      ],
-      "compType": "LymphConnector",
-      "dbcFrom": "LD",
-      "dbcTo": "SVCI"
     },
     "AD_RLB": {
       "enabled": true,
@@ -1371,7 +1250,6 @@
       "dbcFrom": "LV",
       "dbcTo": "RV"
     },
-
     "GASEX_LL": {
       "enabled": true,
       "label": "O2",
