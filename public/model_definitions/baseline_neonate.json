@@ -6021,30 +6021,7 @@
           "model_type": "Lymph",
           "description": "lymphatics model",
           "is_enabled": false,
-          "dependencies": [],
-          "ducts": [
-              "LD"
-          ],
-          "trunks": [
-              "LT"
-          ],
-          "interstitium": [
-              "IS"
-          ],
-          "pump": [],
-          "starlings": [
-              "INT_IS",
-              "KID_IS",
-              "RLB_IS",
-              "LS_IS",
-              "RUB_IS",
-              "LL_IS",
-              "RL_IS"
-          ],
-          "is_flow": 0,
-          "is_lt_flow": 0,
-          "lt_ld_flow": 0,
-          "ld_svc_flow": 0
+          "dependencies": []
       },
       "ArtificialWhomb": {
           "name": "ArtificialWhomb",
