@@ -560,7 +560,8 @@ export default defineComponent({
             function_name: "change_thorax_compliance",
             min: -10.0,
             max: 10.0,
-            step: 0.05
+            step: 0.05,
+            rounding: 2,
           },
           lung_compliance: {
             caption: "lung compliance",
@@ -578,7 +579,8 @@ export default defineComponent({
             function_name: "change_lung_compliance",
             min: -10.0,
             max: 10.0,
-            step: 0.05
+            step: 0.05,
+            rounding: 2,
           },
           dead_space: {
             caption: "dead space",
@@ -596,7 +598,8 @@ export default defineComponent({
             function_name: "change_dead_space",
             min: -10.0,
             max: 10.0,
-            step: 0.05
+            step: 0.05,
+            rounding: 2,
           },
           uaw_resistance: {
             caption: "upper airway resistance",
@@ -614,7 +617,8 @@ export default defineComponent({
             function_name: "change_upper_airway_resistance",
             min: -10.0,
             max: 10.0,
-            step: 0.05
+            step: 0.05,
+            rounding: 2,
           },
           law_resistance: {
             caption: "lower airway resistance",
@@ -632,7 +636,8 @@ export default defineComponent({
             function_name: "change_lower_airway_resistance",
             min: -10.0,
             max: 10.0,
-            step: 0.05
+            step: 0.05,
+            rounding: 2,
           },
           ips: {
             caption: "intra-pulmonary shunt resistance",
@@ -650,7 +655,8 @@ export default defineComponent({
             function_name: "",
             min: -10.0,
             max: 10.0,
-            step: 0.05
+            step: 0.05,
+            rounding: 2,
           },
           diff_o2: {
             caption: "diffusion capacity o2",
