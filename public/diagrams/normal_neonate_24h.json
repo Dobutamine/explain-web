@@ -555,11 +555,11 @@
         }
       }
     },
-    "IVCE": {
+    "VLB": {
       "enabled": true,
-      "label": "IVCE",
+      "label": "VLB",
       "models": [
-        "IVCE"
+        "VLB"
       ],
       "compType": "BloodCompartment",
       "layout": {
@@ -615,11 +615,11 @@
         }
       }
     },
-    "SVCI": {
+    "SVC": {
       "enabled": true,
-      "label": "SVCI",
+      "label": "SVC",
       "models": [
-        "SVCI"
+        "SVC"
       ],
       "compType": "BloodCompartment",
       "layout": {
@@ -645,11 +645,11 @@
         }
       }
     },
-    "SVCE": {
+    "VUB": {
       "enabled": true,
-      "label": "SVCE",
+      "label": "VUB",
       "models": [
-        "SVCE"
+        "VUB"
       ],
       "compType": "BloodCompartment",
       "layout": {
@@ -1040,54 +1040,54 @@
       "dbcFrom": "AD",
       "dbcTo": "LS"
     },
-    "LS_IVCE": {
+    "LS_VLB": {
       "enabled": true,
-      "label": "LS_IVCE",
+      "label": "LS_VLB",
       "models": [
-        "LS_IVCE"
+        "LS_VLB"
       ],
       "compType": "BloodConnector",
       "dbcFrom": "LS",
-      "dbcTo": "IVCE"
+      "dbcTo": "VLB"
     },
-    "INT_IVCE": {
+    "INT_VLB": {
       "enabled": true,
-      "label": "INT_IVCE",
+      "label": "INT_VLB",
       "models": [
-        "INT_IVCE"
+        "INT_VLB"
       ],
       "compType": "BloodConnector",
       "dbcFrom": "INT",
-      "dbcTo": "IVCE"
+      "dbcTo": "VLB"
     },
-    "KID_IVCE": {
+    "KID_VLB": {
       "enabled": true,
-      "label": "KID_IVCE",
+      "label": "KID_VLB",
       "models": [
-        "KID_IVCE"
+        "KID_VLB"
       ],
       "compType": "BloodConnector",
       "dbcFrom": "KID",
-      "dbcTo": "IVCE"
+      "dbcTo": "VLB"
     },
-    "RLB_IVCE": {
+    "RLB_VLB": {
       "enabled": true,
-      "label": "RLB_IVCE",
+      "label": "RLB_VLB",
       "models": [
-        "RLB_IVCE"
+        "RLB_VLB"
       ],
       "compType": "BloodConnector",
       "dbcFrom": "RLB",
-      "dbcTo": "IVCE"
+      "dbcTo": "VLB"
     },
-    "IVCE_IVCI": {
+    "VLB_IVCI": {
       "enabled": true,
-      "label": "IVCE_IVCE",
+      "label": "VLB_VLB",
       "models": [
-        "IVCE_IVCI"
+        "VLB_IVCI"
       ],
       "compType": "BloodConnector",
-      "dbcFrom": "IVCE",
+      "dbcFrom": "VLB",
       "dbcTo": "IVCI"
     },
     "IVCI_RA": {
@@ -1100,45 +1100,45 @@
       "dbcFrom": "IVCI",
       "dbcTo": "RA"
     },
-    "SVCE_SVCI": {
+    "VUB_SVC": {
       "enabled": true,
-      "label": "SVCE_SVCE",
+      "label": "VUB_VUB",
       "models": [
-        "SVCE_SVCI"
+        "VUB_SVC"
       ],
       "compType": "BloodConnector",
-      "dbcFrom": "SVCE",
-      "dbcTo": "SVCI"
+      "dbcFrom": "VUB",
+      "dbcTo": "SVC"
     },
-    "SVCI_RA": {
+    "SVC_RA": {
       "enabled": true,
-      "label": "SVCI_RA",
+      "label": "SVC_RA",
       "models": [
-        "SVCI_RA"
+        "SVC_RA"
       ],
       "compType": "BloodConnector",
-      "dbcFrom": "SVCI",
+      "dbcFrom": "SVC",
       "dbcTo": "RA"
     },
-    "BR_SVCE": {
+    "BR_VUB": {
       "enabled": true,
-      "label": "BR_SVCE",
+      "label": "BR_VUB",
       "models": [
-        "BR_SVCE"
+        "BR_VUB"
       ],
       "compType": "BloodConnector",
       "dbcFrom": "BR",
-      "dbcTo": "SVCE"
+      "dbcTo": "VUB"
     },
-    "RUB_SVCE": {
+    "RUB_VUB": {
       "enabled": true,
-      "label": "RUB_SVCE",
+      "label": "RUB_VUB",
       "models": [
-        "RUB_SVCE"
+        "RUB_VUB"
       ],
       "compType": "BloodConnector",
       "dbcFrom": "RUB",
-      "dbcTo": "SVCE"
+      "dbcTo": "VUB"
     },
     "AA_RUB": {
       "enabled": true,

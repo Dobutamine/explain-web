@@ -1314,8 +1314,8 @@
           "pres_min": 2.9851657219607084,
           "pres_mean": 3.0139831242670767
       },
-      "IVCE": {
-          "name": "IVCE",
+      "VLB": {
+          "name": "VLB",
           "model_type": "BloodCapacitance",
           "description": "vena cava inferior extrathoracic ",
           "is_enabled": true,
@@ -1380,8 +1380,8 @@
           "pres_min": 2.986307519860583,
           "pres_mean": 3.027141335742724
       },
-      "SVCI": {
-          "name": "SVCI",
+      "SVC": {
+          "name": "SVC",
           "model_type": "BloodCapacitance",
           "description": "superior vena cava intrathoracic",
           "is_enabled": true,
@@ -1446,10 +1446,10 @@
           "pres_min": 3.833426161629288,
           "pres_mean": 3.8334261616292884
       },
-      "SVCE": {
-          "name": "SVCE",
+      "VUB": {
+          "name": "VUB",
           "model_type": "BloodCapacitance",
-          "description": "superior vena cava extrathoracic",
+          "description": "veins of the upper body",
           "is_enabled": true,
           "dependencies": [],
           "fixed_composition": false,
@@ -2719,19 +2719,19 @@
           "p1_ext_factor": 1,
           "p2_ext_factor": 1
       },
-      "RUB_SVCE": {
-          "name": "RUB_SVCE",
+      "RUB_VUB": {
+          "name": "RUB_VUB",
           "model_type": "BloodResistor",
           "description": "upper body to superior vena cava",
           "is_enabled": true,
           "dependencies": [
               "RUB",
-              "SVCE"
+              "VUB"
           ],
           "no_flow": false,
           "no_back_flow": true,
           "comp_from": "RUB",
-          "comp_to": "SVCE",
+          "comp_to": "VUB",
           "r_for": 10053.596614950635,
           "r_for_factor": 1,
           "r_back": 10053.596614950635,
@@ -2765,19 +2765,19 @@
           "p1_ext_factor": 1,
           "p2_ext_factor": 1
       },
-      "BR_SVCE": {
-          "name": "BR_SVCE",
+      "BR_VUB": {
+          "name": "BR_VUB",
           "model_type": "BloodResistor",
           "description": "BR to superior vena cava",
           "is_enabled": true,
           "dependencies": [
               "BR",
-              "SVCE"
+              "VUB"
           ],
           "no_flow": false,
           "no_back_flow": true,
           "comp_from": "BR",
-          "comp_to": "SVCE",
+          "comp_to": "VUB",
           "r_for": 8936.530324400564,
           "r_for_factor": 1,
           "r_back": 8936.530324400564,
@@ -2811,19 +2811,19 @@
           "p1_ext_factor": 1,
           "p2_ext_factor": 1
       },
-      "RLB_IVCE": {
-          "name": "RLB_IVCE",
+      "RLB_VLB": {
+          "name": "RLB_VLB",
           "model_type": "BloodResistor",
           "description": "lower body to extrathoracic vci",
           "is_enabled": true,
           "dependencies": [
               "RLB",
-              "IVCE"
+              "VLB"
           ],
           "no_flow": false,
           "no_back_flow": true,
           "comp_from": "RLB",
-          "comp_to": "IVCE",
+          "comp_to": "VLB",
           "r_for": 13240.586741889987,
           "r_for_factor": 1,
           "r_back": 13240.586741889987,
@@ -2857,19 +2857,19 @@
           "p1_ext_factor": 1,
           "p2_ext_factor": 1
       },
-      "LS_IVCE": {
-          "name": "LS_IVCE",
+      "LS_VLB": {
+          "name": "LS_VLB",
           "model_type": "BloodResistor",
           "description": "liver and spleen to extrathoracic vci",
           "is_enabled": true,
           "dependencies": [
               "LS",
-              "IVCE"
+              "VLB"
           ],
           "no_flow": false,
           "no_back_flow": true,
           "comp_from": "LS",
-          "comp_to": "IVCE",
+          "comp_to": "VLB",
           "r_for": 31413.021156558534,
           "r_for_factor": 1,
           "r_back": 31413.021156558534,
@@ -2903,19 +2903,19 @@
           "p1_ext_factor": 1,
           "p2_ext_factor": 1
       },
-      "KID_IVCE": {
-          "name": "KID_IVCE",
+      "KID_VLB": {
+          "name": "KID_VLB",
           "model_type": "BloodResistor",
           "description": "kidneys to extrathoracic vci",
           "is_enabled": true,
           "dependencies": [
               "KID",
-              "IVCE"
+              "VLB"
           ],
           "no_flow": false,
           "no_back_flow": true,
           "comp_from": "KID",
-          "comp_to": "IVCE",
+          "comp_to": "VLB",
           "r_for": 29598.90550070522,
           "r_for_factor": 1,
           "r_back": 29598.90550070522,
@@ -2949,19 +2949,19 @@
           "p1_ext_factor": 1,
           "p2_ext_factor": 1
       },
-      "INT_IVCE": {
-          "name": "INT_IVCE",
+      "INT_VLB": {
+          "name": "INT_VLB",
           "model_type": "BloodResistor",
           "description": "intestines to extrathoracic vci",
           "is_enabled": true,
           "dependencies": [
               "INT",
-              "IVCE"
+              "VLB"
           ],
           "no_flow": false,
           "no_back_flow": true,
           "comp_from": "INT",
-          "comp_to": "IVCE",
+          "comp_to": "VLB",
           "r_for": 17350.273624823694,
           "r_for_factor": 1,
           "r_back": 17350.273624823694,
@@ -2995,18 +2995,18 @@
           "p1_ext_factor": 1,
           "p2_ext_factor": 1
       },
-      "IVCE_IVCI": {
-          "name": "IVCE_IVCI",
+      "VLB_IVCI": {
+          "name": "VLB_IVCI",
           "model_type": "BloodResistor",
           "description": "extrahoracic vena cava inferior to intrathoracic vci",
           "is_enabled": true,
           "dependencies": [
-              "IVCE",
+              "VLB",
               "IVCI"
           ],
           "no_flow": false,
           "no_back_flow": false,
-          "comp_from": "IVCE",
+          "comp_from": "VLB",
           "comp_to": "IVCI",
           "r_for": 50,
           "r_for_factor": 1,
@@ -3087,19 +3087,19 @@
           "p1_ext_factor": 1,
           "p2_ext_factor": 1
       },
-      "SVCE_SVCI": {
-          "name": "SVCE_SVCI",
+      "VUB_SVC": {
+          "name": "VUB_SVC",
           "model_type": "BloodResistor",
-          "description": "extrahoracic vena cava superior to intrathoracic superior",
+          "description": "veins of upper body to intrathoracic vena cava superior",
           "is_enabled": true,
           "dependencies": [
-              "SVCE",
-              "SVCI"
+              "VUB",
+              "SVC"
           ],
           "no_flow": false,
           "no_back_flow": false,
-          "comp_from": "SVCE",
-          "comp_to": "SVCI",
+          "comp_from": "VUB",
+          "comp_to": "SVC",
           "r_for": 50,
           "r_for_factor": 1,
           "r_back": 50,
@@ -3133,18 +3133,18 @@
           "p1_ext_factor": 1,
           "p2_ext_factor": 1
       },
-      "SVCI_RA": {
-          "name": "SVCI_RA",
+      "SVC_RA": {
+          "name": "SVC_RA",
           "model_type": "BloodResistor",
           "description": "superior vena cava inferior to right atrium",
           "is_enabled": true,
           "dependencies": [
-              "SVCI",
+              "SVC",
               "RA"
           ],
           "no_flow": false,
           "no_back_flow": false,
-          "comp_from": "SVCI",
+          "comp_from": "SVC",
           "comp_to": "RA",
           "r_for": 167.55994358251058,
           "r_for_factor": 1,
@@ -4851,7 +4851,7 @@
               "CHEST_L",
               "CHEST_R",
               "IVCI",
-              "SVCI",
+              "SVC",
               "PC",
               "AA",
               "AAR",
@@ -5338,9 +5338,9 @@
           ],
           "systemic_veins": [
               "IVCI",
-              "IVCE",
-              "SVCI",
-              "SVCE"
+              "VLB",
+              "SVC",
+              "VUB"
           ],
           "svr_targets": [
               "AD_INT",
@@ -5357,8 +5357,8 @@
               "IPS"
           ],
           "venpool_targets": [
-              "IVCE",
-              "SVCE"
+              "VLB",
+              "VUB"
           ],
           "heart_aorta": [
               "LV_AA"
@@ -5367,7 +5367,7 @@
               "IVCI_RA"
           ],
           "heart_superior_vena_cava": [
-              "SVCI_RA"
+              "SVC_RA"
           ],
           "heart_pulmonary_artery": [
               "RV_PA"
@@ -5522,8 +5522,8 @@
               "Breathing"
           ],
           "venpool_targets": [
-              "IVCE",
-              "SVCE"
+              "VLB",
+              "VUB"
           ],
           "cont_targets": [
               "LV",
@@ -5665,7 +5665,7 @@
               "INT",
               "KID",
               "RLB",
-              "IVCE",
+              "VLB",
               "IVCI",
               "RA",
               "RV",
@@ -5677,15 +5677,15 @@
               "LV",
               "BR",
               "RUB",
-              "SVCE",
-              "SVCI",
+              "VUB",
+              "SVC",
               "COR",
               "DA"
           ],
           "ascending_aorta": "AA",
           "descending_aorta": "AD",
           "inferior_vena_cava": "IVCI",
-          "superior_vena_cava": "SVCI",
+          "superior_vena_cava": "SVC",
           "right_atrium": "RA",
           "total_blood_volume": 0.2831239959543716,
           "viscosity": 6,
@@ -6023,27 +6023,6 @@
           "is_enabled": false,
           "dependencies": []
       },
-      "ArtificialWhomb": {
-          "name": "ArtificialWhomb",
-          "model_type": "ArtificialWhomb",
-          "description": "artifical whomb model",
-          "is_enabled": false,
-          "dependencies": [],
-          "fio2": 0.205,
-          "humidity": 1,
-          "temp": 37,
-          "p_atm": 760,
-          "origin": "AD",
-          "target": "IVCE",
-          "aw_gas_in": "aw_gas_oxy",
-          "aw_gas_in_oxy": "aw_gas_in_oxy",
-          "aw_gas_oxy": "aw_gas_oxy",
-          "aw_gas_oxy_out": "aw_gas_oxy_out",
-          "aw_gas_out": "aw_gas_out",
-          "aw_blood_oxy": "aw_blood_oxy",
-          "aw_blood_oxy_in": "aw_blood_oxy_in",
-          "aw_blood_oxy_out": "aw_blood_oxy_out"
-      },
       "Resuscitation": {
           "name": "Resuscitation",
           "model_type": "Resuscitation",
@@ -6064,7 +6043,7 @@
               "RV": 1,
               "AA": 0.7,
               "AAR": 0.7,
-              "SVCI": 0.5,
+              "SVC": 0.5,
               "IVCI": 0.5,
               "COR": 1
           },
@@ -6241,10 +6220,10 @@
               "DA"
           ],
           "systemic_veins": [
-              "IVCE",
+              "VLB",
               "IVCI",
-              "SVCI",
-              "SVCE"
+              "SVC",
+              "VUB"
           ],
           "capillaries": [
               "INT",
@@ -6278,15 +6257,15 @@
               "AA_RUB",
               "AA_COR",
               "COR_RA",
-              "LS_IVCE",
-              "KID_IVCE",
-              "INT_IVCE",
-              "RLB_IVCE",
-              "IVCE_IVCI",
-              "BR_SVCE",
-              "RUB_SVCE",
-              "SVCE_SVCI",
-              "SVCI_RA",
+              "LS_VLB",
+              "KID_VLB",
+              "INT_VLB",
+              "RLB_VLB",
+              "VLB_IVCI",
+              "BR_VUB",
+              "RUB_VUB",
+              "VUB_SVC",
+              "SVC_RA",
               "IVCI_RA"
           ],
           "pulm_blood_connectors": [

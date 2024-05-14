@@ -25,7 +25,6 @@ export { Lymph } from "./core_models/Lymph";
 export { Metabolism } from "./core_models/Metabolism";
 export { Mob } from "./core_models/Mob";
 export { Placenta } from "./core_models/Placenta";
-export { ArtificialWhomb } from "./device_models/ArtificialWhomb";
 export { Ecls } from "./device_models/Ecls";
 export { Resuscitation } from "./device_models/Resuscitation";
 export { Ventilator } from "./device_models/Ventilator";
