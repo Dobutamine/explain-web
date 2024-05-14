@@ -285,7 +285,7 @@ export default defineComponent({
   },
   data() {
     return {
-      tab_left: "circulatory_system",
+      tab_left: "other_systems",
       tab_center: "diagram",
       tab_right: "numerics",
       no_of_modeleditor: 1,
@@ -325,7 +325,7 @@ export default defineComponent({
         },
         circulation_numerics: {
           title: "CIRCULATION",
-          collapsed: true,
+          collapsed: false,
           parameters: [
             { label: "LVO", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["LV_AA.flow_lmin_avg"], weight_based: true },
             { label: "RVO", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["RV_PA.flow_lmin_avg"], weight_based: true },
@@ -4007,7 +4007,7 @@ export default defineComponent({
       },
       ecls_controller: {
         title: "ECLS",
-        enabled: true,
+        enabled: false,
         categories: {
           general: {
             caption: "General properties ",

@@ -1,41 +1,6 @@
 export class Resuscitation {
   static model_type = "Resuscitation";
-  static model_interface = [
-    {
-      target: "is_enabled",
-      caption: "is enabled",
-      type: "boolean",
-      optional: true,
-    },
-    {
-      target: "chest_comp_enabled",
-      caption: "compressions enabled",
-      type: "boolean",
-      optional: false,
-    },
-    {
-      target: "chest_comp_freq",
-      caption: "compressions frequency",
-      type: "number",
-      optional: false,
-      factor: 1,
-      delta: 1,
-      rounding: 0,
-      ul: 200,
-      ll: 10,
-    },
-    {
-      target: "chest_comp_pres",
-      caption: "compressions pressure",
-      type: "number",
-      optional: false,
-      factor: 1,
-      delta: 1,
-      rounding: 0,
-      ul: 200,
-      ll: 0,
-    },
-  ];
+  static model_interface = [];
   // independent parameters
   name = "";
   model_type = "";
@@ -154,6 +119,11 @@ export class Resuscitation {
       let a = this.chest_comp_pres / 2.0;
       if (this.chest_comp_cont) {
         this._comp_pause = false;
+        this._vent_timer += this._t;
+        if (this._vent_timer > this.vent_insp_time * 2.1) {
+          this._vent_timer = 0.0;
+          this._model_engine.models["Ventilator"].trigger_breath();
+        }
       }
 
       if (!this._comp_pause) {
