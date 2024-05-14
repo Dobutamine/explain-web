@@ -3920,8 +3920,8 @@ export default defineComponent({
             advanced: false,
           },
           mob: {
-            caption: "oxygen metabolism ",
-            enabled: true,
+            caption: "Oxygen metabolism ",
+            enabled: false,
             advanced: false,
           }
         },
@@ -4007,10 +4007,6 @@ export default defineComponent({
             category: "mob",
             enabled: true,
             advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
             model: "Mob",
             prop: "bm_vo2_ref",
             type: "number",
@@ -4022,14 +4018,10 @@ export default defineComponent({
             rounding: 5
           },
           ecc_c: {
-            caption: "ecc",
+            caption: "excitation contraction coupling vo2",
             category: "mob",
             enabled: true,
             advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
             model: "Mob",
             prop: "ecc_c",
             type: "number",
@@ -4037,11 +4029,11 @@ export default defineComponent({
             function_name: "",
             min: 0.0,
             max: 0.01,
-            step: 0.00001,
-            rounding: 5
+            step: 0.000001,
+            rounding: 6
           },
           pva_c: {
-            caption: "pva_c",
+            caption: "pva area vo2",
             category: "mob",
             enabled: true,
             advanced: false,
