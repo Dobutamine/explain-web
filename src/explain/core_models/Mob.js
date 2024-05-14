@@ -18,13 +18,13 @@ export class Mob {
   cor_model = "COR";
 
   ecc_c = 0.0;
-  pva_c = 8.730000000000001e-5;
+  pva_c = 8.73e-5;
   po2_min = 0.05;
   po2_set = 10.0;
   po2_max = 10.0;
 
-  bm_vo2_ref = 7.154999999999999e-5;
-  bm_vo2_max = 7.154999999999999e-5;
+  bm_vo2_ref = 7.155e-5;
+  bm_vo2_max = 7.155e-5;
   bm_vo2_min = 1.431e-5;
 
   vo2_factor = 0.45;
@@ -153,32 +153,32 @@ export class Mob {
 
   calc_model() {
     // set the heart weight -> at 3.545 ths is 23 grams
+    // desired myocardial flow = 1.8 ml/min/gm tissue => 41.4 ml/min = 0.0414 l/min = 0.00069 l/s = 11,6 ml/kg/min
     this.hw = 7.799 + 0.004296 * this._model_engine.weight * 1000.0;
-
-    // desried myocardial flow = 1.8 ml/min/gm tissue => 41.4 ml/min = 0.0414 l/min = 0.00069 l/s = 11,6 ml/kg/min
-
-    // inflow of oxygen
-    let to2_in = this._aa.aboxy["to2"] * this._aa_cor.flow; // mmol o2 per second
 
     // get the ecc from the heart chambers
     this.ecc_lv = this._heart._lv.el_max * this._heart._lv.el_max_factor;
     this.ecc_rv = this._heart._rv.el_max * this._heart._rv.el_max_factor;
     this.ecc = (this.ecc_lv + this.ecc_rv) / 1000.0;
 
-    // calculate the pressure volume loop area which is the total stroke work of the heart
+    // calculate the pressure volume loop area which is the total stroke work of the heart. We only get the work of the last cardiac cycle
     this.pva = this.calc_pva();
 
     // calculate the blood composition of the coronary blood capacity every heart cycle
     if (this._heart.ncc_ventricular == 1) {
       set_blood_composition(this._cor);
-    }
 
-    // calculate the oxygen metabolism in mmol O2 / cardiac cycle
-    this.mvo2 = this.oxygen_metabolism();
+      // calculate the oxygen metabolism in mmol O2 / cardiac cycle
+      this.mvo2 = this.oxygen_metabolism();
+    }
 
     // this total vo2 is in 1 cardiac cycle, we now have to calculate the vo2 in this model step
     let hc_duration = 60.0 / this._heart.heart_rate;
+
+    // calculate the vo2 in this model step
     this.mvo2_step = (this.mvo2 / hc_duration) * this._t;
+
+    // calculate the co2 production in this model step
     let co2_production = this.mvo2_step * this.resp_q;
 
     // get the necessary model properties from the coronaries
@@ -186,11 +186,12 @@ export class Mob {
     let tco2_cor = this._cor.aboxy.tco2;
     let vol_cor = this._cor.vol;
 
-    // // calculate the myocardial oxygen balance in mmol / cardiac cycle
+    // calculate the myocardial oxygen balance in mmol/s
     let o2_inflow = this._aa_cor.flow * this._aa.aboxy.to2; // in mmol/s
     let o2_use = this.mvo2 / hc_duration; // in mmol/s
     this.mob = o2_inflow - o2_use + to2_cor;
 
+    // calculate the new blood composition of the coronary blood
     if (vol_cor > 0) {
       let new_to2_cor = (to2_cor * vol_cor - this.mvo2_step) / vol_cor;
       let new_tco2_cor = (tco2_cor * vol_cor + co2_production) / vol_cor;
@@ -200,6 +201,7 @@ export class Mob {
       }
     }
 
+    // store the blood composition of the coronary blood
     this.cor_po2 = this._cor.aboxy.po2;
     this.cor_pco2 = this._cor.aboxy.pco2;
     this.cor_so2 = this._cor.aboxy.so2;
@@ -260,10 +262,10 @@ export class Mob {
 
     // calculate the mob factor which controls the contractility of the heart
     this.cont_factor = 1.0 + this.cont_g * this._d_cont;
-    this._heart._lv.el_max_ans_factor = this.cont_factor;
-    this._heart._rv.el_max_ans_factor = this.cont_factor;
-    this._heart._la.el_max_ans_factor = this.cont_factor;
-    this._heart._ra.el_max_ans_factor = this.cont_factor;
+    this._heart._lv.el_max_mob_factor = this.cont_factor;
+    this._heart._rv.el_max_mob_factor = this.cont_factor;
+    this._heart._la.el_max_mob_factor = this.cont_factor;
+    this._heart._ra.el_max_mob_factor = this.cont_factor;
 
     // calculate the ecc vo2 -> not implemented yet but included in baseline metabolism
     this.ecc_vo2 = (this.ecc * this.ecc_c * this.hw) / this._ml_to_mmol; // is about 15% in steady state
