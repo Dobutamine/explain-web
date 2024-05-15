@@ -2,7 +2,32 @@ import { set_blood_composition } from "../helpers/BloodComposition";
 
 export class Blood {
   static model_type = "Blood";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "set_total_blood_volume",
+      caption: "set total blood volume (l)",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "total_blood_volume",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.001,
+          rounding: 3,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+  ];
 
   // independent parameters
   name = "";

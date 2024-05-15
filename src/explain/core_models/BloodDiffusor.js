@@ -13,24 +13,12 @@ export class BloodDiffusor {
       target: "dif_o2",
       caption: "oxygen diffusion constant (mmol/mmHg*sec) ",
       type: "number",
-      optional: true,
+      optional: false,
       factor: 1,
       delta: 0.01,
       rounding: 2,
       ul: 100000000.0,
       ll: -10000000.0,
-    },
-    {
-      target: "dif_o2 factor",
-      caption: "oxygen diffusion constant factor",
-      type: "number",
-      optional: false,
-      relative: false,
-      factor: 1,
-      delta: 0.01,
-      rounding: 2,
-      ul: 100000000.0,
-      ll: 0.0,
     },
     {
       target: "dif_co2",
@@ -44,16 +32,22 @@ export class BloodDiffusor {
       ll: -10000000.0,
     },
     {
-      target: "dif_co2 factor",
-      caption: "carbon dioxide diffusion constant factor",
-      type: "number",
-      optional: false,
-      relative: false,
-      factor: 1,
-      delta: 0.01,
-      rounding: 2,
-      ul: 100000000.0,
-      ll: 0.0,
+      target: "reconnect",
+      caption: "reconnect diffusor",
+      type: "function",
+      optional: true,
+      args: [
+        {
+          target: "comp_from",
+          type: "list",
+          options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+        },
+        {
+          target: "comp_to",
+          type: "list",
+          options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+        },
+      ],
     },
   ];
   // independent parameters
@@ -62,7 +56,6 @@ export class BloodDiffusor {
   description = "";
   is_enabled = false;
   dependencies = [];
-  scalable = true;
   comp_blood1 = {};
   comp_blood2 = {};
   dif_o2 = 0.01;
@@ -120,6 +113,23 @@ export class BloodDiffusor {
 
     // set the flag to model is initialized
     this._is_initialized = true;
+  }
+
+  reconnect(comp_blood1, comp_blood2) {
+    this.comp_blood1 = comp_blood1;
+    this.comp_blood2 = comp_blood2;
+
+    // get a reference to the models
+    if (typeof this.comp_blood1 == "string") {
+      this._comp_blood1 = this._model_engine.models[this.comp_blood1];
+    } else {
+      this._comp_blood1 = this.comp_blood1;
+    }
+    if (typeof this.comp_blood2 == "string") {
+      this._comp_blood2 = this._model_engine.models[this.comp_blood2];
+    } else {
+      this._comp_blood2 = this.comp_blood2;
+    }
   }
 
   step_model() {

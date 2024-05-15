@@ -5,19 +5,19 @@ export class BloodCapacitance {
       target: "is_enabled",
       caption: "is enabled",
       type: "boolean",
-      optional: true,
+      optional: false,
     },
     {
       target: "fixed_composition",
       caption: "fixed composition",
       type: "boolean",
-      optional: true,
+      optional: false,
     },
     {
       target: "u_vol",
       caption: "unstressed volume (l)",
       type: "number",
-      optional: true,
+      optional: false,
       factor: 1,
       delta: 0.0001,
       rounding: 4,
@@ -25,22 +25,10 @@ export class BloodCapacitance {
       ll: -10000000.0,
     },
     {
-      target: "u_vol_factor",
-      caption: "unstressed volume factor",
-      type: "number",
-      optional: false,
-      relative: false,
-      factor: 1,
-      delta: 0.01,
-      rounding: 2,
-      ul: 100000000.0,
-      ll: 0.0,
-    },
-    {
       target: "el_base",
       caption: "baseline elastance (mmHg/l)",
       type: "number",
-      optional: true,
+      optional: false,
       factor: 1,
       delta: 1,
       rounding: 0,
@@ -48,39 +36,15 @@ export class BloodCapacitance {
       ll: 1,
     },
     {
-      target: "el_base_factor",
-      caption: "baseline elastance factor",
-      type: "number",
-      optional: false,
-      relative: false,
-      factor: 1,
-      delta: 0.01,
-      rounding: 2,
-      ul: 100000000.0,
-      ll: 0.0,
-    },
-    {
       target: "el_k",
       caption: "non-linear elastance (mmHg/l^2)",
       type: "number",
-      optional: true,
+      optional: false,
       factor: 1,
       delta: 1,
       rounding: 0,
       ul: 100000000.0,
       ll: 0,
-    },
-    {
-      target: "el_k_factor",
-      caption: "non-linear elastance factor",
-      type: "number",
-      optional: false,
-      relative: false,
-      factor: 1,
-      delta: 0.01,
-      rounding: 2,
-      ul: 100000000.0,
-      ll: 0.0,
     },
   ];
 
@@ -90,7 +54,6 @@ export class BloodCapacitance {
   description = "";
   is_enabled = false;
   dependencies = [];
-  scalable = true;
   fixed_composition = false;
   u_vol = 0.0;
   el_base = 0.0;
