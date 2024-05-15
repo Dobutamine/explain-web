@@ -17,6 +17,7 @@ export class Ans {
       args: [
         {
           target: "min_map",
+          caption: "min map",
           type: "number",
           optional: false,
           factor: 1,
@@ -27,6 +28,7 @@ export class Ans {
         },
         {
           target: "set_map",
+          caption: "set map",
           type: "number",
           optional: false,
           factor: 1,
@@ -37,6 +39,7 @@ export class Ans {
         },
         {
           target: "max_map",
+          caption: "max map",
           type: "number",
           optional: false,
           factor: 1,
@@ -55,6 +58,7 @@ export class Ans {
       args: [
         {
           target: "min_po2",
+          caption: "min po2",
           type: "number",
           optional: false,
           factor: 1,
@@ -65,6 +69,7 @@ export class Ans {
         },
         {
           target: "set_po2",
+          caption: "set po2",
           type: "number",
           optional: false,
           factor: 1,
@@ -75,6 +80,7 @@ export class Ans {
         },
         {
           target: "max_po2",
+          caption: "max po2",
           type: "number",
           optional: false,
           factor: 1,
@@ -93,6 +99,7 @@ export class Ans {
       args: [
         {
           target: "min_pco2",
+          caption: "min pco2",
           type: "number",
           optional: false,
           factor: 1,
@@ -103,6 +110,7 @@ export class Ans {
         },
         {
           target: "set_pco2",
+          caption: "set pco2",
           type: "number",
           optional: false,
           factor: 1,
@@ -113,6 +121,7 @@ export class Ans {
         },
         {
           target: "max_pco2",
+          caption: "max pco2",
           type: "number",
           optional: false,
           factor: 1,
@@ -131,6 +140,7 @@ export class Ans {
       args: [
         {
           target: "min_ph",
+          caption: "min ph",
           type: "number",
           optional: false,
           factor: 1,
@@ -141,6 +151,7 @@ export class Ans {
         },
         {
           target: "set_ph",
+          caption: "set ph",
           type: "number",
           optional: false,
           factor: 1,
@@ -151,6 +162,7 @@ export class Ans {
         },
         {
           target: "max_ph",
+          caption: "max ph",
           type: "number",
           optional: false,
           factor: 1,
