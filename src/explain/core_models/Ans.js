@@ -2,7 +2,1138 @@ import { set_blood_composition } from "../helpers/BloodComposition";
 
 export class Ans {
   static model_type = "Ans";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "change_map",
+      caption: "mean arterial pressure (mmHg)",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "min_map",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0.1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "set_map",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "max_map",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0.1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+    {
+      target: "change_po2",
+      caption: "oxygen partial pressure (mmHg)",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "min_po2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0.1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "set_po2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "max_po2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0.1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+    {
+      target: "change_pco2",
+      caption: "carbon dioxide partial pressure (mmHg)",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "min_pco2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0.1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "set_pco2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "max_pco2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0.1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+    {
+      target: "change_ph",
+      caption: "hydrogen ion concentration (pH)",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "min_ph",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0.1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "set_ph",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "max_ph",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0.1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+    {
+      target: "change_hr_effector",
+      caption: "hr effector configuration",
+      type: "function",
+      optional: true,
+      args: [
+        {
+          target: "hr_factor_min",
+          caption: "hr factor min",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0.1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "hr_factor_max",
+          caption: "hr factor max",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "hr_mxe_map_low",
+          caption: "hr mxe map low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "hr_mxe_map_high",
+          caption: "hr mxe map high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "hr_tc_map",
+          caption: "hr tc map",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "hr_mxe_pco2_low",
+          caption: "hr mxe pco2 low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "hr_mxe_pco2_high",
+          caption: "hr mxe pco2 high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "hr_tc_pco2",
+          caption: "hr tc pco2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "hr_mxe_ph_low",
+          caption: "hr mxe ph low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "hr_mxe_ph_high",
+          caption: "hr mxe ph high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "hr_tc_ph",
+          caption: "hr tc ph",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "hr_mxe_po2_low",
+          caption: "hr mxe po2 low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "hr_mxe_po2_high",
+          caption: "hr mxe po2 high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "hr_tc_po2",
+          caption: "hr tc po2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+    {
+      target: "change_mv_effector",
+      caption: "mv effector configuration",
+      type: "function",
+      optional: true,
+      args: [
+        {
+          target: "mv_factor_min",
+          caption: "mv factor min",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0.1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "mv_factor_max",
+          caption: "mv factor max",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "mv_mxe_map_low",
+          caption: "mv mxe map low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "mv_mxe_map_high",
+          caption: "mv mxe map high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "mv_tc_map",
+          caption: "mv tc map",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "mv_mxe_pco2_low",
+          caption: "mv mxe pco2 low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "mv_mxe_pco2_high",
+          caption: "mv mxe pco2 high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "mv_tc_pco2",
+          caption: "mv tc pco2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "mv_mxe_ph_low",
+          caption: "mv mxe ph low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "mv_mxe_ph_high",
+          caption: "mv mxe ph high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "mv_tc_ph",
+          caption: "mv tc ph",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "mv_mxe_po2_low",
+          caption: "mv mxe po2 low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "mv_mxe_po2_high",
+          caption: "mv mxe po2 high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "mv_tc_po2",
+          caption: "mv tc po2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+    {
+      target: "change_venpool_effector",
+      caption: "venpool effector configuration",
+      type: "function",
+      optional: true,
+      args: [
+        {
+          target: "venpool_factor_min",
+          caption: "venpool factor min",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0.1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "venpool_factor_max",
+          caption: "venpool factor max",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "venpool_mxe_map_low",
+          caption: "venpool mxe map low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "venpool_mxe_map_high",
+          caption: "venpool mxe map high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "venpool_tc_map",
+          caption: "venpool tc map",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "venpool_mxe_pco2_low",
+          caption: "venpool mxe pco2 low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "venpool_mxe_pco2_high",
+          caption: "venpool mxe pco2 high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "venpool_tc_pco2",
+          caption: "venpool tc pco2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "venpool_mxe_ph_low",
+          caption: "venpool mxe ph low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "venpool_mxe_ph_high",
+          caption: "venpool mxe ph high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "venpool_tc_ph",
+          caption: "venpool tc ph",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "venpool_mxe_po2_low",
+          caption: "venpool mxe po2 low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "venpool_mxe_po2_high",
+          caption: "venpool mxe po2 high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "venpool_tc_po2",
+          caption: "venpool tc po2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+    {
+      target: "change_cont_effector",
+      caption: "cont effector configuration",
+      type: "function",
+      optional: true,
+      args: [
+        {
+          target: "cont_factor_min",
+          caption: "cont factor min",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0.1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "cont_factor_max",
+          caption: "cont factor max",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "cont_mxe_map_low",
+          caption: "cont mxe map low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "cont_mxe_map_high",
+          caption: "cont mxe map high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "cont_tc_map",
+          caption: "cont tc map",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "cont_mxe_pco2_low",
+          caption: "cont mxe pco2 low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "cont_mxe_pco2_high",
+          caption: "cont mxe pco2 high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "cont_tc_pco2",
+          caption: "cont tc pco2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "cont_mxe_ph_low",
+          caption: "cont mxe ph low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "cont_mxe_ph_high",
+          caption: "cont mxe ph high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "cont_tc_ph",
+          caption: "cont tc ph",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "cont_mxe_po2_low",
+          caption: "cont mxe po2 low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "cont_mxe_po2_high",
+          caption: "cont mxe po2 high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "cont_tc_po2",
+          caption: "cont tc po2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+    {
+      target: "change_svr_effector",
+      caption: "svr effector configuration",
+      type: "function",
+      optional: true,
+      args: [
+        {
+          target: "svr_factor_min",
+          caption: "svr factor min",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0.1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "svr_factor_max",
+          caption: "svr factor max",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "svr_mxe_map_low",
+          caption: "svr mxe map low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "svr_mxe_map_high",
+          caption: "svr mxe map high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "svr_tc_map",
+          caption: "svr tc map",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "svr_mxe_pco2_low",
+          caption: "svr mxe pco2 low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "svr_mxe_pco2_high",
+          caption: "svr mxe pco2 high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "svr_tc_pco2",
+          caption: "svr tc pco2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "svr_mxe_ph_low",
+          caption: "svr mxe ph low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "svr_mxe_ph_high",
+          caption: "svr mxe ph high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "svr_tc_ph",
+          caption: "svr tc ph",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "svr_mxe_po2_low",
+          caption: "svr mxe po2 low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "svr_mxe_po2_high",
+          caption: "svr mxe po2 high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "svr_tc_po2",
+          caption: "svr tc po2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+    {
+      target: "change_pvr_effector",
+      caption: "pvr effector configuration",
+      type: "function",
+      optional: true,
+      args: [
+        {
+          target: "pvr_factor_min",
+          caption: "pvr factor min",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 0.1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "pvr_factor_max",
+          caption: "pvr factor max",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "pvr_mxe_map_low",
+          caption: "pvr mxe map low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "pvr_mxe_map_high",
+          caption: "pvr mxe map high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "pvr_tc_map",
+          caption: "pvr tc map",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "pvr_mxe_pco2_low",
+          caption: "pvr mxe pco2 low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "pvr_mxe_pco2_high",
+          caption: "pvr mxe pco2 high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "pvr_tc_pco2",
+          caption: "pvr tc pco2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "pvr_mxe_ph_low",
+          caption: "pvr mxe ph low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "pvr_mxe_ph_high",
+          caption: "pvr mxe ph high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "pvr_tc_ph",
+          caption: "pvr tc ph",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "pvr_mxe_po2_low",
+          caption: "pvr mxe po2 low",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "pvr_mxe_po2_high",
+          caption: "pvr mxe po2 high",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+        {
+          target: "pvr_tc_po2",
+          caption: "pvr tc po2",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 100000000000000.0,
+          ll: 0.0,
+        },
+      ],
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";
@@ -134,11 +1265,23 @@ export class Ans {
     this._is_initialized = true;
   }
 
+  change_map(min_map, set_map, max_map) {
+    this.min_map = min_map;
+    this.set_map = set_map;
+    this.max_map = max_map;
+    AnsEffector.min_map = this.min_map;
+    AnsEffector.set_map = this.set_map;
+    AnsEffector.max_map = this.max_map;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+  }
+
   change_set_map(new_map) {
     this.set_map = new_map;
     AnsEffector.set_map = this.set_map;
-    AnsEffector.min_map = this.set_map / 2.0;
-    AnsEffector.max_map = this.set_map * 2.0;
     this._hr_effector.calc_gains();
     this._svr_effector.calc_gains();
     this._pvr_effector.calc_gains();
@@ -155,6 +1298,7 @@ export class Ans {
     this._cont_effector.calc_gains();
     this._venpool_effector.calc_gains();
   }
+
   change_max_map(new_map) {
     this.max_map = new_map;
     AnsEffector.max_map = this.max_map;
@@ -163,6 +1307,21 @@ export class Ans {
     this._pvr_effector.calc_gains();
     this._cont_effector.calc_gains();
     this._venpool_effector.calc_gains();
+  }
+
+  change_po2(min_po2, set_po2, max_po2) {
+    this.min_po2 = min_po2;
+    this.set_po2 = set_po2;
+    this.max_po2 = max_po2;
+    AnsEffector.set_po2 = this.set_po2;
+    AnsEffector.min_po2 = this.min_po2;
+    AnsEffector.max_po2 = this.max_po2;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+    this._mv_effector.calc_gains();
   }
 
   change_set_po2(new_po2) {
@@ -190,6 +1349,21 @@ export class Ans {
   change_min_po2(new_po2) {
     this.min_po2 = new_po2;
     AnsEffector.min_po2 = this.min_po2;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+    this._mv_effector.calc_gains();
+  }
+
+  change_pco2(min_pco2, set_pco2, max_pco2) {
+    this.min_pco2 = min_pco2;
+    this.set_pco2 = set_pco2;
+    this.max_pco2 = max_pco2;
+    AnsEffector.set_po2 = this.set_pco2;
+    AnsEffector.min_po2 = this.min_pco2;
+    AnsEffector.max_po2 = this.max_pco2;
     this._hr_effector.calc_gains();
     this._svr_effector.calc_gains();
     this._pvr_effector.calc_gains();
@@ -231,6 +1405,21 @@ export class Ans {
     this._mv_effector.calc_gains();
   }
 
+  change_ph(min_ph, set_ph, max_ph) {
+    this.set_ph = set_ph;
+    this.min_ph = min_ph;
+    this.max_ph = max_ph;
+    AnsEffector.set_ph = this.set_ph;
+    AnsEffector.min_ph = this.min_ph;
+    AnsEffector.max_ph = this.max_ph;
+    this._hr_effector.calc_gains();
+    this._svr_effector.calc_gains();
+    this._pvr_effector.calc_gains();
+    this._cont_effector.calc_gains();
+    this._venpool_effector.calc_gains();
+    this._mv_effector.calc_gains();
+  }
+
   change_set_ph(new_ph) {
     this.set_ph = new_ph;
     AnsEffector.set_ph = this.set_ph;
@@ -262,6 +1451,216 @@ export class Ans {
     this._cont_effector.calc_gains();
     this._venpool_effector.calc_gains();
     this._mv_effector.calc_gains();
+  }
+
+  change_hr_effector(
+    min,
+    max,
+    tc,
+    mxe_map_low,
+    mxe_map_high,
+    tc_map,
+    mxe_pco2_low,
+    mxe_pco2_high,
+    tc_pco2,
+    mxe_ph_low,
+    mxe_ph_high,
+    tc_ph,
+    mxe_po2_low,
+    mxe_po2_high,
+    tc_po2
+  ) {
+    this.hr_factor_min = min;
+    this.hr_factor_max = max;
+    this.hr_tc = tc;
+    this.hr_mxe_map_low = mxe_map_low;
+    this.hr_mxe_map_high = mxe_map_high;
+    this.hr_tc_map = tc_map;
+    this.hr_mxe_pco2_low = mxe_pco2_low;
+    this.hr_mxe_pco2_high = mxe_pco2_high;
+    this.hr_tc_pco2 = tc_pco2;
+    this.hr_mxe_ph_low = mxe_ph_low;
+    this.hr_mxe_ph_high = mxe_ph_high;
+    this.hr_tc_ph = tc_ph;
+    this.hr_mxe_po2_low = mxe_po2_low;
+    this.hr_mxe_po2_high = mxe_po2_high;
+    this.hr_tc_po2 = tc_po2;
+    this._hr_effector.calc_gains();
+  }
+
+  change_mv_effector(
+    min,
+    max,
+    tc,
+    mxe_map_low,
+    mxe_map_high,
+    tc_map,
+    mxe_pco2_low,
+    mxe_pco2_high,
+    tc_pco2,
+    mxe_ph_low,
+    mxe_ph_high,
+    tc_ph,
+    mxe_po2_low,
+    mxe_po2_high,
+    tc_po2
+  ) {
+    this.mv_factor_min = min;
+    this.mv_factor_max = max;
+    this.mv_tc = tc;
+    this.mv_mxe_map_low = mxe_map_low;
+    this.mv_mxe_map_high = mxe_map_high;
+    this.mv_tc_map = tc_map;
+    this.mv_mxe_pco2_low = mxe_pco2_low;
+    this.mv_mxe_pco2_high = mxe_pco2_high;
+    this.mv_tc_pco2 = tc_pco2;
+    this.mv_mxe_ph_low = mxe_ph_low;
+    this.mv_mxe_ph_high = mxe_ph_high;
+    this.mv_tc_ph = tc_ph;
+    this.mv_mxe_po2_low = mxe_po2_low;
+    this.mv_mxe_po2_high = mxe_po2_high;
+    this.mv_tc_po2 = tc_po2;
+    this._mv_effector.calc_gains();
+  }
+
+  change_venpool_effector(
+    min,
+    max,
+    tc,
+    mxe_map_low,
+    mxe_map_high,
+    tc_map,
+    mxe_pco2_low,
+    mxe_pco2_high,
+    tc_pco2,
+    mxe_ph_low,
+    mxe_ph_high,
+    tc_ph,
+    mxe_po2_low,
+    mxe_po2_high,
+    tc_po2
+  ) {
+    this.venpool_factor_min = min;
+    this.venpool_factor_max = max;
+    this.venpool_tc = tc;
+    this.venpool_mxe_map_low = mxe_map_low;
+    this.venpool_mxe_map_high = mxe_map_high;
+    this.venpool_tc_map = tc_map;
+    this.venpool_mxe_pco2_low = mxe_pco2_low;
+    this.venpool_mxe_pco2_high = mxe_pco2_high;
+    this.venpool_tc_pco2 = tc_pco2;
+    this.venpool_mxe_ph_low = mxe_ph_low;
+    this.venpool_mxe_ph_high = mxe_ph_high;
+    this.venpool_tc_ph = tc_ph;
+    this.venpool_mxe_po2_low = mxe_po2_low;
+    this.venpool_mxe_po2_high = mxe_po2_high;
+    this.venpool_tc_po2 = tc_po2;
+    this._venpool_effector.calc_gains();
+  }
+
+  change_cont_effector(
+    min,
+    max,
+    tc,
+    mxe_map_low,
+    mxe_map_high,
+    tc_map,
+    mxe_pco2_low,
+    mxe_pco2_high,
+    tc_pco2,
+    mxe_ph_low,
+    mxe_ph_high,
+    tc_ph,
+    mxe_po2_low,
+    mxe_po2_high,
+    tc_po2
+  ) {
+    this.cont_factor_min = min;
+    this.cont_factor_max = max;
+    this.cont_tc = tc;
+    this.cont_mxe_map_low = mxe_map_low;
+    this.cont_mxe_map_high = mxe_map_high;
+    this.cont_tc_map = tc_map;
+    this.cont_mxe_pco2_low = mxe_pco2_low;
+    this.cont_mxe_pco2_high = mxe_pco2_high;
+    this.cont_tc_pco2 = tc_pco2;
+    this.cont_mxe_ph_low = mxe_ph_low;
+    this.cont_mxe_ph_high = mxe_ph_high;
+    this.cont_tc_ph = tc_ph;
+    this.cont_mxe_po2_low = mxe_po2_low;
+    this.cont_mxe_po2_high = mxe_po2_high;
+    this.cont_tc_po2 = tc_po2;
+    this._cont_effector.calc_gains();
+  }
+
+  change_svr_effector(
+    min,
+    max,
+    tc,
+    mxe_map_low,
+    mxe_map_high,
+    tc_map,
+    mxe_pco2_low,
+    mxe_pco2_high,
+    tc_pco2,
+    mxe_ph_low,
+    mxe_ph_high,
+    tc_ph,
+    mxe_po2_low,
+    mxe_po2_high,
+    tc_po2
+  ) {
+    this.svr_factor_min = min;
+    this.svr_factor_max = max;
+    this.svr_tc = tc;
+    this.svr_mxe_map_low = mxe_map_low;
+    this.svr_mxe_map_high = mxe_map_high;
+    this.svr_tc_map = tc_map;
+    this.svr_mxe_pco2_low = mxe_pco2_low;
+    this.svr_mxe_pco2_high = mxe_pco2_high;
+    this.svr_tc_pco2 = tc_pco2;
+    this.svr_mxe_ph_low = mxe_ph_low;
+    this.svr_mxe_ph_high = mxe_ph_high;
+    this.svr_tc_ph = tc_ph;
+    this.svr_mxe_po2_low = mxe_po2_low;
+    this.svr_mxe_po2_high = mxe_po2_high;
+    this.svr_tc_po2 = tc_po2;
+    this._svr_effector.calc_gains();
+  }
+
+  change_pvr_effector(
+    min,
+    max,
+    tc,
+    mxe_map_low,
+    mxe_map_high,
+    tc_map,
+    mxe_pco2_low,
+    mxe_pco2_high,
+    tc_pco2,
+    mxe_ph_low,
+    mxe_ph_high,
+    tc_ph,
+    mxe_po2_low,
+    mxe_po2_high,
+    tc_po2
+  ) {
+    this.pvr_factor_min = min;
+    this.pvr_factor_max = max;
+    this.pvr_tc = tc;
+    this.pvr_mxe_map_low = mxe_map_low;
+    this.pvr_mxe_map_high = mxe_map_high;
+    this.pvr_tc_map = tc_map;
+    this.pvr_mxe_pco2_low = mxe_pco2_low;
+    this.pvr_mxe_pco2_high = mxe_pco2_high;
+    this.pvr_tc_pco2 = tc_pco2;
+    this.pvr_mxe_ph_low = mxe_ph_low;
+    this.pvr_mxe_ph_high = mxe_ph_high;
+    this.pvr_tc_ph = tc_ph;
+    this.pvr_mxe_po2_low = mxe_po2_low;
+    this.pvr_mxe_po2_high = mxe_po2_high;
+    this.pvr_tc_po2 = tc_po2;
+    this._pvr_effector.calc_gains();
   }
 
   step_model() {
