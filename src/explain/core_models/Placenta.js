@@ -5,7 +5,181 @@ export class Placenta {
       target: "is_enabled",
       caption: "is enabled",
       type: "boolean",
-      optional: true,
+      optional: false,
+    },
+    {
+      target: "pl_circ_enabled",
+      caption: "placenta circulation enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "umb_art_diameter",
+      caption: "umbilical artery diameter (mm)",
+      type: "number",
+      optional: false,
+      default: 1.0,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 10.0,
+      ll: 0.1,
+    },
+    {
+      target: "umb_art_length",
+      caption: "umbilical artery length (cm)",
+      type: "number",
+      optional: false,
+      default: 1.0,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 1000.0,
+      ll: 0.1,
+    },
+    {
+      target: "umb_ven_diameter",
+      caption: "umbilical vein diameter (mm)",
+      type: "number",
+      optional: false,
+      default: 1.0,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 10.0,
+      ll: 0.1,
+    },
+    {
+      target: "umb_ven_length",
+      caption: "umbilical vein length (cm)",
+      type: "number",
+      optional: false,
+      default: 1.0,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 1000.0,
+      ll: 0.1,
+    },
+    {
+      target: "umb_art_res",
+      caption: "umbilical artery resistance (dynes s/cm5)",
+      type: "number",
+      optional: false,
+      default: 30000,
+      factor: 1,
+      delta: 10,
+      rounding: 0,
+      ul: 1000000,
+      ll: 100,
+    },
+    {
+      target: "umb_ven_res",
+      caption: "umbilical vein resistance",
+      type: "number",
+      optional: false,
+      default: 30000,
+      factor: 1,
+      delta: 10,
+      rounding: 0,
+      ul: 10000000,
+      ll: 100,
+    },
+    {
+      target: "plf_el_base",
+      caption: "fetal placenta elastance",
+      type: "number",
+      optional: false,
+      default: 5000.0,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 1000000,
+      ll: 100,
+    },
+    {
+      target: "plf_u_vol",
+      caption: "fetal placenta unstressed volume (l)",
+      type: "number",
+      optional: false,
+      default: 0.15,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 1.0,
+      ll: 0.0,
+    },
+    {
+      target: "plm_el_base",
+      caption: "material placenta elastance",
+      type: "number",
+      optional: false,
+      default: 5000.0,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 1000000,
+      ll: 100,
+    },
+    {
+      target: "plm_u_vol",
+      caption: "maternal placenta unstressed volume (l)",
+      type: "number",
+      optional: false,
+      default: 0.5,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 5.0,
+      ll: 0.0,
+    },
+    {
+      target: "dif_o2",
+      caption: "oxygen diffusion coefficient",
+      type: "number",
+      optional: false,
+      default: 0.01,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 1.0,
+      ll: 0.0,
+    },
+    {
+      target: "dif_co2",
+      caption: "carbon dioxide diffusion coefficient",
+      type: "number",
+      optional: false,
+      default: 0.01,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 1.0,
+      ll: 0.0,
+    },
+    {
+      target: "mat_to2",
+      caption: "maternal oxygen content (mmol/l)",
+      type: "number",
+      optional: false,
+      default: 0.01,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100.0,
+      ll: 0.0,
+    },
+    {
+      target: "mat_tco2",
+      caption: "maternal carbon dioxide content (mmol/l)",
+      type: "number",
+      optional: false,
+      default: 0.01,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100.0,
+      ll: 0.0,
     },
   ];
   // independent parameters
@@ -37,6 +211,8 @@ export class Placenta {
   dif_o2_factor = 1.0;
   dif_co2 = 0.01;
   dif_co2_factor = 1.0;
+  mat_to2 = 6.5;
+  mat_tco2 = 23.0;
 
   // dependent parameters
   umb_art_flow = 0.0;
@@ -44,8 +220,6 @@ export class Placenta {
   umb_art_velocity = 0.0;
   mat_po2 = 0.0;
   mat_pco2 = 0.0;
-  mat_to2 = 6.5;
-  mat_tco2 = 23.0;
 
   // local parameters
   _model_engine = {};
@@ -96,7 +270,6 @@ export class Placenta {
   }
 
   switch_placenta(state) {
-    console.log(state);
     this.pl_circ_enabled = state;
     this._umb_art.is_enabled = state;
     this._umb_ven.is_enabled = state;
@@ -151,8 +324,6 @@ export class Placenta {
 
       this.mat_po2 = this._plm.aboxy["po2"];
       this.mat_pco2 = this._plm.aboxy["pco2"];
-      this.mat_to2 = this._plm.aboxy["to2"];
-      this.mat_tco2 = this._plm.aboxy["tco2"];
 
       this.umb_art_flow = this._umb_art.flow;
       this.umb_art_flow_lmin = this._umb_art.umb_art_flow_lmin;

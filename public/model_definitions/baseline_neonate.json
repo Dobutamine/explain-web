@@ -5865,8 +5865,8 @@
           "umb_art_velocity": 0,
           "mat_po2": 0,
           "mat_pco2": 0,
-          "mat_to2": 0,
-          "mat_tco2": 0
+          "mat_to2": 8.0,
+          "mat_tco2": 27.1
       },
       "Coronaries": {
           "name": "Coronaries",

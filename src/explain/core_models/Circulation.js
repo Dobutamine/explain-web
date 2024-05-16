@@ -144,6 +144,55 @@ export class Circulation {
         },
       ],
     },
+    {
+      target: "pulmonary_arteries",
+      caption: "pulmonary arteries",
+      type: "multiple-list",
+      optional: false,
+      options: ["BloodCapacitance"],
+    },
+    {
+      target: "pulmonary_veins",
+      caption: "pulmonary veins",
+      type: "multiple-list",
+      optional: false,
+      options: ["BloodCapacitance"],
+    },
+    {
+      target: "systemic_arteries",
+      caption: "systemic arteries",
+      type: "multiple-list",
+      optional: false,
+      options: ["BloodCapacitance"],
+    },
+    {
+      target: "systemic_veins",
+      caption: "systemic veins",
+      type: "multiple-list",
+      optional: false,
+      options: ["BloodCapacitance"],
+    },
+    {
+      target: "svr_targets",
+      caption: "systemic vascular resistance targets",
+      type: "multiple-list",
+      optional: false,
+      options: ["BloodResistor"],
+    },
+    {
+      target: "pvr_targets",
+      caption: "pulmonary vascular resistance targets",
+      type: "multiple-list",
+      optional: false,
+      options: ["BloodResistor"],
+    },
+    {
+      target: "venpool_targets",
+      caption: "venous pool targets",
+      type: "multiple-list",
+      optional: false,
+      options: ["BloodCapacitance"],
+    },
   ];
 
   // independent parameters
