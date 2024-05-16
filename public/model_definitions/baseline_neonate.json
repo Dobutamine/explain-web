@@ -5514,7 +5514,6 @@
           "ans_active": true,
           "baroreceptor_location": "AAR",
           "chemoreceptor_location": "AAR",
-          "chemoreceptor_locatio": "AAR",
           "hr_targets": [
               "Heart"
           ],

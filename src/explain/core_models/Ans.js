@@ -10,6 +10,20 @@ export class Ans {
       optional: false,
     },
     {
+      target: "baroreceptor_location",
+      caption: "baroreceptor location",
+      type: "list",
+      optional: false,
+      options: ["BloodCapacitance"],
+    },
+    {
+      target: "chemoreceptor_location",
+      caption: "chemoreceptor location",
+      type: "list",
+      optional: false,
+      options: ["BloodCapacitance"],
+    },
+    {
       target: "change_map",
       caption: "mean arterial pressure (mmHg)",
       type: "function",
@@ -174,6 +188,13 @@ export class Ans {
       ],
     },
     {
+      target: "hr_targets",
+      caption: "heartrate targets",
+      type: "multiple-list",
+      optional: false,
+      options: ["Heart"],
+    },
+    {
       target: "change_hr_effector",
       caption: "hr effector configuration",
       type: "function",
@@ -334,6 +355,13 @@ export class Ans {
           ll: 0.0,
         },
       ],
+    },
+    {
+      target: "mv_targets",
+      caption: "minute volume targets",
+      type: "multiple-list",
+      optional: false,
+      options: ["Breathing"],
     },
     {
       target: "change_mv_effector",
@@ -498,6 +526,13 @@ export class Ans {
       ],
     },
     {
+      target: "venpool_targets",
+      caption: "venous pool targets",
+      type: "multiple-list",
+      optional: false,
+      options: ["BloodCapacitance"],
+    },
+    {
       target: "change_venpool_effector",
       caption: "venpool effector configuration",
       type: "function",
@@ -658,6 +693,13 @@ export class Ans {
           ll: 0.0,
         },
       ],
+    },
+    {
+      target: "cont_targets",
+      caption: "contractility targets",
+      type: "multiple-list",
+      optional: false,
+      options: ["BloodTimeVaryingElastance"],
     },
     {
       target: "change_cont_effector",
@@ -822,6 +864,13 @@ export class Ans {
       ],
     },
     {
+      target: "svr_targets",
+      caption: "svr targets",
+      type: "multiple-list",
+      optional: false,
+      options: ["BloodResistor"],
+    },
+    {
       target: "change_svr_effector",
       caption: "svr effector configuration",
       type: "function",
@@ -982,6 +1031,13 @@ export class Ans {
           ll: 0.0,
         },
       ],
+    },
+    {
+      target: "pvr_targets",
+      caption: "pvr targets",
+      type: "multiple-list",
+      optional: false,
+      options: ["BloodResistor"],
     },
     {
       target: "change_pvr_effector",
@@ -1154,10 +1210,8 @@ export class Ans {
   dependencies = [];
 
   ans_active = true;
-  baroreceptor_location = "";
-  chemoreceptor_location = "";
+  chemoreceptor_location = "AAR";
   baroreceptor_location = "AAR";
-  chemoreceptor_locatio = "AAR";
   hr_targets = ["Heart"];
   mv_targets = ["Breathing"];
   venpool_targets = ["IVCE", "SVC"];
@@ -1236,36 +1290,6 @@ export class Ans {
 
     // set the modeling step size
     this._t = this._model_engine.modeling_stepsize;
-
-    // get a reference to the baroreceptor and chemoreceptor locations
-    this._baroreceptor = this._model_engine.models[this.baroreceptor_location];
-    this._chemoreceptor =
-      this._model_engine.models[this.chemoreceptor_location];
-
-    // get references to the ans targets
-    for (const hr_target of this.hr_targets) {
-      this._hr_targets.push(this._model_engine.models[hr_target]);
-    }
-
-    for (const mv_target of this.mv_targets) {
-      this._mv_targets.push(this._model_engine.models[mv_target]);
-    }
-
-    for (const venpool_target of this.venpool_targets) {
-      this._venpool_targets.push(this._model_engine.models[venpool_target]);
-    }
-
-    for (const cont_target of this.cont_targets) {
-      this._cont_targets.push(this._model_engine.models[cont_target]);
-    }
-
-    for (const svr_target of this.svr_targets) {
-      this._svr_targets.push(this._model_engine.models[svr_target]);
-    }
-
-    for (const pvr_target of this.pvr_targets) {
-      this._pvr_targets.push(this._model_engine.models[pvr_target]);
-    }
 
     // fill the list of pressures with the baroreflex start point
     this._pressures = new Array(this._data_window).fill(this.set_map);
@@ -1684,6 +1708,12 @@ export class Ans {
   calc_model() {
     // the ans model is executed at a lower frequency then the model step for performance reasons
     if (this._update_counter > this._update_window) {
+      // get a reference to the baro- and chemoreceptors
+      this._baroreceptor =
+        this._model_engine.models[this.baroreceptor_location];
+      this._chemoreceptor =
+        this._model_engine.models[this.chemoreceptor_location];
+
       // insert a new pressure at the start of the list
       this._pressures.unshift(this._baroreceptor.pres);
 
@@ -1822,8 +1852,8 @@ export class Ans {
         this._po2
       );
 
-      for (let hrt of this._hr_targets) {
-        hrt.hr_ans_factor = this.hr_effect_factor;
+      for (let hrt of this.hr_targets) {
+        this._model_engine.models[hrt].hr_ans_factor = this.hr_effect_factor;
       }
 
       this.mv_effect_factor = this._mv_effector.calc_ans_effect_factor(
@@ -1833,8 +1863,8 @@ export class Ans {
         this._po2
       );
 
-      for (let mvt of this._mv_targets) {
-        mvt.mv_ans_factor = this.mv_effect_factor;
+      for (let mvt of this.mv_targets) {
+        this._model_engine.models[mvt].mv_ans_factor = this.mv_effect_factor;
       }
 
       this.venpool_effect_factor =
@@ -1845,8 +1875,9 @@ export class Ans {
           this._po2
         );
 
-      for (let vpt of this._venpool_targets) {
-        vpt.u_vol_ans_factor = this.venpool_effect_factor;
+      for (let vpt of this.venpool_targets) {
+        this._model_engine.models[vpt].u_vol_ans_factor =
+          this.venpool_effect_factor;
       }
 
       this.cont_effect_factor = this._cont_effector.calc_ans_effect_factor(
@@ -1855,8 +1886,9 @@ export class Ans {
         this._ph,
         this._po2
       );
-      for (let contt of this._cont_targets) {
-        contt.el_max_ans_factor = this.cont_effect_factor;
+      for (let contt of this.cont_targets) {
+        this._model_engine.models[contt].el_max_ans_factor =
+          this.cont_effect_factor;
       }
 
       this.svr_effect_factor = this._svr_effector.calc_ans_effect_factor(
@@ -1866,8 +1898,8 @@ export class Ans {
         this._po2
       );
 
-      for (let svrt of this._svr_targets) {
-        svrt.r_ans_factor = this.svr_effect_factor;
+      for (let svrt of this.svr_targets) {
+        this._model_engine.models[svrt].r_ans_factor = this.svr_effect_factor;
       }
 
       this.pvr_effect_factor = this._pvr_effector.calc_ans_effect_factor(
@@ -1877,8 +1909,8 @@ export class Ans {
         this._po2
       );
 
-      for (let pvrt of this._pvr_targets) {
-        pvrt.r_ans_factor = this.pvr_effect_factor;
+      for (let pvrt of this.pvr_targets) {
+        this._model_engine.models[pvrt].r_ans_factor = this.pvr_effect_factor;
       }
 
       // reset the update counter
@@ -1887,6 +1919,8 @@ export class Ans {
 
     this._update_counter += this._t;
   }
+
+  freeze_factors() {}
 
   init_effectors() {
     // set the class attributes (so for all classes)
