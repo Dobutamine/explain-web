@@ -5,7 +5,7 @@ export class Breathing {
       target: "is_enabled",
       caption: "is enabled",
       type: "boolean",
-      optional: true,
+      optional: false,
     },
     {
       target: "breathing_enabled",
@@ -50,12 +50,26 @@ export class Breathing {
       target: "rmp_gain_max",
       caption: "max respiratory muscle pressure gain",
       type: "number",
-      optional: true,
+      optional: false,
       factor: 1.0,
       delta: 0.1,
       rounding: 1,
       ul: 100000000.0,
       ll: 0.1,
+    },
+    {
+      target: "targets",
+      caption: "resp muscle pressure targets",
+      type: "multiple-list",
+      optional: false,
+      options: ["Container", "GasCapacitance"],
+    },
+    {
+      target: "tv_source",
+      caption: "tidal volume source",
+      type: "list",
+      optional: false,
+      options: ["GasResistor"],
     },
   ];
 
@@ -259,6 +273,10 @@ export class Breathing {
     }
 
     // transfer the respiratory muscle pressure to the targets
+    if (typeof this.targets === "string") {
+      this.targets = [this.targets];
+    }
+
     for (let target of this.targets) {
       this._model_engine.models[target].act_factor =
         this.resp_muscle_pressure * 100.0;
