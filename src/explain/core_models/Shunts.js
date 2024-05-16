@@ -356,10 +356,6 @@ export class Shunts {
     }
   }
 
-  test_function(value, t, x) {
-    console.log(value, t, x);
-  }
-
   calc_model() {
     // set the enabled flows
     this._da_in.no_flow = !this.da_enabled;
@@ -376,6 +372,10 @@ export class Shunts {
 
     this._fo.is_enabled = this.fo_enabled;
     this._fo.no_flow = !this.fo_enabled;
+
+    if (this._model_engine.models["Blood"]) {
+      this.viscosity = this._model_engine.models["Blood"].viscosity;
+    }
 
     // set the shunts properties
     if (this.da_enabled) {
