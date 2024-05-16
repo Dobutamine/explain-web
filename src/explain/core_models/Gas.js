@@ -4,6 +4,31 @@ export class Gas {
   static model_type = "Gas";
   static model_interface = [
     {
+      target: "set_new_fio2",
+      caption: "set gas fio2",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "fio2",
+          type: "number",
+          default: 0.21,
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 1.0,
+          ll: 0.02,
+        },
+        {
+          target: "site",
+          type: "multiple-list",
+          default: "MOUTH",
+          options: ["GasCapacitance"],
+          options_default: [],
+        },
+      ],
+    },
+    {
       target: "set_new_atmospheric_pressure",
       caption: "atmospheric pressure (mmHg)",
       type: "function",
@@ -28,7 +53,7 @@ export class Gas {
       optional: false,
       args: [
         {
-          target: "new_temp",
+          target: "temp",
           type: "number",
           default: 37.0,
           factor: 1,
@@ -53,7 +78,7 @@ export class Gas {
       optional: false,
       args: [
         {
-          target: "new_humidity",
+          target: "humidity",
           type: "number",
           default: 0.5,
           factor: 1,
@@ -68,6 +93,24 @@ export class Gas {
           default: "MOUTH",
           options: ["GasCapacitance"],
           options_default: [],
+        },
+      ],
+    },
+    {
+      target: "set_total_gas_volume",
+      caption: "set total gas volume (l)",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "total_gas_volume",
+          type: "number",
+          default: 0.5,
+          factor: 1,
+          delta: 0.001,
+          rounding: 3,
+          ul: 1.0,
+          ll: 0.0,
         },
       ],
     },
@@ -246,7 +289,11 @@ export class Gas {
   }
 
   set_new_fio2(new_fio2, sites = ["OUT", "MOUTH"]) {
+    if (typeof sites === "string") {
+      sites = [sites];
+    }
     if (new_fio2 >= 0.2 && new_fio2 <= 1.0) {
+      this.fio2 = new_fio2;
       sites.forEach((site) => {
         if (this._model_engine.models[site].model_type == "GasCapacitance") {
           this.fio2 = new_fio2;
@@ -262,7 +309,11 @@ export class Gas {
   }
 
   set_new_humidity(new_humidity, sites = ["OUT", "MOUTH"]) {
+    if (typeof sites === "string") {
+      sites = [sites];
+    }
     if (new_humidity >= 0.0 && new_humidity <= 1.0) {
+      this.humidity = new_humidity;
       sites.forEach((site) => {
         if (this._model_engine.models[site].model_type == "GasCapacitance") {
           this.humidity_settings[site] = new_humidity;

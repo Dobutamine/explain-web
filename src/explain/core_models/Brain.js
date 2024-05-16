@@ -1,6 +1,13 @@
 export class Brain {
   static model_type = "Brain";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: false,
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";

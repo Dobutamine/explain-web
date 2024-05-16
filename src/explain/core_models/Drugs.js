@@ -1,6 +1,13 @@
 export class Drugs {
   static model_type = "Drugs";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: false,
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";

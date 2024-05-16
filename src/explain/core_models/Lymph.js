@@ -1,6 +1,13 @@
 export class Lymph {
   static model_type = "Lymph";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: false,
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";
