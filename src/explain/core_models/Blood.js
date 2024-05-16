@@ -10,24 +10,6 @@ export class Blood {
       optional: false,
     },
     {
-      target: "set_total_blood_volume",
-      caption: "set total blood volume (l)",
-      type: "function",
-      optional: false,
-      args: [
-        {
-          target: "total_blood_volume",
-          type: "number",
-          optional: false,
-          factor: 1,
-          delta: 0.001,
-          rounding: 3,
-          ul: 100000000000000.0,
-          ll: 0.0,
-        },
-      ],
-    },
-    {
       target: "set_temp",
       caption: "temperature (°C)",
       type: "function",
@@ -256,7 +238,6 @@ export class Blood {
   inferior_vena_cava = "IVCI";
   superior_vena_cava = "SVC";
   right_atrium = "RA";
-  total_blood_volume = 0.0;
   viscosity = 6.0;
   blood_containing_components = [];
 
@@ -355,8 +336,6 @@ export class Blood {
     this._svc = this._model_engine.models[this.superior_vena_cava];
     this._ra = this._model_engine.models[this.right_atrium];
 
-    this.total_blood_volume = this.get_total_blood_volume();
-
     // set the flag to model is initialized
     this._is_initialized = true;
   }
@@ -424,34 +403,6 @@ export class Blood {
   set_temp(new_temp) {
     this.temp = parseFloat(new_temp);
     this.set_aboxy_concentration("temp", new_temp);
-  }
-
-  set_total_blood_volume(new_blood_volume) {
-    let current_blood_volume = this.get_total_blood_volume();
-    let blood_volume_change = new_blood_volume / current_blood_volume;
-
-    this.blood_containing_components.forEach((c) => {
-      if (this._model_engine.models[c].is_enabled) {
-        this._model_engine.models[c].vol =
-          this._model_engine.models[c].vol * blood_volume_change;
-        this._model_engine.models[c].u_vol =
-          this._model_engine.models[c].u_vol * blood_volume_change;
-      }
-    });
-    this.total_blood_volume = this.get_total_blood_volume();
-  }
-
-  get_total_blood_volume() {
-    let total_volume = 0.0;
-
-    this.blood_containing_components.forEach((c) => {
-      if (this._model_engine.models[c].is_enabled) {
-        total_volume += this._model_engine.models[c].vol;
-      }
-    });
-    this.total_blood_volume = total_volume;
-
-    return total_volume;
   }
 
   set_solute_concentration(solute_name, solute_conc, targets = []) {
@@ -543,8 +494,6 @@ export class Blood {
       this.hco3_ven = this._ra.aboxy.hco3;
       this.be_ven = this._ra.aboxy.be;
       this.so2_ven = this._ra.aboxy.so2;
-
-      this.total_blood_volume = this.get_total_blood_volume();
     }
     this._update_counter += this._t;
   }

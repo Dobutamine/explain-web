@@ -337,7 +337,7 @@ export default defineComponent({
             { label: "fFo", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["FO.flow_lmin_avg"], weight_based: true },
             { label: "fBR", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["AA_BR.flow_lmin_avg"], weight_based: true },
             { label: "fPlacenta", unit: "ml/kg/min", factor: 1000.0, rounding: 1, props: ["UMB_VEN.flow_lmin_avg"], weight_based: true },
-            { label: "Volume", unit: "ml/kg", factor: 1000.0, rounding: 1, props: ["Blood.total_blood_volume"], weight_based: true }
+            { label: "Volume", unit: "ml/kg", factor: 1000.0, rounding: 1, props: ["Circulation.total_blood_volume"], weight_based: true }
 
           ]
         },

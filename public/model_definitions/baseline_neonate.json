@@ -5325,6 +5325,31 @@
           "description": "circulation model",
           "is_enabled": true,
           "dependencies": [],
+          "blood_containing_components": [
+            "AA",
+            "AAR",
+            "AD",
+            "LS",
+            "INT",
+            "KID",
+            "RLB",
+            "VLB",
+            "IVCI",
+            "RA",
+            "RV",
+            "PA",
+            "LL",
+            "RL",
+            "PV",
+            "LA",
+            "LV",
+            "BR",
+            "RUB",
+            "VUB",
+            "SVC",
+            "COR",
+            "DA"
+          ],
           "pulmonary_arteries": [
               "PA"
           ],
@@ -5353,44 +5378,18 @@
               "PA_LL",
               "PA_RL"
           ],
-          "ips_targets": [
-              "IPS"
-          ],
           "venpool_targets": [
               "VLB",
               "VUB"
           ],
-          "heart_aorta": [
-              "LV_AA"
-          ],
-          "heart_inferior_vena_cava": [
-              "IVCI_RA"
-          ],
-          "heart_superior_vena_cava": [
-              "SVC_RA"
-          ],
-          "heart_pulmonary_artery": [
-              "RV_PA"
-          ],
-          "heart_pulmonary_veins": [
-              "PV_LA"
-          ],
           "current_blood_volume": 0.9358843786048312,
-          "svr_res_elastance_ratio": 4,
-          "pvr_res_elastance_ratio": 1,
           "coarc_change": 1,
           "pvr_change": 1,
           "svr_change": 1,
           "venpool_change": 1,
           "pulmartcomp_change": 1,
           "systartcomp_change": 1,
-          "vencomp_change": 1,
-          "ofo_targets": [
-              "FO"
-          ],
-          "vsd_targets": [
-              "VSD"
-          ]
+          "vencomp_change": 1
       },
       "Shunts": {
           "name": "Shunts",
@@ -5657,36 +5656,35 @@
           "is_enabled": true,
           "dependencies": [],
           "blood_containing_components": [
-              "AA",
-              "AAR",
-              "AD",
-              "LS",
-              "INT",
-              "KID",
-              "RLB",
-              "VLB",
-              "IVCI",
-              "RA",
-              "RV",
-              "PA",
-              "LL",
-              "RL",
-              "PV",
-              "LA",
-              "LV",
-              "BR",
-              "RUB",
-              "VUB",
-              "SVC",
-              "COR",
-              "DA"
+            "AA",
+            "AAR",
+            "AD",
+            "LS",
+            "INT",
+            "KID",
+            "RLB",
+            "VLB",
+            "IVCI",
+            "RA",
+            "RV",
+            "PA",
+            "LL",
+            "RL",
+            "PV",
+            "LA",
+            "LV",
+            "BR",
+            "RUB",
+            "VUB",
+            "SVC",
+            "COR",
+            "DA"
           ],
           "ascending_aorta": "AA",
           "descending_aorta": "AD",
           "inferior_vena_cava": "IVCI",
           "superior_vena_cava": "SVC",
           "right_atrium": "RA",
-          "total_blood_volume": 0.2831239959543716,
           "viscosity": 6,
           "ph": 7.432553410956334,
           "pco2": 39.68832629788927,

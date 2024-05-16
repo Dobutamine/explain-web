@@ -1,6 +1,57 @@
 export class Coronaries {
   static model_type = "Coronaries";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "el_min_cor",
+      caption: "minimal elastance (mmHg/l)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 1,
+    },
+    {
+      target: "el_max_cor",
+      caption: "maximal elastance (mmHg/l)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 1,
+    },
+    {
+      target: "res_in",
+      caption: "input resistance (mmHg/l/s)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 1,
+    },
+    {
+      target: "res_out",
+      caption: "output resistance (mmHg/l/s)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 1,
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";
