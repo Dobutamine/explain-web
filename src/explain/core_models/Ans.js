@@ -1920,7 +1920,9 @@ export class Ans {
     this._update_counter += this._t;
   }
 
-  freeze_factors() {}
+  freeze_factors() {
+    // the Ans does not have any factors to freeze and is always changed directly
+  }
 
   init_effectors() {
     // set the class attributes (so for all classes)
