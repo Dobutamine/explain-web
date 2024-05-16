@@ -74,6 +74,7 @@ export class BloodTimeVaryingElastance {
   solutes = {};
   aboxy = {};
   drugs = {};
+  temp = 37.0;
 
   pres_ext = 0.0;
   pres_cc = 0.0;

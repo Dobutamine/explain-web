@@ -5,7 +5,7 @@ export class Metabolism {
       target: "is_enabled",
       caption: "is enabled",
       type: "boolean",
-      optional: true,
+      optional: false,
     },
     {
       target: "vo2",
@@ -30,15 +30,23 @@ export class Metabolism {
       ll: 0.001,
     },
     {
-      target: "body_temp",
-      caption: "body temperature",
-      type: "number",
+      target: "set_body_temp",
+      caption: "body temperature (°C)",
+      type: "function",
       optional: false,
-      factor: 1,
-      delta: 0.1,
-      rounding: 1,
-      ul: 43.0,
-      ll: 20.0,
+      relative: false,
+      args: [
+        {
+          target: "body_temp",
+          caption: "new temperature (°C)",
+          type: "number",
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 43.0,
+          ll: 20.0,
+        },
+      ],
     },
   ];
   // independent parameters
@@ -89,6 +97,18 @@ export class Metabolism {
     if (this.is_enabled && this._is_initialized) {
       this.calc_model();
     }
+  }
+
+  set_body_temp(new_temp) {
+    this.body_temp = new_temp;
+    Object.values(this._model_engine.models).forEach((model) => {
+      if (
+        model.model_type === "BloodCompartment" ||
+        model.model_type === "BloodTimeVaryingElastance"
+      ) {
+        model.temp = new_temp;
+      }
+    });
   }
 
   calc_model() {
