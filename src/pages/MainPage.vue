@@ -4366,7 +4366,6 @@ export default defineComponent({
   methods: {
 
     tabLeftChanged(tabName) {
-      console.log(tabName)
       explain.getModelState()
     },
     tabRightChanged() {
