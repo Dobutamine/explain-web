@@ -38,7 +38,7 @@ export class Circulation {
     },
     {
       target: "change_svr",
-      caption: "systemic arteries outflow resistance factor",
+      caption: "systemic arteries resistance factor",
       type: "function",
       optional: false,
       relative: false,
@@ -110,7 +110,7 @@ export class Circulation {
     },
     {
       target: "change_venpool",
-      caption: "venous pool factor",
+      caption: "venous pool volume factor",
       type: "function",
       optional: false,
       relative: false,
