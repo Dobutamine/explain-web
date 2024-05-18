@@ -21,7 +21,7 @@
     <!-- bottom buttons -->
     <div v-if="isEnabled" class="q-ma-sm text-overline justify-center q-gutter-sm row">
       <q-checkbox v-if="autoscaleEnabled" v-model="autoscale" dense size="xs" label="autoscale"
-        @update:model-value="autoscaling" />
+        @update:model-value="toggleAutoscaling" />
       <q-input v-if="!autoscale" v-model.number="x_min" type="number" @update:model-value="autoscaling" label="x min"
         filled dense hide-bottom-space style="max-width: 75px;" />
       <q-input v-if="!autoscale" v-model.number="x_max" type="number" @update:model-value="autoscaling" label="x max"
@@ -341,6 +341,9 @@ export default {
         this.p2_perbeat = 0.0
       }
 
+    },
+    toggleAutoscaling() {
+      this.autoscaling()
     },
     autoscaling() {
       if (!this.autoscale) {
