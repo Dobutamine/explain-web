@@ -384,6 +384,22 @@ export default class Model {
     this.setPropValue(model_name + ".is_enabled", false, 0, at);
   }
 
+  setSampleInterval(new_interval) {
+    this.sendMessageToModelEngine({
+      type: "set_sample_interval",
+      message: "",
+      payload: new_interval,
+    });
+  }
+
+  setSampleIntervalSlow(new_interval) {
+    this.sendMessageToModelEngine({
+      type: "set_sample_interval_slow",
+      message: "",
+      payload: new_interval,
+    });
+  }
+
   getModelProps(model_name) {
     // get the properties of a specific model
     this.sendMessageToModelEngine({

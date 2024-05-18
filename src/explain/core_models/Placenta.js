@@ -341,4 +341,8 @@ export class Placenta {
       this._umb_ven.flow_lmin = 0.0;
     }
   }
+
+  freeze_scaling() {}
+
+  freeze_factors() {}
 }

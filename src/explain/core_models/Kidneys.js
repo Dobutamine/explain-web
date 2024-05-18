@@ -55,4 +55,8 @@ export class Kidneys {
   }
 
   calc_model() {}
+
+  freeze_scaling() {}
+
+  freeze_factors() {}
 }

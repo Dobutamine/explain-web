@@ -108,6 +108,10 @@ export class Lungs {
 
   calc_model() {}
 
+  freeze_scaling() {}
+
+  freeze_factors() {}
+
   change_lung_shunt(change_forward, change_backward = -1) {
     if (change_forward > 0.0) {
       this.lung_shunt_change = change_forward;

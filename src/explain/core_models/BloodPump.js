@@ -251,6 +251,10 @@ export class BloodPump {
     this.pres_mus = 0.0;
   }
 
+  freeze_scaling() {}
+
+  freeze_factors() {}
+
   connect_pump(_in, _out) {
     if (typeof _in == "string") {
       this._inlet_res = this._model_engine.models[_in];

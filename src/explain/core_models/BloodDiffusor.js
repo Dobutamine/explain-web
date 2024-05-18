@@ -213,4 +213,8 @@ export class BloodDiffusor {
       this._comp_blood2.aboxy.tco2 = new_tco2_comp_blood2;
     }
   }
+
+  freeze_scaling() {}
+
+  freeze_factors() {}
 }

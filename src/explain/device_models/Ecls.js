@@ -651,6 +651,10 @@ export class Ecls {
     this._update_counter += this._t;
   }
 
+  freeze_scaling() {}
+
+  freeze_factors() {}
+
   calc_volume(length, diameter) {
     // return the volume in liters
     return Math.PI * Math.pow(0.5 * diameter, 2) * length * 1000.0;

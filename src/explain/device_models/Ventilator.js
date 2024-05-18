@@ -500,6 +500,10 @@ export class Ventilator {
     this._vent_parts.forEach((vent_part) => vent_part.step_model());
   }
 
+  freeze_scaling() {}
+
+  freeze_factors() {}
+
   time_cycling() {
     // calculate the expiration time
     this.exp_time = 60.0 / this.vent_rate - this.insp_time;

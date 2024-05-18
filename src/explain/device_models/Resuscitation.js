@@ -173,4 +173,8 @@ export class Resuscitation {
       }
     }
   }
+
+  freeze_scaling() {}
+
+  freeze_factors() {}
 }

@@ -283,6 +283,10 @@ export class Breathing {
     }
   }
 
+  freeze_scaling() {}
+
+  freeze_factors() {}
+
   calc_resp_muscle_pressure() {
     let mp = 0.0;
     // inspiration

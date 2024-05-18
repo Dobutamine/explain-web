@@ -316,6 +316,11 @@ export class GasResistor {
       return;
     }
   }
+
+  freeze_scaling() {}
+
+  freeze_factors() {}
+
   diffusion(_r_for, _r_back) {
     // we need to po2 and pco2 so we need to calculate the blood composition
     // get the partial pressures and gas concentrations from the components

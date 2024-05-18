@@ -165,4 +165,8 @@ export class GasExchanger {
     this._gas.co2 = new_co2_gas;
     this._gas.cco2 = new_cco2_gas;
   }
+
+  freeze_scaling() {}
+
+  freeze_factors() {}
 }

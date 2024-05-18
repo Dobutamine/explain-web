@@ -162,6 +162,10 @@ export class Fluids {
     }
   }
 
+  freeze_scaling() {}
+
+  freeze_factors() {}
+
   add_volume(
     vol = 10.0,
     in_time = 5.0,

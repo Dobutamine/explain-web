@@ -777,6 +777,10 @@ export class Heart {
     this.calc_varying_elastance();
   }
 
+  freeze_scaling() {}
+
+  freeze_factors() {}
+
   calc_varying_elastance() {
     // calculate the atrial activation factor
     let _atrial_duration = this.pq_time / this._t;

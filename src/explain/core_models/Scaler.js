@@ -266,6 +266,10 @@ export class Scaler {
     this._update_counter += this._t;
   }
 
+  freeze_scaling() {}
+
+  freeze_factors() {}
+
   // scale by weight function where the global scaler is dependent on the weight change
   scale_weight(new_weight) {
     if (this._debug) {

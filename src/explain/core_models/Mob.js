@@ -441,6 +441,10 @@ export class Mob {
     this.cor_so2 = this._cor.aboxy.so2;
   }
 
+  freeze_scaling() {}
+
+  freeze_factors() {}
+
   oxygen_metabolism() {
     // get the po2 in mmHg from coronaries
     let po2_cor = this._cor.aboxy.po2;

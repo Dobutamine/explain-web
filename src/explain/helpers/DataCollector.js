@@ -96,11 +96,15 @@ export default class DataCollector {
   }
 
   set_sample_interval(new_interval) {
-    this.sample_interval = new_interval;
+    if (new_interval > 0.0005) {
+      this.sample_interval = new_interval;
+    }
   }
 
   set_sample_interval_slow(new_interval) {
-    this.sample_interval_slow = new_interval;
+    if (new_interval > 0.5) {
+      this.sample_interval_slow = new_interval;
+    }
   }
 
   add_to_watchlist(properties) {

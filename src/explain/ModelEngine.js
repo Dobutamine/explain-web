@@ -128,6 +128,12 @@ onmessage = (e) => {
     case "get_prop_value":
       get_prop_value(e.data.payload);
       break;
+    case "set_sample_interval":
+      model["DataCollector"].set_sample_interval(e.data.payload);
+      break;
+    case "set_sample_interval_slow":
+      model["DataCollector"].set_sample_interval_slow(e.data.payload);
+      break;
     case "start_debug":
       debug = true;
       break;
