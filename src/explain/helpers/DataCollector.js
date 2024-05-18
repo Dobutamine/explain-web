@@ -23,7 +23,7 @@ export default class DataCollector {
     this.watch_list = {};
 
     // define the data sample interval
-    this.sample_interval = 0.005;
+    this.sample_interval = 0.0015;
     this._interval_counter = 0;
 
     // get the modeling stepsize from the model

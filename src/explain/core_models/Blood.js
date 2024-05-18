@@ -445,6 +445,9 @@ export class Blood {
       }
     }
   }
+  freeze_factors() {
+    // the Blood does not have any factors to freeze and is always changed directly
+  }
 
   calc_model() {
     if (this._update_counter > this._update_interval) {
