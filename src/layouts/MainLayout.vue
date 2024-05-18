@@ -12,20 +12,7 @@
         <q-toolbar-title class="text-overline">
           <div>{{ statusMessage }}</div>
         </q-toolbar-title>
-        <q-select class="q-mr-sm q-ml-sm" label-color="white" v-model="current_model_definition"
-          :options="available_model_definitions" hide-bottom-space dense label="selected model from server"
-          style="width: 165px; font-size: 12px" @update:model-value="selectModelDefinition">
-          <q-tooltip> availabel models on server</q-tooltip>
-        </q-select>
-        <!-- <div class="q-mr-sm text-overline">
-          <q-file class="text-overline text-bold" style="width: 165px; font-size: 12px" label="upload model"
-            v-model="model_file" :display-value="modelName" @update:model-value="upload">
-            <template v-slot:append>
-              <q-icon size="xs" name="fa-solid fa-upload" />
-            </template>
-<q-tooltip> {{ modelDescription }} </q-tooltip>
-</q-file>
-</div> -->
+
         <q-btn flat round dense size="sm" icon="fa-solid fa-download" color="white" class="q-mr-sm" @click="save_state">
           <q-tooltip> download model state </q-tooltip></q-btn>
         <q-btn flat round dense size="sm" :icon="butIcon" :color="butColor" class="q-mr-sm" @click="togglePlay">
