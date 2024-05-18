@@ -59,8 +59,9 @@
         @update:model-value="toggleSummary" />
       <q-checkbox v-if="presetsEnabled" v-model="showPresets" dense label="presets" size="sm" />
       <q-checkbox v-model="chart_fill" dense label="fill" size="sm" />
-      <q-input v-model.number="rtWindow" type="number" label="time" filled dense min="1" max="30" hide-bottom-space
-        @update:model-value="updateRtWindow" />
+      <q-toggle v-model="hiRes" label="hi-res" dense size="sm" @update:model-value="toggleHires" />
+      <q-input v-if="showRtWindow" v-model.number="rtWindow" type="number" label="time" filled dense min="1" max="30"
+        hide-bottom-space @update:model-value="updateRtWindow" />
       <q-btn v-if="exportEnabled" color="black" size="sm" @click="exportData" icon="fa-solid fa-file-export"></q-btn>
       <q-btn color="negative" size="xs" @click="clearProps" icon="fa-solid fa-trash-can"></q-btn>
     </div>
@@ -191,6 +192,8 @@ export default {
   },
   data() {
     return {
+      hiRes: false,
+      showRtWindow: true,
       presetsEnabled: true,
       showPresets: true,
       show_summary: false,
@@ -319,6 +322,17 @@ export default {
     };
   },
   methods: {
+    toggleHires() {
+      if (this.hiRes) {
+        this.rtWindow = 1.0
+        this.showRtWindow = false
+        explain.setSampleInterval(0.0015)
+      } else {
+        this.rtWindow = 3.0
+        this.showRtWindow = true
+        explain.setSampleInterval(0.005)
+      }
+    },
     makeNewPreset() {
       this.presetEditMode = true
 
@@ -656,7 +670,7 @@ export default {
         this.y2_axis_fill = this.chart_fill
         this.y3_axis_fill = this.chart_fill
 
-        // update is every 0.015 ms and the data is sampled with 0.005 ms resolution (so 3 data points per 0.015 sec = 200 datapoints per second)
+        // update is every 0.015 ms and the data is sampled with 0.0015 ms resolution (so 3 data points per 0.015 sec = 200 datapoints per second)
         for (let i = 0; i < explain.modelData.length; i++) {
           this.y1_axis.push(explain.modelData[i][this.p1] * this.chart1_factor)
           this.y2_axis.push(explain.modelData[i][this.p2] * this.chart2_factor)

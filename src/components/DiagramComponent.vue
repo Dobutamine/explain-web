@@ -2,7 +2,7 @@
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
     <div class="row justify-center">
       <q-select class="q-pa-xs q-mr-sm q-ml-sm col text-overline" v-model="selected_diagram" square
-        label="selected condition" hide-hint :options="conditions" dense dark stack-label
+        label="selected model" hide-hint :options="conditions" dense dark stack-label
         @update:model-value="reloadDiagram" :style="{ 'font-size': '16px' }" />
     </div>
 

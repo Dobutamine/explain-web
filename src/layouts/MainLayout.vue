@@ -24,9 +24,6 @@
         <q-select class="q-ml-md q-mr-md" label-color="white" v-model="selectedDuration" :options="durations"
           hide-bottom-space dense label="step (sec.)" style="width: 90px; font-size: 12px"><q-tooltip> fast forward step
             size</q-tooltip></q-select>
-        <q-btn flat round dense :icon="butDebugIcon" size="sm" @click="toggleDebug" :color="butDebugColor"
-          class="q-mr-sm">
-          <q-tooltip> {{ butDebugCaption }}</q-tooltip></q-btn>
       </q-toolbar>
     </q-footer>
   </q-layout>

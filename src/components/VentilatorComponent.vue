@@ -46,8 +46,12 @@
         <q-toggle v-model="spont_breathing" size="sm" label="breathing" @update:model-value="toggle_spont_breathing" />
       </div>
       <div>
-        <q-input v-if="!show_loops" class="q-ml-sm q-pb-lg" v-model.number="rtWindow" type="number" label="time" filled
-          dense min="1" max="30" hide-bottom-space @update:model-value="updateRtWindow" />
+        <q-toggle class="q-ml-sm q-pb-lg" v-model="hiRes" label="hi-res" dense size="sm"
+          @update:model-value="toggleHires" />
+      </div>
+      <div>
+        <q-input v-if="!show_loops && showRtWindow" class="q-ml-sm q-pb-lg" v-model.number="rtWindow" type="number"
+          label="time" filled dense min="1" max="30" hide-bottom-space @update:model-value="updateRtWindow" />
       </div>
     </div>
     <!-- ventilator controls -->
@@ -347,6 +351,8 @@ export default {
   },
   data() {
     return {
+      hiRes: false,
+      showRtWindow: true,
       ventilator_running: false,
       spont_breathing: true,
       presetsEnabled: true,
@@ -436,6 +442,17 @@ export default {
     };
   },
   methods: {
+    toggleHires() {
+      if (this.hiRes) {
+        this.rtWindow = 1.0
+        this.showRtWindow = false
+        explain.setSampleInterval(0.0015)
+      } else {
+        this.rtWindow = 3.0
+        this.showRtWindow = true
+        explain.setSampleInterval(0.005)
+      }
+    },
     toggle_spont_breathing() {
       if (this.update_model) {
         explain.callModelFunction("Breathing.switch_breathing", [this.spont_breathing])

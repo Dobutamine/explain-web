@@ -123,14 +123,10 @@
         <div class="col-6">
           <q-tabs v-model="tab_center" dense class="text-white" active-color="primary" indicator-color="primary"
             align="center" narrow-indicator outside-arrows @update:model-value="tabCenterChanged">
-            <q-tab name="time_chart">
-              <q-icon name="fa-solid fa-chart-line" size="xs"></q-icon>
-              <q-tooltip>time chart</q-tooltip>
-            </q-tab>
 
-            <q-tab name="xy_chart">
-              <q-icon name="fa-solid fa-chart-area" size="xs"></q-icon>
-              <q-tooltip>xy chart</q-tooltip>
+            <q-tab name="diagram">
+              <q-icon name="fa-solid fa-home" size="xs"></q-icon>
+              <q-tooltip>diagram</q-tooltip>
             </q-tab>
 
             <q-tab name="heart">
@@ -143,15 +139,37 @@
               <q-tooltip>mechanical ventilator</q-tooltip>
             </q-tab>
 
-            <q-tab name="diagram">
-              <q-icon name="fa-solid fa-diagram-project" size="xs"></q-icon>
-              <q-tooltip>diagram</q-tooltip>
+
+            <q-tab name="time_chart">
+              <q-icon name="fa-solid fa-chart-line" size="xs"></q-icon>
+              <q-tooltip>time chart</q-tooltip>
             </q-tab>
+
+            <q-tab name="xy_chart">
+              <q-icon name="fa-solid fa-chart-area" size="xs"></q-icon>
+              <q-tooltip>xy chart</q-tooltip>
+            </q-tab>
+
+
 
 
 
           </q-tabs>
           <q-tab-panels v-model="tab_center" keep-alive style="background-color: black">
+
+            <q-tab-panel name="diagram">
+              <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
+                right: '5px',
+                borderRadius: '5px',
+                background: 'black',
+                width: '5px',
+                opacity: 0.5
+              }">
+                <DiagramComponent :alive="diagram_alive" :global_scale="diagram_scale" :global_speed="diagram_speed">
+                </DiagramComponent>
+              </q-scroll-area>
+            </q-tab-panel>
+
             <q-tab-panel name="time_chart">
               <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
                 right: '5px',
@@ -200,18 +218,7 @@
               </q-scroll-area>
             </q-tab-panel>
 
-            <q-tab-panel name="diagram">
-              <q-scroll-area class="q-pa-xs" dark :style="screen_height" :vertical-bar-style="{
-                right: '5px',
-                borderRadius: '5px',
-                background: 'black',
-                width: '5px',
-                opacity: 0.5
-              }">
-                <DiagramComponent :alive="diagram_alive" :global_scale="diagram_scale" :global_speed="diagram_speed">
-                </DiagramComponent>
-              </q-scroll-area>
-            </q-tab-panel>
+
 
           </q-tab-panels>
 

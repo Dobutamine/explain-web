@@ -1,93 +1,51 @@
 <template>
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
-    <div
-      class="q-mt-es row gutter text-overline justify-center"
-      @click="isEnabled = !isEnabled"
-    >
+    <div class="q-mt-es row gutter text-overline justify-center" @click="isEnabled = !isEnabled">
       {{ title }}
     </div>
 
 
     <!-- chart -->
     <div v-if="!show_loops">
-    <div class="q-mt-sm row text-overline justify-center">pressure (cmh2o)</div>
-      <Line v-if="isEnabled && !show_loops"
-          id="my-chart-heart-pres"
-          :options="chartOptionsPres"
-          :data="chartDataPres"
-          style="max-height: 150px;"
-      />
+      <div class="q-mt-sm row text-overline justify-center">pressure (cmh2o)</div>
+      <Line v-if="isEnabled && !show_loops" id="my-chart-heart-pres" :options="chartOptionsPres" :data="chartDataPres"
+        style="max-height: 150px;" />
       <div class="q-mt-sm row text-overline justify-center">flow (l/s)</div>
-      <Line v-if="isEnabled && !show_loops"
-          id="my-chart-heart-flow"
-          :options="chartOptionsFlow"
-          :data="chartDataFlow"
-          style="max-height: 150px;"
-      />
+      <Line v-if="isEnabled && !show_loops" id="my-chart-heart-flow" :options="chartOptionsFlow" :data="chartDataFlow"
+        style="max-height: 150px;" />
       <div class="row text-overline justify-center">volume (ml)</div>
-      <Line v-if="isEnabled"
-          id="my-chart-vent-vol"
-          :options="chartOptionsVol"
-          :data="chartDataVol"
-          style="max-height: 150px;"
-      />
+      <Line v-if="isEnabled" id="my-chart-vent-vol" :options="chartOptionsVol" :data="chartDataVol"
+        style="max-height: 150px;" />
     </div>
 
-    <XYChartComponent v-if="isEnabled && show_loops" :alive="show_loops" title="" :presets="presets_loops" :load-preset="true"></XYChartComponent>
+    <XYChartComponent v-if="isEnabled && show_loops" :alive="show_loops" title="" :presets="presets_loops"
+      :load-preset="true"></XYChartComponent>
 
-    <div v-if="isEnabled"
-        class="q-mt-sm text-overline justify-center q-gutter-xs row"
-      >
+    <div v-if="isEnabled" class="q-mt-sm text-overline justify-center q-gutter-xs row">
       <div>
-        <q-btn-toggle
-          v-model="mode"
-          color="grey-9"
-          size="sm"
-          text-color="white"
-          toggle-color="primary"
-          :options="[
-            {label: 'LEFT HEART', value: 'LEFT'},
-            {label: 'RIGHT HEART', value: 'RIGHT'},
-            {label: 'ARTERIAL SYSTEM', value: 'ART'},
-            {label: 'VENOUS SYSTEM', value: 'VEN'},
-            {label: 'SHUNTS', value: 'SHUNTS'},
-          ]"
-          @update:model-value="select_heart_chamber"
-        />
+        <q-btn-toggle v-model="mode" color="grey-9" size="sm" text-color="white" toggle-color="primary" :options="[
+          { label: 'LEFT HEART', value: 'LEFT' },
+          { label: 'RIGHT HEART', value: 'RIGHT' },
+        ]" @update:model-value="select_heart_chamber" />
       </div>
     </div>
-    <div v-if="isEnabled"
-        class="q-mt-sm text-overline justify-center q-gutter-xs row"
-      >
+    <div v-if="isEnabled" class="q-mt-sm text-overline justify-center q-gutter-xs row">
       <div>
-      <q-btn-toggle
-      class="q-ml-sm"
-          v-model="show_loops"
-          color="grey-9"
-          size="sm"
-          text-color="white"
-          toggle-color="primary"
-          :options="[
-            {label: 'CURVES', value: false},
-            {label: 'LOOPS', value: true},
-          ]"
-        />
+        <q-btn-toggle class="q-ml-sm" v-model="show_loops" color="grey-9" size="sm" text-color="white"
+          toggle-color="primary" :options="[
+            { label: 'CURVES', value: false },
+            { label: 'LOOPS', value: true },
+          ]" />
       </div>
       <div>
-        <q-input
-                v-if="!show_loops"
-                class="q-ml-sm q-pb-lg"
-                v-model.number="rtWindow"
-                type="number"
-                label="time"
-                filled
-                dense
-                min="1"
-                max="30"
-                hide-bottom-space
-                @update:model-value="updateRtWindow"
-              />
+        <q-toggle class="q-ml-sm q-pb-lg" v-model="hiRes" label="hi-res" dense size="sm"
+          @update:model-value="toggleHires" />
       </div>
+      <div>
+        <q-input v-if="!show_loops && showRtWindow" class="q-ml-sm q-pb-lg" v-model.number="rtWindow" type="number"
+          label="time" filled dense min="1" max="30" hide-bottom-space @update:model-value="updateRtWindow" />
+      </div>
+
     </div>
     <!-- ventilator controls -->
 
@@ -107,126 +65,126 @@ export default {
   setup() {
     // make the chartdata reactive
     let chartDataPres = ref({
-        labels: [],
-        backgroundColor: '#888888',
-        datasets: [ { data: [] } ]
-      })
+      labels: [],
+      backgroundColor: '#888888',
+      datasets: [{ data: [] }]
+    })
     let chartDataFlow = ref({
-        labels: [],
-        backgroundColor: '#888888',
-        datasets: [ { data: [] } ]
-      })
+      labels: [],
+      backgroundColor: '#888888',
+      datasets: [{ data: [] }]
+    })
     let chartDataVol = ref({
-        labels: [],
-        backgroundColor: '#888888',
-        datasets: [ { data: [] } ]
-      })
+      labels: [],
+      backgroundColor: '#888888',
+      datasets: [{ data: [] }]
+    })
 
-      let chartOptionsPres = ref({
-        responsive: true,
-        animation: false,
-        spanGaps: true,
-        showLine: true,
-        plugins: {
-          legend: {
+    let chartOptionsPres = ref({
+      responsive: true,
+      animation: false,
+      spanGaps: true,
+      showLine: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      datasets: {
+        line: {
+          pointRadius: 0 // disable for all `'line'` datasets
+        }
+      },
+      scales: {
+        x: {
+          display: false,
+          grid: {
+            color: '#444444'
+          },
+          border: {
             display: false
           }
         },
-        datasets: {
-            line: {
-                pointRadius: 0 // disable for all `'line'` datasets
-            }
-        },
-        scales: {
-            x: {
-              display: false,
-              grid: {
-                color: '#444444'
-              },
-              border: {
-                display: false
-              }
-            },
-            y: {
-              grid: {
-                color: '#333333'
-              },
-              border: {
-                display: false
-              }
-            }
+        y: {
+          grid: {
+            color: '#333333'
+          },
+          border: {
+            display: false
+          }
         }
-      })
-      let chartOptionsFlow = ref({
-        responsive: true,
-        animation: false,
-        spanGaps: true,
-        showLine: true,
-        plugins: {
-          legend: {
+      }
+    })
+    let chartOptionsFlow = ref({
+      responsive: true,
+      animation: false,
+      spanGaps: true,
+      showLine: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      datasets: {
+        line: {
+          pointRadius: 0 // disable for all `'line'` datasets
+        }
+      },
+      scales: {
+        x: {
+          display: false,
+          grid: {
+            color: '#444444'
+          },
+          border: {
             display: false
           }
         },
-        datasets: {
-            line: {
-                pointRadius: 0 // disable for all `'line'` datasets
-            }
-        },
-        scales: {
-            x: {
-              display: false,
-              grid: {
-                color: '#444444'
-              },
-              border: {
-                display: false
-              }
-            },
-            y: {
-              grid: {
-                color: '#333333'
-              },
-              border: {
-                display: false
-              }
-            }
+        y: {
+          grid: {
+            color: '#333333'
+          },
+          border: {
+            display: false
+          }
         }
-      })
-      let chartOptionsVol = ref({
-        responsive: true,
-        animation: false,
-        spanGaps: true,
-        showLine: true,
-        plugins: {
-          legend: {
+      }
+    })
+    let chartOptionsVol = ref({
+      responsive: true,
+      animation: false,
+      spanGaps: true,
+      showLine: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      datasets: {
+        line: {
+          pointRadius: 0 // disable for all `'line'` datasets
+        }
+      },
+      scales: {
+        x: {
+          display: false,
+          grid: {
+            color: '#444444'
+          },
+          border: {
             display: false
           }
         },
-        datasets: {
-            line: {
-                pointRadius: 0 // disable for all `'line'` datasets
-            }
-        },
-        scales: {
-            x: {
-              display: false,
-              grid: {
-                color: '#444444'
-              },
-              border: {
-                display: false
-              }
-            },
-            y: {
-              grid: {
-                color: '#333333'
-              },
-              border: {
-                display: false
-              }
-            }
+        y: {
+          grid: {
+            color: '#333333'
+          },
+          border: {
+            display: false
+          }
         }
-      })
+      }
+    })
 
 
     return {
@@ -251,6 +209,8 @@ export default {
   },
   data() {
     return {
+      hiRes: false,
+      showRtWindow: true,
       ventilator_running: false,
       spont_breathing: true,
       presetsEnabled: true,
@@ -390,6 +350,17 @@ export default {
     };
   },
   methods: {
+    toggleHires() {
+      if (this.hiRes) {
+        this.rtWindow = 1.0
+        this.showRtWindow = false
+        explain.setSampleInterval(0.0015)
+      } else {
+        this.rtWindow = 3.0
+        this.showRtWindow = true
+        explain.setSampleInterval(0.005)
+      }
+    },
 
 
     select_heart_chamber() {
@@ -441,38 +412,6 @@ export default {
           this.selectedModel7 = "RA"
           this.selectedProp7 = "vol"
           break;
-        case "SHUNTS":
-          this.p1 = "AAR.pres"
-          this.selectedModel1 = "AAR"
-          this.selectedProp1 = "pres"
-          this.p2 = "PA.pres"
-          this.selectedModel2 = "PA"
-          this.selectedProp2 = "pres"
-          this.p3 = ""
-          this.selectedModel3 = ""
-          this.selectedProp3 = ""
-
-          this.p5 = "DuctusArteriosus.flow"
-          this.selectedModel5 = "DuctusArteriosus"
-          this.selectedProp5 = "flow"
-
-          this.p6 = ""
-          this.selectedModel6 = ""
-          this.selectedProp6 = ""
-
-          this.p4 = "LV.vol"
-          this.selectedModel4 = "LV"
-          this.selectedProp4 = "vol"
-
-          this.p7 = "RV.vol"
-          this.selectedModel7 = "RV"
-          this.selectedProp7 = "vol"
-          console.log("SUNTSCD")
-          explain.watchModelProps(["AAR.pres", "PA.pres", "DuctusArteriosus.flow", "LV.vol", "RV.vol" ])
-
-          break;
-
-
       }
     },
     clearProps() {
@@ -650,7 +589,7 @@ export default {
 
 
       if (this.p1 !== '') {
-        param1 = explain.modelData.map((item) => {return item[this.p1] * this.chart1_factor;});
+        param1 = explain.modelData.map((item) => { return item[this.p1] * this.chart1_factor; });
         this.p1_max = Stat.max(param1).toFixed(4)
         this.p1_min = Stat.min(param1).toFixed(4)
         this.p1_sd = Stat.standardDeviation(param1).toFixed(4)
@@ -660,7 +599,7 @@ export default {
       }
 
       if (this.p2 !== '') {
-        param2 = explain.modelData.map((item) => {return item[this.p2] * this.chart2_factor;});
+        param2 = explain.modelData.map((item) => { return item[this.p2] * this.chart2_factor; });
         this.p2_max = Stat.max(param2).toFixed(4)
         this.p2_min = Stat.min(param2).toFixed(4)
         this.p2_sd = Stat.standardDeviation(param2).toFixed(4)
@@ -670,7 +609,7 @@ export default {
       }
 
       if (this.p3 !== '') {
-        param3 = explain.modelData.map((item) => {return item[this.p3] * this.chart3_factor;});
+        param3 = explain.modelData.map((item) => { return item[this.p3] * this.chart3_factor; });
         this.p3_max = Stat.max(param3).toFixed(4)
         this.p3_min = Stat.min(param3).toFixed(4)
         this.p3_sd = Stat.standardDeviation(param3).toFixed(4)
@@ -680,7 +619,7 @@ export default {
       }
 
       if (this.p4 !== '') {
-        param4 = explain.modelData.map((item) => {return item[this.p4] * this.chart4_factor;});
+        param4 = explain.modelData.map((item) => { return item[this.p4] * this.chart4_factor; });
         this.p4_max = Stat.max(param4).toFixed(4)
         this.p4_min = Stat.min(param4).toFixed(4)
         this.p4_sd = Stat.standardDeviation(param4).toFixed(4)
@@ -690,7 +629,7 @@ export default {
       }
 
       if (this.p5 !== '') {
-        param5 = explain.modelData.map((item) => {return item[this.p5] * this.chart5_factor;});
+        param5 = explain.modelData.map((item) => { return item[this.p5] * this.chart5_factor; });
         this.p5_max = Stat.max(param5).toFixed(4)
         this.p5_min = Stat.min(param5).toFixed(4)
         this.p5_sd = Stat.standardDeviation(param5).toFixed(4)
@@ -700,7 +639,7 @@ export default {
       }
 
       if (this.p6 !== '') {
-        param6 = explain.modelData.map((item) => {return item[this.p6] * this.chart6_factor;});
+        param6 = explain.modelData.map((item) => { return item[this.p6] * this.chart6_factor; });
         this.p6_max = Stat.max(param6).toFixed(4)
         this.p6_min = Stat.min(param6).toFixed(4)
         this.p6_sd = Stat.standardDeviation(param6).toFixed(4)
@@ -710,7 +649,7 @@ export default {
       }
 
       if (this.p7 !== '') {
-        param7 = explain.modelData.map((item) => {return item[this.p7] * this.chart7_factor;});
+        param7 = explain.modelData.map((item) => { return item[this.p7] * this.chart7_factor; });
         this.p7_max = Stat.max(param7).toFixed(4)
         this.p7_min = Stat.min(param7).toFixed(4)
         this.p7_sd = Stat.standardDeviation(param7).toFixed(4)
@@ -735,21 +674,21 @@ export default {
             }
           },
           datasets: {
-              line: {
-                  pointRadius: 0 // disable for all `'line'` datasets
-              }
+            line: {
+              pointRadius: 0 // disable for all `'line'` datasets
+            }
           },
           scales: {
-              x: {
-                display: false
+            x: {
+              display: false
+            },
+            y: {
+              min: this.y_min,
+              max: this.y_max,
+              grid: {
+                color: '#333333'
               },
-              y: {
-                min: this.y_min,
-                max: this.y_max,
-                grid: {
-                  color: '#333333'
-                },
-              }
+            }
           }
         }
       } else {
@@ -764,19 +703,19 @@ export default {
             }
           },
           datasets: {
-              line: {
-                  pointRadius: 0 // disable for all `'line'` datasets
-              }
+            line: {
+              pointRadius: 0 // disable for all `'line'` datasets
+            }
           },
           scales: {
-              x: {
-                display: false
+            x: {
+              display: false
+            },
+            y: {
+              grid: {
+                color: '#333333'
               },
-              y: {
-                grid: {
-                  color: '#333333'
-                },
-              }
+            }
           }
         }
       }
@@ -786,7 +725,7 @@ export default {
     dataUpdateRt() {
       if (this.alive) {
         // update is every 0.015 ms and the data is sampled with 0.005 ms resolution (so 3 data points per 0.015 sec = 200 datapoints per second)
-        for (let i=0; i < explain.modelData.length; i++) {
+        for (let i = 0; i < explain.modelData.length; i++) {
           this.y1_axis.push(explain.modelData[i][this.p1] * this.chart1_factor)
           this.y2_axis.push(explain.modelData[i][this.p2] * this.chart2_factor)
           this.y3_axis.push(explain.modelData[i][this.p3] * this.chart3_factor)
@@ -814,7 +753,7 @@ export default {
           this.redrawTimer = 0;
           this.chartDataPres = {
             labels: this.x_axis,
-            datasets: [ {
+            datasets: [{
               data: [...this.y1_axis],
               borderColor: this.p1_color,
               borderWidth: 1,
@@ -836,7 +775,7 @@ export default {
           }
           this.chartDataFlow = {
             labels: this.x_axis,
-            datasets: [ {
+            datasets: [{
               data: [...this.y5_axis],
               borderColor: this.p5_color,
               borderWidth: 1,
@@ -852,7 +791,7 @@ export default {
           }
           this.chartDataVol = {
             labels: this.x_axis,
-            datasets: [ {
+            datasets: [{
               data: [...this.y4_axis],
               borderColor: this.p4_color,
               borderWidth: 1,
@@ -863,7 +802,7 @@ export default {
               borderColor: this.p7_color,
               borderWidth: 1,
               pointStyle: false
-            }  ]
+            }]
           }
 
           if (this.show_summary) {
@@ -884,99 +823,98 @@ export default {
 
       let data_set_pres = []
       if (this.p1 !== '') {
-        this.y1_axis = explain.modelData.map((item) => {return item[this.p1] * this.chart1_factor;});
+        this.y1_axis = explain.modelData.map((item) => { return item[this.p1] * this.chart1_factor; });
         data_set_pres.push({
-              data: this.y1_axis,
-              borderColor: this.p1_color,
-              borderWidth: 1,
-              pointStyle: false
-            })
+          data: this.y1_axis,
+          borderColor: this.p1_color,
+          borderWidth: 1,
+          pointStyle: false
+        })
       }
 
       if (this.p2 !== '') {
-        this.y2_axis = explain.modelData.map((item) => {return item[this.p2] * this.chart2_factor;});
+        this.y2_axis = explain.modelData.map((item) => { return item[this.p2] * this.chart2_factor; });
         data_set_pres.push({
-              data: this.y2_axis,
-              borderColor: this.p2_color,
-              borderWidth: 1,
-              pointStyle: false
-            })
+          data: this.y2_axis,
+          borderColor: this.p2_color,
+          borderWidth: 1,
+          pointStyle: false
+        })
       }
 
       if (this.p3 !== '') {
-        this.y3_axis = explain.modelData.map((item) => {return item[this.p3] * this.chart3_factor;});
+        this.y3_axis = explain.modelData.map((item) => { return item[this.p3] * this.chart3_factor; });
         data_set_pres.push({
-              data: this.y3_axis,
-              borderColor: this.p3_color,
-              borderWidth: 1,
-              pointStyle: false
-            })
+          data: this.y3_axis,
+          borderColor: this.p3_color,
+          borderWidth: 1,
+          pointStyle: false
+        })
       }
 
 
       let data_set_flow = []
       if (this.p5 !== '') {
-        this.y5_axis = explain.modelData.map((item) => {return item[this.p5] * this.chart5_factor;});
+        this.y5_axis = explain.modelData.map((item) => { return item[this.p5] * this.chart5_factor; });
         data_set_flow.push({
-              data: this.y5_axis,
-              borderColor: this.p5_color,
-              borderWidth: 1,
-              pointStyle: false
-            })
+          data: this.y5_axis,
+          borderColor: this.p5_color,
+          borderWidth: 1,
+          pointStyle: false
+        })
       }
       if (this.p6 !== '') {
-        this.y6_axis = explain.modelData.map((item) => {return item[this.p6] * this.chart6_factor;});
+        this.y6_axis = explain.modelData.map((item) => { return item[this.p6] * this.chart6_factor; });
         data_set_flow.push({
-              data: this.y6_axis,
-              borderColor: this.p6_color,
-              borderWidth: 1,
-              pointStyle: false
-            })
+          data: this.y6_axis,
+          borderColor: this.p6_color,
+          borderWidth: 1,
+          pointStyle: false
+        })
       }
 
 
 
       let data_set_vol = []
       if (this.p4 !== '') {
-        this.y4_axis = explain.modelData.map((item) => {return item[this.p4] * this.chart4_factor;});
+        this.y4_axis = explain.modelData.map((item) => { return item[this.p4] * this.chart4_factor; });
         data_set_vol.push({
-              data: this.y4_axis,
-              borderColor: this.p4_color,
-              borderWidth: 1,
-              pointStyle: false
-            })
+          data: this.y4_axis,
+          borderColor: this.p4_color,
+          borderWidth: 1,
+          pointStyle: false
+        })
       }
 
       if (this.p7 !== '') {
-        this.y7_axis = explain.modelData.map((item) => {return item[this.p7] * this.chart7_factor;});
+        this.y7_axis = explain.modelData.map((item) => { return item[this.p7] * this.chart7_factor; });
         data_set_vol.push({
-              data: this.y7_axis,
-              borderColor: this.p7_color,
-              borderWidth: 1,
-              pointStyle: false
-            })
+          data: this.y7_axis,
+          borderColor: this.p7_color,
+          borderWidth: 1,
+          pointStyle: false
+        })
       }
 
 
       this.x_axis = [...Array(this.y1_axis.length).keys()]
 
       this.chartDataPres = {
-            labels: this.x_axis,
-            datasets: [...data_set_pres]
+        labels: this.x_axis,
+        datasets: [...data_set_pres]
       }
       this.chartDataFlow = {
-            labels: this.x_axis,
-            datasets: [...data_set_flow]
+        labels: this.x_axis,
+        datasets: [...data_set_flow]
       }
       this.chartDataVol = {
-            labels: this.x_axis,
-            datasets: [...data_set_vol]
+        labels: this.x_axis,
+        datasets: [...data_set_vol]
       }
 
 
 
-      if (this.show_summary)
-      {
+      if (this.show_summary) {
         this.analyzeDataRt()
       }
       // prepare for realtime analysis
@@ -995,44 +933,44 @@ export default {
     exportData() {
       let header = ""
       let data = {
-        time: explain.modelData.map((item) => {return item['time']}),
+        time: explain.modelData.map((item) => { return item['time'] }),
       }
 
 
       if (this.p1 !== "") {
         let h1 = this.selectedModel1.toUpperCase() + this.selectedProp1.toUpperCase() + "_";
         header += h1
-        data[h1] = explain.modelData.map((item) => {return (parseFloat(item[this.p1])).toFixed(5)});
+        data[h1] = explain.modelData.map((item) => { return (parseFloat(item[this.p1])).toFixed(5) });
       }
       if (this.p2 !== "") {
         let h2 = this.selectedModel2.toUpperCase() + this.selectedProp2.toUpperCase() + "_";
         header += h2
-        data[h2] = explain.modelData.map((item) => {return (parseFloat(item[this.p2])).toFixed(5)});
+        data[h2] = explain.modelData.map((item) => { return (parseFloat(item[this.p2])).toFixed(5) });
       }
       if (this.p3 !== "") {
         let h3 = this.selectedModel3.toUpperCase() + this.selectedProp3.toUpperCase();
         header += h3
-        data[h3] = explain.modelData.map((item) => {return (parseFloat(item[this.p3])).toFixed(5)});
+        data[h3] = explain.modelData.map((item) => { return (parseFloat(item[this.p3])).toFixed(5) });
       }
       if (this.p4 !== "") {
         let h4 = this.selectedModel4.toUpperCase() + this.selectedProp4.toUpperCase();
         header += h4
-        data[h4] = explain.modelData.map((item) => {return (parseFloat(item[this.p4])).toFixed(5)});
+        data[h4] = explain.modelData.map((item) => { return (parseFloat(item[this.p4])).toFixed(5) });
       }
       if (this.p5 !== "") {
         let h5 = this.selectedModel5.toUpperCase() + this.selectedProp5.toUpperCase();
         header += h5
-        data[h5] = explain.modelData.map((item) => {return (parseFloat(item[this.p5])).toFixed(5)});
+        data[h5] = explain.modelData.map((item) => { return (parseFloat(item[this.p5])).toFixed(5) });
       }
       if (this.p6 !== "") {
         let h6 = this.selectedModel6.toUpperCase() + this.selectedProp6.toUpperCase();
         header += h6
-        data[h6] = explain.modelData.map((item) => {return (parseFloat(item[this.p6])).toFixed(5)});
+        data[h6] = explain.modelData.map((item) => { return (parseFloat(item[this.p6])).toFixed(5) });
       }
       if (this.p7 !== "") {
         let h7 = this.selectedModel7.toUpperCase() + this.selectedProp7.toUpperCase();
         header += h7
-        data[h7] = explain.modelData.map((item) => {return (parseFloat(item[this.p7])).toFixed(5)});
+        data[h7] = explain.modelData.map((item) => { return (parseFloat(item[this.p7])).toFixed(5) });
       }
       this.exportFileName = `time_vs_${header}.csv`;
       this.writeDataToDisk(data)
@@ -1085,7 +1023,7 @@ export default {
     this.$bus.on("rtf", () => this.dataUpdateRt());
     this.$bus.on("data", () => this.dataUpdate())
     this.$bus.on("state", this.processModelState)
-    explain.watchModelProps(["LV.pres","LV.vol", "LA.pres", "LA.vol", "AA.pres", "LA_LV.flow", "LV_AA.flow","RV.pres","RV.vol", "RA.pres", "RA.vol", "PA.pres", "RA_RV.flow", "RV_PA.flow"])
+    explain.watchModelProps(["LV.pres", "LV.vol", "LA.pres", "LA.vol", "AA.pres", "LA_LV.flow", "LV_AA.flow", "RV.pres", "RV.vol", "RA.pres", "RA.vol", "PA.pres", "RA_RV.flow", "RV_PA.flow"])
 
   },
 };
