@@ -40,7 +40,7 @@
     <!-- bottom buttons -->
     <div v-if="isEnabled" class="q-ma-sm text-overline justify-center q-gutter-sm row">
       <q-checkbox v-if="autoscaleEnabled" v-model="autoscale" dense size="xs" label="autoscale"
-        @update:model-value="autoscaling" />
+        @update:model-value="toggleAutoscaling" />
       <q-input v-if="!autoscale" v-model.number="y_min" type="number" @update:model-value="autoscaling" label="y min"
         filled dense hide-bottom-space style="max-width: 75px;" />
       <q-input v-if="!autoscale" v-model.number="y_max" type="number" @update:model-value="autoscaling" label="y max"
@@ -125,7 +125,6 @@ import { Bar, Line, Scatter } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Filler } from 'chart.js'
 import { ref } from 'vue'
 import * as Stat from "simple-statistics";
-import { TextureUvs } from "pixi.js";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Filler)
 
@@ -323,6 +322,7 @@ export default {
   },
   methods: {
     toggleHires() {
+
       if (this.hiRes) {
         this.rtWindow = 1.0
         this.showRtWindow = false
@@ -521,6 +521,11 @@ export default {
 
 
 
+    },
+    toggleAutoscaling() {
+      this.y_max = parseFloat(this.chartData.datasets[0].data.reduce((max, current) => (current > max ? current : max), -Infinity))
+      this.y_min = parseFloat(this.chartData.datasets[0].data.reduce((min, current) => (current < min ? current : min), Infinity))
+      this.autoscaling()
     },
     autoscaling() {
       if (!this.autoscale) {
