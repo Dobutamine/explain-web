@@ -231,10 +231,12 @@
                 opacity: 0.5
               }">
                 <BigNumbersComponent></BigNumbersComponent>
-                <div v-for="(numeric, index) in config.numerics" :key="index">
-                  <NumericsComponent :title="numeric.title" :collapsed="numeric.collapsed"
-                    :parameters="numeric.parameters"></NumericsComponent>
+                <div v-for="enabled_numeric in config.enabled_monitors.general">
+                  <NumericsComponent :title="config.monitors[enabled_numeric].title"
+                    :collapsed="config.monitors[enabled_numeric].collapsed"
+                    :parameters="config.monitors[enabled_numeric].parameters"></NumericsComponent>
                 </div>
+
               </q-scroll-area>
             </q-tab-panel>
           </q-tab-panels>
@@ -247,6 +249,7 @@
 
 <script>
 import { defineComponent } from 'vue'
+import { useUserStore } from 'src/stores/user';
 import { useConfigStore } from 'src/stores/config';
 import NumericsComponent from "src/components/NumericsComponent.vue";
 import ModelEditor from "src/components/ModelEditorComponent.vue"
@@ -264,9 +267,11 @@ export default defineComponent({
   name: 'MainPage',
   setup() {
     const config = useConfigStore();
+    const user = useUserStore();
 
     return {
-      config
+      config,
+      user
     }
   },
   components: {
@@ -357,9 +362,11 @@ export default defineComponent({
     updateWatchlist() {
       explain.watchModelPropsSlow(["Heart.heart_rate", "Blood.so2_pre", "Blood.so2_post", "AD.pres_max", "AD.pres_min", "AD.pres_mean", "Breathing.resp_rate", "Ventilator.vent_rate"])
 
-      Object.keys(this.config.numerics).forEach(numeric => {
-        this.config.numerics[numeric].parameters.forEach((p) => {
-          explain.watchModelPropsSlow([...p.props])
+      Object.keys(this.config.enabled_monitors).forEach(enabled_monitor_category => {
+        this.config.enabled_monitors[enabled_monitor_category].forEach((monitor) => {
+          this.config.monitors[monitor].parameters.forEach((p) => {
+            explain.watchModelPropsSlow([...p.props])
+          })
         })
       })
     },
@@ -368,6 +375,11 @@ export default defineComponent({
     this.$bus.off("reset", this.updateWatchlist)
   },
   mounted() {
+    // return if the user is not logged in
+    if (!this.user.loggedIn) {
+      this.$router.push("/login");
+    }
+
     // set the dark theme
     this.$q.dark.set(true);
 
@@ -385,6 +397,8 @@ export default defineComponent({
     explain.getModelState()
 
     this.$bus.on("reset", this.updateWatchlist)
+
+
 
   }
 })

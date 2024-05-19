@@ -1,6 +1,19 @@
 <template>
   <q-layout view="hHh lpR fFf">
     <q-header class="bg-indigo-10 text-white headerCustomStyle" height-hint="68">
+      <q-toolbar>
+        <q-toolbar-title class="text-overline">
+          Explanatory models in neonatology (EXPLAIN)
+        </q-toolbar-title>
+
+        <div class="text-overline q-ml-sm">
+          logged in as: <b>{{ user.name }} </b>
+        </div>
+        <q-btn v-if="user.loggedIn" size="sm" dense color="indigo-10" class="q-ml-sm q-pl-sm q-pr-sm"
+          icon="fa-solid fa-right-from-bracket"><q-tooltip>log out</q-tooltip></q-btn>
+        <q-btn v-if="user.admin" size="sm" dense color="indigo-10" class="q-ml-sm q-pl-sm q-pr-sm"
+          icon="fa-solid fa-lock"><q-tooltip>admin page</q-tooltip></q-btn>
+      </q-toolbar>
     </q-header>
 
     <q-page-container class="black-background">
@@ -13,6 +26,9 @@
           <div>{{ statusMessage }}</div>
         </q-toolbar-title>
 
+        <q-btn flat round dense size="sm" icon="fa-solid fa-upload" color="white" class="q-mr-sm"
+          @click="uploadDefinition">
+          <q-tooltip> upload model state </q-tooltip></q-btn>
         <q-btn flat round dense size="sm" icon="fa-solid fa-download" color="white" class="q-mr-sm" @click="save_state">
           <q-tooltip> download model state </q-tooltip></q-btn>
         <q-btn flat round dense size="sm" :icon="butIcon" :color="butColor" class="q-mr-sm" @click="togglePlay">
@@ -31,12 +47,24 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
+import { useGeneralStore } from 'src/stores/general';
+import { useUserStore } from 'src/stores/user';
+import { useDefinitionStore } from 'src/stores/definition';
 import { explain } from 'src/boot/explain';
 
 export default defineComponent({
   name: 'MainLayout',
 
   setup() {
+    const user = useUserStore()
+    const general = useGeneralStore()
+    const definition = useDefinitionStore()
+
+    return {
+      user,
+      general,
+      definition
+    }
   },
   data() {
     return {
@@ -65,6 +93,12 @@ export default defineComponent({
     }
   },
   methods: {
+    uploadDefinition() {
+      this.definition.definition = JSON.stringify(explain.modelDefinition)
+      this.definition.name = explain.modelDefinition.name
+
+      this.definition.saveDefinitionToServer(this.general.apiUrl, this.user.name, this.user.token)
+    },
     selectModelDefinition() {
       // stop the model
       explain.stop();

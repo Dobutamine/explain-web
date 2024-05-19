@@ -2,11 +2,33 @@ import { defineStore } from "pinia";
 
 export const useConfigStore = defineStore("config", {
   state: () => ({
+    user: "Timothy Antonius",
     diagram_speed: 1,
     diagram_scale: 1,
     chart_hires: false,
-    numerics: {
-      vitals_numerics: {
+    enabled_controllers: {
+      circulation: [
+        "heart_controller",
+        "circulation_controller",
+        "shunts_controller",
+        "coronaries_controller",
+      ],
+      respiration: [
+        "respiration_controller",
+        "control_of_breathing_controller",
+        "gas_controller",
+      ],
+      brain: [],
+      others: [],
+    },
+    enabled_monitors: {
+      general: ["add_vitals", "lab"],
+      circulation: [],
+      respiration: [],
+      shunts: [],
+    },
+    monitors: {
+      add_vitals: {
         title: "ADDITIONAL VITALS",
         collapsed: true,
         parameters: [
@@ -52,7 +74,7 @@ export const useConfigStore = defineStore("config", {
           },
         ],
       },
-      heart_numerics: {
+      heart: {
         title: "HEART",
         collapsed: true,
         parameters: [
@@ -114,7 +136,7 @@ export const useConfigStore = defineStore("config", {
           },
         ],
       },
-      circulation_numerics: {
+      circulation: {
         title: "CIRCULATION",
         collapsed: false,
         parameters: [
@@ -208,7 +230,7 @@ export const useConfigStore = defineStore("config", {
           },
         ],
       },
-      lab_numerics: {
+      lab: {
         title: "LABS",
         collapsed: true,
         parameters: [
@@ -262,7 +284,7 @@ export const useConfigStore = defineStore("config", {
           },
         ],
       },
-      resp_numerics: {
+      respiration: {
         title: "RESPIRATION",
         collapsed: true,
         parameters: [
@@ -292,7 +314,7 @@ export const useConfigStore = defineStore("config", {
           },
         ],
       },
-      ecls_numerics: {
+      ecls: {
         title: "ECLS",
         collapsed: true,
         parameters: [
@@ -386,7 +408,7 @@ export const useConfigStore = defineStore("config", {
           },
         ],
       },
-      vent_numerics: {
+      ventilator: {
         title: "VENTILATOR",
         collapsed: true,
         parameters: [
@@ -480,21 +502,6 @@ export const useConfigStore = defineStore("config", {
           },
         ],
       },
-    },
-    enabled_controllers: {
-      circulation: [
-        "heart_controller",
-        "circulation_controller",
-        "shunts_controller",
-        "coronaries_controller",
-      ],
-      respiration: [
-        "respiration_controller",
-        "control_of_breathing_controller",
-        "gas_controller",
-      ],
-      brain: [],
-      others: [],
     },
     controllers: {
       circulation_controller: {
