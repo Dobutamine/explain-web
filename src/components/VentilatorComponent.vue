@@ -46,12 +46,13 @@
         <q-toggle v-model="spont_breathing" size="sm" label="breathing" @update:model-value="toggle_spont_breathing" />
       </div>
       <div>
-        <q-toggle class="q-ml-sm q-pb-lg" v-model="hiRes" label="hi-res" dense size="sm"
+        <q-toggle class="q-ml-sm q-pb-lg" v-model="config.chart_hires" label="hi-res" dense size="sm"
           @update:model-value="toggleHires" />
       </div>
       <div>
-        <q-input v-if="!show_loops && showRtWindow" class="q-ml-sm q-pb-lg" v-model.number="rtWindow" type="number"
-          label="time" filled dense min="1" max="30" hide-bottom-space @update:model-value="updateRtWindow" />
+        <q-input v-if="!show_loops && !config.chart_hires" class="q-ml-sm q-pb-lg" v-model.number="rtWindow"
+          type="number" label="time" filled dense min="1" max="30" hide-bottom-space
+          @update:model-value="updateRtWindow" />
       </div>
     </div>
     <!-- ventilator controls -->
@@ -195,6 +196,7 @@
 </template>
 
 <script>
+import { useConfigStore } from "src/stores/config";
 import { explain } from "../boot/explain";
 import { Bar, Line, Scatter } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'
@@ -205,6 +207,7 @@ import XYChartComponent from "./XYChartComponent.vue";
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement)
 export default {
   setup() {
+    const config = useConfigStore()
     // make the chartdata reactive
     let chartDataPres = ref({
       labels: [],
@@ -330,6 +333,7 @@ export default {
 
 
     return {
+      config,
       chartDataPres,
       chartDataFlow,
       chartDataVol,
@@ -351,8 +355,6 @@ export default {
   },
   data() {
     return {
-      hiRes: false,
-      showRtWindow: true,
       ventilator_running: false,
       spont_breathing: true,
       presetsEnabled: true,
@@ -443,13 +445,11 @@ export default {
   },
   methods: {
     toggleHires() {
-      if (this.hiRes) {
+      if (this.config.chart_hires) {
         this.rtWindow = 1.0
-        this.showRtWindow = false
         explain.setSampleInterval(0.0015)
       } else {
         this.rtWindow = 3.0
-        this.showRtWindow = true
         explain.setSampleInterval(0.005)
       }
     },
@@ -969,6 +969,8 @@ export default {
     this.$bus.on("state", this.processModelState)
     explain.watchModelProps(["Ventilator.pres", "Ventilator.flow", "Ventilator.vol", "Ventilator.co2", "Ventilator.etco2"])
 
+    // check whether hires is enabled
+    this.toggleHires()
   },
 };
 </script>

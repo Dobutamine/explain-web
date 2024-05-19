@@ -165,7 +165,8 @@
                 width: '5px',
                 opacity: 0.5
               }">
-                <DiagramComponent :alive="diagram_alive" :global_scale="diagram_scale" :global_speed="diagram_speed">
+                <DiagramComponent :alive="diagram_alive" :global_scale="config.diagram_scale"
+                  :global_speed="config.diagram_speed">
                 </DiagramComponent>
               </q-scroll-area>
             </q-tab-panel>
@@ -260,6 +261,7 @@
 
 <script>
 import { defineComponent } from 'vue'
+import { useConfigStore } from 'src/stores/config';
 import NumericsComponent from "src/components/NumericsComponent.vue";
 import ModelEditor from "src/components/ModelEditorComponent.vue"
 import TimeBasedChartComponent from 'src/components/TimeBasedChartComponent.vue';
@@ -276,7 +278,13 @@ import { explain } from 'src/boot/explain';
 
 export default defineComponent({
   name: 'MainPage',
-  setup() { },
+  setup() {
+    const config = useConfigStore();
+
+    return {
+      config
+    }
+  },
   components: {
     NumericsComponent,
     BigNumbersComponent,
@@ -297,8 +305,6 @@ export default defineComponent({
       tab_right: "numerics",
       no_of_modeleditor: 1,
       chart_alive: true,
-      diagram_speed: 1.0,
-      diagram_scale: 1.0,
       ventilator_alive: true,
       heart_alive: false,
       xy_alive: true,
