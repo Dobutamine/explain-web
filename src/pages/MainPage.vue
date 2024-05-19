@@ -149,11 +149,6 @@
               <q-icon name="fa-solid fa-chart-area" size="xs"></q-icon>
               <q-tooltip>xy chart</q-tooltip>
             </q-tab>
-
-
-
-
-
           </q-tabs>
           <q-tab-panels v-model="tab_center" keep-alive style="background-color: black">
 
@@ -267,9 +262,7 @@ import ModelEditor from "src/components/ModelEditorComponent.vue"
 import TimeBasedChartComponent from 'src/components/TimeBasedChartComponent.vue';
 import VentilatorComponent from 'src/components/VentilatorComponent.vue';
 import XYChartComponent from 'src/components/XYChartComponent.vue';
-import RespiratorySystemComponent from 'src/components/RespiratorySystemComponent.vue';
 import HeartComponent from 'src/components/HeartComponent.vue';
-import ShuntSystemComponent from 'src/components/ShuntSystemComponent.vue'
 import DiagramComponent from 'src/components/DiagramComponent.vue';
 import NiceController from 'src/components/NiceController.vue';
 import BigNumbersComponent from 'src/components/BigNumbersComponent.vue';
@@ -292,9 +285,7 @@ export default defineComponent({
     TimeBasedChartComponent,
     VentilatorComponent,
     XYChartComponent,
-    RespiratorySystemComponent,
     HeartComponent,
-    ShuntSystemComponent,
     DiagramComponent,
     NiceController
   },

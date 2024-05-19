@@ -4,7 +4,7 @@ export const useConfigStore = defineStore("config", {
   state: () => ({
     counter: 0,
     diagram_speed: 1,
-    diagram_scale: 1,
+    diagram_scale: 10,
     chart_hires: false,
   }),
 
