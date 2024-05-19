@@ -394,7 +394,7 @@ export default {
       const xOffset = this.diagram.settings.xOffset
       const yOffset = this.diagram.settings.yOffset
       const radius = this.diagram.settings.radius;
-      let global_scaling = this.diagram.settings.scaling;
+      let global_scaling = this.diagram.settings.scaling * this.global_scale
       // render the blood compartments
       Object.entries(component_list).forEach(([key, component]) => {
         // inject the offsets
@@ -520,7 +520,8 @@ export default {
                 this.diagramComponents[component.dbcTo],
                 {},
                 component.compPicto,
-                global_scaling
+                global_scaling,
+                this.global_speed
               );
               let watched_models_bcon = []
               component.models.forEach(m => {
@@ -538,7 +539,8 @@ export default {
                 this.diagramComponents[component.dbcTo],
                 {},
                 component.compPicto,
-                global_scaling
+                global_scaling,
+                this.global_speed
               );
               let watched_models_lcon = []
               component.models.forEach(m => {
@@ -556,7 +558,8 @@ export default {
                 this.diagramComponents[component.dbcTo],
                 {},
                 component.compPicto,
-                global_scaling
+                global_scaling,
+                this.global_speed
               );
               let watched_models_shunt = []
               component.models.forEach(m => {
@@ -595,7 +598,8 @@ export default {
                 this.diagramComponents[component.dbcTo],
                 {},
                 component.compPicto,
-                global_scaling
+                global_scaling,
+                this.global_speed
               );
               let watched_models_gascon = []
               component.models.forEach(m => {

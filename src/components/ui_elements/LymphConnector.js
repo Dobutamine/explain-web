@@ -11,6 +11,7 @@ export default class LymphConnector {
   dbcTo = {};
   layout = {};
   global_scaling = 1.0;
+  global_speed = 1.0;
 
   sprite = {};
   spriteColor = 0xffffff;
@@ -61,7 +62,8 @@ export default class LymphConnector {
     dbcTo,
     layout,
     picto,
-    scaling
+    scaling,
+    global_speed = 1.0
   ) {
     this.pixiApp = pixiApp;
     this.key = key;
@@ -71,6 +73,7 @@ export default class LymphConnector {
     this.dbcTo = dbcTo;
     this.compPicto = picto;
     this.global_scaling = scaling;
+    this.global_speed = global_speed;
     this.pathWidth = this.pathWidth * this.global_scaling;
 
     if (!this.compPicto) {
@@ -228,7 +231,8 @@ export default class LymphConnector {
       noData = true;
     }
 
-    this.spritePosition += (flow * 100.0) / this.models.length;
+    this.spritePosition +=
+      ((flow * 100.0) / this.models.length) * this.global_speed;
     this.sprite.tint = "0x005555";
 
     if (flow >= 0) {
