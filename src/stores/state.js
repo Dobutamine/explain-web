@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 
-export const useConditionStore = defineStore("condition", {
-  condition: () => ({
+export const useStateStore = defineStore("state", {
+  state: () => ({
     user: "",
     name: "",
     protected: false,
@@ -16,8 +16,8 @@ export const useConditionStore = defineStore("condition", {
   getters: {},
 
   actions: {
-    getAllConditionsFromServer(apiUrl, userName, token) {},
-    getConditionFromServer(apiUrl, userName, patientName, token) {},
-    saveConditionToServer(apiUrl, userName, token) {},
+    getAllStatesFromServer(apiUrl, userName, token) {},
+    getStateFromServer(apiUrl, userName, patientName, token) {},
+    saveStateToServer(apiUrl, userName, token) {},
   },
 });
