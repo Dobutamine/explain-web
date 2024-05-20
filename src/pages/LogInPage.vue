@@ -172,9 +172,6 @@ export default {
         this.admin,
         this.institution,
         this.subscriptionType,
-        this.subscriptionStartDate,
-        this.subscriptionEndDate,
-        this.subscriptionAutoRenew,
         this.additionalData
       );
       this.newUserEntry = false;

@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { subtractFromMean } from "simple-statistics";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -16,6 +15,7 @@ export const useUserStore = defineStore("user", {
     },
     additionalData: {},
     loggedIn: false,
+    defaultState: "normal_neonate_24h",
     errorText: "",
     token: "",
   }),
@@ -38,6 +38,7 @@ export const useUserStore = defineStore("user", {
       this.additionalData = {};
       this.token = "";
       this.admin = false;
+      this.defaultState = "normal_neonate_24h";
       this.loggedIn = false;
       this.errorText = "";
     },
@@ -63,6 +64,7 @@ export const useUserStore = defineStore("user", {
         this.additionalData = data.additionalData;
         this.admin = data.admin;
         this.token = data.token;
+        this.defaultState = data.defaultState;
         this.loggedIn = true;
         this.errorText = "";
         return true;
@@ -82,13 +84,13 @@ export const useUserStore = defineStore("user", {
       admin = false,
       institution = "",
       subscriptionType = "",
-      subscriptionStartDate = "",
-      subscriptionEndDate = "",
-      subscriptionAutoRenew = false,
       additionalData = {}
     ) {
       const url = `${apiUrl}/api/users/new_user`;
-      // get the user log in data
+      // make the start date
+      let startDate = new Date();
+      startDate = startDate.toISOString();
+      let endDate = "";
       let response = await fetch(url, {
         method: "POST",
         headers: {
@@ -103,11 +105,12 @@ export const useUserStore = defineStore("user", {
           institution: institution,
           subscription: {
             subscriptionType: subscriptionType,
-            subscriptionStartDate: subscriptionStartDate,
-            subscriptionEndDate: subscriptionEndDate,
-            subscriptionAutoRenew: subscriptionAutoRenew,
+            subscriptionStartDate: startDate,
+            subscriptionEndDate: endDate,
+            subscriptionAutoRenew: false,
           },
           additionalData: additionalData,
+          defaultState: "normal_neonate_24h",
         }),
       });
 
@@ -130,6 +133,7 @@ export const useUserStore = defineStore("user", {
         this.token = "";
         this.admin = false;
         this.loggedIn = false;
+        this.defaultState = "normal_neonate_24h";
         return false;
       }
     },
