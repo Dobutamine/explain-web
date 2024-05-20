@@ -26,6 +26,7 @@ export const useDefinitionStore = defineStore("definition", {
 
       if (response.status === 200) {
         let data = await response.json();
+        console.log("Definition uploaded to server.");
         return data.message;
       } else {
         return false;
@@ -50,7 +51,7 @@ export const useDefinitionStore = defineStore("definition", {
         let data = await response.json();
         this.name = data.name;
         this.definition = data.definition;
-        console.log("Definition loaded.");
+        console.log("Definition downloaded from server.");
         return true;
       } else {
         // we can't find a definition for this user so we have to supply the default one

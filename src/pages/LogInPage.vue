@@ -24,6 +24,25 @@
       <div class="col text-center"></div>
     </div>
 
+    <div v-if="newUserEntry" class="row justify-center items-start q-ma-lg">
+      <div class="col text-center"></div>
+      <div class="col text-center">
+        <q-input v-model="institution" :value="institution" stack-label autofocus label="INSTITUTION">
+        </q-input>
+      </div>
+      <div class="col text-center"></div>
+    </div>
+
+    <div v-if="newUserEntry" class="row justify-center items-start q-ma-lg">
+      <div class="col text-center"></div>
+      <div class="col text-center">
+        <q-select v-model="subscriptionType" :options="subscriptionTypes" readonly stack-label autofocus
+          label="SUBSCRIPTION PLAN">
+        </q-select>
+      </div>
+      <div class="col text-center"></div>
+    </div>
+
     <div v-if="login" class="row justify-center items-start q-ma-lg">
       <div class="col text-center"></div>
       <div class="col text-center">
@@ -43,7 +62,7 @@
         <q-btn class="q-ml-lg q-pl-lg q-pr-lg bg-blue-grey-10" @click="showRegistration"
           style="width: 150px;font-size: 16px;" size="sm">REGISTER</q-btn>
         <q-btn v-if="newUserEntry" class="q-ml-lg q-pl-lg q-pr-lg bg-blue-grey-10" @click="cancelRegistration"
-          style="width: 150px" size="sm">CANCEL</q-btn>
+          style="width: 150px;font-size: 16px;" size="sm">CANCEL</q-btn>
       </div>
       <div class="col text-center"></div>
     </div>
@@ -52,23 +71,9 @@
       <div class="col text-center">
         <br />
         <p>
-          This Explain model is a webapplication developed by
-          Tim Antonius, Willem van Meurs, Berend Westerhof and Willem de Boode <br> <br> By clicking the Donate Me
-          button and contributing, you're directly supporting this
-          website. Every donation, big or small, is immensely appreciated. <br><br>Thank you!
+          This Explain webapplication is developed by Tim Antonius, Willem van Meurs, Berend Westerhof and Willem de
+          Boode <br>
         </p>
-        <div class="row justify-center items-start q-ma-lg">
-          <form action="https://www.paypal.com/donate" method="post" target="_top">
-            <input type="hidden" name="hosted_button_id" value="8S8Y4MJYQUTYE" />
-            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0"
-              name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-            <img alt="" border="0" src="https://www.paypal.com/en_NL/i/scr/pixel.gif" width="1" height="1" />
-          </form>
-        </div>
-        <!-- <h6 style="color: red;">IMPORTANT MESSAGE FOR USERS COMING FROM MONITOREMULATOR.COM</h6>
-        <h6>Please reregister your name, email and password</h6>
-        <h6>From now one use https://explain-monitor.com instead of https://monitoremulator.com to keep using the monitor emulator.</h6>
- -->
 
         <br />
         <a href="mailto: tajantonius@gmail.com">Report comments or bugs here!</a>
@@ -81,8 +86,8 @@
     <div class="row justify-center items-start q-ma-lg">
       <div class="col text-center"></div>
       <div class="col text-center">
-        <q-card v-if="user.errorText != ''" class="q-pa-sm">
-          {{ user.errorText }}
+        <q-card v-if="errorText != ''" class="q-pa-sm">
+          {{ errorText }}
         </q-card>
       </div>
       <div class="col text-center"></div>
@@ -97,7 +102,6 @@
 <script>
 import { useUserStore } from "src/stores/user";
 import { useGeneralStore } from "../stores/general";
-import { useConfigStore } from "../stores/config";
 
 //import axios from "axios";
 /* eslint-disable */
@@ -113,10 +117,18 @@ export default {
   },
   data() {
     return {
+      id: "",
       name: "",
       email: "",
+      institution: "",
+      admin: false,
       password: "",
-      id: "",
+      subscriptionTypes: ["free", "premium", "institution"],
+      subscriptionType: "free",
+      subscriptionStartDate: "",
+      subscriptionEndDate: "",
+      subscriptionAutoRenew: false,
+      additionalData: {},
       errorText: "",
       connected: false,
       showChoices: false,
@@ -128,12 +140,40 @@ export default {
     };
   },
   methods: {
+    validateRegisterRequest() {
+      if (this.name === "") {
+        this.errorText = "Please enter a username!";
+        return false;
+      }
+      if (this.email === "") {
+        this.errorText = "Please enter an email address!";
+        return false;
+      }
+      if (this.institution === "") {
+        this.errorText = "Please enter an institution!";
+        return false;
+      }
+      if (this.password === "") {
+        this.errorText = "Please enter a password!";
+        return false;
+      }
+    },
     registerNewUser() {
+      if (!this.validateRegisterRequest()) {
+        return;
+      }
       this.user.registerNewUser(
         this.general.apiUrl,
         this.name,
         this.email,
-        this.password
+        this.password,
+        this.admin,
+        this.institution,
+        this.subscriptionType,
+        this.subscriptionStartDate,
+        this.subscriptionEndDate,
+        this.subscriptionAutoRenew,
+        this.additionalData
       );
       this.newUserEntry = false;
     },
@@ -151,6 +191,12 @@ export default {
       this.email = "";
       this.password = "";
       this.name = "";
+      this.institution = "";
+      this.subscriptionType = "free";
+      this.subscriptionStartDate = "";
+      this.subscriptionEndDate = "";
+      this.subscriptionAutoRenew = false;
+      this.additionalData = {};
     },
     LogIn() {
       this.user.logIn(this.general.apiUrl, this.name, this.password);
@@ -162,6 +208,12 @@ export default {
       this.email = "";
       this.password = "";
       this.name = "";
+      this.institution = "";
+      this.subscriptionType = "free";
+      this.subscriptionStartDate = "";
+      this.subscriptionEndDate = "";
+      this.subscriptionAutoRenew = false;
+      this.additionalData = {};
       this.errorText = "";
     },
     pressedEnter() {
@@ -198,12 +250,12 @@ export default {
       this.newUserEntry = false;
     });
 
-    if (process.env.DEV) {
-      //override login for developement development
-      this.password = "y5qkqjed";
-      this.name = "timothy";
-      this.user.logIn(this.general.apiUrl, this.name, this.password);
-    }
+    // if (process.env.DEV) {
+    //   //override login for developement development
+    //   this.password = "y5qkqjed";
+    //   this.name = "timothy";
+    //   this.user.logIn(this.general.apiUrl, this.name, this.password);
+    // }
   },
 };
 </script>

@@ -1,14 +1,23 @@
 import { defineStore } from "pinia";
+import { subtractFromMean } from "simple-statistics";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
     id: "",
     name: "",
-    password: "",
     email: "",
-    token: "",
+    institution: "",
     admin: false,
+    subscription: {
+      subscriptionType: "",
+      subscriptionStartDate: "",
+      subscriptionEndDate: "",
+      subscriptionAutoRenew: false,
+    },
+    additionalData: {},
     loggedIn: false,
+    errorText: "",
+    token: "",
   }),
 
   getters: {},
@@ -17,6 +26,16 @@ export const useUserStore = defineStore("user", {
     logOut() {
       this.id = "";
       this.name = "";
+      this.password = "";
+      this.email = "";
+      this.institution = "";
+      this.subscription = {
+        subscriptionType: "",
+        subscriptionStartDate: "",
+        subscriptionEndDate: "",
+        subscriptionAutoRenew: false,
+      };
+      this.additionalData = {};
       this.token = "";
       this.admin = false;
       this.loggedIn = false;
@@ -39,8 +58,11 @@ export const useUserStore = defineStore("user", {
         this.id = data._id;
         this.name = data.name;
         this.email = data.email;
-        this.token = data.token;
+        this.institution = data.institution;
+        this.subscription = data.subscription;
+        this.additionalData = data.additionalData;
         this.admin = data.admin;
+        this.token = data.token;
         this.loggedIn = true;
         this.errorText = "";
         console.log("User logged in.");
@@ -49,15 +71,23 @@ export const useUserStore = defineStore("user", {
         this.errorText = "Invalid username or password";
         // reset the password entry
         this.password = "";
-        this.name = "";
-        this.email = "";
-        this.token = "";
-        this.admin = false;
         this.loggedIn = false;
         return false;
       }
     },
-    async registerNewUser(apiUrl, name, email, password) {
+    async registerNewUser(
+      apiUrl,
+      name,
+      email,
+      password,
+      admin = false,
+      institution = "",
+      subscriptionType = "",
+      subscriptionStartDate = "",
+      subscriptionEndDate = "",
+      subscriptionAutoRenew = false,
+      additionalData = {}
+    ) {
       const url = `${apiUrl}/api/users/new_user`;
       // get the user log in data
       let response = await fetch(url, {
@@ -66,7 +96,20 @@ export const useUserStore = defineStore("user", {
           Accept: "application/json, text/plain, */*",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name: name, email: email, password: password }),
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          password: password,
+          admin: admin,
+          institution: institution,
+          subscription: {
+            subscriptionType: subscriptionType,
+            subscriptionStartDate: subscriptionStartDate,
+            subscriptionEndDate: subscriptionEndDate,
+            subscriptionAutoRenew: subscriptionAutoRenew,
+          },
+          additionalData: additionalData,
+        }),
       });
 
       if (response.status === 200) {

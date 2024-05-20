@@ -6,7 +6,7 @@
           Explanatory models in neonatology (EXPLAIN)
         </q-toolbar-title>
 
-        <div class="text-overline q-ml-sm">
+        <div v-if="user.loggedIn" class="text-overline q-ml-sm">
           logged in as: <b>{{ user.name }} </b>
         </div>
         <q-btn v-if="user.loggedIn" size="sm" dense color="indigo-10" class="q-ml-sm q-pl-sm q-pr-sm"
@@ -21,7 +21,7 @@
     </q-page-container>
 
     <q-footer class="bg-grey-8 text-white footerCustomStyle">
-      <q-toolbar>
+      <q-toolbar v-if="user.loggedIn">
         <q-toolbar-title class="text-overline">
           <div>{{ statusMessage }}</div>
         </q-toolbar-title>
@@ -94,7 +94,7 @@ export default defineComponent({
   },
   methods: {
     uploadDefinition() {
-      this.definition.definition = JSON.stringify(explain.modelDefinition)
+      this.definition.definition = { ...explain.modelDefinition }
       this.definition.name = explain.modelDefinition.name
 
       this.definition.saveDefinitionToServer(this.general.apiUrl, this.user.name, this.user.token)
