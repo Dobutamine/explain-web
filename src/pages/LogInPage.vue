@@ -157,6 +157,8 @@ export default {
         this.errorText = "Please enter a password!";
         return false;
       }
+
+      return true;
     },
     registerNewUser() {
       if (!this.validateRegisterRequest()) {
@@ -245,17 +247,16 @@ export default {
       }
     });
 
-
     this.$bus.on("registered", () => {
       this.newUserEntry = false;
     });
 
-    // if (process.env.DEV) {
-    //   //override login for developement development
-    //   this.password = "y5qkqjed";
-    //   this.name = "timothy";
-    //   this.user.logIn(this.general.apiUrl, this.name, this.password);
-    // }
+    if (process.env.DEV) {
+      //override login for developement development
+      this.password = "y5qkqjed";
+      this.name = "timothy";
+      this.user.logIn(this.general.apiUrl, this.name, this.password);
+    }
   },
 };
 </script>

@@ -65,7 +65,6 @@ export const useUserStore = defineStore("user", {
         this.token = data.token;
         this.loggedIn = true;
         this.errorText = "";
-        console.log("User logged in.");
         return true;
       } else {
         this.errorText = "Invalid username or password";
@@ -121,7 +120,6 @@ export const useUserStore = defineStore("user", {
         this.admin = data.admin;
         this.loggedIn = true;
         this.errorText = "";
-        console.log("User registered.");
         return true;
       } else {
         this.errorText = "Invalid username or password";

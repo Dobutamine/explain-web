@@ -10,7 +10,7 @@
           logged in as: <b>{{ user.name }} </b>
         </div>
         <q-btn v-if="user.loggedIn" size="sm" dense color="indigo-10" class="q-ml-sm q-pl-sm q-pr-sm"
-          icon="fa-solid fa-right-from-bracket"><q-tooltip>log out</q-tooltip></q-btn>
+          icon="fa-solid fa-right-from-bracket" @click="logOut"><q-tooltip>log out</q-tooltip></q-btn>
         <q-btn v-if="user.admin" size="sm" dense color="indigo-10" class="q-ml-sm q-pl-sm q-pr-sm"
           icon="fa-solid fa-lock"><q-tooltip>admin page</q-tooltip></q-btn>
       </q-toolbar>
@@ -93,6 +93,17 @@ export default defineComponent({
     }
   },
   methods: {
+    logOut() {
+      explain.stop();
+      this.rtState = false
+      this.playArmed = false;
+      this.butColor = "white";
+      this.butIcon = "fa-solid fa-play";
+      this.butCaption = "PLAY";
+      this.$bus.emit("rt_stop")
+      this.user.logOut()
+      this.$router.push("/login");
+    },
     uploadDefinition() {
       this.definition.definition = { ...explain.modelDefinition }
       this.definition.name = explain.modelDefinition.name
