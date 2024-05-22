@@ -53,8 +53,8 @@
                 opacity: 0.5
               }">
 
-                <div v-for="item in config.enabled_controllers.circulation">
-                  <NiceController :config="config.controllers[item]"></NiceController>
+                <div v-for="item in state.configuration.enabled_controllers.circulation">
+                  <NiceController :config="state.configuration.controllers[item]"></NiceController>
                 </div>
 
               </q-scroll-area>
@@ -68,8 +68,8 @@
                 opacity: 0.5
               }">
 
-                <div v-for="item in config.enabled_controllers.respiration">
-                  <NiceController :config="config.controllers[item]"></NiceController>
+                <div v-for="item in state.configuration.enabled_controllers.respiration">
+                  <NiceController :config="state.configuration.controllers[item]"></NiceController>
                 </div>
 
               </q-scroll-area>
@@ -82,8 +82,8 @@
                 width: '5px',
                 opacity: 0.5
               }">
-                <div v-for="item in config.enabled_controllers.brain">
-                  <NiceController :config="config.controllers[item]"></NiceController>
+                <div v-for="item in state.configuration.enabled_controllers.brain">
+                  <NiceController :config="state.configuration.controllers[item]"></NiceController>
                 </div>
               </q-scroll-area>
             </q-tab-panel>
@@ -95,8 +95,8 @@
                 width: '5px',
                 opacity: 0.5
               }">
-                <div v-for="item in config.enabled_controllers.others">
-                  <NiceController :config="config.controllers[item]"></NiceController>
+                <div v-for="item in state.configuration.enabled_controllers.others">
+                  <NiceController :config="state.configuration.controllers[item]"></NiceController>
                 </div>
 
               </q-scroll-area>
@@ -109,7 +109,7 @@
                 width: '5px',
                 opacity: 0.5
               }">
-                <NiceController :config="config.controllers.scaler_controller"></NiceController>
+                <NiceController :config="state.configuration.controllers.scaler_controller"></NiceController>
               </q-scroll-area>
             </q-tab-panel>
 
@@ -156,8 +156,8 @@
                 width: '5px',
                 opacity: 0.5
               }">
-                <DiagramComponent :alive="diagram_alive" :global_scale="config.diagram_scale"
-                  :global_speed="config.diagram_speed">
+                <DiagramComponent :alive="diagram_alive" :global_scale="state.configuration.diagram_scale"
+                  :global_speed="state.configuration.diagram_speed">
                 </DiagramComponent>
               </q-scroll-area>
             </q-tab-panel>
@@ -231,10 +231,10 @@
                 opacity: 0.5
               }">
                 <BigNumbersComponent></BigNumbersComponent>
-                <div v-for="enabled_numeric in config.enabled_monitors.general">
-                  <NumericsComponent :title="config.monitors[enabled_numeric].title"
-                    :collapsed="config.monitors[enabled_numeric].collapsed"
-                    :parameters="config.monitors[enabled_numeric].parameters"></NumericsComponent>
+                <div v-for="enabled_numeric in state.configuration.enabled_monitors.general">
+                  <NumericsComponent :title="state.configuration.monitors[enabled_numeric].title"
+                    :collapsed="state.configuration.monitors[enabled_numeric].collapsed"
+                    :parameters="state.configuration.monitors[enabled_numeric].parameters"></NumericsComponent>
                 </div>
 
               </q-scroll-area>
@@ -250,7 +250,7 @@
 <script>
 import { defineComponent } from 'vue'
 import { useUserStore } from 'src/stores/user';
-import { useConfigStore } from 'src/stores/config';
+import { useStateStore } from 'src/stores/state';
 import NumericsComponent from "src/components/NumericsComponent.vue";
 import ModelEditor from "src/components/ModelEditorComponent.vue"
 import TimeBasedChartComponent from 'src/components/TimeBasedChartComponent.vue';
@@ -263,14 +263,15 @@ import BigNumbersComponent from 'src/components/BigNumbersComponent.vue';
 
 import { explain } from 'src/boot/explain';
 
+
 export default defineComponent({
   name: 'MainPage',
   setup() {
-    const config = useConfigStore();
+    const state = useStateStore();
     const user = useUserStore();
 
     return {
-      config,
+      state,
       user
     }
   },
@@ -362,9 +363,9 @@ export default defineComponent({
     updateWatchlist() {
       explain.watchModelPropsSlow(["Heart.heart_rate", "Blood.so2_pre", "Blood.so2_post", "AD.pres_max", "AD.pres_min", "AD.pres_mean", "Breathing.resp_rate", "Ventilator.vent_rate"])
 
-      Object.keys(this.config.enabled_monitors).forEach(enabled_monitor_category => {
-        this.config.enabled_monitors[enabled_monitor_category].forEach((monitor) => {
-          this.config.monitors[monitor].parameters.forEach((p) => {
+      Object.keys(this.state.configuration.enabled_monitors).forEach(enabled_monitor_category => {
+        this.state.configuration.enabled_monitors[enabled_monitor_category].forEach((monitor) => {
+          this.state.configuration.monitors[monitor].parameters.forEach((p) => {
             explain.watchModelPropsSlow([...p.props])
           })
         })
@@ -397,9 +398,6 @@ export default defineComponent({
     explain.getModelState()
 
     this.$bus.on("reset", this.updateWatchlist)
-
-
-
   }
 })
 </script>

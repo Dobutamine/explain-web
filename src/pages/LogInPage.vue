@@ -100,8 +100,10 @@
 </template>
 
 <script>
+import { explain } from 'src/boot/explain';
 import { useUserStore } from "src/stores/user";
 import { useGeneralStore } from "../stores/general";
+import { useStateStore } from "src/stores/state";
 
 //import axios from "axios";
 /* eslint-disable */
@@ -109,9 +111,11 @@ export default {
   setup() {
     const user = useUserStore();
     const general = useGeneralStore();
+    const state = useStateStore();
 
     return {
       user,
+      state,
       general,
     };
   },
@@ -215,6 +219,9 @@ export default {
       this.additionalData = {};
       this.errorText = "";
     },
+    LoadDefaultState() {
+      this.state.getStateFromServer(this.general.apiUrl, this.user.name, this.user.defaultState, this.user.token);
+    },
     pressedEnter() {
       if (this.newUserEntry) {
         this.registerNewUser();
@@ -235,14 +242,30 @@ export default {
         after((result) => {
           if (result) {
             this.errorText = "";
-            // transfer to main page
-            this.$router.push("/explain");
+            console.log(`User ${this.user.name} logged in.`)
+            // load the default state for this user
+            this.LoadDefaultState()
           } else {
             this.errorText = "Invalid username or password!";
           }
         });
       }
     });
+    this.load_default_state = this.state.$onAction(({ name, after }) => {
+      if (name === "getStateFromServer") {
+        after((result) => {
+          if (result) {
+            this.errorText = ""
+            console.log(`State ${this.state.name} loaded`)
+            explain.loadModelDefinition(this.state.model_definition);
+            this.$router.push("/explain");
+          } else {
+            this.errorText = "Cannot find default model state on the server!";
+          }
+        });
+      }
+    });
+
 
     this.$bus.on("registered", () => {
       this.newUserEntry = false;

@@ -38,6 +38,7 @@ export default class Model {
   _error_event = new CustomEvent("error");
   _script_event = new CustomEvent("script");
   _props_event = new CustomEvent("props");
+  _state_saved = new CustomEvent("state_saved");
 
   constructor() {
     // spin up a new model engine worker thread
@@ -57,15 +58,9 @@ export default class Model {
     });
 
     // get the baseline neonate
-    this.modelDefinition = this.loadBakedInModelDefinition("baseline_neonate");
+    // this.modelDefinition = this.loadBakedInModelDefinition("baseline_neonate");
   }
-  testAcidBase() {
-    this.sendMessageToModelEngine({
-      type: "test_acidbase",
-      message: "",
-      payload: [],
-    });
-  }
+
   sendMessageToModelEngine(message) {
     if (this.modelEngine) {
       message.message = message.message;
@@ -202,7 +197,7 @@ export default class Model {
           break;
 
         case "saved_state":
-          this.download_model_state(e.data.payload[0]);
+          this.download_model_state(e.data.message, e.data.payload[0]);
           break;
 
         default:
@@ -212,12 +207,19 @@ export default class Model {
       }
     };
   }
-  download_model_state(state) {
-    let current_date = new Date();
-    let filename =
-      state["name"] + "_" + current_date.toLocaleTimeString() + ".json";
-    this.saveObjectAsJson(state, filename);
+
+  download_model_state(target, state) {
+    this.modelDefinition = { ...state };
+    if (target === "local") {
+      let current_date = new Date();
+      let filename =
+        state["name"] + "_" + current_date.toLocaleTimeString() + ".json";
+      this.saveObjectAsJson(state, filename);
+    } else {
+      document.dispatchEvent(this._state_saved);
+    }
   }
+
   saveObjectAsJson(object, filename) {
     const jsonString = JSON.stringify(object, null, 2); // Convert object to JSON string
     const blob = new Blob([jsonString], { type: "application/json" }); // Create a blob with JSON content
@@ -248,6 +250,7 @@ export default class Model {
         return response.json();
       })
       .then((jsonData) => {
+        console.log(jsonData);
         this.loadModelDefinition(jsonData);
       })
       .catch((error) => {
@@ -368,10 +371,10 @@ export default class Model {
     });
   }
 
-  saveModelState() {
+  saveModelState(target) {
     this.sendMessageToModelEngine({
       type: "save_state",
-      message: "",
+      message: target,
       payload: [],
     });
   }

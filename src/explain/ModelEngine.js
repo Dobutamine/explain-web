@@ -90,7 +90,7 @@ onmessage = (e) => {
       stop();
       break;
     case "save_state":
-      save_model_state_json();
+      save_model_state_json(e.data.message);
       break;
     case "get_state":
       get_state();
@@ -628,7 +628,7 @@ const get_model_data_rt_slow = function () {
   });
 };
 
-const save_model_state_json = function () {
+const save_model_state_json = function (target) {
   let current_data = new Date();
   let new_json = {
     explain_version: model["explain_version"],
@@ -665,7 +665,7 @@ const save_model_state_json = function () {
   // send data to the ui
   postMessage({
     type: "saved_state",
-    message: "",
+    message: target,
     payload: [new_json],
   });
 };

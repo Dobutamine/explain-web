@@ -25,12 +25,10 @@
         <q-toolbar-title class="text-overline">
           <div>{{ statusMessage }}</div>
         </q-toolbar-title>
-
-        <q-btn flat round dense size="sm" icon="fa-solid fa-upload" color="white" class="q-mr-sm"
-          @click="uploadDefinition">
-          <q-tooltip> upload model state </q-tooltip></q-btn>
-        <q-btn flat round dense size="sm" icon="fa-solid fa-download" color="white" class="q-mr-sm" @click="save_state">
-          <q-tooltip> download model state </q-tooltip></q-btn>
+        <q-btn flat round dense size="sm" icon="fa-solid fa-upload" color="white" class="q-mr-sm" @click="upload">
+          <q-tooltip> upload model state to server </q-tooltip></q-btn>
+        <q-btn flat round dense size="sm" icon="fa-solid fa-download" color="white" class="q-mr-sm" @click="download">
+          <q-tooltip> download model state to disk </q-tooltip></q-btn>
         <q-btn flat round dense size="sm" :icon="butIcon" :color="butColor" class="q-mr-sm" @click="togglePlay">
           <q-tooltip> start/stop model </q-tooltip></q-btn>
         <q-btn flat round dense size="sm" icon="fa-solid fa-rotate-right" color="white" class="q-mr-sm" @click="reload">
@@ -49,7 +47,7 @@
 import { defineComponent, ref } from 'vue'
 import { useGeneralStore } from 'src/stores/general';
 import { useUserStore } from 'src/stores/user';
-import { useDefinitionStore } from 'src/stores/definition';
+import { useStateStore } from 'src/stores/state';
 import { explain } from 'src/boot/explain';
 
 export default defineComponent({
@@ -58,12 +56,12 @@ export default defineComponent({
   setup() {
     const user = useUserStore()
     const general = useGeneralStore()
-    const definition = useDefinitionStore()
+    const state = useStateStore()
 
     return {
       user,
       general,
-      definition
+      state
     }
   },
   data() {
@@ -107,7 +105,6 @@ export default defineComponent({
     uploadDefinition() {
       this.definition.definition = { ...explain.modelDefinition }
       this.definition.name = explain.modelDefinition.name
-
       this.definition.saveDefinitionToServer(this.general.apiUrl, this.user.name, this.user.token)
     },
     selectModelDefinition() {
@@ -134,8 +131,26 @@ export default defineComponent({
       // Read the file as Text or as needed
       reader.readAsText(this.model_file);
     },
-    save_state() {
-      explain.saveModelState()
+    stopRt() {
+      if (this.rtState) {
+        explain.stop();
+        this.rtState = false
+        this.playArmed = false;
+        this.butColor = "white";
+        this.butIcon = "fa-solid fa-play";
+        this.butCaption = "PLAY";
+        // get the model state
+        explain.getModelState()
+        this.$bus.emit("rt_stop")
+      }
+    },
+    download() {
+      this.stopRt()
+      explain.saveModelState("local")
+    },
+    upload() {
+      this.stopRt()
+      explain.saveModelState("server")
     },
     toggleDebug() {
       this.debugState = !this.debugState
@@ -238,7 +253,11 @@ export default defineComponent({
     },
     dataUpdate() {
       this.$bus.emit('data')
-    }
+    },
+    uploadStateToServer() {
+      this.state.model_definition = { ...explain.modelDefinition }
+      this.state.saveStateToServer(this.general.apiUrl, this.user.name, this.user.token)
+    },
   },
   beforeUnmount() {
     document.removeEventListener("state", this.stateUpdate);
@@ -248,6 +267,7 @@ export default defineComponent({
     document.removeEventListener("rts", this.dataSlowUpdate);
     document.removeEventListener("rtf", this.dataFastUpdate);
     document.removeEventListener("data", this.dataUpdate);
+    document.removeEventListener("state_saved", this.uploadStateToServer);
   },
   mounted() {
     try {
@@ -282,6 +302,10 @@ export default defineComponent({
       document.removeEventListener("data", this.dataUpdate);
     } catch { }
     document.addEventListener("data", this.dataUpdate);
+    try {
+      document.removeEventListener("state_saved", this.uploadStateToServer);
+    } catch { }
+    document.addEventListener("state_saved", this.uploadStateToServer);
 
     this.$bus.on('load_new_model', (t) => {
       if (t !== this.current_model_definition) {

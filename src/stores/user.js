@@ -15,7 +15,7 @@ export const useUserStore = defineStore("user", {
     },
     additionalData: {},
     loggedIn: false,
-    defaultState: "normal_neonate_24h",
+    defaultState: "baseline neonate",
     errorText: "",
     token: "",
   }),
@@ -121,6 +121,10 @@ export const useUserStore = defineStore("user", {
         this.email = data.email;
         this.token = data.token;
         this.admin = data.admin;
+        this.defaultState = data.defaultState;
+        this.institution = data.institution;
+        this.subscription = data.subscription;
+        this.additionalData = data.additionalData;
         this.loggedIn = true;
         this.errorText = "";
         return true;

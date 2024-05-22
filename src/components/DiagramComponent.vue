@@ -1,10 +1,5 @@
 <template>
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
-    <div class="row justify-center">
-      <q-select class="q-pa-xs q-mr-sm q-ml-sm col text-overline" v-model="selected_diagram" square
-        label="selected model" hide-hint :options="conditions" dense dark stack-label
-        @update:model-value="reloadDiagram" :style="{ 'font-size': '16px' }" />
-    </div>
 
     <div class="stage" :style="{ display: display }">
       <canvas id="stage">
@@ -32,9 +27,14 @@ import GasExchanger from "./ui_elements/GasExchanger";
 import Oxygenator from "./ui_elements/Oxygenator";
 import Shunt from "./ui_elements/Shunt";
 
+import { useStateStore } from "src/stores/state";
 
 let canvas = null;
 export default {
+  setup() {
+    const state = useStateStore();
+    return { state };
+  },
   props: {
     alive: Boolean,
     global_speed: Number,
@@ -49,72 +49,12 @@ export default {
       ticker: null,
       pixiApp: null,
       diagram: {},
-      diagramComponents: {},
+      diagram_components: {},
       gridVertical: null,
       gridHorizontal: null,
       skeletonGraphics: null,
       shortTimer: null,
       rt_running: false,
-      conditions: ["normal neonate at 24h", "study_no_shunts", "fetus at term"],// "ecls", "fetus at term", "coarctatio aortae", "pulmonary atresia", "hypoplastic left heart syndrome", "transposition of the great arteries", "total anomalous pulmonary venous connection", "mitral valve atresia", "tricuspid valve atresia", "fontan-1-norwood", "fontan-2-glenn", "fontan-3"],
-      condition_filenames: [
-        {
-          name: "normal neonate at 24h",
-          filename: "normal_neonate_24h"
-        },
-        {
-          name: "study_no_shunts",
-          filename: "study_no_shunts"
-        },
-        {
-          name: "ecls",
-          filename: "ecls"
-        },
-        {
-          name: "fetus at term",
-          filename: "term_fetus"
-        },
-        {
-          name: "coarctatio aortae",
-          filename: "coarctatio_aortae"
-        },
-        {
-          name: "pulmonary atresia",
-          filename: "pulmonary_atresia"
-        },
-        {
-          name: "hypoplastic left heart syndrome",
-          filename: "hlhs"
-        },
-        {
-          name: "transposition of the great arteries",
-          filename: "tga"
-        },
-        {
-          name: "total anomalous pulmonary venous connection",
-          filename: "tapvc"
-        },
-        {
-          name: "mitral valve atresia",
-          filename: "mitral_atresia"
-        },
-        {
-          name: "tricuspid valve atresia",
-          filename: "tricuspid_atresia"
-        },
-        {
-          name: "fontan-1-norwood",
-          filename: "fontan-stage-1"
-        },
-        {
-          name: "fontan-2-glenn",
-          filename: "fontan-stage-2"
-        },
-        {
-          name: "fontan-3",
-          filename: "fontan-stage-3"
-        }
-      ],
-      selected_diagram: 'normal neonate at 24h',
       selected_shunts: [],
       shunt_options: [{
         label: 'PDA',
@@ -186,75 +126,6 @@ export default {
       }
 
     },
-    reloadDiagram() {
-      let fn = this.findDiagramFilename(this.selected_diagram)
-      const path = "/diagrams/" + fn + ".json"
-      const absoluteUrl = new URL(
-        path.toString(),
-        import.meta.url
-      );
-      fetch(absoluteUrl)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(
-              "Uh oh! could not get the baseline_neonate from the server!"
-            );
-          }
-          return response.json();
-        })
-        .then((jsonData) => {
-          this.diagram = { ...jsonData }
-          this.buildDiagram()
-          this.$bus.emit('load_new_model', this.diagram.settings.model_filename)
-        })
-        .catch((error) => {
-          console.error("Error: ", error);
-        });
-    },
-    findDiagramFilename(condition) {
-      let filename = "normal_neonate_24h"
-      this.condition_filenames.forEach(c => {
-        if (condition == c.name) {
-          filename = c.filename
-        }
-      })
-      return filename
-    },
-    loadDiagram(filename = "normal neonate at 24h") {
-      let fn = this.findDiagramFilename(filename)
-      const path = "/diagrams/" + fn + ".json"
-      const absoluteUrl = new URL(
-        path.toString(),
-        import.meta.url
-      );
-
-      fetch(absoluteUrl)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(
-              "Uh oh! could not get the baseline_neonate from the server!"
-            );
-          }
-          return response.json();
-        })
-        .then((jsonData) => {
-          this.diagram = { ...jsonData }
-          this.initDiagram().then(() => {
-            this.buildDiagram()
-            this.$bus.emit('load_new_model', this.diagram.settings.model_filename)
-          }
-          )
-
-        })
-        .catch((error) => {
-          console.error("Error: ", error);
-        });
-    },
-    changeEditingMode(e) {
-      Object.values(this.diagramComponents).forEach((comp) => {
-        comp.setEditingMode(this.editingSelection);
-      });
-    },
     async initDiagram() {
       // first clear all children from the stage
       if (this.pixiApp) {
@@ -290,30 +161,30 @@ export default {
     },
     drawSkeletonGraphics() {
 
-      if (this.diagram.settings.skeleton) {
+      if (this.state.diagram_definition.settings.skeleton) {
         if (this.skeletonGraphics) {
           this.skeletonGraphics.clear();
           this.pixiApp.stage.removeChild(this.skeletonGraphics);
         }
-        const radius = this.diagram.settings.radius;
-        const color = this.diagram.settings.skeletonColor;
+        const radius = this.state.diagram_definition.settings.radius;
+        const color = this.state.diagram_definition.settings.skeletonColor;
 
         // initalize the skeleton graphics
         this.skeletonGraphics = new PIXI.Graphics();
 
         // get center stage
-        const xCenter = (this.pixiApp.renderer.width / 4) + this.diagram.settings.xOffset
-        const yCenter = (this.pixiApp.renderer.height / 4) + this.diagram.settings.yOffset
+        const xCenter = (this.pixiApp.renderer.width / 4) + this.state.diagram_definition.settings.xOffset
+        const yCenter = (this.pixiApp.renderer.height / 4) + this.state.diagram_definition.settings.yOffset
         this.skeletonGraphics.beginFill(color);
         this.skeletonGraphics.lineStyle(1, color, 1);
-        this.skeletonGraphics.drawCircle(xCenter, yCenter, (xCenter - this.diagram.settings.xOffset) * radius);
+        this.skeletonGraphics.drawCircle(xCenter, yCenter, (xCenter - this.state.diagram_definition.settings.xOffset) * radius);
         this.skeletonGraphics.endFill();
         this.pixiApp.stage.addChild(this.skeletonGraphics);
       }
     },
     drawGrid() {
-      if (this.diagram.settings.grid) {
-        const gridSize = this.diagram.settings.gridSize;
+      if (this.state.diagram_definition.settings.grid) {
+        const gridSize = this.state.diagram_definition.settings.gridSize;
 
         if (this.gridVertical) {
           this.gridVertical.clear();
@@ -366,7 +237,7 @@ export default {
         this.pixiApp.stage.removeChild(this.pixiApp.stage.children[index_path])
       }
 
-      this.diagram.components[comp_name].enabled = false
+      this.state.diagram_definition.components[comp_name].enabled = false
     },
     addDiagramComponent(comp_name) {
       const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == comp_name);
@@ -374,8 +245,8 @@ export default {
       const index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == comp_name);
       if (index_sprite < 0 && index_text < 0 && index_path < 0) {
         let component = {}
-        this.diagram.components[comp_name].enabled = true
-        component[comp_name] = this.diagram.components[comp_name]
+        this.state.diagram_definition.components[comp_name].enabled = true
+        component[comp_name] = this.state.diagram_definition.components[comp_name]
         this.drawComponents(component)
       }
     },
@@ -391,17 +262,17 @@ export default {
       // get the layout properties
       const xCenter = (this.pixiApp.renderer.width / 4)
       const yCenter = (this.pixiApp.renderer.height / 4)
-      const xOffset = this.diagram.settings.xOffset
-      const yOffset = this.diagram.settings.yOffset
-      const radius = this.diagram.settings.radius;
-      let global_scaling = this.diagram.settings.scaling * this.global_scale
+      const xOffset = this.state.diagram_definition.settings.xOffset
+      const yOffset = this.state.diagram_definition.settings.yOffset
+      const radius = this.state.diagram_definition.settings.radius;
+      let global_scaling = this.state.diagram_definition.settings.scaling * this.global_scale
       // render the blood compartments
       Object.entries(component_list).forEach(([key, component]) => {
         // inject the offsets
         if (component.enabled) {
           switch (component.compType) {
             case "Oxygenator":
-              this.diagramComponents[key] = new Oxygenator(
+              this.diagram_components[key] = new Oxygenator(
                 this.pixiApp,
                 key,
                 component.label,
@@ -423,7 +294,7 @@ export default {
               explain.watchModelProps(watched_models_oxy)
               break;
             case "BloodPump":
-              this.diagramComponents[key] = new BloodPump(
+              this.diagram_components[key] = new BloodPump(
                 this.pixiApp,
                 key,
                 component.label,
@@ -446,7 +317,7 @@ export default {
               explain.watchModelProps(watched_models_pump)
               break;
             case "LymphCompartment":
-              this.diagramComponents[key] = new LymphCompartment(
+              this.diagram_components[key] = new LymphCompartment(
                 this.pixiApp,
                 key,
                 component.label,
@@ -467,7 +338,7 @@ export default {
               explain.watchModelProps(watched_models_lc)
               break;
             case "BloodCompartment":
-              this.diagramComponents[key] = new BloodCompartment(
+              this.diagram_components[key] = new BloodCompartment(
                 this.pixiApp,
                 key,
                 component.label,
@@ -489,7 +360,7 @@ export default {
               explain.watchModelProps(watched_models_bc)
               break;
             case "GasCompartment":
-              this.diagramComponents[key] = new GasCompartment(
+              this.diagram_components[key] = new GasCompartment(
                 this.pixiApp,
                 key,
                 component.label,
@@ -511,13 +382,13 @@ export default {
               explain.watchModelProps(watched_models_gc)
               break;
             case "BloodConnector":
-              this.diagramComponents[key] = new BloodConnector(
+              this.diagram_components[key] = new BloodConnector(
                 this.pixiApp,
                 key,
                 component.label,
                 component.models,
-                this.diagramComponents[component.dbcFrom],
-                this.diagramComponents[component.dbcTo],
+                this.diagram_components[component.dbcFrom],
+                this.diagram_components[component.dbcTo],
                 {},
                 component.compPicto,
                 global_scaling,
@@ -530,13 +401,13 @@ export default {
               explain.watchModelProps(watched_models_bcon)
               break;
             case "LymphConnector":
-              this.diagramComponents[key] = new LymphConnector(
+              this.diagram_components[key] = new LymphConnector(
                 this.pixiApp,
                 key,
                 component.label,
                 component.models,
-                this.diagramComponents[component.dbcFrom],
-                this.diagramComponents[component.dbcTo],
+                this.diagram_components[component.dbcFrom],
+                this.diagram_components[component.dbcTo],
                 {},
                 component.compPicto,
                 global_scaling,
@@ -549,13 +420,13 @@ export default {
               explain.watchModelProps(watched_models_lcon)
               break;
             case "Shunt":
-              this.diagramComponents[key] = new Shunt(
+              this.diagram_components[key] = new Shunt(
                 this.pixiApp,
                 key,
                 component.label,
                 component.models,
-                this.diagramComponents[component.dbcFrom],
-                this.diagramComponents[component.dbcTo],
+                this.diagram_components[component.dbcFrom],
+                this.diagram_components[component.dbcTo],
                 {},
                 component.compPicto,
                 global_scaling,
@@ -568,7 +439,7 @@ export default {
               explain.watchModelProps(watched_models_shunt)
               break;
             case "Container":
-              this.diagramComponents[key] = new Container(
+              this.diagram_components[key] = new Container(
                 this.pixiApp,
                 key,
                 component.label,
@@ -589,13 +460,13 @@ export default {
               explain.watchModelProps(watched_models_cont)
               break;
             case "GasConnector":
-              this.diagramComponents[key] = new GasConnector(
+              this.diagram_components[key] = new GasConnector(
                 this.pixiApp,
                 key,
                 component.label,
                 component.models,
-                this.diagramComponents[component.dbcFrom],
-                this.diagramComponents[component.dbcTo],
+                this.diagram_components[component.dbcFrom],
+                this.diagram_components[component.dbcTo],
                 {},
                 component.compPicto,
                 global_scaling,
@@ -608,7 +479,7 @@ export default {
               explain.watchModelProps(watched_models_gascon)
               break;
             case "GasExchanger":
-              this.diagramComponents[key] = new GasExchanger(
+              this.diagram_components[key] = new GasExchanger(
                 this.pixiApp,
                 key,
                 component.label,
@@ -634,7 +505,7 @@ export default {
       });
     },
     update_watchlist() {
-      Object.entries(this.diagram.components).forEach(([key, component]) => {
+      Object.entries(this.state.diagram_definition.components).forEach(([key, component]) => {
         // inject the offsets
         if (component.enabled) {
           switch (component.compType) {
@@ -707,22 +578,11 @@ export default {
               explain.watchModelProps(watched_models_cont)
               break;
             case "GasConnector":
-              this.diagramComponents[key] = new GasConnector(
-                this.pixiApp,
-                key,
-                component.label,
-                component.models,
-                this.diagramComponents[component.dbcFrom],
-                this.diagramComponents[component.dbcTo],
-                {},
-                component.compPicto,
-                global_scaling
-              );
-              let watched_models_gascon = []
+              let watched_models_gcon = []
               component.models.forEach(m => {
-                watched_models_gascon.push(m + ".flow")
+                watched_models_gcon.push(m + ".flow")
               })
-              explain.watchModelProps(watched_models_gascon)
+              explain.watchModelProps(watched_models_gcon)
               break;
             case "GasExchanger":
               let watched_models_gasex = []
@@ -739,7 +599,7 @@ export default {
     processStateChanged() {
       if (!this.rt_running) {
         if (this.alive) {
-          Object.values(this.diagramComponents).forEach((sprite) => {
+          Object.values(this.diagram_components).forEach((sprite) => {
             if (explain.modelData.length > 0) {
               sprite.update(explain.modelData[explain.modelData.length - 1]);
             }
@@ -750,7 +610,7 @@ export default {
     },
     tickerFunction() {
       if (this.rt_running && this.alive) {
-        Object.values(this.diagramComponents).forEach((sprite) => {
+        Object.values(this.diagram_components).forEach((sprite) => {
           if (explain.modelData.length > 0) {
             sprite.update(explain.modelData[0]);
           }
@@ -759,15 +619,17 @@ export default {
     },
     buildDiagram() {
       this.pixiApp.stage.removeChildren();
+
       // draw the skeleton graphics
       this.drawSkeletonGraphics()
+
       // draw the grid
       this.drawGrid()
-      // draw the components after resetting them
-      if (this.diagramComponents) {
-        this.diagramComponents = {}
-      }
-      this.drawComponents(this.diagram.components)
+
+      // draw the components
+      this.diagram_components = {}
+      this.drawComponents(this.state.diagram_definition.components)
+
       // first remove the old ticker
       if (this.ticker) {
         this.pixiApp.ticker.remove(this.tickerFunction)
@@ -776,27 +638,27 @@ export default {
       this.ticker = this.pixiApp.ticker.add(this.tickerFunction);
 
       // get the shunt options state of the diagram
-      this.shuntOptionsVisible = this.diagram.settings.shuntOptionsVisible
+      this.shuntOptionsVisible = this.state.diagram_definition.settings.shuntOptionsVisible
 
       // get the current shunts state
       this.selected_shunts = []
       if (this.shuntOptionsVisible) {
         try {
-          if (this.diagram.components['DA'].enabled) {
+          if (this.state.diagram_definition.components['DA'].enabled) {
 
             this.selected_shunts.push('DA')
             this.showOrHideShunt(true, ['DA'])
           }
-          if (this.diagram.components['FO'].enabled) {
+          if (this.state.diagram_definition.components['FO'].enabled) {
             this.selected_shunts.push('FO')
           }
-          if (this.diagram.components['IPS'].enabled) {
+          if (this.state.diagram_definition.components['IPS'].enabled) {
             this.selected_shunts.push('IPS')
           }
-          if (this.diagram.components['VSD'].enabled) {
+          if (this.state.diagram_definition.components['VSD'].enabled) {
             this.selected_shunts.push('VSD')
           }
-          if (this.diagram.components['ECLS'].enabled) {
+          if (this.state.diagram_definition.components['ECLS'].enabled) {
             this.selected_shunts.push('ECLS')
           }
 
@@ -804,25 +666,35 @@ export default {
       }
     }
   },
-  beforeUnmount() {
-
-  },
+  beforeUnmount() { },
   mounted() {
-    this.loadDiagram()
+    // initialize and build the diagram
+    this.initDiagram().then(() => {
+
+      // build the diagram
+      this.buildDiagram()
+    })
+
+    // add the event listener for the state change
     this.$bus.on("state", this.processStateChanged)
-    this.$bus.on('reset', () => this.buildDiagram())
+
+    // add the event listener for the diagram update
     this.$bus.on('rt_start', () => this.rt_running = true)
     this.$bus.on('rt_stop', () => this.rt_running = false)
+
+    this.$bus.on('reset', () => this.buildDiagram())
+
     this.$bus.on("update_watchlist", () => this.update_watchlist())
+
     this.$bus.on("update_drainage_site", (new_site) => {
       try {
-        this.diagram.components['ECLS_DR'].dbcFrom = new_site
+        this.state.diagram_definition.components['ECLS_DR'].dbcFrom = new_site
         this.update_component('ECLS_DR')
       } catch { }
     })
     this.$bus.on("update_return_site", (new_site) => {
       try {
-        this.diagram.components['ECLS_RE'].dbcTo = new_site
+        this.state.diagram_definition.components['ECLS_RE'].dbcTo = new_site
         this.update_component('ECLS_RE')
       } catch { }
 

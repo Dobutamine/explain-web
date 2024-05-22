@@ -44,9 +44,10 @@
 
       <q-btn v-if="exportEnabled" color="black" size="sm" @click="exportData" icon="fa-solid fa-file-export"></q-btn>
       <q-btn color="negative" size="xs" @click="clearProps" icon="fa-solid fa-trash-can"></q-btn>
-      <q-toggle v-model="config.chart_hires" label="hi-res" dense size="sm" @update:model-value="toggleHires" />
-      <q-input v-if="!config.chart_hires" v-model.number="rtWindow" type="number" label="time" filled dense min="1"
-        max="30" hide-bottom-space @update:model-value="updateRtWindow" />
+      <q-toggle v-model="state.configuration.chart_hires" label="hi-res" dense size="sm"
+        @update:model-value="toggleHires" />
+      <q-input v-if="!state.configuration.chart_hires" v-model.number="rtWindow" type="number" label="time" filled dense
+        min="1" max="30" hide-bottom-space @update:model-value="updateRtWindow" />
     </div>
     <!-- presets -->
     <div v-if="isEnabled && showPresets" class="q-mb-sm text-overline justify-center q-gutter-xs row">
@@ -95,7 +96,7 @@
 </template>
 
 <script>
-import { useConfigStore } from "src/stores/config";
+import { useStateStore } from "src/stores/state";
 import { explain } from "../boot/explain";
 import { Bar, Line, Scatter } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'
@@ -107,7 +108,7 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale,
 
 export default {
   setup() {
-    const config = useConfigStore()
+    const state = useStateStore()
     // make the chartdata reactive
     let chartData = ref({
       labels: [],
@@ -152,7 +153,7 @@ export default {
     })
 
     return {
-      config,
+      state,
       chartData,
       chartOptions
     }
@@ -226,7 +227,7 @@ export default {
   },
   methods: {
     toggleHires() {
-      if (this.config.chart_hires) {
+      if (this.state.configuration.chart_hires) {
         this.rtWindow = 1.0
         explain.setSampleInterval(0.0015)
       } else {

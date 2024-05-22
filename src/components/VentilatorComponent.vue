@@ -46,12 +46,12 @@
         <q-toggle v-model="spont_breathing" size="sm" label="breathing" @update:model-value="toggle_spont_breathing" />
       </div>
       <div>
-        <q-toggle class="q-ml-sm q-pb-lg" v-model="config.chart_hires" label="hi-res" dense size="sm"
+        <q-toggle class="q-ml-sm q-pb-lg" v-model="state.configuration.chart_hires" label="hi-res" dense size="sm"
           @update:model-value="toggleHires" />
       </div>
       <div>
-        <q-input v-if="!show_loops && !config.chart_hires" class="q-ml-sm q-pb-lg" v-model.number="rtWindow"
-          type="number" label="time" filled dense min="1" max="30" hide-bottom-space
+        <q-input v-if="!show_loops && !state.configuration.chart_hires" class="q-ml-sm q-pb-lg"
+          v-model.number="rtWindow" type="number" label="time" filled dense min="1" max="30" hide-bottom-space
           @update:model-value="updateRtWindow" />
       </div>
     </div>
@@ -196,7 +196,7 @@
 </template>
 
 <script>
-import { useConfigStore } from "src/stores/config";
+import { useStateStore } from "src/stores/state";
 import { explain } from "../boot/explain";
 import { Bar, Line, Scatter } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'
@@ -207,7 +207,7 @@ import XYChartComponent from "./XYChartComponent.vue";
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement)
 export default {
   setup() {
-    const config = useConfigStore()
+    const state = useStateStore()
     // make the chartdata reactive
     let chartDataPres = ref({
       labels: [],
@@ -333,7 +333,7 @@ export default {
 
 
     return {
-      config,
+      state,
       chartDataPres,
       chartDataFlow,
       chartDataVol,
@@ -445,7 +445,7 @@ export default {
   },
   methods: {
     toggleHires() {
-      if (this.config.chart_hires) {
+      if (this.state.configuration.chart_hires) {
         this.rtWindow = 1.0
         explain.setSampleInterval(0.0015)
       } else {
