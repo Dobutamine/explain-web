@@ -60,19 +60,30 @@
         <q-toolbar-title class="text-overline">
           <div>{{ statusMessage }}</div>
         </q-toolbar-title>
+
         <div v-if="!state.protected" class="text-overline" @click="renameState">
           <b>{{ state.name }} </b>
         </div>
+
         <div v-if="state.protected" class="text-overline" @click="renameState">
           <b>{{ state.name }} (protected) </b>
         </div>
+
         <div v-if="!state.saved" class="text-overline" @click="renameState">
           <b>*</b>
         </div>
+
+        <q-btn v-if="user.admin && state.protected" flat round dense size="sm" icon="fa-solid fa-lock" color="white"
+          class="q-ml-sm" @click="protectState">
+          <q-tooltip> state is protected </q-tooltip></q-btn>
+
+        <q-btn v-if="user.admin && !state.protected" flat round dense size="sm" icon="fa-solid fa-lock-open"
+          color="white" class="q-ml-sm" @click="protectState">
+          <q-tooltip> state is not protected </q-tooltip></q-btn>
+
         <q-btn v-if="state.default" flat round dense size="sm" icon="fa-solid fa-tag" color="white" class="q-ml-sm"
           @click="renameState">
           <q-tooltip> rename the current state </q-tooltip></q-btn>
-
 
         <q-btn v-if="state.default" flat round dense size="sm" icon="fa-solid fa-star" color="white" class="q-ml-sm"
           @click="setStateAsDefault">
@@ -151,13 +162,15 @@ export default defineComponent({
       inputPopupTitle: "Input",
       inputPopupClass: "text-h6",
       userInput: "",
-
       durations: [1, 2, 3, 5, 10, 20, 30, 60, 120, 240, 360, 600, 1200, 1800],
       current_model_definition: 'baseline_neonate',
       available_model_definitions: ['default', 'coarctatio_aortae', 'double_outlet_right_ventricle', 'term_fetus', 'hypoplastic_left_heart_syndrome', 'mitral_atresia', 'pulmonary_atresia', 'total_anomalous_venous_connection', 'transposition_of_great_arteries', 'tricuspid_atresia', 'truncus_arteriosus']
     }
   },
   methods: {
+    protectState() {
+      this.state.protected = !this.state.protected
+    },
     setStateAsDefault() {
       this.state.default = true
       this.user.defaultState = this.state.name
