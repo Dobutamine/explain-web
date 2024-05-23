@@ -241,9 +241,9 @@
             </q-tab-panel>
           </q-tab-panels>
         </div>
-
       </div>
     </div>
+
   </q-page>
 </template>
 
@@ -298,7 +298,7 @@ export default defineComponent({
       xy_alive: true,
       diagram_alive: true,
       screen_offset: 135.0,
-      screen_height: 100.0
+      screen_height: 100.0,
     }
   },
   methods: {

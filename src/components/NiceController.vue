@@ -383,31 +383,32 @@ export default {
     },
     processModelState() {
       if (explain.modelState.models) {
-        for (let [controller_name, controller] of Object.entries(this.controllers.items)) {
-          switch (controller.type) {
-            case 'factor':
-              controller.model_value = explain.modelState.models[controller.model][controller.prop]
-              controller.slider_value = this.translateValueToSlider(controller.model_value)
-              controller.display_value = controller.model_value.toFixed(controller.rounding)
-              break;
-            case 'number':
-              controller.model_value = explain.modelState.models[controller.model][controller.prop]
-              controller.slider_value = controller.model_value
-              controller.display_value = controller.model_value.toFixed(controller.rounding)
-              break;
-            case 'string':
-              controller.model_value = explain.modelState.models[controller.model][controller.prop]
-              controller.slider_value = controller.model_value
-              controller.display_value = controller.model_value
-              break;
-            case 'boolean':
-              controller.model_value = explain.modelState.models[controller.model][controller.prop]
-              controller.slider_value = controller.model_value
-              controller.display_value = controller.model_value
-              break;
+        if (this.controllers.items) {
+          for (let [controller_name, controller] of Object.entries(this.controllers.items)) {
+            switch (controller.type) {
+              case 'factor':
+                controller.model_value = explain.modelState.models[controller.model][controller.prop]
+                controller.slider_value = this.translateValueToSlider(controller.model_value)
+                controller.display_value = controller.model_value.toFixed(controller.rounding)
+                break;
+              case 'number':
+                controller.model_value = explain.modelState.models[controller.model][controller.prop]
+                controller.slider_value = controller.model_value
+                controller.display_value = controller.model_value.toFixed(controller.rounding)
+                break;
+              case 'string':
+                controller.model_value = explain.modelState.models[controller.model][controller.prop]
+                controller.slider_value = controller.model_value
+                controller.display_value = controller.model_value
+                break;
+              case 'boolean':
+                controller.model_value = explain.modelState.models[controller.model][controller.prop]
+                controller.slider_value = controller.model_value
+                controller.display_value = controller.model_value
+                break;
+            }
           }
         }
-
       }
     },
   },
@@ -419,19 +420,25 @@ export default {
     // copy the configuration object
     this.controllers = { ...this.config }
     // build the controllers object
-    Object.values(this.controllers.categories).forEach(category => {
-      category['enabledColor'] = "transparent"
-      category['advancedColor'] = "transparent"
-    })
-    Object.values(this.controllers.items).forEach(item => {
-      item['link_color'] = "transparent"
-      item['model_value'] = 0.0
-      item['slider_value'] = 0.0
-      item['display_value'] = 0.0
-      if (!item['rounding']) {
-        item['rounding'] = 1.0
-      }
-    })
+    if (this.controllers.categories) {
+      Object.values(this.controllers.categories).forEach(category => {
+        category['enabledColor'] = "transparent"
+        category['advancedColor'] = "transparent"
+      })
+
+    }
+    if (this.controllers.items) {
+      Object.values(this.controllers.items).forEach(item => {
+        item['link_color'] = "transparent"
+        item['model_value'] = 0.0
+        item['slider_value'] = 0.0
+        item['display_value'] = 0.0
+        if (!item['rounding']) {
+          item['rounding'] = 1.0
+        }
+      })
+    }
+
   },
 };
 </script>

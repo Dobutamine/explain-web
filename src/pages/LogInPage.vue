@@ -222,6 +222,9 @@ export default {
     LoadDefaultState() {
       this.state.getStateFromServer(this.general.apiUrl, this.user.name, this.user.defaultState, this.user.token);
     },
+    LoadGeneralDefaultState() {
+      this.state.getDefaultStateFromServer(this.general.apiUrl, this.user.name, this.user.token);
+    },
     pressedEnter() {
       if (this.newUserEntry) {
         this.registerNewUser();
@@ -258,9 +261,31 @@ export default {
             this.errorText = ""
             console.log(`State ${this.state.name} loaded`)
             explain.loadModelDefinition(this.state.model_definition);
+            if (this.user.defaultState === this.name) {
+              this.default = true;
+            } else {
+              this.default = false;
+            }
+            this.state.saved = true;
             this.$router.push("/explain");
           } else {
-            this.errorText = "Cannot find default model state on the server!";
+            this.errorText = "Cannot find default model state on the server! Loading general default state";
+            this.LoadGeneralDefaultState()
+          }
+        });
+      }
+    });
+    this.load_general_default_state = this.state.$onAction(({ name, after }) => {
+      if (name === "getDefaultStateFromServer") {
+        after((result) => {
+          if (result) {
+            this.errorText = ""
+            console.log(`Default state ${this.state.name} loaded`)
+            explain.loadModelDefinition(this.state.model_definition);
+            this.state.saved = true;
+            this.$router.push("/explain");
+          } else {
+            this.errorText = "Cannot find the general default model state on the server!";
           }
         });
       }

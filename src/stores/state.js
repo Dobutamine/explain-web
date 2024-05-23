@@ -14,12 +14,55 @@ export const useStateStore = defineStore("state", {
     },
     model_definition: {},
     configuration: {},
+    saved: false,
+    default: true,
   }),
 
   getters: {},
 
   actions: {
+    renameState(newName, userName) {
+      if (newName !== this.name) {
+        this.name = newName;
+        this.default = false;
+        this.protected = false;
+        this.user = userName;
+        this.dateCreated = new Date();
+        this.dateCreated = this.dateCreated.toISOString();
+        this.saved = false;
+      }
+    },
     getAllStatesFromServer(apiUrl, userName, token) {},
+    async getDefaultStateFromServer(apiUrl, userName, token) {
+      const url = `${apiUrl}/api/states/get_state?token=${token}`;
+      let response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: "timothy",
+          name: "baseline neonate",
+        }),
+      });
+
+      if (response.status === 200) {
+        let data = await response.json();
+        this.user = userName;
+        this.name = "baseline neonate";
+        this.protected = true;
+        this.shared = data.shared;
+        this.dateCreated = data.dateCreated;
+        this.dateLastUpdated = data.dateLastUpdated;
+        this.diagram_definition = data.diagram_definition;
+        this.model_definition = data.model_definition;
+        this.configuration = data.configuration;
+        return true;
+      } else {
+        return false;
+      }
+    },
     async getStateFromServer(apiUrl, userName, stateName, token) {
       const url = `${apiUrl}/api/states/get_state?token=${token}`;
       let response = await fetch(url, {
@@ -45,6 +88,7 @@ export const useStateStore = defineStore("state", {
         this.diagram_definition = data.diagram_definition;
         this.model_definition = data.model_definition;
         this.configuration = data.configuration;
+
         return true;
       } else {
         return false;
@@ -52,7 +96,6 @@ export const useStateStore = defineStore("state", {
     },
     async saveStateToServer(apiUrl, userName, token) {
       if (!this.protected) {
-        this.name = this.model_definition.name;
         this.dateCreated = this.model_definition.date_created;
         this.dateLastUpdated = new Date();
         this.dateLastUpdated = this.dateLastUpdated.toISOString();
@@ -78,12 +121,20 @@ export const useStateStore = defineStore("state", {
         });
 
         if (response.status === 200) {
-          return true;
+          return { result: true, message: "State saved" };
         } else {
-          return false;
+          return {
+            result: false,
+            message:
+              "State could not saved! Server error. Contact administrator.",
+          };
         }
       } else {
-        return false;
+        return {
+          result: false,
+          message:
+            "State is protected. Please store state under a different name.",
+        };
       }
     },
   },

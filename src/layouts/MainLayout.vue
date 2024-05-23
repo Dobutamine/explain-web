@@ -9,6 +9,9 @@
         <div v-if="user.loggedIn" class="text-overline q-ml-sm">
           logged in as: <b>{{ user.name }} </b>
         </div>
+        <div v-if="user.admin" class="text-overline q-ml-sm">
+          <b>(admin) </b>
+        </div>
         <q-btn v-if="user.loggedIn" size="sm" dense color="indigo-10" class="q-ml-sm q-pl-sm q-pr-sm"
           icon="fa-solid fa-right-from-bracket" @click="logOut"><q-tooltip>log out</q-tooltip></q-btn>
         <q-btn v-if="user.admin" size="sm" dense color="indigo-10" class="q-ml-sm q-pl-sm q-pr-sm"
@@ -18,6 +21,38 @@
 
     <q-page-container class="black-background">
       <router-view />
+      <q-dialog v-model="showPopup" persistent>
+        <q-card>
+          <q-card-section>
+            <div :class="popupClass">{{ popupTitle }}</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            {{ popupMessage }}
+          </q-card-section>
+
+          <q-card-actions align="right">
+            <q-btn flat label="Close" size="sm" color="primary" v-close-popup />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+
+      <q-dialog v-model="showInputPopup" persistent transition-show="slide-up" transition-hide="slide-down">
+        <q-card>
+          <q-card-section>
+            <div :class="inputPopupClass">{{ inputPopupTitle }}</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            <q-input v-model="userInput" label="new name" filled clearable @keyup.enter="submitInput" />
+          </q-card-section>
+
+          <q-card-actions align="right">
+            <q-btn flat label="Cancel" color="primary" size="sm" v-close-popup />
+            <q-btn flat label="Submit" color="primary" size="sm" @click="submitInput" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
     </q-page-container>
 
     <q-footer class="bg-grey-8 text-white footerCustomStyle">
@@ -25,7 +60,30 @@
         <q-toolbar-title class="text-overline">
           <div>{{ statusMessage }}</div>
         </q-toolbar-title>
-        <q-btn flat round dense size="sm" icon="fa-solid fa-upload" color="white" class="q-mr-sm" @click="upload">
+        <div v-if="!state.protected" class="text-overline" @click="renameState">
+          <b>{{ state.name }} </b>
+        </div>
+        <div v-if="state.protected" class="text-overline" @click="renameState">
+          <b>{{ state.name }} (protected) </b>
+        </div>
+        <div v-if="!state.saved" class="text-overline" @click="renameState">
+          <b>*</b>
+        </div>
+        <q-btn v-if="state.default" flat round dense size="sm" icon="fa-solid fa-tag" color="white" class="q-ml-sm"
+          @click="renameState">
+          <q-tooltip> rename the current state </q-tooltip></q-btn>
+
+
+        <q-btn v-if="state.default" flat round dense size="sm" icon="fa-solid fa-star" color="white" class="q-ml-sm"
+          @click="setStateAsDefault">
+          <q-tooltip> current state is the default state </q-tooltip></q-btn>
+
+        <q-btn v-if="!state.default" flat round dense size="sm" icon="fa-regular fa-star" color="white" class="q-ml-sm"
+          @click="setStateAsDefault">
+          <q-tooltip> set current state as default </q-tooltip></q-btn>
+
+        <q-btn flat round dense size="sm" icon="fa-solid fa-upload" color="white" class="q-mr-sm q-ml-sm"
+          @click="upload">
           <q-tooltip> upload model state to server </q-tooltip></q-btn>
         <q-btn flat round dense size="sm" icon="fa-solid fa-download" color="white" class="q-mr-sm" @click="download">
           <q-tooltip> download model state to disk </q-tooltip></q-btn>
@@ -85,12 +143,25 @@ export default defineComponent({
       infoMessage: "",
       statusMessage: "STATUS:",
       selectedDuration: 10,
+      showPopup: false,
+      popupTitle: "Popup Title",
+      popupClass: "text-h6",
+      popupMessage: "popup message",
+      showInputPopup: false,
+      inputPopupTitle: "Input",
+      inputPopupClass: "text-h6",
+      userInput: "",
+
       durations: [1, 2, 3, 5, 10, 20, 30, 60, 120, 240, 360, 600, 1200, 1800],
       current_model_definition: 'baseline_neonate',
       available_model_definitions: ['default', 'coarctatio_aortae', 'double_outlet_right_ventricle', 'term_fetus', 'hypoplastic_left_heart_syndrome', 'mitral_atresia', 'pulmonary_atresia', 'total_anomalous_venous_connection', 'transposition_of_great_arteries', 'tricuspid_atresia', 'truncus_arteriosus']
     }
   },
   methods: {
+    setStateAsDefault() {
+      this.state.default = true
+      this.user.defaultState = this.state.name
+    },
     logOut() {
       explain.stop();
       this.rtState = false
@@ -168,6 +239,7 @@ export default defineComponent({
       this.rtState = !this.rtState;
       if (this.rtState) {
         this.playArmed = true;
+        this.state.saved = false
         this.selectedDuration = 3;
         explain.start();
         this.butColor = "negative";
@@ -193,6 +265,7 @@ export default defineComponent({
       this.calcRunning = !this.calcRunning;
       if (this.calcRunning) {
         this.butCalcColor = "negative";
+        this.state.saved = false
         explain.calculate(parseInt(this.selectedDuration));
       }
     },
@@ -254,9 +327,31 @@ export default defineComponent({
     dataUpdate() {
       this.$bus.emit('data')
     },
+    submitInput() {
+      if (this.userInput.length > 0) {
+        this.state.renameState(this.userInput, this.user.name)
+      }
+      this.showInputPopup = false
+    },
+    renameState() {
+      this.showInputPopup = true
+      this.inputPopupTitle = "Enter a new state name"
+      this.inputPopupClass = "text-h6"
+
+    },
     uploadStateToServer() {
       this.state.model_definition = { ...explain.modelDefinition }
-      this.state.saveStateToServer(this.general.apiUrl, this.user.name, this.user.token)
+      this.state.saveStateToServer(this.general.apiUrl, this.user.name, this.user.token).then((t) => {
+        if (t.result) {
+          this.popupClass = "text-h6"
+          this.$bus.emit('show_popup', { title: "Success!", message: t.message })
+          this.state.saved = true;
+        } else {
+          this.popupClass = "text-h6 text-negative"
+          this.$bus.emit('show_popup', { title: "Error!", message: t.message })
+          this.state.saved = false
+        }
+      })
     },
   },
   beforeUnmount() {
@@ -268,6 +363,11 @@ export default defineComponent({
     document.removeEventListener("rtf", this.dataFastUpdate);
     document.removeEventListener("data", this.dataUpdate);
     document.removeEventListener("state_saved", this.uploadStateToServer);
+    document.removeEventListener("show_popup", (t) => {
+      this.popupTitle = t.title
+      this.popupMessage = t.message
+      this.showPopup = true
+    });
   },
   mounted() {
     try {
@@ -306,6 +406,14 @@ export default defineComponent({
       document.removeEventListener("state_saved", this.uploadStateToServer);
     } catch { }
     document.addEventListener("state_saved", this.uploadStateToServer);
+    try {
+      document.removeEventListener("show_popup", (t) => {
+        this.popupTitle = t.title
+        this.popupMessage = t.message
+        this.showPopup = true
+      });
+    } catch {
+    }
 
     this.$bus.on('load_new_model', (t) => {
       if (t !== this.current_model_definition) {
@@ -314,6 +422,11 @@ export default defineComponent({
       }
     })
 
+    this.$bus.on('show_popup', (t) => {
+      this.popupTitle = t.title
+      this.popupMessage = t.message
+      this.showPopup = true
+    })
 
   }
 })
