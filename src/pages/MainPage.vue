@@ -288,7 +288,7 @@ export default defineComponent({
   },
   data() {
     return {
-      tab_left: "other_systems",
+      tab_left: "circulatory_system",
       tab_center: "diagram",
       tab_right: "numerics",
       no_of_modeleditor: 1,
