@@ -389,12 +389,16 @@ export default {
               case 'factor':
                 controller.model_value = explain.modelState.models[controller.model][controller.prop]
                 controller.slider_value = this.translateValueToSlider(controller.model_value)
-                controller.display_value = controller.model_value.toFixed(controller.rounding)
+                if (controller.display_value) {
+                  controller.display_value = controller.model_value.toFixed(controller.rounding)
+                }
                 break;
               case 'number':
                 controller.model_value = explain.modelState.models[controller.model][controller.prop]
                 controller.slider_value = controller.model_value
-                controller.display_value = controller.model_value.toFixed(controller.rounding)
+                if (controller.display_value) {
+                  controller.display_value = controller.model_value.toFixed(controller.rounding)
+                }
                 break;
               case 'string':
                 controller.model_value = explain.modelState.models[controller.model][controller.prop]

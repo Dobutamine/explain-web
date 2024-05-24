@@ -390,6 +390,7 @@ export default {
         if (component.enabled) {
           switch (component.compType) {
             case "BloodConnector":
+              //console.log(`Connecting ${component.dbcFrom} to ${component.dbcTo}`)
               this.diagram_components[key] = new BloodConnector(
                 this.pixiApp,
                 key,

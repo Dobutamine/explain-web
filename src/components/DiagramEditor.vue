@@ -187,6 +187,7 @@ export default {
       selectedDiagramComponent: "",
       diagramComponentTypes: ["BloodCompartment", "BloodPump", "BloodConnector", "Shunt", "GasCompartment", "GasConnector", "Container", "GasExchanger", "Oxygenator", "LymphCompartment", "LymphPump", "LymphConnector"],
       diagramComponentNames: [],
+      compEnabled: false,
       compName: "",
       compLabel: "",
       compType: "",
@@ -249,6 +250,7 @@ export default {
             layoutType = "arc";
           }
           this.state.diagram_definition.components[this.compName] = {
+            enabled: this.compEnabled,
             label: this.compLabel,
             models: this.compModelSelection,
             compType: this.compType,
@@ -284,6 +286,7 @@ export default {
             layoutType = "arc";
           }
           this.state.diagram_definition.components[this.compName] = {
+            enabled: this.compEnabled,
             label: this.compLabel,
             models: this.compModelSelection,
             compType: this.compType,
@@ -319,6 +322,7 @@ export default {
             layoutType = "arc";
           }
           this.state.diagram_definition.components[this.compName] = {
+            enabled: this.compEnabled,
             label: this.compLabel,
             models: this.compModelSelection,
             compType: this.compType,
@@ -354,6 +358,7 @@ export default {
             layoutType = "arc";
           }
           this.state.diagram_definition.components[this.compName] = {
+            enabled: this.compEnabled,
             label: this.compLabel,
             models: this.compModelSelection,
             compType: this.compType,
@@ -389,6 +394,7 @@ export default {
             layoutType = "arc";
           }
           this.state.diagram_definition.components[this.compName] = {
+            enabled: this.compEnabled,
             label: this.compLabel,
             models: this.compModelSelection,
             compType: this.compType,
@@ -420,6 +426,7 @@ export default {
           break;
         case "BloodConnector":
           this.state.diagram_definition.components[this.compName] = {
+            enabled: this.compEnabled,
             label: this.compLabel,
             models: this.compModelSelection,
             compType: this.compType,
@@ -431,6 +438,7 @@ export default {
           break;
         case "Shunt":
           this.state.diagram_definition.components[this.compName] = {
+            enabled: this.compEnabled,
             label: this.compLabel,
             models: this.compModelSelection,
             compType: this.compType,
@@ -442,6 +450,7 @@ export default {
           break;
         case "GasConnector":
           this.state.diagram_definition.components[this.compName] = {
+            enabled: this.compEnabled,
             label: this.compLabel,
             models: this.compModelSelection,
             compType: this.compType,
@@ -457,6 +466,7 @@ export default {
             layoutType = "arc";
           }
           this.state.diagram_definition.components[this.compName] = {
+            enabled: this.compEnabled,
             label: this.compLabel,
             models: this.compModelSelection,
             compType: this.compType,
@@ -547,10 +557,9 @@ export default {
       this.compModels = [];
       this.compModelSelection = [];
 
-      console.log(this.selectedDiagramComponent);
-
       switch (this.selectedDiagramComponent.compType) {
         case "BloodConnector":
+          this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
           this.compName = compName;
           this.compLabel = this.selectedDiagramComponent.label;
@@ -565,6 +574,7 @@ export default {
           break;
 
         case "GasConnector":
+          this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
           this.compName = compName;
           this.compLabel = this.selectedDiagramComponent.label;
@@ -576,6 +586,7 @@ export default {
           break;
 
         case "Shunt":
+          this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
           this.compName = compName;
           this.compLabel = this.selectedDiagramComponent.label;
@@ -589,6 +600,7 @@ export default {
           break;
 
         case "BloodCompartment":
+          this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
           this.compName = compName;
           this.compLabel = this.selectedDiagramComponent.label;
@@ -636,6 +648,7 @@ export default {
           // add the other possible models
           break;
         case "Oxygenator":
+          this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
           this.compName = compName;
           this.compLabel = this.selectedDiagramComponent.label;
@@ -683,6 +696,7 @@ export default {
           // add the other possible models
           break;
         case "BloodPump":
+          this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
           this.compName = compName;
           this.compLabel = this.selectedDiagramComponent.label;
@@ -730,6 +744,7 @@ export default {
           // add the other possible models
           break;
         case "GasCompartment":
+          this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
           this.compName = compName;
           this.compLabel = this.selectedDiagramComponent.label;
@@ -777,6 +792,7 @@ export default {
           // add the other possible models
           break;
         case "Container":
+          this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
           this.compName = compName;
           this.compLabel = this.selectedDiagramComponent.label;
@@ -824,6 +840,7 @@ export default {
           // add the other possible models
           break;
         case "GasExchanger":
+          this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
           this.compName = compName;
           this.compLabel = this.selectedDiagramComponent.label;
