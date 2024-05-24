@@ -2,20 +2,13 @@
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
     <div class="row text-overline justify-center" @click="collapsed = !collapsed">
       {{ title }}
-      <q-icon v-if="collapsed" class="q-ml-sm q-mt-sm" name="fa-solid fa-chevron-down"></q-icon>
-      <q-icon v-if="!collapsed" class="q-ml-sm q-mt-sm" name="fa-solid fa-chevron-up"></q-icon>
     </div>
     <div v-if="!collapsed">
-      <div v-if="state.name !== ''" class="row text-overline justify-center">
-        {{ state.name }}
-      </div>
-      <div v-if="state.name === ''" class="row text-overline justify-center">
-        no diagram loaded
-      </div>
-
-      <!-- topline buttons -->
-      <div v-if="state.name !== ''" class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md row text-overline justify-center">
-        <q-btn color="primary q-mr-xs" label="add" dark class="col" size="sm">
+      <div class="q-ml-md q-mr-sm row text-overline justify-center">
+        <q-select class="col-8" v-model:model-value="selectedDiagramComponentName"
+          :options="Object.keys(state.diagram_definition.components)" label="diagram component" dense
+          @update:model-value="editComponent"></q-select>
+        <q-btn color="secondary" label="add" dark class="q-ma-sm q-mt-md col" dense size="xs">
           <q-menu dark>
             <q-list dense>
               <div v-for="(
@@ -30,32 +23,12 @@
             </q-list>
           </q-menu>
         </q-btn>
-        <q-btn color="secondary" label="edit" dark class="col q-mr-xs" size="sm">
-          <q-menu dark>
-            <q-list dense>
-              <div v-for="(diagramComponentName, index) in diagramComponentNames" :key="index">
-                <q-item clickable dense>
-                  <q-item-section clickable v-close-popup @click="editComponent(diagramComponentName)">
-                    {{ diagramComponentName }}
-                  </q-item-section>
-                </q-item>
-              </div>
-            </q-list>
-          </q-menu>
-        </q-btn>
-        <q-btn color="negative" label="delete" dark class="col" size="sm">
-          <q-menu dark>
-            <q-list dense>
-              <div v-for="(diagramComponentName, index) in diagramComponentNames" :key="index">
-                <q-item clickable dense>
-                  <q-item-section clickable v-close-popup @click="deleteComponent(diagramComponentName)">
-                    {{ diagramComponentName }}
-                  </q-item-section>
-                </q-item>
-              </div>
-            </q-list>
-          </q-menu>
-        </q-btn>
+
+      </div>
+
+      <!-- topline buttons -->
+      <div class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md row text-overline justify-center">
+
       </div>
       <!-- editor mode 1 or 2 -->
       <div v-if="editorMode == 1 || editorMode == 2"
@@ -142,8 +115,11 @@
       </div>
       <!-- server communication buttons -->
       <div v-if="editorMode < 3 && editorMode > 0" class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
-        <q-btn color="negative" dense size="sm" style="width: 50px" icon="fa-solid fa-check"
+        <q-btn color="secondary" dense size="sm" style="width: 50px" icon="fa-solid fa-check"
           @click="saveDiagramComponent"></q-btn>
+        <q-btn color="negative" dense size="sm" style="width: 50px" icon="fa-solid fa-trash-can"
+          @click="deleteComponent">
+        </q-btn>
         <q-btn color="grey-14" size="xs" dense style="width: 50px" @click="cancelDiagramBuild"
           icon="fa-solid fa-xmark"></q-btn>
       </div>
@@ -176,6 +152,9 @@ export default {
   },
   data() {
     return {
+      selectedDiagramComponentName: "",
+      selectedDiagramComponentExp: {},
+
       advancedMode: true,
       editorMode: 0,
       title: "DIAGRAM EDITOR",
@@ -229,6 +208,10 @@ export default {
     };
   },
   methods: {
+    selectDiagramComponentExp() {
+      this.selectedDiagramComponentExp = this.state.diagram_definition.components[this.selectedDiagramComponentName];
+      console.log(this.selectDiagramComponentExp)
+    },
     updateDiagram() {
       // this.$bus.emit("rebuild_diagram");
     },
@@ -507,9 +490,9 @@ export default {
       this.selectedModelItems = [];
       this.editorMode = 0;
     },
-    deleteComponent(compName) {
+    deleteComponent() {
       this.editorMode = 3;
-      this.compName = compName;
+      this.compName = this.selectedDiagramComponentName;
     },
     deleteComponentFromStore() {
       // also delete all connector which are pointing to this component
@@ -548,10 +531,11 @@ export default {
       this.$bus.emit("rebuild_diagram");
       this.cancelDiagramBuild();
     },
-    editComponent(compName) {
+    editComponent() {
+
       this.editorMode = 2;
       // get all the properties
-      this.selectedDiagramComponent = this.state.diagram_definition.components[compName];
+      this.selectedDiagramComponent = this.state.diagram_definition.components[this.selectedDiagramComponentName];
 
       // get all possible model types
       this.compModels = [];
@@ -561,7 +545,7 @@ export default {
         case "BloodConnector":
           this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
-          this.compName = compName;
+          this.compName = this.selectedDiagramComponentName;
           this.compLabel = this.selectedDiagramComponent.label;
           this.selectModelTypeToAdd(this.selectedDiagramComponent.compType);
           this.compModelSelection = this.selectedDiagramComponent.models;
@@ -576,7 +560,7 @@ export default {
         case "GasConnector":
           this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
-          this.compName = compName;
+          this.compName = this.selectedDiagramComponentName;
           this.compLabel = this.selectedDiagramComponent.label;
           this.selectModelTypeToAdd(this.selectedDiagramComponent.compType);
           this.compModelSelection = this.selectedDiagramComponent.models;
@@ -588,7 +572,7 @@ export default {
         case "Shunt":
           this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
-          this.compName = compName;
+          this.compName = this.selectedDiagramComponentName;
           this.compLabel = this.selectedDiagramComponent.label;
           this.selectModelTypeToAdd(this.selectedDiagramComponent.compType);
           this.compModelSelection = this.selectedDiagramComponent.models;
@@ -602,7 +586,7 @@ export default {
         case "BloodCompartment":
           this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
-          this.compName = compName;
+          this.compName = this.selectedDiagramComponentName;
           this.compLabel = this.selectedDiagramComponent.label;
           this.selectModelTypeToAdd(this.selectedDiagramComponent.compType);
           this.compModelSelection = this.selectedDiagramComponent.models;
@@ -650,7 +634,7 @@ export default {
         case "Oxygenator":
           this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
-          this.compName = compName;
+          this.compName = this.selectedDiagramComponentName;
           this.compLabel = this.selectedDiagramComponent.label;
           this.selectModelTypeToAdd(this.selectedDiagramComponent.compType);
           this.compModelSelection = this.selectedDiagramComponent.models;
@@ -698,7 +682,7 @@ export default {
         case "BloodPump":
           this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
-          this.compName = compName;
+          this.compName = this.selectedDiagramComponentName;
           this.compLabel = this.selectedDiagramComponent.label;
           this.selectModelTypeToAdd(this.selectedDiagramComponent.compType);
           this.compModelSelection = this.selectedDiagramComponent.models;
@@ -746,7 +730,7 @@ export default {
         case "GasCompartment":
           this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
-          this.compName = compName;
+          this.compName = this.selectedDiagramComponentName;
           this.compLabel = this.selectedDiagramComponent.label;
           this.selectModelTypeToAdd(this.selectedDiagramComponent.compType);
           this.compModelSelection = this.selectedDiagramComponent.models;
@@ -794,7 +778,7 @@ export default {
         case "Container":
           this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
-          this.compName = compName;
+          this.compName = this.selectedDiagramComponentName;
           this.compLabel = this.selectedDiagramComponent.label;
           this.selectModelTypeToAdd(this.selectedDiagramComponent.compType);
           this.compModelSelection = this.selectedDiagramComponent.models;
@@ -842,7 +826,7 @@ export default {
         case "GasExchanger":
           this.compEnabled = this.selectedDiagramComponent.enabled;
           this.compType = this.selectedDiagramComponent.compType;
-          this.compName = compName;
+          this.compName = this.selectedDiagramComponentName;
           this.compLabel = this.selectedDiagramComponent.label;
           this.compGas = this.selectedDiagramComponent.gas;
           this.selectModelTypeToAdd(this.selectedDiagramComponent.compType);
