@@ -32,7 +32,8 @@ export const useStateStore = defineStore("state", {
         this.saved = false;
       }
     },
-    getAllStatesFromServer(apiUrl, userName, token) {},
+    getAllSharedStatesFromServer(apiUrl, userName, token) {},
+    getAllUserStatesFromServer(apiUrl, userName, token) {},
     async getDefaultStateFromServer(apiUrl, userName, token) {
       const url = `${apiUrl}/api/states/get_state?token=${token}`;
       let response = await fetch(url, {
