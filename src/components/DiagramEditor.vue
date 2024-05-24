@@ -4,11 +4,11 @@
       {{ title }}
     </div>
     <div v-if="!collapsed">
-      <div class="q-ml-md q-mr-sm row text-overline justify-center">
-        <q-select class="col-8" v-model:model-value="selectedDiagramComponentName"
+      <div class="q-ml-md q-mr-sm q-mb-sm row text-overline justify-center">
+        <q-select class="col-9" v-model:model-value="selectedDiagramComponentName"
           :options="Object.keys(state.diagram_definition.components)" label="diagram component" dense
           @update:model-value="editComponent"></q-select>
-        <q-btn color="secondary" label="add" dark class="q-ma-sm q-mt-md col" dense size="xs">
+        <q-btn color="secondary" label="ADD NEW" dark class="q-ma-sm q-mt-md col" dense size="sm">
           <q-menu dark>
             <q-list dense>
               <div v-for="(
@@ -26,10 +26,6 @@
 
       </div>
 
-      <!-- topline buttons -->
-      <div class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md row text-overline justify-center">
-
-      </div>
       <!-- editor mode 1 or 2 -->
       <div v-if="editorMode == 1 || editorMode == 2"
         class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md row text-overline justify-center">
