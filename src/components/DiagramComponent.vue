@@ -266,7 +266,7 @@ export default {
       const yOffset = this.state.diagram_definition.settings.yOffset
       const radius = this.state.diagram_definition.settings.radius;
       let global_scaling = this.state.diagram_definition.settings.scaling * this.global_scale
-      // render the blood compartments
+      // first render all compartments and then the connectors
       Object.entries(component_list).forEach(([key, component]) => {
         // inject the offsets
         if (component.enabled) {
@@ -381,6 +381,14 @@ export default {
               })
               explain.watchModelProps(watched_models_gc)
               break;
+          }
+        }
+      });
+
+      Object.entries(component_list).forEach(([key, component]) => {
+        // inject the offsets
+        if (component.enabled) {
+          switch (component.compType) {
             case "BloodConnector":
               this.diagram_components[key] = new BloodConnector(
                 this.pixiApp,
@@ -683,6 +691,7 @@ export default {
     this.$bus.on('rt_stop', () => this.rt_running = false)
 
     this.$bus.on('reset', () => this.buildDiagram())
+    this.$bus.on('rebuild_diagram', () => this.buildDiagram())
 
     this.$bus.on("update_watchlist", () => this.update_watchlist())
 

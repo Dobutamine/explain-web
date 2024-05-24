@@ -98,6 +98,7 @@
                 <div v-for="item in state.configuration.enabled_controllers.others">
                   <NiceController :config="state.configuration.controllers[item]"></NiceController>
                 </div>
+                <DiagramEditorComponent></DiagramEditorComponent>
 
               </q-scroll-area>
             </q-tab-panel>
@@ -260,6 +261,7 @@ import HeartComponent from 'src/components/HeartComponent.vue';
 import DiagramComponent from 'src/components/DiagramComponent.vue';
 import NiceController from 'src/components/NiceController.vue';
 import BigNumbersComponent from 'src/components/BigNumbersComponent.vue';
+import DiagramEditorComponent from 'src/components/DiagramEditor.vue';
 
 import { explain } from 'src/boot/explain';
 
@@ -284,7 +286,8 @@ export default defineComponent({
     XYChartComponent,
     HeartComponent,
     DiagramComponent,
-    NiceController
+    NiceController,
+    DiagramEditorComponent
   },
   data() {
     return {

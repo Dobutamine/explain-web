@@ -96,14 +96,19 @@
         <q-btn flat round dense size="sm" icon="fa-solid fa-upload" color="white" class="q-mr-sm q-ml-sm"
           @click="upload">
           <q-tooltip> upload model state to server </q-tooltip></q-btn>
+
         <q-btn flat round dense size="sm" icon="fa-solid fa-download" color="white" class="q-mr-sm" @click="download">
           <q-tooltip> download model state to disk </q-tooltip></q-btn>
+
         <q-btn flat round dense size="sm" :icon="butIcon" :color="butColor" class="q-mr-sm" @click="togglePlay">
           <q-tooltip> start/stop model </q-tooltip></q-btn>
+
         <q-btn flat round dense size="sm" icon="fa-solid fa-rotate-right" color="white" class="q-mr-sm" @click="reload">
           <q-tooltip> restart model </q-tooltip></q-btn>
+
         <q-btn flat round dense :icon="butCalcIcon" size="sm" @click="calculate" :color="butCalcColor" class="q-mr-sm">
           <q-tooltip> fast forward model</q-tooltip></q-btn>
+
         <q-select class="q-ml-md q-mr-md" label-color="white" v-model="selectedDuration" :options="durations"
           hide-bottom-space dense label="step (sec.)" style="width: 90px; font-size: 12px"><q-tooltip> fast forward step
             size</q-tooltip></q-select>
