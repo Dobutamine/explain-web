@@ -204,12 +204,8 @@ export default {
     };
   },
   methods: {
-    selectDiagramComponentExp() {
-      this.selectedDiagramComponentExp = this.state.diagram_definition.components[this.selectedDiagramComponentName];
-      console.log(this.selectDiagramComponentExp)
-    },
     updateDiagram() {
-      // this.$bus.emit("rebuild_diagram");
+      this.$bus.emit("rebuild_diagram");
     },
     getAllDiagramComponents() {
       this.diagramComponentNames = [];
@@ -477,12 +473,13 @@ export default {
           this.$bus.emit("rebuild_diagram");
           break;
       }
-      this.cancelDiagramBuild();
+      // this.cancelDiagramBuild();
     },
     cancelDiagramBuild() {
       this.clearFields();
       this.getAllDiagramComponents();
       this.compType = "";
+      this.selectedDiagramComponentName = "";
       this.selectedModelItems = [];
       this.editorMode = 0;
     },
@@ -520,7 +517,7 @@ export default {
         );
       }
       compToDelete.forEach((c) => {
-        delete this.diagram.components[c];
+        delete this.state.diagram_definition.components[c];
       });
 
       //delete this.state.diagram_definition.components[this.compName];
@@ -528,7 +525,6 @@ export default {
       this.cancelDiagramBuild();
     },
     editComponent() {
-
       this.editorMode = 2;
       // get all the properties
       this.selectedDiagramComponent = this.state.diagram_definition.components[this.selectedDiagramComponentName];
@@ -882,6 +878,7 @@ export default {
       });
     },
     clearFields() {
+      this.compEnabled = false;
       this.compLabel = "";
       this.compName = "";
       this.compModels = [];
@@ -904,6 +901,7 @@ export default {
     },
     addComponent(compType) {
       this.editorMode = 1;
+      this.compEnabled = true;
       this.clearFields();
       this.selectModelTypeToAdd(compType);
       switch (compType) {
