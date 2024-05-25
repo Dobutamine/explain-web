@@ -32,10 +32,50 @@ export const useStateStore = defineStore("state", {
         this.saved = false;
       }
     },
-    getAllSharedStatesFromServer(apiUrl, userName, token) {},
-    getAllUserStatesFromServer(apiUrl, userName, token) {},
+    async getAllSharedStatesFromServer(apiUrl, userName, token) {
+      const url = `${apiUrl}/api/states/get_all_shared_states?token=${token}`;
+      let response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: userName,
+        }),
+      });
+
+      if (response.status === 200) {
+        let data = await response.json();
+        console.log(data);
+        return data;
+      } else {
+        return false;
+      }
+    },
+    async getAllUserStatesFromServer(apiUrl, userName, token) {
+      const url = `${apiUrl}/api/states/get_all_user_states?token=${token}`;
+      let response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: userName,
+        }),
+      });
+
+      if (response.status === 200) {
+        let data = await response.json();
+        console.log(data);
+        return data;
+      } else {
+        return false;
+      }
+    },
     async getDefaultStateFromServer(apiUrl, userName, token) {
-      const url = `${apiUrl}/api/states/get_state?token=${token}`;
+      const url = `${apiUrl}/api/states/get_user_state?token=${token}`;
       let response = await fetch(url, {
         method: "POST",
         headers: {
@@ -65,7 +105,7 @@ export const useStateStore = defineStore("state", {
       }
     },
     async getStateFromServer(apiUrl, userName, stateName, token) {
-      const url = `${apiUrl}/api/states/get_state?token=${token}`;
+      const url = `${apiUrl}/api/states/get_user_state?token=${token}`;
       let response = await fetch(url, {
         method: "POST",
         headers: {

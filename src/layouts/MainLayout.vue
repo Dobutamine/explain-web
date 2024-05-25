@@ -73,6 +73,11 @@
           <b>*</b>
         </div>
 
+
+        <q-btn v-if="state.default" flat round dense size="sm" icon="fa-solid fa-tag" color="white" class="q-ml-sm"
+          @click="renameState">
+          <q-tooltip> rename the current state </q-tooltip></q-btn>
+
         <q-btn v-if="user.admin && state.protected" flat round dense size="sm" icon="fa-solid fa-lock" color="white"
           class="q-ml-sm" @click="protectState">
           <q-tooltip> state is protected </q-tooltip></q-btn>
@@ -81,9 +86,14 @@
           color="white" class="q-ml-sm" @click="protectState">
           <q-tooltip> state is not protected </q-tooltip></q-btn>
 
-        <q-btn v-if="state.default" flat round dense size="sm" icon="fa-solid fa-tag" color="white" class="q-ml-sm"
-          @click="renameState">
-          <q-tooltip> rename the current state </q-tooltip></q-btn>
+        <q-btn v-if="state.shared" flat round dense size="sm" icon="fa-solid fa-share-nodes" color="white"
+          class="q-ml-sm" @click="shareState">
+          <q-tooltip> state is shared </q-tooltip></q-btn>
+
+        <q-btn v-if="!state.shared" flat round dense size="sm" icon="fa-solid fa-square-share-nodes" color="white"
+          class="q-ml-sm" @click="shareState">
+          <q-tooltip> state is not shared </q-tooltip></q-btn>
+
 
         <q-btn v-if="state.default" flat round dense size="sm" icon="fa-solid fa-star" color="white" class="q-ml-sm"
           @click="setStateAsDefault">
@@ -93,18 +103,19 @@
           @click="setStateAsDefault">
           <q-tooltip> set current state as default </q-tooltip></q-btn>
 
-        <q-btn flat round dense size="sm" icon="fa-solid fa-upload" color="white" class="q-mr-sm q-ml-sm"
-          @click="upload">
-          <q-tooltip> upload model state to server </q-tooltip></q-btn>
+        <q-btn v-if="user.admin && state.protected" flat round dense size="sm" icon="fa-solid fa-folder" color="white"
+          class="q-ml-sm" @click="getStates">
+          <q-tooltip> get states from server </q-tooltip></q-btn>
 
-        <q-btn flat round dense size="sm" icon="fa-solid fa-download" color="white" class="q-mr-sm" @click="download">
-          <q-tooltip> download model state to disk </q-tooltip></q-btn>
+        <q-btn flat round dense size="sm" icon="fa-solid fa-save" color="white" class="q-mr-sm q-ml-sm" @click="upload">
+          <q-tooltip> save model state to server </q-tooltip></q-btn>
+
+        <q-btn flat round dense size="sm" icon="fa-solid fa-file-export" color="white" class="q-mr-sm"
+          @click="download">
+          <q-tooltip> export model state to disk </q-tooltip></q-btn>
 
         <q-btn flat round dense size="sm" :icon="butIcon" :color="butColor" class="q-mr-sm" @click="togglePlay">
           <q-tooltip> start/stop model </q-tooltip></q-btn>
-
-        <q-btn flat round dense size="sm" icon="fa-solid fa-rotate-right" color="white" class="q-mr-sm" @click="reload">
-          <q-tooltip> restart model </q-tooltip></q-btn>
 
         <q-btn flat round dense :icon="butCalcIcon" size="sm" @click="calculate" :color="butCalcColor" class="q-mr-sm">
           <q-tooltip> fast forward model</q-tooltip></q-btn>
@@ -112,6 +123,10 @@
         <q-select class="q-ml-md q-mr-md" label-color="white" v-model="selectedDuration" :options="durations"
           hide-bottom-space dense label="step (sec.)" style="width: 90px; font-size: 12px"><q-tooltip> fast forward step
             size</q-tooltip></q-select>
+
+
+        <q-btn flat round dense size="sm" icon="fa-solid fa-rotate-right" color="white" class="q-mr-sm" @click="reload">
+          <q-tooltip> restart model </q-tooltip></q-btn>
       </q-toolbar>
     </q-footer>
   </q-layout>
@@ -173,6 +188,13 @@ export default defineComponent({
     }
   },
   methods: {
+    getStates() { },
+    getAllSharedStates() {
+      this.state.getAllSharedStatesFromServer(this.general.apiUrl, this.user.name, this.user.token)
+    },
+    getAllUserStates() {
+      this.state.getAllUserStatesFromServer(this.general.apiUrl, this.user.name, this.user.token)
+    },
     protectState() {
       this.state.protected = !this.state.protected
     },
@@ -351,6 +373,7 @@ export default defineComponent({
       }
       this.showInputPopup = false
     },
+    shareState() { },
     renameState() {
       this.showInputPopup = true
       this.inputPopupTitle = "Enter a new state name"
