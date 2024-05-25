@@ -627,6 +627,7 @@ export default {
       }
     },
     buildDiagram() {
+      console.log('rebuilding diagram')
       this.pixiApp.stage.removeChildren();
 
       // draw the skeleton graphics

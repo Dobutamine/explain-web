@@ -275,6 +275,28 @@ export default {
         });
       }
     });
+    this.load_shared_state = this.state.$onAction(({ name, after }) => {
+      if (name === "getSharedStateFromServer") {
+        after((result) => {
+          if (result) {
+            this.errorText = ""
+            console.log(`State ${this.state.name} loaded`)
+            explain.loadModelDefinition(this.state.model_definition);
+            if (this.user.defaultState === this.name) {
+              this.default = true;
+            } else {
+              this.default = false;
+            }
+            this.state.saved = true;
+            this.$router.push("/explain");
+          } else {
+            this.errorText = "Cannot find shared model state on the server! Loading general default state";
+            this.LoadGeneralDefaultState()
+          }
+        });
+      }
+    });
+
     this.load_general_default_state = this.state.$onAction(({ name, after }) => {
       if (name === "getDefaultStateFromServer") {
         after((result) => {

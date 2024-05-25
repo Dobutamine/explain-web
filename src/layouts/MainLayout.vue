@@ -53,6 +53,44 @@
           </q-card-actions>
         </q-card>
       </q-dialog>
+
+      <q-dialog v-model="showLoadStatePopUp" persistent transition-show="slide-up" transition-hide="slide-down">
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">Select model state from server</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            <q-select v-model="selectedState" :options="stateList" label="user states" filled dense />
+            <q-checkbox class="q-ma-sm" v-model="sharedStates" label="include shared states" color="primary" dense dark
+              size="xs" @update:model-value="toggleSharedStates" />
+          </q-card-section>
+
+          <q-card-actions align="right">
+            <q-btn flat label="Cancel" color="primary" size="sm" v-close-popup />
+            <q-btn flat label="Load" color="primary" size="sm" @click="loadSelectedState" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+
+      <q-dialog v-model="showSaveStatePopUp" persistent transition-show="slide-up" transition-hide="slide-down">
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">Save model state to server</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            <q-input v-model="selectedState" label="state name" filled clearable />
+            <q-checkbox class="q-ma-sm" v-model="state.shared" label="shared state" color="primary" dense dark
+              size="xs" />
+          </q-card-section>
+
+          <q-card-actions align="right">
+            <q-btn flat label="Cancel" color="primary" size="sm" v-close-popup />
+            <q-btn flat label="Save" color="primary" size="sm" @click="upload" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
     </q-page-container>
 
     <q-footer class="bg-grey-8 text-white footerCustomStyle">
@@ -73,11 +111,6 @@
           <b>*</b>
         </div>
 
-
-        <q-btn v-if="state.default" flat round dense size="sm" icon="fa-solid fa-tag" color="white" class="q-ml-sm"
-          @click="renameState">
-          <q-tooltip> rename the current state </q-tooltip></q-btn>
-
         <q-btn v-if="user.admin && state.protected" flat round dense size="sm" icon="fa-solid fa-lock" color="white"
           class="q-ml-sm" @click="protectState">
           <q-tooltip> state is protected </q-tooltip></q-btn>
@@ -85,15 +118,6 @@
         <q-btn v-if="user.admin && !state.protected" flat round dense size="sm" icon="fa-solid fa-lock-open"
           color="white" class="q-ml-sm" @click="protectState">
           <q-tooltip> state is not protected </q-tooltip></q-btn>
-
-        <q-btn v-if="state.shared" flat round dense size="sm" icon="fa-solid fa-share-nodes" color="white"
-          class="q-ml-sm" @click="shareState">
-          <q-tooltip> state is shared </q-tooltip></q-btn>
-
-        <q-btn v-if="!state.shared" flat round dense size="sm" icon="fa-solid fa-square-share-nodes" color="white"
-          class="q-ml-sm" @click="shareState">
-          <q-tooltip> state is not shared </q-tooltip></q-btn>
-
 
         <q-btn v-if="state.default" flat round dense size="sm" icon="fa-solid fa-star" color="white" class="q-ml-sm"
           @click="setStateAsDefault">
@@ -103,11 +127,12 @@
           @click="setStateAsDefault">
           <q-tooltip> set current state as default </q-tooltip></q-btn>
 
-        <q-btn v-if="user.admin && state.protected" flat round dense size="sm" icon="fa-solid fa-folder" color="white"
-          class="q-ml-sm" @click="getStates">
+        <q-btn flat round dense size="sm" icon="fa-solid fa-folder" color="white" class="q-ml-sm"
+          @click="getAllUserStates">
           <q-tooltip> get states from server </q-tooltip></q-btn>
 
-        <q-btn flat round dense size="sm" icon="fa-solid fa-save" color="white" class="q-mr-sm q-ml-sm" @click="upload">
+        <q-btn flat round dense size="sm" icon="fa-solid fa-save" color="white" class="q-mr-sm q-ml-sm"
+          @click="saveState">
           <q-tooltip> save model state to server </q-tooltip></q-btn>
 
         <q-btn flat round dense size="sm" icon="fa-solid fa-file-export" color="white" class="q-mr-sm"
@@ -138,6 +163,7 @@ import { useGeneralStore } from 'src/stores/general';
 import { useUserStore } from 'src/stores/user';
 import { useStateStore } from 'src/stores/state';
 import { explain } from 'src/boot/explain';
+import { TimeScale } from 'chart.js';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -181,6 +207,13 @@ export default defineComponent({
       showInputPopup: false,
       inputPopupTitle: "Input",
       inputPopupClass: "text-h6",
+      showLoadStatePopUp: false,
+      showSaveStatePopUp: false,
+      selectedState: "",
+      sharedStates: false,
+      stateList: [],
+      userStateList: [],
+      sharedStateList: [],
       userInput: "",
       durations: [1, 2, 3, 5, 10, 20, 30, 60, 120, 240, 360, 600, 1200, 1800],
       current_model_definition: 'baseline_neonate',
@@ -188,12 +221,46 @@ export default defineComponent({
     }
   },
   methods: {
-    getStates() { },
-    getAllSharedStates() {
-      this.state.getAllSharedStatesFromServer(this.general.apiUrl, this.user.name, this.user.token)
+    async loadSelectedState() {
+      let result = false
+      if (this.selectedState.includes("shared")) {
+        let stateName = this.selectedState.split(" (shared)")[0]
+        result = await this.state.getSharedStateFromServer(this.general.apiUrl, stateName, this.user.token)
+        if (result) {
+          explain.loadModelDefinition(this.state.model_definition);
+        }
+      } else {
+        result = await this.state.getStateFromServer(this.general.apiUrl, this.user.name, this.selectedState, this.user.token)
+      }
+      if (result) {
+        console.log("state loaded")
+        this.showLoadStatePopUp = false
+        this.$bus.emit('reset')
+      }
+      this.showLoadStatePopUp = false
     },
-    getAllUserStates() {
-      this.state.getAllUserStatesFromServer(this.general.apiUrl, this.user.name, this.user.token)
+    toggleSharedStates() {
+      this.buildStateList()
+    },
+    buildStateList() {
+      this.selectedState = ""
+      this.stateList = [...this.userStateList]
+      if (this.sharedStates) {
+        this.sharedStateList.forEach((t) => {
+          this.stateList.push(t + " (shared)")
+        })
+      }
+    },
+    async getAllUserStates() {
+      this.stateList = []
+      this.userStateList = []
+      this.sharedStateList = []
+
+      this.userStateList = await this.state.getAllUserStatesFromServer(this.general.apiUrl, this.user.name, this.user.token)
+      this.sharedStateList = await this.state.getAllSharedStatesFromServer(this.general.apiUrl, this.user.name, this.user.token)
+
+      this.buildStateList()
+      this.showLoadStatePopUp = true
     },
     protectState() {
       this.state.protected = !this.state.protected
@@ -230,18 +297,6 @@ export default defineComponent({
       // load the new model definition
       explain.loadBakedInModelDefinition(this.current_model_definition)
     },
-    upload() {
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        const fileContents = e.target.result;
-        let loaded_definition = JSON.parse(fileContents)
-        explain.loadModelDefinition(loaded_definition)
-      };
-
-      // Read the file as Text or as needed
-      reader.readAsText(this.model_file);
-    },
     stopRt() {
       if (this.rtState) {
         explain.stop();
@@ -259,8 +314,19 @@ export default defineComponent({
       this.stopRt()
       explain.saveModelState("local")
     },
-    upload() {
+    saveState() {
       this.stopRt()
+      this.selectedState = this.state.name
+      this.showSaveStatePopUp = true
+    },
+    upload() {
+      if (this.state.protected) {
+        if (this.selectedState !== this.state.name) {
+          this.state.protected = false
+        }
+      }
+      this.state.name = this.selectedState
+      this.showSaveStatePopUp = false
       explain.saveModelState("server")
     },
     toggleDebug() {
@@ -372,13 +438,6 @@ export default defineComponent({
         this.state.renameState(this.userInput, this.user.name)
       }
       this.showInputPopup = false
-    },
-    shareState() { },
-    renameState() {
-      this.showInputPopup = true
-      this.inputPopupTitle = "Enter a new state name"
-      this.inputPopupClass = "text-h6"
-
     },
     uploadStateToServer() {
       this.state.model_definition = { ...explain.modelDefinition }

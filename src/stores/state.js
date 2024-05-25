@@ -47,7 +47,6 @@ export const useStateStore = defineStore("state", {
 
       if (response.status === 200) {
         let data = await response.json();
-        console.log(data);
         return data;
       } else {
         return false;
@@ -68,7 +67,6 @@ export const useStateStore = defineStore("state", {
 
       if (response.status === 200) {
         let data = await response.json();
-        console.log(data);
         return data;
       } else {
         return false;
@@ -123,6 +121,36 @@ export const useStateStore = defineStore("state", {
         this.user = data.user;
         this.name = data.name;
         this.protected = data.protected;
+        this.shared = data.shared;
+        this.dateCreated = data.dateCreated;
+        this.dateLastUpdated = data.dateLastUpdated;
+        this.diagram_definition = data.diagram_definition;
+        this.model_definition = data.model_definition;
+        this.configuration = data.configuration;
+
+        return true;
+      } else {
+        return false;
+      }
+    },
+    async getSharedStateFromServer(apiUrl, stateName, token) {
+      const url = `${apiUrl}/api/states/get_shared_state?token=${token}`;
+      let response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: stateName,
+        }),
+      });
+
+      if (response.status === 200) {
+        let data = await response.json();
+        this.user = data.user;
+        this.name = data.name;
+        this.protected = true;
         this.shared = data.shared;
         this.dateCreated = data.dateCreated;
         this.dateLastUpdated = data.dateLastUpdated;
