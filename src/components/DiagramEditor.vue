@@ -210,7 +210,7 @@ export default {
       selectedModelItems: [],
       modelTypes: [],
       selectedDiagramComponent: "",
-      diagramComponentTypes: ["BloodCompartment", "BloodPump", "BloodConnector", "Shunt", "GasCompartment", "GasConnector", "Container", "GasExchanger", "Oxygenator", "LymphCompartment", "LymphPump", "LymphConnector"],
+      diagramComponentTypes: ["BloodCompartment", "BloodPump", "BloodConnector", "Shunt", "GasCompartment", "GasConnector", "Container", "GasExchanger", "Oxygenator"],
       diagramComponentNames: [],
       compEnabled: false,
       compName: "",
