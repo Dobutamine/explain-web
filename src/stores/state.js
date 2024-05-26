@@ -27,7 +27,7 @@ export const useStateStore = defineStore("state", {
         this.name = newName;
         this.default = false;
         this.protected = false;
-        this.user = userName;
+        this.user = userName.toLowerCase();
         this.dateCreated = new Date();
         this.dateCreated = this.dateCreated.toISOString();
         this.saved = false;
@@ -42,7 +42,7 @@ export const useStateStore = defineStore("state", {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user: userName,
+          user: userName.toLowerCase(),
         }),
       });
 
@@ -62,7 +62,7 @@ export const useStateStore = defineStore("state", {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user: userName,
+          user: userName.toLowerCase(),
         }),
       });
 
@@ -89,7 +89,7 @@ export const useStateStore = defineStore("state", {
 
       if (response.status === 200) {
         let data = await response.json();
-        this.user = userName;
+        this.user = userName.toLowerCase();
         this.name = "baseline neonate";
         this.protected = true;
         this.shared = data.shared;
@@ -112,14 +112,14 @@ export const useStateStore = defineStore("state", {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user: userName,
+          user: userName.toLowerCase(),
           name: stateName,
         }),
       });
 
       if (response.status === 200) {
         let data = await response.json();
-        this.user = data.user;
+        this.user = data.user.toLowerCase();
         this.name = data.name;
         this.protected = data.protected;
         this.shared = data.shared;
@@ -149,7 +149,7 @@ export const useStateStore = defineStore("state", {
 
       if (response.status === 200) {
         let data = await response.json();
-        this.user = data.user;
+        this.user = data.user.toLowerCase();
         this.name = data.name;
         this.protected = true;
         this.shared = data.shared;
@@ -178,7 +178,7 @@ export const useStateStore = defineStore("state", {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            user: userName,
+            user: userName.toLowerCase(),
             name: this.name,
             protected: this.protected,
             shared: this.shared,

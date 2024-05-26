@@ -57,7 +57,7 @@ export const useUserStore = defineStore("user", {
       if (response.status === 200) {
         let data = await response.json();
         this.id = data._id;
-        this.name = data.name;
+        this.name = data.name.toLowerCase();
         this.email = data.email;
         this.institution = data.institution;
         this.subscription = data.subscription;
@@ -98,7 +98,7 @@ export const useUserStore = defineStore("user", {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: name,
+          name: name.toLowerCase(),
           email: email,
           password: password,
           admin: admin,
@@ -117,7 +117,7 @@ export const useUserStore = defineStore("user", {
       if (response.status === 200) {
         let data = await response.json();
         this.id = data._id;
-        this.name = data.name;
+        this.name = data.name.toLowerCase();
         this.email = data.email;
         this.token = data.token;
         this.admin = data.admin;
@@ -151,7 +151,7 @@ export const useUserStore = defineStore("user", {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: this.name,
+          name: this.name.toLowerCase(),
           email: this.email,
         }),
       });
