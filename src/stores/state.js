@@ -16,6 +16,7 @@ export const useStateStore = defineStore("state", {
     configuration: {},
     saved: false,
     default: true,
+    prev_diagram_definition: {},
   }),
 
   getters: {},

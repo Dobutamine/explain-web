@@ -5,18 +5,19 @@
     </div>
     <div v-if="!collapsed">
       <div class="q-ml-md q-mr-sm q-mb-sm  text-overline justify-center">
-        <div class="q-ma-sm row justify-center">
+        <div class="text-center" @click="generalSettingsCollapsed = !generalSettingsCollapsed">general settings</div>
+        <div v-if="!generalSettingsCollapsed" class="q-ma-sm row justify-center">
           <q-toggle class="col-6" v-model="state.diagram_definition.settings.grid" label="grid" dense dark size="sm"
             @update:model-value="updateDiagram" />
           <q-input class="col-6" v-model.number="state.diagram_definition.settings.gridSize" type="number" :min="5"
             :max="100" :step="1" label="grid size" dense dark @update:model-value="updateDiagram" />
         </div>
 
-        <div class="q-ma-sm row">
+        <div v-if="!generalSettingsCollapsed" class="q-ma-sm row">
           <q-toggle v-model="state.diagram_definition.settings.skeleton" label="skeleton" dense dark size="sm"
             @update:model-value="updateDiagram" />
         </div>
-        <div v-if="state.diagram_definition.settings.skeleton" class="q-ma-sm row">
+        <div v-if="state.diagram_definition.settings.skeleton && !generalSettingsCollapsed" class="q-ma-sm row">
           <q-input class="col-4" v-model.number="state.diagram_definition.settings.xOffset" label="x-offset"
             type="number" :min="-1000" :max="1000" :step="1" dense dark @update:model-value="updateDiagram" />
           <q-input class="col-4" v-model.number="state.diagram_definition.settings.yOffset" label="y-offset"
@@ -25,15 +26,29 @@
             type="number" :min="0.01" :max="1" :step="0.01" @update:model-value="updateDiagram" />
         </div>
 
-        <div class="q-ma-sm row">
+        <div v-if="!generalSettingsCollapsed" class="q-ma-sm row">
           <q-input class="col-6" v-model.number="state.diagram_definition.settings.scaling" label="scaling" dense dark
             type="number" :min="0.1" :max="1000" :step="0.1" @update:model-value="updateDiagram" />
           <q-input class="col-6" v-model.number="state.diagram_definition.settings.speed" label="speed" dense dark
             type="number" :min="0.1" :max="1000" :step="0.1" @update:model-value="updateDiagram" />
         </div>
 
+        <div v-if="!generalSettingsCollapsed" class="q-ma-sm row">
+          <q-toggle v-model="state.diagram_definition.settings.shuntOptionsVisible" label="shunt and ecls options" dense
+            dark size="sm" @update:model-value="updateDiagram" />
+        </div>
+
+        <div v-if="!generalSettingsCollapsed" class="q-ma-sm row justify-center">
+          <q-btn class="col q-ma-sm" color="negative" size="sm" @click="clearDiagram">CLEAR DIAGRAM</q-btn>
+          <q-btn v-if="this.state.prev_diagram_definition" class="col q-ma-sm" color="secondary" size="sm"
+            @click="restore_diagram">RESTORE DIAGRAM</q-btn>
+        </div>
+
       </div>
-      <div class="q-ml-md q-mr-sm q-mb-sm row text-overline justify-center">
+
+      <div class="text-center text-overline" @click="componentSettingsCollapsed = !componentSettingsCollapsed">component
+        settings</div>
+      <div v-if="!componentSettingsCollapsed" class="q-ml-md q-mr-sm q-mb-sm row text-overline justify-center">
         <q-select class="col-9" v-model:model-value="selectedDiagramComponentName"
           :options="Object.keys(state.diagram_definition.components)" label="diagram component" dense
           @update:model-value="editComponent"></q-select>
@@ -55,102 +70,106 @@
 
       </div>
 
-      <!-- editor mode 1 or 2 -->
-      <div v-if="editorMode == 1 || editorMode == 2"
-        class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md row text-overline justify-center">
-        {{ compType }}
-        <div :style="{ 'font-size': '10px', width: '100%' }">
-          <q-input label="name" v-model="compName" square hide-hint dense dark stack-label style="width: 100%" />
-          <q-input label="label" v-model="compLabel" square hide-hint dense dark stack-label style="width: 100%" />
-          <q-select class="col-9" label="models" v-model="compModelSelection" :options="compModels" hide-bottom-space
-            dense multiple style="font-size: 12px" />
-          <div v-if="
-            advancedMode &&
-            (compType == 'BloodCompartment' ||
-              compType == 'BloodPump' ||
-              compType == 'Oxygenator' ||
-              compType == 'GasCompartment' ||
-              compType == 'Container' ||
-              compType == 'GasExchanger')
-          ">
-            layout
-            <q-btn-toggle class="q-ma-sm col-9" v-model="compLayoutType" size="sm" dark spread dense no-caps
-              toggle-color="blue-grey-6" color="grey-9" text-color="black" :options="[
-                { label: 'Arc', value: true },
-                { label: 'Relative', value: false },
-              ]" />
-            <div class="row">
-              <q-select class="col q-ma-sm" label="pictogram" square hide-hint stack-label v-model="compPicto"
-                :options="pictos" hide-bottom-space dense dark style="font-size: 12px" />
-            </div>
-            <div v-if="!compLayoutType" class="row">
-              <q-input class="col q-ma-sm" label="postion x" v-model="compLayoutX" square type="number" hide-hint dense
-                dark stack-label />
-              <q-input class="col q-ma-sm" label="position Y" v-model="compLayoutY" square type="number" hide-hint dense
-                dark stack-label />
-            </div>
-            <div v-if="compLayoutType" class="row">
-              <q-input class="col q-ma-sm" label="position Degrees" v-model="compLayoutDgs" square type="number"
-                hide-hint dense dark stack-label />
+
+      <div v-if="!componentSettingsCollapsed">
+        <!-- editor mode 1 or 2 -->
+        <div v-if="editorMode == 1 || editorMode == 2"
+          class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md row text-overline justify-center">
+          {{ compType }}
+          <div :style="{ 'font-size': '10px', width: '100%' }">
+            <q-input label="name" v-model="compName" square hide-hint dense dark stack-label style="width: 100%" />
+            <q-input label="label" v-model="compLabel" square hide-hint dense dark stack-label style="width: 100%" />
+            <q-select class="col-9" label="models" v-model="compModelSelection" :options="compModels" hide-bottom-space
+              dense multiple style="font-size: 12px" />
+            <div v-if="
+              advancedMode &&
+              (compType == 'BloodCompartment' ||
+                compType == 'BloodPump' ||
+                compType == 'Oxygenator' ||
+                compType == 'GasCompartment' ||
+                compType == 'Container' ||
+                compType == 'GasExchanger')
+            ">
+              layout
+              <q-btn-toggle class="q-ma-sm col-9" v-model="compLayoutType" size="sm" dark spread dense no-caps
+                toggle-color="blue-grey-6" color="grey-9" text-color="black" :options="[
+                  { label: 'Arc', value: true },
+                  { label: 'Relative', value: false },
+                ]" />
+              <div class="row">
+                <q-select class="col q-ma-sm" label="pictogram" square hide-hint stack-label v-model="compPicto"
+                  :options="pictos" hide-bottom-space dense dark style="font-size: 12px" />
+              </div>
+              <div v-if="!compLayoutType" class="row">
+                <q-input class="col q-ma-sm" label="postion x" v-model="compLayoutX" square type="number" hide-hint
+                  dense dark stack-label />
+                <q-input class="col q-ma-sm" label="position Y" v-model="compLayoutY" square type="number" hide-hint
+                  dense dark stack-label />
+              </div>
+              <div v-if="compLayoutType" class="row">
+                <q-input class="col q-ma-sm" label="position Degrees" v-model="compLayoutDgs" square type="number"
+                  hide-hint dense dark stack-label />
+              </div>
+
+              <div class="row">
+                <q-input class="col q-ma-sm" label="scale X" v-model="compScaleX" square type="number" hide-hint dense
+                  dark stack-label />
+                <q-input class="col q-ma-sm" label="scale Y" v-model="compScaleY" square type="number" hide-hint dense
+                  dark stack-label />
+                <q-input class="col q-ma-sm" label="rotation" v-model="compRotation" square type="number" hide-hint
+                  dense dark stack-label />
+              </div>
+              <div class="row">
+                <q-input class="col q-ma-sm" label="label pos X" v-model="compTextX" square type="number" hide-hint
+                  dense dark stack-label />
+                <q-input class="col q-ma-sm" label="label pos Y" v-model="compTextY" square type="number" hide-hint
+                  dense dark stack-label />
+                <q-input class="col q-ma-sm" label="label size" v-model="compTextSize" square type="number" hide-hint
+                  dense dark stack-label />
+              </div>
             </div>
 
-            <div class="row">
-              <q-input class="col q-ma-sm" label="scale X" v-model="compScaleX" square type="number" hide-hint dense
-                dark stack-label />
-              <q-input class="col q-ma-sm" label="scale Y" v-model="compScaleY" square type="number" hide-hint dense
-                dark stack-label />
-              <q-input class="col q-ma-sm" label="rotation" v-model="compRotation" square type="number" hide-hint dense
-                dark stack-label />
-            </div>
-            <div class="row">
-              <q-input class="col q-ma-sm" label="label pos X" v-model="compTextX" square type="number" hide-hint dense
-                dark stack-label />
-              <q-input class="col q-ma-sm" label="label pos Y" v-model="compTextY" square type="number" hide-hint dense
-                dark stack-label />
-              <q-input class="col q-ma-sm" label="label size" v-model="compTextSize" square type="number" hide-hint
-                dense dark stack-label />
-            </div>
-          </div>
-
-          <div v-if="
-            compType == 'BloodConnector' ||
-            compType == 'GasConnector' ||
-            compType == 'Shunt'
-          ">
-            <div class="row">
-              <q-select class="col" label="Diagram comp from" v-model="compDbcFrom" :options="compDbcFroms"
-                hide-bottom-space dense style="font-size: 12px" />
-              <q-select class="col" label="Diagram comp To" v-model="compDbcTo" :options="compDbcTos" hide-bottom-space
-                dense style="font-size: 12px" />
+            <div v-if="
+              compType == 'BloodConnector' ||
+              compType == 'GasConnector' ||
+              compType == 'Shunt'
+            ">
+              <div class="row">
+                <q-select class="col" label="Diagram comp from" v-model="compDbcFrom" :options="compDbcFroms"
+                  hide-bottom-space dense style="font-size: 12px" />
+                <q-select class="col" label="Diagram comp To" v-model="compDbcTo" :options="compDbcTos"
+                  hide-bottom-space dense style="font-size: 12px" />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <!-- editor mode 3 -->
-      <div v-if="editorMode === 3">
-        <div class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
-          Are you sure you want to remove {{ compName }}?
+        <!-- editor mode 3 -->
+        <div v-if="editorMode === 3">
+          <div class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
+            Are you sure you want to remove {{ compName }}?
+          </div>
+          <div class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
+            <q-btn color="red-10" dense size="sm" style="width: 50px" icon="fa-solid fa-trash-can"
+              @click="deleteComponentFromStore"></q-btn>
+            <q-btn color="grey-14" size="xs" dense style="width: 50px" @click="cancelDiagramBuild"
+              icon="fa-solid fa-refresh"></q-btn>
+          </div>
         </div>
-        <div class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
-          <q-btn color="red-10" dense size="sm" style="width: 50px" icon="fa-solid fa-trash-can"
-            @click="deleteComponentFromStore"></q-btn>
+        <!-- server communication buttons -->
+        <div v-if="editorMode < 3 && editorMode > 0"
+          class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
+          <q-btn color="secondary" dense size="sm" style="width: 50px" icon="fa-solid fa-check"
+            @click="saveDiagramComponent"></q-btn>
+          <q-btn color="negative" dense size="sm" style="width: 50px" icon="fa-solid fa-trash-can"
+            @click="deleteComponent">
+          </q-btn>
           <q-btn color="grey-14" size="xs" dense style="width: 50px" @click="cancelDiagramBuild"
-            icon="fa-solid fa-refresh"></q-btn>
+            icon="fa-solid fa-xmark"></q-btn>
         </div>
-      </div>
-      <!-- server communication buttons -->
-      <div v-if="editorMode < 3 && editorMode > 0" class="q-gutter-sm row text-overline justify-center q-mb-sm q-mt-xs">
-        <q-btn color="secondary" dense size="sm" style="width: 50px" icon="fa-solid fa-check"
-          @click="saveDiagramComponent"></q-btn>
-        <q-btn color="negative" dense size="sm" style="width: 50px" icon="fa-solid fa-trash-can"
-          @click="deleteComponent">
-        </q-btn>
-        <q-btn color="grey-14" size="xs" dense style="width: 50px" @click="cancelDiagramBuild"
-          icon="fa-solid fa-xmark"></q-btn>
-      </div>
-      <!-- status message -->
-      <div class="q-gutter-sm row text-overline justify-center q-mb-xs" style="font-size: 10px">
-        {{ statusMessage }}
+        <!-- status message -->
+        <div class="q-gutter-sm row text-overline justify-center q-mb-xs" style="font-size: 10px">
+          {{ statusMessage }}
+        </div>
       </div>
     </div>
   </q-card>
@@ -183,6 +202,8 @@ export default {
       advancedMode: true,
       editorMode: 0,
       title: "DIAGRAM EDITOR",
+      generalSettingsCollapsed: false,
+      componentSettingsCollapsed: false,
       collapsed: false,
       modelsTree: {},
       selectedModelType: [],
@@ -233,6 +254,17 @@ export default {
     };
   },
   methods: {
+    restore_diagram() {
+      if (this.state.prev_diagram_definition) {
+        this.state.diagram_definition = JSON.parse(JSON.stringify(this.prev_diagram_definition));
+        this.$bus.emit("rebuild_diagram");
+      }
+    },
+    clearDiagram() {
+      this.prev_diagram_definition = JSON.parse(JSON.stringify(this.state.diagram_definition));
+      this.state.diagram_definition.components = {};
+      this.$bus.emit("rebuild_diagram");
+    },
     updateDiagram() {
       this.$bus.emit("rebuild_diagram");
     },
@@ -930,8 +962,8 @@ export default {
     },
     addComponent(compType) {
       this.editorMode = 1;
-      this.compEnabled = true;
       this.clearFields();
+      this.compEnabled = true;
       this.selectModelTypeToAdd(compType);
       switch (compType) {
         case "BloodConnector":
