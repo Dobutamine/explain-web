@@ -37,8 +37,6 @@ export default {
   },
   props: {
     alive: Boolean,
-    global_speed: Number,
-    global_scale: Number
   },
   data() {
     return {
@@ -48,6 +46,8 @@ export default {
       display: "block",
       ticker: null,
       pixiApp: null,
+      global_speed: 1,
+      global_scale: 1,
       diagram: {},
       diagram_components: {},
       gridVertical: null,
@@ -155,11 +155,21 @@ export default {
       });
       // allow sortable children
       this.pixiApp.stage.sortableChildren = true;
+
     },
     clearDiagram() {
       this.pixiApp.stage.removeChildren();
     },
     drawSkeletonGraphics() {
+      if (isNaN(this.diagram_components.xOffset)) {
+        this.diagram_components.xOffset = 0
+      }
+      if (isNaN(this.diagram_components.yOffset)) {
+        this.diagram_components.yOffset = 0
+      }
+      if (isNaN(this.diagram_components.radius) || this.diagram_components.radius <= 0.01) {
+        this.diagram_components.radius = 0.6
+      }
 
       if (this.state.diagram_definition.settings.skeleton) {
         if (this.skeletonGraphics) {
@@ -184,6 +194,9 @@ export default {
     },
     drawGrid() {
       if (this.state.diagram_definition.settings.grid) {
+        if (isNaN(this.state.diagram_definition.settings.gridSize) || this.state.diagram_definition.settings.gridSize <= 5) {
+          this.state.diagram_definition.settings.gridSize = 15
+        }
         const gridSize = this.state.diagram_definition.settings.gridSize;
 
         if (this.gridVertical) {
@@ -628,6 +641,16 @@ export default {
     },
     buildDiagram() {
       console.log('rebuilding diagram')
+
+      if (isNaN(this.state.diagram_definition.settings.speed) || this.state.diagram_definition.settings.speed <= 0.01) {
+        this.state.diagram_definition.settings.speed = 1
+      }
+      if (isNaN(this.state.diagram_definition.settings.scaling) || this.state.diagram_definition.settings.scaling <= 0.01) {
+        this.state.diagram_definition.settings.scaling = 1
+      }
+      this.global_speed = this.state.diagram_definition.settings.speed
+      this.global_scale = this.state.diagram_definition.settings.scaling
+
       this.pixiApp.stage.removeChildren();
 
       // draw the skeleton graphics

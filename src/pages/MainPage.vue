@@ -157,8 +157,7 @@
                 width: '5px',
                 opacity: 0.5
               }">
-                <DiagramComponent :alive="diagram_alive" :global_scale="state.configuration.diagram_scale"
-                  :global_speed="state.configuration.diagram_speed">
+                <DiagramComponent :alive="diagram_alive">
                 </DiagramComponent>
               </q-scroll-area>
             </q-tab-panel>

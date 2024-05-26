@@ -4,6 +4,35 @@
       {{ title }}
     </div>
     <div v-if="!collapsed">
+      <div class="q-ml-md q-mr-sm q-mb-sm  text-overline justify-center">
+        <div class="q-ma-sm row justify-center">
+          <q-toggle class="col-6" v-model="state.diagram_definition.settings.grid" label="grid" dense dark size="sm"
+            @update:model-value="updateDiagram" />
+          <q-input class="col-6" v-model.number="state.diagram_definition.settings.gridSize" type="number" :min="5"
+            :max="100" :step="1" label="grid size" dense dark @update:model-value="updateDiagram" />
+        </div>
+
+        <div class="q-ma-sm row">
+          <q-toggle v-model="state.diagram_definition.settings.skeleton" label="skeleton" dense dark size="sm"
+            @update:model-value="updateDiagram" />
+        </div>
+        <div v-if="state.diagram_definition.settings.skeleton" class="q-ma-sm row">
+          <q-input class="col-4" v-model.number="state.diagram_definition.settings.xOffset" label="x-offset"
+            type="number" :min="-1000" :max="1000" :step="1" dense dark @update:model-value="updateDiagram" />
+          <q-input class="col-4" v-model.number="state.diagram_definition.settings.yOffset" label="y-offset"
+            type="number" :min="-1000" :max="1000" :step="1" dense dark @update:model-value="updateDiagram" />
+          <q-input class="col-4" v-model.number="state.diagram_definition.settings.radius" label="radius" dense dark
+            type="number" :min="0.01" :max="1" :step="0.01" @update:model-value="updateDiagram" />
+        </div>
+
+        <div class="q-ma-sm row">
+          <q-input class="col-6" v-model.number="state.diagram_definition.settings.scaling" label="scaling" dense dark
+            type="number" :min="0.1" :max="1000" :step="0.1" @update:model-value="updateDiagram" />
+          <q-input class="col-6" v-model.number="state.diagram_definition.settings.speed" label="speed" dense dark
+            type="number" :min="0.1" :max="1000" :step="0.1" @update:model-value="updateDiagram" />
+        </div>
+
+      </div>
       <div class="q-ml-md q-mr-sm q-mb-sm row text-overline justify-center">
         <q-select class="col-9" v-model:model-value="selectedDiagramComponentName"
           :options="Object.keys(state.diagram_definition.components)" label="diagram component" dense
@@ -205,6 +234,7 @@ export default {
   },
   methods: {
     updateDiagram() {
+      console.log('signal update diagram');
       this.$bus.emit("rebuild_diagram");
     },
     getAllDiagramComponents() {
