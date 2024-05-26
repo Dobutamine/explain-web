@@ -640,8 +640,6 @@ export default {
       }
     },
     buildDiagram() {
-      console.log('rebuilding diagram')
-
       if (isNaN(this.state.diagram_definition.settings.speed) || this.state.diagram_definition.settings.speed <= 0.01) {
         this.state.diagram_definition.settings.speed = 1
       }

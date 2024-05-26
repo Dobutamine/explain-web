@@ -234,7 +234,6 @@ export default {
   },
   methods: {
     updateDiagram() {
-      console.log('signal update diagram');
       this.$bus.emit("rebuild_diagram");
     },
     getAllDiagramComponents() {
