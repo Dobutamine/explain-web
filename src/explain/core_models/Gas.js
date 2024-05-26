@@ -177,9 +177,20 @@ export class Gas {
     this._t = this._model_engine.modeling_stepsize;
 
     // set the atmospheric pressure, temperatures and humidities of the gas capacitances
-    this.set_atmospheric_pressure();
-    this.set_temperatures();
-    this.set_humidity();
+    for (let [_, model] of Object.entries(this._model_engine.models)) {
+      if (model.model_type === "GasCapacitance") {
+        model.pres_atm = this.pres_atm;
+      }
+    }
+
+    for (let [model_name, temp] of Object.entries(this.temp_settings)) {
+      this._model_engine.models[model_name].temp = temp;
+      this._model_engine.models[model_name].target_temp = temp;
+    }
+
+    for (let [model_name, humidity] of Object.entries(this.humidity_settings)) {
+      this._model_engine.models[model_name].humidity = humidity;
+    }
 
     //  we need a pressure to calculate the composition of the gas in the gas capacitances
     for (let [model_name, model] of Object.entries(this._model_engine.models)) {
