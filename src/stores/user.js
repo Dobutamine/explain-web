@@ -51,7 +51,7 @@ export const useUserStore = defineStore("user", {
           Accept: "application/json, text/plain, */*",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name: name, password: password }),
+        body: JSON.stringify({ name: name.toLowerCase(), password: password }),
       });
 
       if (response.status === 200) {
