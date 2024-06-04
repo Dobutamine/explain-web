@@ -183,20 +183,39 @@ export class Gas {
       }
     }
 
+    // as the baseline state already has all the settings we do not need to reinitialize the model except when the values are 0
     for (let [model_name, temp] of Object.entries(this.temp_settings)) {
-      this._model_engine.models[model_name].temp = temp;
-      this._model_engine.models[model_name].target_temp = temp;
+      if (
+        !this._model_engine.models[model_name].temp ||
+        this._model_engine.models[model_name].temp == 0.0
+      ) {
+        console.log("setting temp");
+        this._model_engine.models[model_name].temp = temp;
+        this._model_engine.models[model_name].target_temp = temp;
+      }
     }
 
     for (let [model_name, humidity] of Object.entries(this.humidity_settings)) {
-      this._model_engine.models[model_name].humidity = humidity;
+      if (
+        !this._model_engine.models[model_name].humidity ||
+        this._model_engine.models[model_name].humidity == 0.0
+      ) {
+        console.log("setting humidity");
+        this._model_engine.models[model_name].humidity = humidity;
+      }
     }
 
     //  we need a pressure to calculate the composition of the gas in the gas capacitances
     for (let [model_name, model] of Object.entries(this._model_engine.models)) {
       if (model.model_type === "GasCapacitance") {
-        // calculate the gas composition
-        set_gas_composition(model, this.fio2, model.temp, model.humidity);
+        if (
+          !this._model_engine.models[model_name].co2 ||
+          this._model_engine.models[model_name].co2 == 0.0
+        ) {
+          console.log("setting gas composition");
+          // calculate the gas composition
+          set_gas_composition(model, this.fio2, model.temp, model.humidity);
+        }
       }
     }
 

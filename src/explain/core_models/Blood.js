@@ -315,14 +315,14 @@ export class Blood {
     // set the modeling step size
     this._t = this._model_engine.modeling_stepsize;
 
-    // set the aboxy and solutes
-    //  we need a pressure to calculate the composition of the gas in the gas capacitances
+    // set the aboxy and solutes if not set by the state which is loaded
     for (let [model_name, model] of Object.entries(this._model_engine.models)) {
       if (
         model.model_type === "BloodCapacitance" ||
         model.model_type === "BloodTimeVaryingElastance"
       ) {
         if (!model.aboxy) {
+          console.log("setting blood composition");
           model.aboxy = { ...this.aboxy };
           model.solutes = { ...this.solutes };
         }
