@@ -223,26 +223,27 @@ export default class BloodPump {
     if (isNaN(to2)) {
       return 0x666666;
     }
-    if (to2 > 6.95) {
-      to2 = 6.95;
-    }
-    let remap = this.remap(to2, 0, 6.95, -10, 1);
-    if (remap < 0) remap = 0;
-    const red = (remap * 210).toFixed(0);
-    const green = (remap * 80).toFixed(0);
-    const blue = (80 + remap * 75).toFixed(0);
-    const color = "0x" + this.fullColorHex(red, green, blue);
-    return color;
-  }
-  remap(value, from1, to1, from2, to2) {
-    return ((value - from1) / (to1 - from1)) * (to2 - from2) + from2;
-  }
-  rgbToHex(rgb) {
-    let hex = Number(rgb).toString(16);
-    if (hex.length < 2) {
-      hex = "0" + hex;
-    }
-    return hex;
+    return 0x226666;
+    //   if (to2 > 6.95) {
+    //     to2 = 6.95;
+    //   }
+    //   let remap = this.remap(to2, 0, 6.95, -10, 1);
+    //   if (remap < 0) remap = 0;
+    //   const red = (remap * 210).toFixed(0);
+    //   const green = (remap * 80).toFixed(0);
+    //   const blue = (80 + remap * 75).toFixed(0);
+    //   const color = "0x" + this.fullColorHex(red, green, blue);
+    //   return color;
+    // }
+    // remap(value, from1, to1, from2, to2) {
+    //   return ((value - from1) / (to1 - from1)) * (to2 - from2) + from2;
+    // }
+    // rgbToHex(rgb) {
+    //   let hex = Number(rgb).toString(16);
+    //   if (hex.length < 2) {
+    //     hex = "0" + hex;
+    //   }
+    //   return hex;
   }
   fullColorHex(r, g, b) {
     const red = this.rgbToHex(r);
