@@ -68,6 +68,7 @@ export default class LymphCompartment {
     // this is a blood compartment sprite which uses
     this.sprite = PIXI.Sprite.from(this.compPicto);
     this.sprite["name_sprite"] = key;
+    this.sprite["compType"] = this.compType;
     this.sprite.eventMode = "none";
     this.sprite.scale.set(
       this.volume * this.layout.scale.x * this.global_scaling,

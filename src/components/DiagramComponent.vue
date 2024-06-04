@@ -1,8 +1,15 @@
 <template>
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
+    <div v-if="shuntOptionsVisible" class="row justify-center">
+      <q-btn-toggle v-model="edit_mode" toggle-color="primary" size="sm" :options="[
+        { label: 'NONE', value: 0 },
+        { label: 'EDIT', value: 1 },
+        { label: 'SIZE', value: 2 }
+      ]" />
+    </div>
 
     <div class="stage" :style="{ display: display }">
-      <canvas id="stage">
+      <canvas id="stage" :onmousemove="mousecoordinates">
       </canvas>
     </div>
 
@@ -28,6 +35,7 @@ import Oxygenator from "./ui_elements/Oxygenator";
 import Shunt from "./ui_elements/Shunt";
 
 import { useStateStore } from "src/stores/state";
+import { getTransitionRawChildren } from "vue";
 
 let canvas = null;
 let pixiApp = null;
@@ -62,6 +70,10 @@ export default {
       skeletonGraphics: null,
       shortTimer: null,
       rt_running: false,
+      edit_mode: 0,
+      active_sprite: null,
+      mouse_x: 0,
+      mouse_y: 0,
       selected_shunts: [],
       shunt_options: [{
         label: 'PDA',
@@ -99,6 +111,16 @@ export default {
     };
   },
   methods: {
+    mousecoordinates(event) {
+      const rect = canvas.getBoundingClientRect();
+      this.mouse_x = event.clientX - rect.left;
+      this.mouse_y = event.clientY - rect.top;
+      // move the selected sprite
+      if (this.edit_mode == 1 && this.active_sprite) {
+        this.active_sprite.position.x = this.mouse_x
+        this.active_sprite.position.y = this.mouse_y
+      }
+    },
     changeGlobalSize() {
 
     },
@@ -648,6 +670,42 @@ export default {
         });
       }
     },
+    setNewComponentScale() {
+
+    },
+    setNewComponentPosition() {
+      const xCenter = (pixiApp.renderer.width / 4)
+      const yCenter = (pixiApp.renderer.height / 4)
+      const xOffset = this.state.diagram_definition.settings.xOffset
+      const yOffset = this.state.diagram_definition.settings.yOffset
+      const radius = this.state.diagram_definition.settings.radius;
+
+      let comp = this.state.diagram_definition.components[this.active_sprite.name_sprite]
+      comp.layout.pos.type = "rel"
+      comp.layout.pos.x = (xCenter + xOffset - this.active_sprite.position.x) / (-xCenter * radius)
+      comp.layout.pos.y = (yCenter + yOffset - this.active_sprite.position.y) / (-xCenter * radius)
+
+      this.buildDiagram()
+
+    },
+    selectComponent(event) {
+      switch (this.edit_mode) {
+        case 0:
+          break;
+        case 1:
+          if (this.active_sprite) {
+            this.setNewComponentPosition()
+            this.active_sprite = null
+          } else {
+            if (event.target.compType == "BloodCompartment" || event.target.compType == "GasCompartment" || event.target.compType == "LymphCompartment" || event.target.compType == "Container" || event.target.compType == "Oxygenator" || event.target.compType == "BloodPump" || event.target.compType == "GasExchanger") {
+              this.active_sprite = event.target
+            }
+          }
+          break;
+        case 2:
+          break;
+      }
+    },
     buildDiagram() {
       if (isNaN(this.state.diagram_definition.settings.speed) || this.state.diagram_definition.settings.speed <= 0.01) {
         this.state.diagram_definition.settings.speed = 1
@@ -670,7 +728,11 @@ export default {
       diagram_components = {}
       this.drawComponents(this.state.diagram_definition.components)
 
-
+      // add the event listeners
+      pixiApp.stage.children.forEach((child) => {
+        child.eventMode = "static";
+        child.on("pointerdown", (event) => this.selectComponent(event))
+      })
 
       // first remove the old ticker
       if (this.ticker) {

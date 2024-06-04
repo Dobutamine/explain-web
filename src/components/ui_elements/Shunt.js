@@ -80,6 +80,7 @@ export default class Shunt {
     this.drawPath();
     this.sprite = PIXI.Sprite.from(this.compPicto);
     this.sprite["name_sprite"] = key;
+    this.sprite["compType"] = this.compType;
     this.sprite.anchor = { x: 0.5, y: 0.5 };
     this.sprite.x = this.dbcFrom.sprite.x;
     this.sprite.y = this.dbcFrom.sprite.y;
