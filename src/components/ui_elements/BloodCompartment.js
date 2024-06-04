@@ -68,7 +68,10 @@ export default class BloodCompartment {
     // this is a blood compartment sprite which uses
     this.sprite = PIXI.Sprite.from(this.compPicto);
     this.sprite["name_sprite"] = key;
-    this.sprite.eventMode = "none";
+    this.sprite.eventMode = "static";
+    this.sprite.on("pointerdown", (event) => {
+      console.log(event);
+    });
     this.sprite.scale.set(
       this.volume * this.layout.scale.x * this.global_scaling,
       this.volume * this.layout.scale.y * this.global_scaling

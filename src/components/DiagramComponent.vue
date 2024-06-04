@@ -30,6 +30,13 @@ import Shunt from "./ui_elements/Shunt";
 import { useStateStore } from "src/stores/state";
 
 let canvas = null;
+let pixiApp = null;
+let skeletonGraphics = null;
+let gridVertical = null;
+let gridHorizontal = null;
+let diagram_components = {};
+
+
 export default {
   setup() {
     const state = useStateStore();
@@ -108,7 +115,7 @@ export default {
       if (state) {
         // show the shunt if not already shown
         shunts.forEach(shunt => {
-          const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == shunt);
+          const index_sprite = pixiApp.stage.children.findIndex((obj) => obj.name_sprite == shunt);
           if (index_sprite < 0) {
             // not shown already so add it
             this.addDiagramComponent(shunt)
@@ -117,7 +124,7 @@ export default {
       } else {
         // hide the shunt
         shunts.forEach(shunt => {
-          const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == shunt);
+          const index_sprite = pixiApp.stage.children.findIndex((obj) => obj.name_sprite == shunt);
           if (index_sprite > 0) {
             // it is present so hide it
             this.removeDiagramComponent(shunt)
@@ -128,8 +135,8 @@ export default {
     },
     async initDiagram() {
       // first clear all children from the stage
-      if (this.pixiApp) {
-        this.pixiApp = null
+      if (pixiApp) {
+        pixiApp = null
       }
       // get the reference to the canvas
       canvas = document.getElementById("stage");
@@ -138,12 +145,12 @@ export default {
       PIXI.settings.RESOLUTION = 2;
 
       // define a pixi app with the canvas as view
-      this.pixiApp = new PIXI.Application({
+      pixiApp = new PIXI.Application({
         transparent: true,
         antialias: true,
         backgroundColor: 0x111111,
         view: canvas,
-        eventMode: 'passive',
+        eventMode: 'static',
         eventFeatures: {
           move: true,
           /** disables the global move events which can be very expensive in large scenes */
@@ -153,43 +160,45 @@ export default {
         }
 
       });
+      console.log(pixiApp)
+
       // allow sortable children
-      this.pixiApp.stage.sortableChildren = true;
+      pixiApp.stage.sortableChildren = true;
 
     },
     clearDiagram() {
-      this.pixiApp.stage.removeChildren();
+      pixiApp.stage.removeChildren();
     },
     drawSkeletonGraphics() {
-      if (isNaN(this.diagram_components.xOffset)) {
-        this.diagram_components.xOffset = 0
+      if (isNaN(diagram_components.xOffset)) {
+        diagram_components.xOffset = 0
       }
-      if (isNaN(this.diagram_components.yOffset)) {
-        this.diagram_components.yOffset = 0
+      if (isNaN(diagram_components.yOffset)) {
+        diagram_components.yOffset = 0
       }
-      if (isNaN(this.diagram_components.radius) || this.diagram_components.radius <= 0.01) {
-        this.diagram_components.radius = 0.6
+      if (isNaN(diagram_components.radius) || diagram_components.radius <= 0.01) {
+        diagram_components.radius = 0.6
       }
 
       if (this.state.diagram_definition.settings.skeleton) {
-        if (this.skeletonGraphics) {
-          this.skeletonGraphics.clear();
-          this.pixiApp.stage.removeChild(this.skeletonGraphics);
+        if (skeletonGraphics) {
+          skeletonGraphics.clear();
+          pixiApp.stage.removeChild(skeletonGraphics);
         }
         const radius = this.state.diagram_definition.settings.radius;
         const color = this.state.diagram_definition.settings.skeletonColor;
 
         // initalize the skeleton graphics
-        this.skeletonGraphics = new PIXI.Graphics();
+        skeletonGraphics = new PIXI.Graphics();
 
         // get center stage
-        const xCenter = (this.pixiApp.renderer.width / 4) + this.state.diagram_definition.settings.xOffset
-        const yCenter = (this.pixiApp.renderer.height / 4) + this.state.diagram_definition.settings.yOffset
-        this.skeletonGraphics.beginFill(color);
-        this.skeletonGraphics.lineStyle(1, color, 1);
-        this.skeletonGraphics.drawCircle(xCenter, yCenter, (xCenter - this.state.diagram_definition.settings.xOffset) * radius);
-        this.skeletonGraphics.endFill();
-        this.pixiApp.stage.addChild(this.skeletonGraphics);
+        const xCenter = (pixiApp.renderer.width / 4) + this.state.diagram_definition.settings.xOffset
+        const yCenter = (pixiApp.renderer.height / 4) + this.state.diagram_definition.settings.yOffset
+        skeletonGraphics.beginFill(color);
+        skeletonGraphics.lineStyle(1, color, 1);
+        skeletonGraphics.drawCircle(xCenter, yCenter, (xCenter - this.state.diagram_definition.settings.xOffset) * radius);
+        skeletonGraphics.endFill();
+        pixiApp.stage.addChild(skeletonGraphics);
       }
     },
     drawGrid() {
@@ -199,63 +208,63 @@ export default {
         }
         const gridSize = this.state.diagram_definition.settings.gridSize;
 
-        if (this.gridVertical) {
-          this.gridVertical.clear();
-          this.pixiApp.stage.removeChild(this.gridVertical);
+        if (gridVertical) {
+          gridVertical.clear();
+          pixiApp.stage.removeChild(gridVertical);
         }
         // build the grid
-        this.gridVertical = new PIXI.Graphics();
-        for (let x = 0; x < this.pixiApp.renderer.width; x = x + gridSize) {
-          this.gridVertical.lineStyle(1, 0x888888, 0.1);
-          this.gridVertical.moveTo(x, 0);
-          this.gridVertical.lineTo(x, this.pixiApp.renderer.height);
+        gridVertical = new PIXI.Graphics();
+        for (let x = 0; x < pixiApp.renderer.width; x = x + gridSize) {
+          gridVertical.lineStyle(1, 0x888888, 0.1);
+          gridVertical.moveTo(x, 0);
+          gridVertical.lineTo(x, pixiApp.renderer.height);
         }
-        this.pixiApp.stage.addChild(this.gridVertical);
+        pixiApp.stage.addChild(gridVertical);
 
-        if (this.gridHorizontal) {
-          this.gridHorizontal.clear();
-          this.pixiApp.stage.removeChild(this.gridHorizontal);
+        if (gridHorizontal) {
+          gridHorizontal.clear();
+          pixiApp.stage.removeChild(gridHorizontal);
         }
-        this.gridHorizontal = new PIXI.Graphics();
-        for (let y = 0; y < this.pixiApp.renderer.height; y = y + gridSize) {
-          this.gridHorizontal.lineStyle(1, 0x888888, 0.1);
-          this.gridHorizontal.moveTo(0, y);
-          this.gridHorizontal.lineTo(this.pixiApp.renderer.width, y);
+        gridHorizontal = new PIXI.Graphics();
+        for (let y = 0; y < pixiApp.renderer.height; y = y + gridSize) {
+          gridHorizontal.lineStyle(1, 0x888888, 0.1);
+          gridHorizontal.moveTo(0, y);
+          gridHorizontal.lineTo(pixiApp.renderer.width, y);
         }
-        this.pixiApp.stage.addChild(this.gridHorizontal);
+        pixiApp.stage.addChild(gridHorizontal);
       } else {
-        if (this.gridVertical) {
-          this.gridVertical.clear();
-          this.pixiApp.stage.removeChild(this.gridVertical);
+        if (gridVertical) {
+          gridVertical.clear();
+          pixiApp.stage.removeChild(gridVertical);
         }
-        if (this.gridHorizontal) {
-          this.gridHorizontal.clear();
-          this.pixiApp.stage.removeChild(this.gridHorizontal);
+        if (gridHorizontal) {
+          gridHorizontal.clear();
+          pixiApp.stage.removeChild(gridHorizontal);
         }
       }
     },
     removeDiagramComponent(comp_name) {
-      const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == comp_name);
+      const index_sprite = pixiApp.stage.children.findIndex((obj) => obj.name_sprite == comp_name);
       if (index_sprite > 0) {
-        this.pixiApp.stage.removeChild(this.pixiApp.stage.children[index_sprite])
+        pixiApp.stage.removeChild(pixiApp.stage.children[index_sprite])
       }
 
-      const index_text = this.pixiApp.stage.children.findIndex((obj) => obj.name_text == comp_name);
+      const index_text = pixiApp.stage.children.findIndex((obj) => obj.name_text == comp_name);
       if (index_text > 0) {
-        this.pixiApp.stage.removeChild(this.pixiApp.stage.children[index_text])
+        pixiApp.stage.removeChild(pixiApp.stage.children[index_text])
       }
 
-      const index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == comp_name);
+      const index_path = pixiApp.stage.children.findIndex((obj) => obj.name_path == comp_name);
       if (index_path > 0) {
-        this.pixiApp.stage.removeChild(this.pixiApp.stage.children[index_path])
+        pixiApp.stage.removeChild(pixiApp.stage.children[index_path])
       }
 
       this.state.diagram_definition.components[comp_name].enabled = false
     },
     addDiagramComponent(comp_name) {
-      const index_sprite = this.pixiApp.stage.children.findIndex((obj) => obj.name_sprite == comp_name);
-      const index_text = this.pixiApp.stage.children.findIndex((obj) => obj.name_text == comp_name);
-      const index_path = this.pixiApp.stage.children.findIndex((obj) => obj.name_path == comp_name);
+      const index_sprite = pixiApp.stage.children.findIndex((obj) => obj.name_sprite == comp_name);
+      const index_text = pixiApp.stage.children.findIndex((obj) => obj.name_text == comp_name);
+      const index_path = pixiApp.stage.children.findIndex((obj) => obj.name_path == comp_name);
       if (index_sprite < 0 && index_text < 0 && index_path < 0) {
         let component = {}
         this.state.diagram_definition.components[comp_name].enabled = true
@@ -273,8 +282,8 @@ export default {
     },
     drawComponents(component_list) {
       // get the layout properties
-      const xCenter = (this.pixiApp.renderer.width / 4)
-      const yCenter = (this.pixiApp.renderer.height / 4)
+      const xCenter = (pixiApp.renderer.width / 4)
+      const yCenter = (pixiApp.renderer.height / 4)
       const xOffset = this.state.diagram_definition.settings.xOffset
       const yOffset = this.state.diagram_definition.settings.yOffset
       const radius = this.state.diagram_definition.settings.radius;
@@ -285,8 +294,8 @@ export default {
         if (component.enabled) {
           switch (component.compType) {
             case "Oxygenator":
-              this.diagram_components[key] = new Oxygenator(
-                this.pixiApp,
+              diagram_components[key] = new Oxygenator(
+                pixiApp,
                 key,
                 component.label,
                 component.models,
@@ -307,8 +316,8 @@ export default {
               explain.watchModelProps(watched_models_oxy)
               break;
             case "BloodPump":
-              this.diagram_components[key] = new BloodPump(
-                this.pixiApp,
+              diagram_components[key] = new BloodPump(
+                pixiApp,
                 key,
                 component.label,
                 component.models,
@@ -330,8 +339,8 @@ export default {
               explain.watchModelProps(watched_models_pump)
               break;
             case "LymphCompartment":
-              this.diagram_components[key] = new LymphCompartment(
-                this.pixiApp,
+              diagram_components[key] = new LymphCompartment(
+                pixiApp,
                 key,
                 component.label,
                 component.models,
@@ -351,8 +360,8 @@ export default {
               explain.watchModelProps(watched_models_lc)
               break;
             case "BloodCompartment":
-              this.diagram_components[key] = new BloodCompartment(
-                this.pixiApp,
+              diagram_components[key] = new BloodCompartment(
+                pixiApp,
                 key,
                 component.label,
                 component.models,
@@ -373,8 +382,8 @@ export default {
               explain.watchModelProps(watched_models_bc)
               break;
             case "GasCompartment":
-              this.diagram_components[key] = new GasCompartment(
-                this.pixiApp,
+              diagram_components[key] = new GasCompartment(
+                pixiApp,
                 key,
                 component.label,
                 component.models,
@@ -404,13 +413,13 @@ export default {
           switch (component.compType) {
             case "BloodConnector":
               //console.log(`Connecting ${component.dbcFrom} to ${component.dbcTo}`)
-              this.diagram_components[key] = new BloodConnector(
-                this.pixiApp,
+              diagram_components[key] = new BloodConnector(
+                pixiApp,
                 key,
                 component.label,
                 component.models,
-                this.diagram_components[component.dbcFrom],
-                this.diagram_components[component.dbcTo],
+                diagram_components[component.dbcFrom],
+                diagram_components[component.dbcTo],
                 {},
                 component.compPicto,
                 global_scaling,
@@ -423,13 +432,13 @@ export default {
               explain.watchModelProps(watched_models_bcon)
               break;
             case "LymphConnector":
-              this.diagram_components[key] = new LymphConnector(
-                this.pixiApp,
+              diagram_components[key] = new LymphConnector(
+                pixiApp,
                 key,
                 component.label,
                 component.models,
-                this.diagram_components[component.dbcFrom],
-                this.diagram_components[component.dbcTo],
+                diagram_components[component.dbcFrom],
+                diagram_components[component.dbcTo],
                 {},
                 component.compPicto,
                 global_scaling,
@@ -442,13 +451,13 @@ export default {
               explain.watchModelProps(watched_models_lcon)
               break;
             case "Shunt":
-              this.diagram_components[key] = new Shunt(
-                this.pixiApp,
+              diagram_components[key] = new Shunt(
+                pixiApp,
                 key,
                 component.label,
                 component.models,
-                this.diagram_components[component.dbcFrom],
-                this.diagram_components[component.dbcTo],
+                diagram_components[component.dbcFrom],
+                diagram_components[component.dbcTo],
                 {},
                 component.compPicto,
                 global_scaling,
@@ -461,8 +470,8 @@ export default {
               explain.watchModelProps(watched_models_shunt)
               break;
             case "Container":
-              this.diagram_components[key] = new Container(
-                this.pixiApp,
+              diagram_components[key] = new Container(
+                pixiApp,
                 key,
                 component.label,
                 component.models,
@@ -482,13 +491,13 @@ export default {
               explain.watchModelProps(watched_models_cont)
               break;
             case "GasConnector":
-              this.diagram_components[key] = new GasConnector(
-                this.pixiApp,
+              diagram_components[key] = new GasConnector(
+                pixiApp,
                 key,
                 component.label,
                 component.models,
-                this.diagram_components[component.dbcFrom],
-                this.diagram_components[component.dbcTo],
+                diagram_components[component.dbcFrom],
+                diagram_components[component.dbcTo],
                 {},
                 component.compPicto,
                 global_scaling,
@@ -501,8 +510,8 @@ export default {
               explain.watchModelProps(watched_models_gascon)
               break;
             case "GasExchanger":
-              this.diagram_components[key] = new GasExchanger(
-                this.pixiApp,
+              diagram_components[key] = new GasExchanger(
+                pixiApp,
                 key,
                 component.label,
                 component.models,
@@ -621,7 +630,7 @@ export default {
     processStateChanged() {
       if (!this.rt_running) {
         if (this.alive) {
-          Object.values(this.diagram_components).forEach((sprite) => {
+          Object.values(diagram_components).forEach((sprite) => {
             if (explain.modelData.length > 0) {
               sprite.update(explain.modelData[explain.modelData.length - 1]);
             }
@@ -632,7 +641,7 @@ export default {
     },
     tickerFunction() {
       if (this.rt_running && this.alive) {
-        Object.values(this.diagram_components).forEach((sprite) => {
+        Object.values(diagram_components).forEach((sprite) => {
           if (explain.modelData.length > 0) {
             sprite.update(explain.modelData[0]);
           }
@@ -649,7 +658,7 @@ export default {
       this.global_speed = this.state.diagram_definition.settings.speed
       this.global_scale = this.state.diagram_definition.settings.scaling
 
-      this.pixiApp.stage.removeChildren();
+      pixiApp.stage.removeChildren();
 
       // draw the skeleton graphics
       this.drawSkeletonGraphics()
@@ -658,15 +667,17 @@ export default {
       this.drawGrid()
 
       // draw the components
-      this.diagram_components = {}
+      diagram_components = {}
       this.drawComponents(this.state.diagram_definition.components)
+
+
 
       // first remove the old ticker
       if (this.ticker) {
-        this.pixiApp.ticker.remove(this.tickerFunction)
+        pixiApp.ticker.remove(this.tickerFunction)
       }
       // add the new ticker function and start it
-      this.ticker = this.pixiApp.ticker.add(this.tickerFunction);
+      this.ticker = pixiApp.ticker.add(this.tickerFunction);
 
       // get the shunt options state of the diagram
       this.shuntOptionsVisible = this.state.diagram_definition.settings.shuntOptionsVisible
@@ -701,6 +712,7 @@ export default {
   mounted() {
     // initialize and build the diagram
     this.initDiagram().then(() => {
+
 
       // build the diagram
       this.buildDiagram()
