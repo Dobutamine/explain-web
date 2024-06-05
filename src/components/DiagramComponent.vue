@@ -9,7 +9,7 @@
     </div>
 
     <div class="stage" :style="{ display: display }">
-      <canvas id="stage" :onmousemove="mousecoordinates">
+      <canvas id="stage">
       </canvas>
     </div>
 
@@ -117,8 +117,8 @@ export default {
       this.mouse_y = event.clientY - rect.top;
       // move the selected sprite
       if (this.edit_mode == 1 && this.active_sprite) {
-        this.active_sprite.position.x = this.mouse_x
-        this.active_sprite.position.y = this.mouse_y
+        this.active_sprite.x = this.mouse_x
+        this.active_sprite.y = this.mouse_y
       }
     },
     changeGlobalSize() {
@@ -186,6 +186,17 @@ export default {
 
       // allow sortable children
       pixiApp.stage.sortableChildren = true;
+
+      pixiApp.view.addEventListener('mousemove', (event) => {
+        this.mousecoordinates(event)
+      });
+
+      // pixiApp.view.addEventListener('click', (event) => {
+      //   if (this.edit_mode == 1 && this.active_sprite) {
+      //     this.setNewComponentPosition()
+      //     this.active_sprite = null
+      //   }
+      // });
 
     },
     clearDiagram() {
@@ -682,8 +693,8 @@ export default {
 
       let comp = this.state.diagram_definition.components[this.active_sprite.name_sprite]
       comp.layout.pos.type = "rel"
-      comp.layout.pos.x = (xCenter + xOffset - this.active_sprite.position.x) / (-xCenter * radius)
-      comp.layout.pos.y = (yCenter + yOffset - this.active_sprite.position.y) / (-xCenter * radius)
+      comp.layout.pos.x = (xCenter + xOffset - this.active_sprite.x) / (-xCenter * radius)
+      comp.layout.pos.y = (yCenter + yOffset - this.active_sprite.y) / (-xCenter * radius)
 
       this.buildDiagram()
 
