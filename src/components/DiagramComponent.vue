@@ -33,9 +33,7 @@ import GasConnector from "./ui_elements/GasConnector";
 import GasExchanger from "./ui_elements/GasExchanger";
 import Oxygenator from "./ui_elements/Oxygenator";
 import Shunt from "./ui_elements/Shunt";
-
 import { useStateStore } from "src/stores/state";
-import { getTransitionRawChildren } from "vue";
 
 let canvas = null;
 let pixiApp = null;
@@ -70,10 +68,6 @@ export default {
       skeletonGraphics: null,
       shortTimer: null,
       rt_running: false,
-      edit_mode: 0,
-      active_sprite: null,
-      mouse_x: 0,
-      mouse_y: 0,
       selected_shunts: [],
       shunt_options: [{
         label: 'PDA',
@@ -111,16 +105,7 @@ export default {
     };
   },
   methods: {
-    mousecoordinates(event) {
-      const rect = canvas.getBoundingClientRect();
-      this.mouse_x = event.clientX - rect.left;
-      this.mouse_y = event.clientY - rect.top;
-      // move the selected sprite
-      if (this.edit_mode == 1 && this.active_sprite) {
-        this.active_sprite.x = this.mouse_x
-        this.active_sprite.y = this.mouse_y
-      }
-    },
+
     changeGlobalSize() {
 
     },
@@ -174,11 +159,11 @@ export default {
         view: canvas,
         eventMode: 'none',
         eventFeatures: {
-          move: true,
+          move: false,
           /** disables the global move events which can be very expensive in large scenes */
           globalMove: false,
-          click: true,
-          wheel: true,
+          click: false,
+          wheel: false,
         }
 
       });
@@ -186,17 +171,6 @@ export default {
 
       // allow sortable children
       pixiApp.stage.sortableChildren = true;
-
-      // pixiApp.view.addEventListener('mousemove', (event) => {
-      //   this.mousecoordinates(event)
-      // });
-
-      // pixiApp.view.addEventListener('click', (event) => {
-      //   if (this.edit_mode == 1 && this.active_sprite) {
-      //     this.setNewComponentPosition()
-      //     this.active_sprite = null
-      //   }
-      // });
 
     },
     clearDiagram() {
@@ -681,42 +655,6 @@ export default {
         });
       }
     },
-    setNewComponentScale() {
-
-    },
-    setNewComponentPosition() {
-      const xCenter = (pixiApp.renderer.width / 4)
-      const yCenter = (pixiApp.renderer.height / 4)
-      const xOffset = this.state.diagram_definition.settings.xOffset
-      const yOffset = this.state.diagram_definition.settings.yOffset
-      const radius = this.state.diagram_definition.settings.radius;
-
-      let comp = this.state.diagram_definition.components[this.active_sprite.name_sprite]
-      comp.layout.pos.type = "rel"
-      comp.layout.pos.x = (xCenter + xOffset - this.active_sprite.x) / (-xCenter * radius)
-      comp.layout.pos.y = (yCenter + yOffset - this.active_sprite.y) / (-xCenter * radius)
-
-      this.buildDiagram()
-
-    },
-    selectComponent(event) {
-      switch (this.edit_mode) {
-        case 0:
-          break;
-        case 1:
-          if (this.active_sprite) {
-            this.setNewComponentPosition()
-            this.active_sprite = null
-          } else {
-            if (event.target.compType == "BloodCompartment" || event.target.compType == "GasCompartment" || event.target.compType == "LymphCompartment" || event.target.compType == "Container" || event.target.compType == "Oxygenator" || event.target.compType == "BloodPump" || event.target.compType == "GasExchanger") {
-              this.active_sprite = event.target
-            }
-          }
-          break;
-        case 2:
-          break;
-      }
-    },
     buildDiagram() {
       if (isNaN(this.state.diagram_definition.settings.speed) || this.state.diagram_definition.settings.speed <= 0.01) {
         this.state.diagram_definition.settings.speed = 1
@@ -739,10 +677,9 @@ export default {
       diagram_components = {}
       this.drawComponents(this.state.diagram_definition.components)
 
-      // add the event listeners
+      // remove the event listeners
       pixiApp.stage.children.forEach((child) => {
-        child.eventMode = "static";
-        child.on("pointerdown", (event) => this.selectComponent(event))
+        child.eventMode = "none";
       })
 
       // first remove the old ticker
