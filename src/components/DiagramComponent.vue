@@ -1,12 +1,12 @@
 <template>
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
-    <div v-if="shuntOptionsVisible" class="row justify-center">
+    <!-- <div v-if="shuntOptionsVisible" class="row justify-center">
       <q-btn-toggle v-model="edit_mode" toggle-color="primary" size="sm" :options="[
         { label: 'NONE', value: 0 },
         { label: 'EDIT', value: 1 },
         { label: 'SIZE', value: 2 }
       ]" />
-    </div>
+    </div> -->
 
     <div class="stage" :style="{ display: display }">
       <canvas id="stage">
@@ -172,7 +172,7 @@ export default {
         antialias: true,
         backgroundColor: 0x111111,
         view: canvas,
-        eventMode: 'static',
+        eventMode: 'none',
         eventFeatures: {
           move: true,
           /** disables the global move events which can be very expensive in large scenes */
@@ -187,9 +187,9 @@ export default {
       // allow sortable children
       pixiApp.stage.sortableChildren = true;
 
-      pixiApp.view.addEventListener('mousemove', (event) => {
-        this.mousecoordinates(event)
-      });
+      // pixiApp.view.addEventListener('mousemove', (event) => {
+      //   this.mousecoordinates(event)
+      // });
 
       // pixiApp.view.addEventListener('click', (event) => {
       //   if (this.edit_mode == 1 && this.active_sprite) {
