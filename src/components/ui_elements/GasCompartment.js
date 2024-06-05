@@ -78,7 +78,7 @@ export default class GasCompartment {
     this.sprite.anchor = { x: 0.5, y: 0.5 };
     this.sprite.tint = "0x151a7b";
     this.sprite.rotation = this.layout.rotation;
-    this.sprite.zIndex = this.layout.level;
+    this.sprite.zIndex = 6;
 
     // place the sprite on the stage
     switch (this.layout.pos.type) {

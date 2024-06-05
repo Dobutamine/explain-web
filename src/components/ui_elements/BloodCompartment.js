@@ -12,6 +12,8 @@ export default class BloodCompartment {
   yCenter = 0;
   xOffset = 0;
   yOffset = 0;
+  zIndexSprite = 10;
+  zIndexText = 11;
   radius = 0;
   angle = 0;
   rotation = 0;
@@ -76,7 +78,7 @@ export default class BloodCompartment {
     this.sprite.anchor = { x: 0.5, y: 0.5 };
     this.sprite.tint = "0x151a7b";
     this.sprite.rotation = this.layout.rotation;
-    this.sprite.zIndex = 4;
+    this.sprite.zIndex = this.zIndexSprite;
 
     // place the sprite on the stage
     switch (this.layout.pos.type) {
@@ -122,7 +124,7 @@ export default class BloodCompartment {
     this.text.x = this.sprite.x + this.layout.text.x;
     this.text.y = this.sprite.y + this.layout.text.y;
     this.text.rotation = this.layout.rotation;
-    this.text.zIndex = 7;
+    this.text.zIndexText = 7;
 
     this.pixiApp.stage.addChild(this.text);
   }
@@ -159,9 +161,11 @@ export default class BloodCompartment {
 
     this.sprite.rotation = this.layout.rotation;
     this.text.rotation = this.layout.rotation;
+    this.sprite.zIndex = this.zIndexSprite;
 
     this.text.x = this.sprite.x + this.layout.text.x;
     this.text.y = this.sprite.y + this.layout.text.y;
+    this.text.zIndex = this.zIndexText;
 
     this.text.scale.set(scaleFont, scaleFont);
     this.text.alpha = 1.0;

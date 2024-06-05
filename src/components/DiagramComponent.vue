@@ -28,6 +28,7 @@ import LymphCompartment from "./ui_elements/LymphCompartment";
 import GasCompartment from "./ui_elements/GasCompartment";
 import BloodConnector from "./ui_elements/BloodConnector";
 import BloodPump from "./ui_elements/BloodPump";
+import Container from "./ui_elements/Container";
 import LymphConnector from "./ui_elements/LymphConnector";
 import GasConnector from "./ui_elements/GasConnector";
 import GasExchanger from "./ui_elements/GasExchanger";
@@ -201,6 +202,7 @@ export default {
         // get center stage
         const xCenter = (pixiApp.renderer.width / 4) + this.state.diagram_definition.settings.xOffset
         const yCenter = (pixiApp.renderer.height / 4) + this.state.diagram_definition.settings.yOffset
+        skeletonGraphics.zIndex = 0;
         skeletonGraphics.beginFill(color);
         skeletonGraphics.lineStyle(1, color, 1);
         skeletonGraphics.drawCircle(xCenter, yCenter, (xCenter - this.state.diagram_definition.settings.xOffset) * radius);

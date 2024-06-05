@@ -14,7 +14,8 @@ export default class Container {
   radius = 0;
   rotation = 0;
   global_scaling = 1.0;
-
+  zIndexSprite = 2;
+  zIndexText = 3;
   sprite = {};
   text = {};
   textStyle = {};
@@ -127,12 +128,15 @@ export default class Container {
   update(data) {
     let volume = 0;
     this.models.forEach((model) => {
-      volume += data[model + ".Vol"];
+      volume += data[model + ".vol"];
     });
+
     if (isNaN(volume)) {
       this.volume = (0.15 / this.layout.scale.x) * this.global_scaling;
+      this.sprite.tint = "0x666666";
     } else {
       this.volume = this.calculateRadius(volume);
+      this.sprite.tint = "0x333333";
     }
 
     this.sprite.scale.set(
@@ -143,8 +147,15 @@ export default class Container {
     if (scaleFont > 1.1) {
       scaleFont = 1.1;
     }
+
     this.sprite.rotation = this.layout.rotation;
     this.text.rotation = this.layout.rotation;
+    this.sprite.zIndex = this.zIndexSprite;
+
+    this.text.x = this.sprite.x + this.layout.text.x;
+    this.text.y = this.sprite.y + this.layout.text.y;
+    this.text.zIndex = this.zIndexText;
+
     this.text.scale.set(scaleFont, scaleFont);
     this.text.alpha = 1.0;
   }

@@ -77,7 +77,7 @@ export default class GasExchanger {
     );
     this.sprite.anchor = { x: 0.5, y: 0.5 };
     this.sprite.tint = "0xbbbbbb";
-    this.sprite.zIndex = this.layout.level;
+    this.sprite.zIndex = 12;
 
     // place the sprite on the stage
     switch (this.layout.pos.type) {
@@ -122,7 +122,7 @@ export default class GasExchanger {
     this.text.x = this.sprite.x + this.layout.text.x;
     this.text.y = this.sprite.y + this.layout.text.y;
     this.text.rotation = this.layout.rotation;
-    this.text.zIndex = 4;
+    this.text.zIndex = 13;
 
     this.pixiApp.stage.addChild(this.text);
   }

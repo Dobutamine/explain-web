@@ -90,7 +90,7 @@ export default class Shunt {
     );
     this.sprite.eventMode = "none";
     this.sprite.tint = this.spriteColor;
-    this.sprite.zIndex = 6;
+    this.sprite.zIndex = 8;
 
     this.pixiApp.stage.addChild(this.sprite);
 
@@ -110,7 +110,7 @@ export default class Shunt {
     this.text.x = this.sprite.x;
     this.text.y = this.sprite.y;
     this.text.rotation = 0;
-    this.text.zIndex = 7;
+    this.text.zIndex = 9;
 
     const x2 = this.dbcTo.sprite.x;
     const y2 = this.dbcTo.sprite.y;
@@ -145,7 +145,7 @@ export default class Shunt {
 
     this.path = new PIXI.Graphics();
     this.path["name_path"] = this.key;
-    this.path.zIndex = 1;
+    this.path.zIndex = 7;
     this.path.cacheAsBitmap = true;
 
     this.arc.enabled = false;

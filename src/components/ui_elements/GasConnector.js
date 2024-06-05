@@ -93,7 +93,7 @@ export default class GasConnector {
     );
     this.sprite.eventMode = "none";
     this.sprite.tint = this.spriteColor;
-    this.sprite.zIndex = 6;
+    this.sprite.zIndex = 5;
 
     this.pixiApp.stage.addChild(this.sprite);
 
@@ -112,7 +112,7 @@ export default class GasConnector {
     }
     this.path = new PIXI.Graphics();
     this.path["name_path"] = key;
-    this.path.zIndex = 1;
+    this.path.zIndex = 4;
     this.path.cacheAsBitmap = true;
 
     if (

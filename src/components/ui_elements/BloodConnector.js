@@ -93,7 +93,7 @@ export default class BloodConnector {
     );
     this.sprite.eventMode = "none";
     this.sprite.tint = this.spriteColor;
-    this.sprite.zIndex = 6;
+    this.sprite.zIndex = 8;
 
     this.pixiApp.stage.addChild(this.sprite);
     this.sprite.eventMode = "none";
@@ -113,7 +113,7 @@ export default class BloodConnector {
     }
     this.path = new PIXI.Graphics();
     this.path["name_path"] = this.key;
-    this.path.zIndex = 1;
+    this.path.zIndex = 7;
     this.path.cacheAsBitmap = true;
 
     if (
