@@ -197,6 +197,7 @@ export class LymphResistor {
   // dependent parameters
   flow = 0.0;
   flow_lmin = 0.0;
+  flow_mlkgmin = 0.0;
   flow_forward_lmin = 0.0;
   flow_backward_lmin = 0.0;
   flux_o2 = 0.0;
@@ -455,6 +456,7 @@ export class LymphResistor {
       this.flow_backward_lmin =
         (this._cum_backward_flow / this._flow_counter) * 60.0;
       this.flow_lmin = this.flow_forward_lmin + this.flow_backward_lmin;
+      this.flow_mlkgmin = this.flow_lmin * 1000 / this._model_engine.weight;
       this._cum_forward_flow = 0.0;
       this._cum_backward_flow = 0.0;
       this._flow_counter = 0.0;

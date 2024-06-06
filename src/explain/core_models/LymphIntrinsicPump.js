@@ -68,7 +68,7 @@ export class LymphIntrinsicPump {
       }
 
       let el_rest = this._model_engine.models[target].el_rest;
-      this._model_engine.models[target].contraction_interval = 60 / this.freq;
+      this._model_engine.models[target].contraction_interval = 60 / this._model_engine.models[target].freqINT;
 
       if (this.total_time >= t_start) {
         this._model_engine.models[target].interval_running = true;

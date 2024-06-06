@@ -24,30 +24,37 @@ export class Lymph {
   feedback_enabled = false;
   min_mflow = 0.0;
   set_mflow = 0.1369;
-  max_mflow = 0.28;
+  max_mflow = 0.2738;
 
-  tc_amp_mflow = 5.0;
-  g_amp_mflow = -15700;
-  d_amp = 0.0;
-  amp = 0.0;
-  amp_ref = 4850.0;
+  init_flow = 0.0000075
 
-  tc_freq_mflow = 1.0;
-  g_freq_mflow = -71.0;
-  freq = 0.0;
-  freq_ref = 10.0;
+  tc_me_mflow = 3.0;
+  g_me_mflow_low = -986121;
+  g_me_mflow_high = -328707
+  g_me_mflow = 0.0;
+  d_me_mflow = 0.0;
 
-  min_ISpres = -7.2;
-  set_ISpres = -3.6;
-  max_ISpres = 0.0;
+  min_mpres = 7.65;
+  set_mpres = 9.65;
+  max_mpres = 11.65;
 
-  tc_amp_ISpres = 3.0;
-  g_amp_ISpres = 1153;
+  tc_me_mpres = 3.0;
+  g_me_mpres_low = 22500;
+  g_me_mpres_high = 67500;
+  g_me_mpres = 0.0;
+  d_me_mpres = 0.0;
 
-  minute_el_ref = 48500;
-  g_target_minute = 13472;
-  amp_freq_ratio = 0.83;
+  // min_ISpres = -4.5;
+  // set_ISpres = -3.5;
+  // max_ISpres = -2.5;
 
+  // tc_me_ISpres = 3.0;
+  // g_me_ISpres = 111500;
+
+  me = 0.0;
+  me_ref = 45000;
+  
+  amp_freq_ratio = 450;
 
   // dependent parameters
   is_flow = 0.0;
@@ -55,6 +62,8 @@ export class Lymph {
   il_lt_flow = 0.0;
   lt_ld_flow = 0.0;
   ld_svc_flow = 0.0;
+
+  is_flowmlkgmin = 0.0;
 
   // local parameters
   _model_engine = {};
@@ -72,7 +81,9 @@ export class Lymph {
   _update_counter = 0.0;
 
   _flows = [];
-  _data_window = 2400
+  _pres = [];
+  _data_window_flow = 2400
+  _data_window_pres = 2400
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -106,8 +117,9 @@ export class Lymph {
     }
 
     // fill the list of flows with the baroreflex start point
-    this._flows = new Array(this._data_window).fill(this.set_mflow);
-    this._setflow = new Array(this._data_window).fill(this.set_mflow);
+    this._flows = new Array(this._data_window_flow).fill(this.init_flow);
+    this._pres = new Array(this._data_window_pres).fill(this.set_mpres);
+    // this._setflow = new Array(this._data_window).fill(this.init_flow);
 
     // set the flag to model is initialized
     this._is_initialized = true;
@@ -148,6 +160,7 @@ export class Lymph {
   calc_model() {
     if (this._analysis_counter > this._analysis_interval) {
       this.is_flow = (this._cum_is_flow / this._analysis_counter) * 60.0;
+      this.is_flowmlkgmin = this.is_flow *1000 / this._model_engine.weight
       this.is_il_flow = (this._cum_is_il_flow / this._analysis_counter) * 60.0;
       this.il_lt_flow = (this._cum_il_lt_flow / this._analysis_counter) * 60.0;
       this.lt_ld_flow = (this._cum_lt_ld_flow / this._analysis_counter) * 60.0;
@@ -177,62 +190,83 @@ export class Lymph {
     if (this._update_counter > this._update_window) {
       // insert a new flow at the start of the list
       this._flows.unshift(this._model_engine.models["LD_SVC"].flow);
-      this._isflow = 0.0;
-      this.starlings.forEach((cap) => {
-        this._isflow += this._model_engine.models[cap].flow;
-      });
-      this._setflow.unshift(this._isflow);
-
+      this._pres.unshift(this._model_engine.models["LD"].pres_tm);
       // remove the last flow from the list
       this._flows.pop();
-      this._setflow.pop();
+      this._pres.pop();
 
       // get the moving average of the flow
       this.mflow =
         this._flows.reduce(
           (accumulator, currentValue) => accumulator + currentValue,
           0
-        ) / this._data_window*60000/this._model_engine.weight;  
-        
-      this.msetflow = 
-        this._setflow.reduce(
+        ) / this._data_window_flow*60000/this._model_engine.weight;  
+
+      this.mpres =
+        this._pres.reduce(
           (accumulator, currentValue) => accumulator + currentValue,
           0
-        ) / this._data_window*60000/this._model_engine.weight;  
+        ) / this._data_window_pres
 
-      // let a = this.activation_function(this.mflow, this.max_mflow, this.msetflow, this.min_mflow)
-      let a = this.activation_function(this._model_engine.models["IS"].pres, this.max_ISpres, this.set_ISpres, this.min_ISpres)
-      this.d_amp = this.time_constant(this.tc_amp_mflow, this.d_amp, a, this._update_window)
-      this.amp = this.amp_ref + this.d_amp * this.g_amp_ISpres
+      // this._isflow = 0.0;
+      // this.starlings.forEach((cap) => {
+      //   this._isflow += this._model_engine.models[cap].flow;
+      // });
+      // this._setflow.unshift(this._isflow);
+
+      // this._setflow.pop();      
+
+      // this.msetflow = 
+      //   this._setflow.reduce(
+      //     (accumulator, currentValue) => accumulator + currentValue,
+      //     0
+      //   ) / this._data_window*60000/this._model_engine.weight;  
+
+      let a_mflow = this.activation_function(this.mflow, this.max_mflow, this.set_mflow, this.min_mflow)
+      this.d_me_mflow = this.time_constant(this.tc_me_mflow, this.d_me_mflow, a_mflow, this._update_window)
+      if (a_mflow >= 0.0) {
+        this.g_me_mflow = this.g_me_mflow_high;
+      } else {
+        this.g_me_mflow = this.g_me_mflow_low;
+      }
+
+      let a_mpres = this.activation_function(this.mpres, this.max_mpres, this.set_mpres, this.min_mpres)
+      this.d_me_mpres = this.time_constant(this.tc_me_mpres, this.d_me_mpres, a_mpres, this._update_window)
+      if (a_mpres >= 0.0) {
+        this.g_me_mpres = this.g_me_mpres_high;
+      } else {
+        this.g_me_mpres = this.g_me_mpres_low;
+      }
+
+      this.me = this.me_ref + 0.5*(this.d_me_mpres * this.g_me_mpres) + 0.5*(this.d_me_mflow * this.g_me_mflow) 
+      if (this.me <= 0.0) {
+        this.me = 0.001;
+      }
+
+      //reset update counter
+      this.amp_freq_controller();
 
       if (this.feedback_enabled) {
         this._model_engine.models["LT"].ampINT = this.amp;
         this._model_engine.models["LD"].ampINT = this.amp;
-      }
-
-      // this.d_freq = this.time_constant(this.tc_freq_mflow, this.d_freq, a, this._update_window)
-      // this.freq = this.freq_ref + this.d_freq * this.g_freq_mflow
-      // this._model_engine.models["LT","LD"].freqINT = this.freq
-
-      this.target_minute_elastance = this.minute_el_ref + this.d_amp * this.g_minute_el
-
-      //reset update counter
+        this._model_engine.models["LT"].freqINT = this.freq;
+        this._model_engine.models["LD"].freqINT = this.freq;
+      }  
       this._update_counter = 0.0;
     }
 
     this._update_counter += this._t;
+  }
 
-    }
-
-  amp_freq_controller(_weight) {
+  amp_freq_controller() {
     // calculate the spontaneous resp rate depending on the target minute volume (from ANS) and the set vt-rr ratio
     this.freq = Math.sqrt(
-      this.target_minute_elastance / (this.amp_freq_ratio * _weight)
+      this.me / (this.amp_freq_ratio)
     );
 
     // calculate the target tidal volume depending on the target resp rate and target minute volume (from ANS)
     if (this.freq > 0) {
-      this.target_amp = this.target_minute_elastance / this.freq;
+      this.amp = this.me / this.freq;
     }
   }
 

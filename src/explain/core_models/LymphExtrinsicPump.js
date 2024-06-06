@@ -10,7 +10,9 @@ export class LymphExtrinsicPump {
   ampEXT = 1.0; // contraction amplitude
   freqEXT = 10; // frequency, contractions per minute
   durEXT = 2.0; // duration of contraction
-  targets = ["IL","LT"];
+  targets = ["IL","LT","LD"];
+
+  c = 0.0;
 
   // dependent parameters
   total_time = 0.0;
@@ -80,14 +82,14 @@ export class LymphExtrinsicPump {
 
     this.targets.forEach((target) => {
       let time = this.total_time;
-      if (this._model_engine.models[target].name !== "IL") {
+      if (this._model_engine.models[target].name === "LT") {
         time = this.contraction_timer;
       } 
 
       let pres_conEXT =
         this._model_engine.models[target].ampEXT * 0.5*
         (1/this._model_engine.models[target].b-
-        Math.cos(2*Math.PI/this._model_engine.models[target].durEXT*(time)))
+        Math.cos(2*Math.PI/this._model_engine.models[target].durEXT*(time))) + this._model_engine.models[target].c
       
       this._model_engine.models[target].pres_conEXT = pres_conEXT;
       this._model_engine.models[target].pres_ext += pres_conEXT;
@@ -102,7 +104,7 @@ export class LymphExtrinsicPump {
       let amp = this._model_engine.models[target].ampEXT * f;
       let el_conEXT =
           amp/2*(3-Math.cos(
-            2*Math.PI/this._model_engine.models[target].durEXT*(this.total_time + this._model_engine.models[target].phase)))
+            2*Math.PI/this._model_engine.models[target].durEXT*(this.total_time + this._model_engine.models[target].phase))) 
 
       this._model_engine.models[target].el_conEXT = el_conEXT;
       // this._model_engine.models[target].el_base += el_conEXT;

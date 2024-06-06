@@ -1128,9 +1128,9 @@ export default defineComponent({
             function_name: "",
             model: "LD",
             prop: "ampEXT",
-            min: -5,
-            max: 5,
-            step: 0.5
+            min: 0,
+            max: 1,
+            step: 0.01
           },
           lt_freq: {
             caption: "lymphatic trunks frequency",
@@ -1150,26 +1150,7 @@ export default defineComponent({
             min: 0.0,
             max: 30,
             step: 1
-          },           
-          ld_freq: {
-            caption: "lymphatic ducts frequency",
-            category: "extrinsic_pump",
-            enabled: true,
-            advanced: false,
-            linked: false,
-            link_button: false,
-            linked_caption: "",
-            linked_to: "",
-            type: "number",
-            unit: "/min",
-            caller: "direct",
-            function_name: "",
-            model: "LD",
-            prop: "freqEXT",
-            min: 0.0,
-            max: 30,
-            step: 1
-          },    
+          },            
           il_dur: {
             caption: "initial lymphatics contraction duration",
             category: "extrinsic_pump",
@@ -1226,7 +1207,26 @@ export default defineComponent({
             min: 0.0,
             max: 10,
             step: 0.5
-          },              
+          },  
+          ld_c: {
+            caption: "lymphatic ducts c",
+            category: "extrinsic_pump",
+            enabled: true,
+            advanced: false,
+            linked: false,
+            link_button: false,
+            linked_caption: "",
+            linked_to: "",
+            type: "number",
+            unit: "",
+            caller: "direct",
+            function_name: "",
+            model: "LD",
+            prop: "c",
+            min: -5.0,
+            max: 5,
+            step: 0.5
+          },                       
           is_il_res: {
             caption: "IS_IL resistance",
             category: "resistances",
