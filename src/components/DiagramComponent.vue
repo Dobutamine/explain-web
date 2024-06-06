@@ -168,7 +168,6 @@ export default {
         }
 
       });
-      console.log(pixiApp)
 
       // allow sortable children
       pixiApp.stage.sortableChildren = true;

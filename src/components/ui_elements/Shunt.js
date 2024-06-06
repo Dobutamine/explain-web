@@ -117,8 +117,8 @@ export default class Shunt {
 
     let xc = this.line.x2 - this.line.x1;
     let yc = this.line.y2 - this.line.y1;
-    this.text.x = this.line.x1 + xc / 3.0;
-    this.text.y = this.line.y1 + yc / 3.0;
+    this.text.x = this.line.x1 + xc / 2.0;
+    this.text.y = this.line.y1 + yc / 2.0;
 
     let angle = 0;
     angle =

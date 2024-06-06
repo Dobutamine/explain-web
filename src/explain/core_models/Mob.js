@@ -49,17 +49,6 @@ export class Mob {
       ll: 0.0,
     },
     {
-      target: "bm_po2_tc",
-      caption: "po2 time constant (s)",
-      type: "number",
-      optional: false,
-      factor: 1,
-      delta: 0.1,
-      rounding: 1,
-      ul: 100.0,
-      ll: 0.0,
-    },
-    {
       target: "bm_vo2_ref",
       caption: "vo2 reference (mmol/s)",
       type: "number",
@@ -93,7 +82,7 @@ export class Mob {
       ll: 0.0,
     },
     {
-      target: "bm_tc",
+      target: "bm_vo2_tc",
       caption: "vo2 time constant (s)",
       type: "number",
       optional: false,
@@ -252,7 +241,10 @@ export class Mob {
   cor_model = "COR";
 
   ecc_c = 0.0;
+  ecc_c_factor = 1.0;
   pva_c = 8.73e-5;
+  pva_c_factor = 1.0;
+
   po2_min = 0.05;
   po2_set = 10.0;
   po2_max = 10.0;
@@ -260,10 +252,9 @@ export class Mob {
   bm_vo2_ref = 7.155e-5;
   bm_vo2_max = 7.155e-5;
   bm_vo2_min = 1.431e-5;
+  bm_vo2_factor = 0.45;
+  bm_vo2_tc = 5.0;
 
-  vo2_factor = 0.45;
-  bm_po2_tc = 5.0;
-  bm_tc = 5.0;
   resp_q = 0.7;
 
   hr_factor = 1.0;
@@ -328,6 +319,12 @@ export class Mob {
   _pv_area_rv_inc = 0.0;
   _pv_area_lv_dec = 0.0;
   _pv_area_rv_dec = 0.0;
+
+  _pv_area_lv_inc_exp = 0.0;
+  _pv_area_rv_inc_exp = 0.0;
+  _pv_area_lv_dec_exp = 0.0;
+  _pv_area_rv_dec_exp = 0.0;
+
   _sv_lv_cum = 0.0;
   _sv_rv_cum = 0.0;
 
@@ -339,6 +336,8 @@ export class Mob {
   _ml_to_mmol = 22.414;
 
   test = 0;
+  pva_running = 0.0;
+  pva_step = 0.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -366,14 +365,6 @@ export class Mob {
     this._aa = this._model_engine.models[this.aa_model];
     this._aa_cor = this._model_engine.models[this.aa_cor_model];
     this._cor = this._model_engine.models[this.cor_model];
-
-    // set the heart weight
-    this.hw = 7.799 + 0.004296 * this._model_engine.weight * 1000.0; // = 21.9 grams for a 3 kg baby
-    this.bm_vo2_ref = this.bm_vo2_ref * this.vo2_factor;
-    this.bm_vo2_max = this.bm_vo2_max * this.vo2_factor;
-    this.bm_vo2_min = this.bm_vo2_min * this.vo2_factor;
-    this.pva_c = this.pva_c * this.vo2_factor;
-    this.ecc_c = this.ecc_c * this.vo2_factor;
 
     // set the flag to model is initialized
     this._is_initialized = true;
@@ -403,7 +394,7 @@ export class Mob {
       set_blood_composition(this._cor);
 
       // calculate the oxygen metabolism in mmol O2 / cardiac cycle
-      this.mvo2 = this.oxygen_metabolism();
+      this.mvo2 = this.oxygen_metabolism(60.0 / this._heart.heart_rate);
     }
 
     // this total vo2 is in 1 cardiac cycle, we now have to calculate the vo2 in this model step
@@ -445,11 +436,13 @@ export class Mob {
 
   freeze_factors() {}
 
-  oxygen_metabolism() {
+  oxygen_metabolism(t) {
     // get the po2 in mmHg from coronaries
     let po2_cor = this._cor.aboxy.po2;
 
     // calculate the activation function of the baseline vo2, which is zero when the po2 is above 10.0
+    // as the max is the same as the setpoint the activation function is zero when the po2 is above the setpoint
+    this.po2_max = this.po2_set;
     this._a_po2 = this.activation_function(
       po2_cor,
       this.po2_max,
@@ -460,7 +453,8 @@ export class Mob {
     // calculate the gain depending on the reference and minimal baseline vo2 and po2 threshold from where the baseline vo2 is reduced
     // this gain determines how much the baseline vo2 is reduced when the po2 drops below the threshold
     this.bm_g =
-      (this.bm_vo2_max * this.hw - this.bm_vo2_min * this.hw) /
+      (this.bm_vo2_max * this.bm_vo2_factor * this.hw -
+        this.bm_vo2_min * this.bm_vo2_factor * this.hw) /
       (this.po2_max - this.po2_min);
     this.cont_g =
       (this.cont_factor_max - this.cont_factor_min) /
@@ -473,21 +467,28 @@ export class Mob {
 
     // incorporate the time constants
     this._d_bm_vo2 =
-      this._t * ((1 / this.bm_tc) * (-this._d_bm_vo2 + this._a_po2)) +
+      t * ((1 / this.bm_vo2_tc) * (-this._d_bm_vo2 + this._a_po2)) +
       this._d_bm_vo2;
     this._d_hr =
-      this._t * ((1 / this.hr_tc) * (-this._d_hr + this._a_po2)) + this._d_hr;
+      t * ((1 / this.hr_tc) * (-this._d_hr + this._a_po2)) + this._d_hr;
     this._d_cont =
-      this._t * ((1 / this.cont_tc) * (-this._d_cont + this._a_po2)) +
-      this._d_cont;
+      t * ((1 / this.cont_tc) * (-this._d_cont + this._a_po2)) + this._d_cont;
     this._d_ans =
-      this._t * ((1 / this.ans_tc) * (-this._d_ans + this._a_po2)) +
-      this._d_ans;
+      t * ((1 / this.ans_tc) * (-this._d_ans + this._a_po2)) + this._d_ans;
 
     // calculate the baseline vo2 in mmol O2 /  cardiac cycle
     this.bm_vo2 =
-      (this.bm_vo2_ref * this.hw + this._d_bm_vo2 * this.bm_g) /
+      (this.bm_vo2_ref * this.bm_vo2_factor * this.hw +
+        this._d_bm_vo2 * this.bm_g) /
       this._ml_to_mmol; // is about 20% in steady state
+
+    if (
+      this.bm_vo2 <
+      (this.bm_vo2_min * this.bm_vo2_factor * this.hw) / this._ml_to_mmol
+    ) {
+      this.bm_vo2 =
+        (this.bm_vo2_min * this.bm_vo2_factor * this.hw) / this._ml_to_mmol;
+    }
 
     // when hypoxia gets severe the ANS influence gets inhibited and the heartrate, contractility and baseline metabolism are decreased
     // calculate the new ans activity (1.0 is max activity and 0.0 is min activity) which controls the ans activity
@@ -506,10 +507,12 @@ export class Mob {
     this._heart._ra.el_max_mob_factor = this.cont_factor;
 
     // calculate the ecc vo2 -> not implemented yet but included in baseline metabolism
-    this.ecc_vo2 = (this.ecc * this.ecc_c * this.hw) / this._ml_to_mmol; // is about 15% in steady state
+    this.ecc_vo2 =
+      (this.ecc * this.ecc_c * this.ecc_c_factor * this.hw) / this._ml_to_mmol; // is about 15% in steady state
 
     // calculate the pva vo2 in mmol O2 / cardiac cycle
-    this.pva_vo2 = (this.pva * this.pva_c * this.hw) / this._ml_to_mmol;
+    this.pva_vo2 =
+      (this.pva * this.pva_c * this.pva_c_factor * this.hw) / this._ml_to_mmol;
 
     // return the total vo2 in mmol O2 / carciac cycle
     return this.bm_vo2 + this.pva_vo2 + this.ecc_vo2;
@@ -567,6 +570,14 @@ export class Mob {
         -_dV_rv * this._prev_rv_pres +
         (-_dV_rv * (this._heart._rv.pres - this._prev_rv_pres)) / 2.0;
     }
+
+    this.pva_running =
+      _dV_lv * this._prev_lv_pres +
+      (_dV_lv * (this._heart._lv.pres - this._prev_lv_pres)) / 2.0 +
+      (_dV_rv * this._prev_rv_pres +
+        (_dV_rv * (this._heart._rv.pres - this._prev_rv_pres)) / 2.0);
+
+    this.pva_step = (this.pva / (60.0 / this._heart.heart_rate)) * this._t;
 
     // store current volumes and pressures
     this._prev_lv_vol = this._heart._lv.vol;

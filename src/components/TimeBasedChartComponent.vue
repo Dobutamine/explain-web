@@ -264,6 +264,28 @@ export default {
       presetNames: [],
       newPresetName: "",
       presets: {
+        "Pva": {
+          props: ["Mob.pva", "Mob.pva_running"],
+          autoscale: true,
+          y_min: 0.0,
+          y_max: 35,
+          factors: false,
+          fill: false,
+          chart1_factor: 100000,
+          chart2_factor: 1.0,
+          chart3_factor: 1.0
+        },
+        "Mob": {
+          props: ["Mob.bm_vo2", "Mob.cor_po2"],
+          autoscale: false,
+          y_min: 0.0,
+          y_max: 35,
+          factors: true,
+          fill: false,
+          chart1_factor: 100000,
+          chart2_factor: 1.0,
+          chart3_factor: 1.0
+        },
         "Brain and coronary avg flow": {
           props: ["AA_BR.flow_lmin_avg", "AA_COR.flow_lmin_avg"],
           autoscale: false,
