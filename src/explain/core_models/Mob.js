@@ -244,15 +244,18 @@ export class Mob {
   ecc_c_factor = 1.0;
   pva_c = 8.73e-5;
   pva_c_factor = 1.0;
+  pe_c = 0.0;
+  pe_c_factor = 1.0;
 
-  po2_min = 0.05;
-  po2_set = 10.0;
-  po2_max = 10.0;
+  to2_min = 0.0002;
+  to2_set = 0.2;
+  to2_max = 0.2;
 
-  bm_vo2_ref = 7.155e-5;
-  bm_vo2_max = 7.155e-5;
-  bm_vo2_min = 1.431e-5;
-  bm_vo2_factor = 0.45;
+  bm_vo2_ref = 0.0007;
+  bm_vo2_max = 0.0007;
+  bm_vo2_min = 0.00035;
+  bm_vo2_factor = 1.0;
+
   bm_vo2_tc = 5.0;
 
   resp_q = 0.7;
@@ -277,9 +280,11 @@ export class Mob {
   mob = 0.0;
   mvo2 = 0.0;
   mvo2_step = 0.0;
+  bm = 0.0;
   bm_vo2 = 0.0;
   ecc_vo2 = 0.0;
   pva_vo2 = 0.0;
+  pe_vo2 = 0.0;
   bm_g = 2.0;
   cont_g = 0.0;
   hr_g = 0.0;
@@ -287,8 +292,9 @@ export class Mob {
 
   ecc_lv = 0.0; // pres_ms of the heart chamber
   ecc_rv = 0.0;
-  ecc = 0.0;
+  ecc = 0.0; // excitation contraction coupling
   pva = 0.0; // total pva of both ventricles
+  pe = 0.0; // potenital mechanical work stored in the ventricular wall
   stroke_work_lv = 0.0; // stroke work of left ventricle
   stroke_work_rv = 0.0; // stroke work of right ventricle
   stroke_volume_lv = 0.0; // stroke volume in liters
@@ -328,7 +334,7 @@ export class Mob {
   _sv_lv_cum = 0.0;
   _sv_rv_cum = 0.0;
 
-  _a_po2 = 0.0;
+  _a_to2 = 0.0;
   _d_bm_vo2 = 0.0;
   _d_cont = 0.0;
   _d_hr = 0.0;
@@ -377,31 +383,40 @@ export class Mob {
   }
 
   calc_model() {
-    // set the heart weight -> at 3.545 ths is 23 grams
-    // desired myocardial flow = 1.8 ml/min/gm tissue => 41.4 ml/min = 0.0414 l/min = 0.00069 l/s = 11,6 ml/kg/min
+    // set the heart weight -> at 3.545 that is about 23 grams
     this.hw = 7.799 + 0.004296 * this._model_engine.weight * 1000.0;
 
-    // get the ecc from the heart chambers
-    this.ecc_lv = this._heart._lv.el_max * this._heart._lv.el_max_factor;
-    this.ecc_rv = this._heart._rv.el_max * this._heart._rv.el_max_factor;
-    this.ecc = (this.ecc_lv + this.ecc_rv) / 1000.0;
+    // calculate the basal metabolism in mmol O2 / sec is dependent on the to2 in the coronary blood
+    this.bm_vo2 = this.calc_bm();
 
-    // calculate the pressure volume loop area which is the total stroke work of the heart. We only get the work of the last cardiac cycle
-    this.pva = this.calc_pva();
+    // calculate the energy cost of the excitation-contraction coupling in mmol O2 / cardiac cycle
+    this.ecc_vo2 = this.calc_ecc();
 
-    // calculate the blood composition of the coronary blood capacity every heart cycle
-    if (this._heart.ncc_ventricular == 1) {
-      set_blood_composition(this._cor);
+    // calculate the pressure volume loop area which is the total stroke work and convert it to mmol O2 / cardiac cycle
+    this.pva_vo2 = this.calc_pva();
 
-      // calculate the oxygen metabolism in mmol O2 / cardiac cycle
-      this.mvo2 = this.oxygen_metabolism(60.0 / this._heart.heart_rate);
+    // calculate the potentential mechanical work stored in the ventricular wall and convert it to mmol O2 / cardiac cycle
+    this.pe_vo2 = this.calc_pe();
+
+    // so the basal metabolism is always running but the pe, ecc and pva are only calculated relevant during a cardiac cycle
+    let bm_vo2_step = this.bm_vo2 * this._t;
+
+    // the ecc_vo2, pva_vo2 are only running during a cardiac cycle which is stored in the heart object cardiac_cycle_time variable
+    let ecc_vo2_step = 0.0;
+    let pva_vo2_step = 0.0;
+    let pe_vo2_step = 0.0;
+
+    if (
+      this._heart.cardiac_cycle_time > 0.0 &&
+      this._heart.cardiac_cycle_running
+    ) {
+      ecc_vo2_step = (this.ecc_vo2 / this._heart.cardiac_cycle_time) * this._t;
+      pva_vo2_step = (this.pva_vo2 / this._heart.cardiac_cycle_time) * this._t;
+      pe_vo2_step = (this.pe_vo2 / this._heart.cardiac_cycle_time) * this._t;
     }
 
-    // this total vo2 is in 1 cardiac cycle, we now have to calculate the vo2 in this model step
-    let hc_duration = 60.0 / this._heart.heart_rate;
-
-    // calculate the vo2 in this model step
-    this.mvo2_step = (this.mvo2 / hc_duration) * this._t;
+    // calculate the total vo2 in mmol O2 for the model step
+    this.mvo2_step = bm_vo2_step + ecc_vo2_step + pva_vo2_step + pe_vo2_step;
 
     // calculate the co2 production in this model step
     let co2_production = this.mvo2_step * this.resp_q;
@@ -413,7 +428,7 @@ export class Mob {
 
     // calculate the myocardial oxygen balance in mmol/s
     let o2_inflow = this._aa_cor.flow * this._aa.aboxy.to2; // in mmol/s
-    let o2_use = this.mvo2 / hc_duration; // in mmol/s
+    let o2_use = this.mvo2_step / this._t; // in mmol/s
     this.mob = o2_inflow - o2_use + to2_cor;
 
     // calculate the new blood composition of the coronary blood
@@ -432,22 +447,21 @@ export class Mob {
     this.cor_so2 = this._cor.aboxy.so2;
   }
 
-  freeze_scaling() {}
+  calc_bm() {
+    // the basal metabolism is dependent on the to2 in the coronary blood as the basal metabolism is reduced in hypoxic conditions
+    // po2 20 mmHg to 0.65, po2 15 mmHg = 0.4, po2 10 mmHg = 0.2
 
-  freeze_factors() {}
-
-  oxygen_metabolism(t) {
     // get the po2 in mmHg from coronaries
-    let po2_cor = this._cor.aboxy.po2;
+    let to2_cor = this._cor.aboxy.to2;
 
-    // calculate the activation function of the baseline vo2, which is zero when the po2 is above 10.0
-    // as the max is the same as the setpoint the activation function is zero when the po2 is above the setpoint
-    this.po2_max = this.po2_set;
-    this._a_po2 = this.activation_function(
-      po2_cor,
-      this.po2_max,
-      this.po2_set,
-      this.po2_min
+    // calculate the activation function of the baseline vo2, which is zero when the to2 is above to2 setpoint
+    // as the max is the same as the setpoint the activation function is zero when the to2 is above the setpoint
+    this.to2_max = this.to2_set;
+    this._a_to2 = this.activation_function(
+      to2_cor,
+      this.to2_max,
+      this.to2_set,
+      this.to2_min
     );
 
     // calculate the gain depending on the reference and minimal baseline vo2 and po2 threshold from where the baseline vo2 is reduced
@@ -455,74 +469,75 @@ export class Mob {
     this.bm_g =
       (this.bm_vo2_max * this.bm_vo2_factor * this.hw -
         this.bm_vo2_min * this.bm_vo2_factor * this.hw) /
-      (this.po2_max - this.po2_min);
+      (this.to2_max - this.to2_min);
     this.cont_g =
       (this.cont_factor_max - this.cont_factor_min) /
-      (this.po2_max - this.po2_min);
+      (this.to2_max - this.to2_min);
     this.hr_g =
-      (this.hr_factor_max - this.hr_factor_min) / (this.po2_max - this.po2_min);
+      (this.hr_factor_max - this.hr_factor_min) / (this.to2_max - this.to2_min);
     this.ans_g =
       (this.ans_factor_max - this.ans_factor_min) /
-      (this.po2_max - this.po2_min);
+      (this.to2_max - this.to2_min);
 
     // incorporate the time constants
     this._d_bm_vo2 =
-      t * ((1 / this.bm_vo2_tc) * (-this._d_bm_vo2 + this._a_po2)) +
+      this._t * ((1 / this.bm_vo2_tc) * (-this._d_bm_vo2 + this._a_to2)) +
       this._d_bm_vo2;
     this._d_hr =
-      t * ((1 / this.hr_tc) * (-this._d_hr + this._a_po2)) + this._d_hr;
+      this._t * ((1 / this.hr_tc) * (-this._d_hr + this._a_to2)) + this._d_hr;
     this._d_cont =
-      t * ((1 / this.cont_tc) * (-this._d_cont + this._a_po2)) + this._d_cont;
+      this._t * ((1 / this.cont_tc) * (-this._d_cont + this._a_to2)) +
+      this._d_cont;
     this._d_ans =
-      t * ((1 / this.ans_tc) * (-this._d_ans + this._a_po2)) + this._d_ans;
+      this._t * ((1 / this.ans_tc) * (-this._d_ans + this._a_to2)) +
+      this._d_ans;
 
     // calculate the baseline vo2 in mmol O2 /  cardiac cycle
-    this.bm_vo2 =
+    let bm_vo2 =
       (this.bm_vo2_ref * this.bm_vo2_factor * this.hw +
         this._d_bm_vo2 * this.bm_g) /
       this._ml_to_mmol; // is about 20% in steady state
 
     if (
-      this.bm_vo2 <
+      bm_vo2 <
       (this.bm_vo2_min * this.bm_vo2_factor * this.hw) / this._ml_to_mmol
     ) {
-      this.bm_vo2 =
+      bm_vo2 =
         (this.bm_vo2_min * this.bm_vo2_factor * this.hw) / this._ml_to_mmol;
     }
 
-    // when hypoxia gets severe the ANS influence gets inhibited and the heartrate, contractility and baseline metabolism are decreased
-    // calculate the new ans activity (1.0 is max activity and 0.0 is min activity) which controls the ans activity
-    this.ans_activity_factor = 1.0 + this.ans_g * this._d_ans;
-    this._heart.ans_activity_factor = this.ans_activity_factor;
-
-    // calculate the mob factor which controls the heart rate
-    this.hr_factor = 1.0 + this.hr_g * this._d_hr;
-    this._heart.hr_mob_factor = this.hr_factor;
-
-    // calculate the mob factor which controls the contractility of the heart
-    this.cont_factor = 1.0 + this.cont_g * this._d_cont;
-    this._heart._lv.el_max_mob_factor = this.cont_factor;
-    this._heart._rv.el_max_mob_factor = this.cont_factor;
-    this._heart._la.el_max_mob_factor = this.cont_factor;
-    this._heart._ra.el_max_mob_factor = this.cont_factor;
-
-    // calculate the ecc vo2 -> not implemented yet but included in baseline metabolism
-    this.ecc_vo2 =
-      (this.ecc * this.ecc_c * this.ecc_c_factor * this.hw) / this._ml_to_mmol; // is about 15% in steady state
-
-    // calculate the pva vo2 in mmol O2 / cardiac cycle
-    this.pva_vo2 =
-      (this.pva * this.pva_c * this.pva_c_factor * this.hw) / this._ml_to_mmol;
-
-    // return the total vo2 in mmol O2 / carciac cycle
-    return this.bm_vo2 + this.pva_vo2 + this.ecc_vo2;
+    return bm_vo2;
   }
 
-  calc_pe() {}
+  calc_ecc() {
+    // calculate the excitation contraction coupling in mmol O2 / cardiac cycle relates to the costs of ion transport and calcium cycling
+    this.ecc_lv = this._heart._lv.el_max * this._heart._lv.el_max_factor;
+    this.ecc_rv = this._heart._rv.el_max * this._heart._rv.el_max_factor;
+    this.ecc = (this.ecc_lv + this.ecc_rv) / 1000.0;
+
+    return (
+      (this.ecc * this.ecc_c * this.ecc_c_factor * this.hw) / this._ml_to_mmol
+    ); // is about 15% in steady state;
+  }
+
+  calc_pe() {
+    // calculate the potential mechanical work stored in the ventricular wall in mmol O2 / cardiac cycle which does not have a direct metabolic cost but is stored energy
+    this.pe = 0;
+
+    return (
+      (this.pe * this.pe_c * this.pe_c_factor * this.hw) / this._ml_to_mmol
+    );
+  }
 
   calc_pva() {
     // detect the start of the cardiac cycle and calculate the area of the pv loop of the last cardiac cycle
-    if (this._heart.ncc_ventricular == 1) {
+    if (
+      this._heart.cardiac_cycle_running &&
+      !this._heart.prev_cardiac_cycle_running
+    ) {
+      // calculate the composition the coronary blood
+      set_blood_composition(this._cor);
+
       // calculate the stroke work of the ventricles
       this.stroke_work_lv = this._pv_area_lv_dec - this._pv_area_lv_inc; // in l * mmHg/cardiac cycle
       this.stroke_work_rv = this._pv_area_rv_dec - this._pv_area_rv_inc; // in l * mmHg/cardiac cycle
@@ -571,14 +586,6 @@ export class Mob {
         (-_dV_rv * (this._heart._rv.pres - this._prev_rv_pres)) / 2.0;
     }
 
-    this.pva_running =
-      _dV_lv * this._prev_lv_pres +
-      (_dV_lv * (this._heart._lv.pres - this._prev_lv_pres)) / 2.0 +
-      (_dV_rv * this._prev_rv_pres +
-        (_dV_rv * (this._heart._rv.pres - this._prev_rv_pres)) / 2.0);
-
-    this.pva_step = (this.pva / (60.0 / this._heart.heart_rate)) * this._t;
-
     // store current volumes and pressures
     this._prev_lv_vol = this._heart._lv.vol;
     this._prev_lv_pres = this._heart._lv.pres;
@@ -587,7 +594,11 @@ export class Mob {
     this._prev_rv_pres = this._heart._rv.pres;
 
     // return the total pressure volume area of both ventricles
-    return this.stroke_work_lv + this.stroke_work_rv;
+    this.pva = this.stroke_work_lv + this.stroke_work_rv;
+
+    return (
+      (this.pva * this.pva_c * this.pva_c_factor * this.hw) / this._ml_to_mmol
+    );
   }
 
   activation_function(value, max, setpoint, min) {

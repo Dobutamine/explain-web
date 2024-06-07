@@ -294,6 +294,9 @@ export class Blood {
   _svc = {};
   _ra = {};
 
+  to2 = 0.0;
+  tco2 = 0.0;
+
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
     // name of the model
@@ -487,7 +490,9 @@ export class Blood {
 
       this.ph = this.ph_post;
       this.po2 = this.po2_post;
+      this.to2 = this._aa.aboxy.to2;
       this.pco2 = this.pco2_post;
+      this.tco2 = this._aa.aboxy.tco2;
       this.hco3 = this.hco3_post;
       this.be = this.be_post;
       this.so2 = this.so2_post;

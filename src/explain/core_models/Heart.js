@@ -586,6 +586,9 @@ export class Heart {
   qrs_time = 0.075;
   qt_time = 0.25;
   av_delay = 0.0005;
+  cardiac_cycle_running = 0;
+  prev_cardiac_cycle_running = 0;
+  cardiac_cycle_time = 0.353;
 
   hr_ans_factor = 1.0;
   hr_mob_factor = 1.0;
@@ -625,6 +628,8 @@ export class Heart {
   _qt_timer = 0.0;
   _ventricle_is_refractory = false;
   _kn = 0.579;
+  _prev_cardiac_cycle = false;
+  _temp_cardiac_cycle_time = 0.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -676,6 +681,9 @@ export class Heart {
   }
 
   calc_model() {
+    // set the previous cardiac cycle flag
+    this.prev_cardiac_cycle_running = this.cardiac_cycle_running;
+
     // calculate the heartrate from the reference value and all other influences
     this.heart_rate =
       this.heart_rate_ref +
@@ -704,6 +712,9 @@ export class Heart {
       this._pq_running = true;
       // reset the atrial activation curve counter
       this.ncc_atrial = -1;
+      // signal that the cardiac cycle is running and reset the timer
+      this._temp_cardiac_cycle_time = 0.0;
+      this.cardiac_cycle_running = 1;
     }
 
     // has the pq time period elapsed?
@@ -751,6 +762,9 @@ export class Heart {
       this._qt_running = false;
       // signal that the ventricles are coming out of their refractory state
       this._ventricle_is_refractory = false;
+      // signal the end of the cardiac cycle
+      this.cardiac_cycle_time = this._temp_cardiac_cycle_time;
+      this.cardiac_cycle_running = 0;
     }
 
     // increase the timers with the modeling stepsize as set by the model base class
@@ -767,6 +781,11 @@ export class Heart {
     }
     if (this._qt_running) {
       this._qt_timer += this._t;
+    }
+
+    // check the cardiac cycle
+    if (this.cardiac_cycle_running === 1) {
+      this._temp_cardiac_cycle_time += this._t;
     }
 
     // increase the heart activation function counters
