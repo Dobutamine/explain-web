@@ -1,5 +1,5 @@
-export class Lymph {
-  static model_type = "Lymph";
+export class LymphResistor {
+  static model_type = "LymphResistor";
   static model_interface = [
     {
       target: "is_enabled",
@@ -46,6 +46,7 @@ export class Lymph {
     // set the flag to model is initialized
     this._is_initialized = true;
   }
+
   step_model() {
     if (this.is_enabled && this._is_initialized) {
       this.calc_model();
@@ -53,4 +54,8 @@ export class Lymph {
   }
 
   calc_model() {}
+
+  freeze_scaling() {}
+
+  freeze_factors() {}
 }

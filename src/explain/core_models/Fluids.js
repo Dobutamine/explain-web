@@ -9,6 +9,7 @@ export class Fluids {
       args: [
         {
           target: "vol",
+          caption: "volume (ml)",
           type: "number",
           default: 10.0,
           factor: 1,
@@ -19,6 +20,7 @@ export class Fluids {
         },
         {
           target: "in_time",
+          caption: "infusion time (sec)",
           type: "number",
           default: 5.0,
           factor: 1,
@@ -28,19 +30,9 @@ export class Fluids {
           ll: 0.0,
         },
         {
-          target: "at_time",
-          type: "number",
-          default: 0.0,
-          factor: 1,
-          delta: 1,
-          rounding: 0,
-          ul: 1000.0,
-          ll: 0.0,
-        },
-        {
           target: "site",
           type: "list",
-          default: "IVCE",
+          default: "VLB",
           options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
           options_default: [],
         },
@@ -61,6 +53,7 @@ export class Fluids {
       args: [
         {
           target: "vol",
+          caption: "volume (ml)",
           type: "number",
           default: 10.0,
           factor: 1,
@@ -71,6 +64,7 @@ export class Fluids {
         },
         {
           target: "in_time",
+          caption: "removal time (sec)",
           type: "number",
           default: 5.0,
           factor: 1,
@@ -80,19 +74,9 @@ export class Fluids {
           ll: 0.0,
         },
         {
-          target: "at_time",
-          type: "number",
-          default: 0.0,
-          factor: 1,
-          delta: 1,
-          rounding: 0,
-          ul: 1000.0,
-          ll: 0.0,
-        },
-        {
           target: "site",
           type: "list",
-          default: "IVCE",
+          default: "VLB",
           options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
           options_default: [],
         },
@@ -162,24 +146,14 @@ export class Fluids {
     }
   }
 
-  freeze_scaling() {}
-
-  freeze_factors() {}
-
-  add_volume(
-    vol = 10.0,
-    in_time = 5.0,
-    at_time = 0.0,
-    site = "IVCE",
-    fluid_type = null
-  ) {
+  add_volume(vol = 10.0, in_time = 5.0, site = "VLB", fluid_type = null) {
     if (vol > 0) {
       if (fluid_type in this.fluid_types) {
         const new_fluid = new Fluid(
           vol,
           this.fluid_types[fluid_type],
           in_time,
-          at_time,
+          0.0,
           this._model_engine.models[site],
           this._t
         );
@@ -189,7 +163,7 @@ export class Fluids {
           vol,
           null,
           in_time,
-          at_time,
+          0.0,
           this._model_engine.models[site],
           this._t
         );
@@ -199,13 +173,13 @@ export class Fluids {
     }
   }
 
-  remove_volume(vol = 10.0, in_time = 5.0, at_time = 0.0, site = "IVCE") {
+  remove_volume(vol = 10.0, in_time = 5.0, site = "VLB") {
     if (vol > 0) {
       const new_fluid = new Fluid(
         -vol,
         null,
         in_time,
-        at_time,
+        0.0,
         this._model_engine.models[site],
         this._t
       );
