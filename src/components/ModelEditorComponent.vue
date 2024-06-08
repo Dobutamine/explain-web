@@ -50,7 +50,7 @@
             <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
               {{ field.caption }}
               <div class="text-white" :style="{ 'font-size': '10px' }">
-                <q-select v-model="field.value" :options="field.choices"
+                <q-select v-model="field.value" :options="selectedNewModelPropsChoices"
                   @update:model-value="changePropState(field, arg)" color="blue" hide-hint filled dense stack-label
                   style="font-size: 14px" class="q-mb-sm" squared>
                 </q-select>
@@ -62,7 +62,7 @@
             <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
               {{ field.caption }}
               <div class="text-white" :style="{ 'font-size': '10px' }">
-                <q-select v-model="field.value" :options="field.choices"
+                <q-select v-model="field.value" :options="selectedNewModelPropsChoices"
                   @update:model-value="changePropState(field, arg)" multiple color="blue" hide-hint filled dense
                   stack-label style="font-size: 14px" class="q-mb-sm" squared>
                 </q-select>
@@ -238,6 +238,7 @@ export default {
       isEnabled: true,
       redraw: 1,
       selectedModelType: "",
+      selectedNewModelPropsChoices: [],
       newModelErrorFlag: false,
       noNewModelError: "q-ml-md q-mr-md q-mt-md text-secondary text-center",
       newModelError: "q-ml-md q-mr-md q-mt-md text-negative text-center",
@@ -285,6 +286,9 @@ export default {
       // add the properties
       this.selectedNewModelProps.forEach(prop => {
         new_model[prop.target] = prop.value
+        if (prop.type == 'number') {
+          new_model[prop.target] = parseFloat(prop.value)
+        }
       })
       // set to the model for processing
       explain.addNewModelToEngine(this.selectedModelType, new_model)
@@ -500,9 +504,92 @@ export default {
 
     },
     addBloodResistor() {
-      this.selectedNewModelProps = []
+      this.selectedNewModelProps = [
+        {
+          "caption": "name",
+          "target": "name",
+          "type": "string",
+          "value": "",
+        },
+        {
+          "caption": "description",
+          "target": "description",
+          "type": "string",
+          "value": "",
+        },
+        {
+          "caption": "is enabled",
+          "target": "is_enabled",
+          "type": "boolean",
+          "value": true,
+        },
+        {
+          "caption": "no flow",
+          "target": "no_flow",
+          "type": "boolean",
+          "value": false,
+        },
+        {
+          "caption": "no backflow allowed",
+          "target": "no_back_flow",
+          "type": "boolean",
+          "value": true,
+        },
+        {
+          "caption": "forward flow resistance (mmHg*sec/l)",
+          "target": "r_for",
+          "type": "number",
+          "ul": 1000000000,
+          "ll": 15,
+          "delta": 5,
+          "value": 10000,
+          "state_changed": false
+        },
+        {
+          "caption": "backward flow resistance (mmHg*sec/l)",
+          "target": "r_back",
+          "type": "number",
+          "ul": 1000000000,
+          "ll": 15,
+          "delta": 5,
+          "value": 10000,
+          "state_changed": false
+        },
+        {
+          "caption": "non-linear resistance (sec/l)",
+          "target": "r_k",
+          "type": "number",
+          "ul": 10000000000000,
+          "ll": 0,
+          "delta": 100,
+          "value": 1,
+          "state_changed": false
+        },
+        {
+          "caption": "comp from",
+          "target": "comp_from",
+          "type": "list",
+          "value": "",
+          "state_changed": false
+        },
+        {
+          "caption": "comp to",
+          "target": "comp_to",
+          "type": "list",
+          "value": "",
+          "state_changed": false
+        }
+      ]
+      this.selectedNewModelPropsChoices = []
+      let options = ["BloodCapacitance", "BloodTimeVaryingElastance"]
+      Object.values(explain.modelState.models).forEach(model => {
+        if (options.includes(model.model_type)) {
+          this.selectedNewModelPropsChoices.push(model.name)
+        }
+      })
 
     },
+
     addBloodValve() {
       this.selectedNewModelProps = []
 

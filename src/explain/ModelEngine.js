@@ -260,6 +260,7 @@ const add_model_to_engine = function (model_type, model_props) {
   if (model_props.model_type === "GasCapacitance") {
     model.models["Gas"].set_gas_properties(model_props.name);
   }
+  console.log(model.models);
 };
 
 const process_model_definition = function (model_definition) {
