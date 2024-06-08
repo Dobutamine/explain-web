@@ -39,6 +39,8 @@ export default class Model {
   _script_event = new CustomEvent("script");
   _props_event = new CustomEvent("props");
   _state_saved = new CustomEvent("state_saved");
+  _model_interface_event = new CustomEvent("model_interface");
+  _model_types_event = new CustomEvent("model_types");
 
   constructor() {
     // spin up a new model engine worker thread
@@ -61,6 +63,21 @@ export default class Model {
     // this.modelDefinition = this.loadBakedInModelDefinition("baseline_neonate");
   }
 
+  getModelTypes() {
+    this.sendMessageToModelEngine({
+      type: "get_model_types",
+      message: "",
+      payload: [],
+    });
+  }
+
+  getModelInterface(model_type) {
+    this.sendMessageToModelEngine({
+      type: "get_model_interface",
+      message: model_type,
+      payload: [],
+    });
+  }
   addNewModelToEngine(model_type, model_props) {
     this.sendMessageToModelEngine({
       type: "add_model",
@@ -202,6 +219,25 @@ export default class Model {
           }
           this.modelDataSlow = e.data.payload[0];
           document.dispatchEvent(this._rts_event);
+          break;
+
+        case "model_types":
+          if (this.debug) {
+            console.log(`Model: received model types.`);
+          }
+          this._model_types_event["model_types"] = JSON.parse(e.data.payload);
+          document.dispatchEvent(this._model_types_event);
+          break;
+
+        case "model_interface":
+          if (this.debug) {
+            console.log(`Model: received model interface.`);
+          }
+          this._model_interface_event["model_type"] = e.data.message;
+          this._model_interface_event["model_props"] = JSON.parse(
+            e.data.payload
+          );
+          document.dispatchEvent(this._model_interface_event);
           break;
 
         case "saved_state":

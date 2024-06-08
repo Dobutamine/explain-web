@@ -5,7 +5,7 @@
     <div>
       <div class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center row">
         <q-select class="q-pa-xs col" v-model="selectedModelType" style="font-size: 12px" square label="add new model"
-          hide-hint :options="modelTypes" dense dark stack-label @update:model-value="addNewModel" />
+          hide-hint :options="availableModelTypes" dense dark stack-label @update:model-value="addNewModel" />
       </div>
       <div v-if="redraw > 0.0" class="q-ma-sm q-mb-md">
         <div v-for="(field, index) in selectedNewModelProps" :key="index">
@@ -237,6 +237,7 @@ export default {
       title: "SUBMODEL EDITOR",
       isEnabled: true,
       redraw: 1,
+      availableModelTypes: [],
       selectedModelType: "",
       selectedNewModelPropsChoices: [],
       newModelErrorFlag: false,
@@ -307,298 +308,7 @@ export default {
     },
     addNewModel() {
       this.resetNewModel()
-      switch (this.selectedModelType) {
-        case "BloodCapacitance":
-          this.addBloodCapacitance()
-          break;
-        case "GasCapacitance":
-          this.addGasCapacitance()
-          break;
-        case "BloodTimeVaryingElastance":
-          this.addBloodTimeVaryingElastance()
-          break;
-        case "BloodResistor":
-          this.addBloodResistor()
-          break;
-        case "BloodValve":
-          this.addBloodValve()
-          break;
-        case "BloodDiffusor":
-          this.addBloodDiffusor()
-          break;
-        case "BloodPump":
-          this.addBloodPump()
-          break;
-      }
-
-    },
-    addBloodCapacitance() {
-      this.selectedNewModelProps = [
-        {
-          "caption": "name",
-          "target": "name",
-          "type": "string",
-          "value": "",
-        },
-        {
-          "caption": "description",
-          "target": "description",
-          "type": "string",
-          "value": "",
-        },
-        {
-          "caption": "is enabled",
-          "target": "is_enabled",
-          "type": "boolean",
-          "value": true,
-        },
-        {
-          "caption": "fixed composition",
-          "target": "fixed_composition",
-          "type": "boolean",
-          "value": false,
-        },
-        {
-          "caption": "unstressed volume (l)",
-          "target": "u_vol",
-          "type": "number",
-          "ul": 100,
-          "ll": 0,
-          "delta": 0.001,
-          "value": 0.001,
-          "state_changed": false
-        },
-        {
-          "caption": "volume (l)",
-          "target": "vol",
-          "type": "number",
-          "ul": 100,
-          "ll": 0,
-          "delta": 0.001,
-          "value": 0.001,
-          "state_changed": false
-        },
-        {
-          "caption": "baseline elastance (mmHg/l)",
-          "target": "el_base",
-          "type": "number",
-          "ul": 1000000000,
-          "ll": 1,
-          "delta": 10,
-          "value": 1000,
-          "state_changed": false
-        },
-        {
-          "caption": "non-linear elastance (mmHg/l)",
-          "target": "el_k",
-          "type": "number",
-          "ul": 10000000000000,
-          "ll": 0,
-          "delta": 100,
-          "value": 1,
-          "state_changed": false
-        },
-      ]
-    },
-    addGasCapacitance() {
-      this.selectedNewModelProps = [
-        {
-          "caption": "name",
-          "target": "name",
-          "type": "string",
-          "value": "",
-        },
-        {
-          "caption": "description",
-          "target": "description",
-          "type": "string",
-          "value": "",
-        },
-        {
-          "caption": "is enabled",
-          "target": "is_enabled",
-          "type": "boolean",
-          "value": true,
-        },
-        {
-          "caption": "fixed composition",
-          "target": "fixed_composition",
-          "type": "boolean",
-          "value": false,
-        },
-        {
-          "caption": "unstressed volume (l)",
-          "target": "u_vol",
-          "type": "number",
-          "ul": 100,
-          "ll": 0,
-          "delta": 0.001,
-          "value": 0.001,
-          "state_changed": false
-        },
-        {
-          "caption": "volume (l)",
-          "target": "vol",
-          "type": "number",
-          "ul": 100,
-          "ll": 0,
-          "delta": 0.001,
-          "value": 0.001,
-          "state_changed": false
-        },
-        {
-          "caption": "baseline elastance (mmHg/l)",
-          "target": "el_base",
-          "type": "number",
-          "ul": 1000000000,
-          "ll": 1,
-          "delta": 10,
-          "value": 1000,
-          "state_changed": false
-        },
-        {
-          "caption": "non-linear elastance (mmHg/l)",
-          "target": "el_k",
-          "type": "number",
-          "ul": 10000000000000,
-          "ll": 0,
-          "delta": 100,
-          "value": 1,
-          "state_changed": false
-        },
-        {
-          "caption": "temperature (C)",
-          "target": "temp",
-          "type": "number",
-          "ul": 100,
-          "ll": 0,
-          "delta": 0.1,
-          "value": 37,
-          "state_changed": false
-        },
-        {
-          "caption": "fio2",
-          "target": "fo2",
-          "type": "number",
-          "ul": 1,
-          "ll": 0,
-          "delta": 0.1,
-          "value": 0.21,
-          "state_changed": false
-        },
-        {
-          "caption": "humidity",
-          "target": "humidity",
-          "type": "number",
-          "ul": 1,
-          "ll": 0,
-          "delta": 0.1,
-          "value": 1.0,
-          "state_changed": false
-        },
-      ]
-
-    },
-    addBloodTimeVaryingElastance() {
-      this.selectedNewModelProps = []
-
-    },
-    addBloodResistor() {
-      this.selectedNewModelProps = [
-        {
-          "caption": "name",
-          "target": "name",
-          "type": "string",
-          "value": "",
-        },
-        {
-          "caption": "description",
-          "target": "description",
-          "type": "string",
-          "value": "",
-        },
-        {
-          "caption": "is enabled",
-          "target": "is_enabled",
-          "type": "boolean",
-          "value": true,
-        },
-        {
-          "caption": "no flow",
-          "target": "no_flow",
-          "type": "boolean",
-          "value": false,
-        },
-        {
-          "caption": "no backflow allowed",
-          "target": "no_back_flow",
-          "type": "boolean",
-          "value": true,
-        },
-        {
-          "caption": "forward flow resistance (mmHg*sec/l)",
-          "target": "r_for",
-          "type": "number",
-          "ul": 1000000000,
-          "ll": 15,
-          "delta": 5,
-          "value": 10000,
-          "state_changed": false
-        },
-        {
-          "caption": "backward flow resistance (mmHg*sec/l)",
-          "target": "r_back",
-          "type": "number",
-          "ul": 1000000000,
-          "ll": 15,
-          "delta": 5,
-          "value": 10000,
-          "state_changed": false
-        },
-        {
-          "caption": "non-linear resistance (sec/l)",
-          "target": "r_k",
-          "type": "number",
-          "ul": 10000000000000,
-          "ll": 0,
-          "delta": 100,
-          "value": 1,
-          "state_changed": false
-        },
-        {
-          "caption": "comp from",
-          "target": "comp_from",
-          "type": "list",
-          "value": "",
-          "state_changed": false
-        },
-        {
-          "caption": "comp to",
-          "target": "comp_to",
-          "type": "list",
-          "value": "",
-          "state_changed": false
-        }
-      ]
-      this.selectedNewModelPropsChoices = []
-      let options = ["BloodCapacitance", "BloodTimeVaryingElastance"]
-      Object.values(explain.modelState.models).forEach(model => {
-        if (options.includes(model.model_type)) {
-          this.selectedNewModelPropsChoices.push(model.name)
-        }
-      })
-
-    },
-
-    addBloodValve() {
-      this.selectedNewModelProps = []
-
-    },
-    addBloodDiffusor() {
-
-    },
-    addBloodPump() {
-
+      explain.getModelInterface(this.selectedModelType)
     },
     collapsEditor() {
 
@@ -834,13 +544,34 @@ export default {
           this.selectModel()
         }
       } catch { }
-    }
+    },
+    processAvailableModelTypes(data) {
+      this.availableModelTypes = data
+    },
+    processModelInterface(model_type, model_props) {
+      console.log("received model interface of ", model_type)
+      console.log(model_props)
+    },
   },
   beforeUnmount() {
     this.state_changed = false
+    document.removeEventListener("model_interface", (data) => { this.processModelInterface(data.model_type, data.model_props) });
+    document.removeEventListener("model_types", (data) => { this.processAvailableModelTypes(data.model_types) });
   },
   mounted() {
     this.$bus.on("state", this.processAvailableModels)
+
+    try {
+      document.removeEventListener("model_interface", (data) => { this.processModelInterface(data.model_type, data.model_props) });
+    } catch { }
+    document.addEventListener("model_interface", (data) => { this.processModelInterface(data.model_type, data.model_props) });
+
+    try {
+      document.removeEventListener("model_types", (data) => { this.processAvailableModelTypes(data.model_types) });
+    } catch { }
+    document.addEventListener("model_types", (data) => { this.processAvailableModelTypes(data.model_types) });
+
+    explain.getModelTypes()
 
   },
 };

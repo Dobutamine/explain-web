@@ -143,6 +143,12 @@ onmessage = (e) => {
     case "add_model":
       add_model_to_engine(e.data.message, e.data.payload);
       break;
+    case "get_model_interface":
+      get_model_interface(e.data.message);
+      break;
+    case "get_model_types":
+      get_model_types();
+      break;
     case "wake_up":
       if (debug) {
         console.info(e.data.message);
@@ -221,6 +227,37 @@ const get_props = function (model_name) {
     message: model_name,
     payload: JSON.stringify(model_props),
   });
+};
+
+const get_model_types = function () {
+  let model_types = [];
+  available_models.forEach((model) => {
+    model_types.push(model.model_type);
+  });
+
+  sendMessage({
+    type: "model_types",
+    message: "available model types",
+    payload: JSON.stringify(model_types),
+  });
+};
+const get_model_interface = function (model_type) {
+  let index = available_models.findIndex(
+    (available_model) => available_model.model_type === model_type
+  );
+  if (index > -1) {
+    sendMessage({
+      type: "model_interface",
+      message: model_type,
+      payload: JSON.stringify(available_models[index].model_interface),
+    });
+  } else {
+    sendMessage({
+      type: "error",
+      message: model_type + " model not found",
+      payload: [],
+    });
+  }
 };
 
 const add_model_to_engine = function (model_type, model_props) {
