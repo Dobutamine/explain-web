@@ -4,7 +4,84 @@
     </div>
     <div>
       <div class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center row">
-        <q-select class="q-pa-xs col" v-model="selectedModelName" square label="select model" hide-hint
+        <q-select class="q-pa-xs col" v-model="selectedModelType" style="font-size: 12px" square label="add new model"
+          hide-hint :options="modelTypes" dense dark stack-label @update:model-value="addNewModel" />
+      </div>
+      <div v-if="redraw > 0.0" class="q-ma-sm q-mb-md">
+        <div v-for="(field, index) in selectedNewModelProps" :key="index">
+          <div v-if="field.type == 'number'">
+            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+              {{ field.caption }}
+              <div class="text-white" :style="{ 'font-size': '10px' }">
+                <q-input v-model="field.value" :max="field.ul" :min="field.ll" :step="field.delta" color="blue"
+                  hide-hint filled dense stack-label type="number" @update:model-value="changePropState(field, arg)"
+                  style="font-size: 14px" class="q-mb-sm" squared>
+                </q-input>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="field.type == 'boolean'">
+            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary row" :style="{ 'font-size': '14px' }">
+              <div class="col">
+                {{ field.caption }}
+              </div>
+              <div class="col-1 text-white" :style="{ 'font-size': '10px' }">
+                <q-toggle v-model="field.value" color="primary" size="sm"
+                  @update:model-value="changePropState(field, arg)" hide-hint filled dense style="font-size: 14px"
+                  class="q-mb-sm">
+                </q-toggle>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="field.type == 'string'">
+            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+              {{ field.caption }}
+              <div class="text-white" :style="{ 'font-size': '10px' }">
+                <q-input v-model="field.value" color="blue" @update:model-value="changePropState(field, arg)" hide-hint
+                  filled dense stack-label style="font-size: 14px" class="q-mb-sm" squared>
+                </q-input>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="field.type == 'list'">
+            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+              {{ field.caption }}
+              <div class="text-white" :style="{ 'font-size': '10px' }">
+                <q-select v-model="field.value" :options="field.choices"
+                  @update:model-value="changePropState(field, arg)" color="blue" hide-hint filled dense stack-label
+                  style="font-size: 14px" class="q-mb-sm" squared>
+                </q-select>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="field.type == 'multiple-list'">
+            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+              {{ field.caption }}
+              <div class="text-white" :style="{ 'font-size': '10px' }">
+                <q-select v-model="field.value" :options="field.choices"
+                  @update:model-value="changePropState(field, arg)" multiple color="blue" hide-hint filled dense
+                  stack-label style="font-size: 14px" class="q-mb-sm" squared>
+                </q-select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="newModelErrorFlag" :class="newModelErrorClass" :style="{ 'font-size': '14px' }">
+          {{ newModelErrorMessage }}
+        </div>
+        <div v-if="selectedNewModelProps.length > 0" class="row q-ma-md">
+          <q-btn class="col q-ma-sm" color="negative" size="xs" dense icon="fa-solid fa-add"
+            @click="addNewModelToEngine" style="font-size: 10px"><q-tooltip>add new model</q-tooltip></q-btn>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center row">
+        <q-select class="q-pa-xs col" v-model="selectedModelName" square label="edit existing model" hide-hint
           :options="modelNames" dense dark stack-label @update:model-value="modelChanged" />
         <q-btn v-if="selectedModelName" class="col-1 q-ma-xs q-mt-sm" color="grey-9" size="xs" dense
           :icon="collaps_icon" @click="collapsEditor" style="font-size: 8px"></q-btn>
@@ -142,15 +219,17 @@
 </template>
 
 <script>
+
 import { explain } from "../boot/explain";
 
 
 export default {
   setup() {
     let selectedModelProps = []
+    let selectedNewModelProps = []
 
     return {
-      selectedModelProps
+      selectedModelProps, selectedNewModelProps
     }
   },
   data() {
@@ -158,6 +237,13 @@ export default {
       title: "SUBMODEL EDITOR",
       isEnabled: true,
       redraw: 1,
+      selectedModelType: "",
+      newModelErrorFlag: false,
+      noNewModelError: "q-ml-md q-mr-md q-mt-md text-secondary text-center",
+      newModelError: "q-ml-md q-mr-md q-mt-md text-negative text-center",
+      newModelErrorClass: "q-ml-md q-mr-md q-mt-md text-secondary text-center",
+      newModelErrorMessage: "no error",
+      modelTypes: ["BloodCompartment", "BloodTimeVaryingElastance", "BloodResistor", "BloodValve", "BloodDiffusor", "BloodPump"],
       selectedModelName: "",
       show_optionals: false,
       show_relatives: false,
@@ -175,6 +261,128 @@ export default {
     };
   },
   methods: {
+    addNewModelToEngine() {
+      this.newModelErrorFlag = true
+      this.newModelErrorClass = this.newModelError
+      this.newModelErrorMessage = "not implemented yet"
+    },
+    resetNewModel() {
+      this.selectedNewModelProps = []
+      this.newModelErrorClass = this.noNewModelError
+      this.newModelErrorFlag = false
+    },
+    addNewModel() {
+      this.resetNewModel()
+      switch (this.selectedModelType) {
+        case "BloodCompartment":
+          this.addBloodCompartment()
+          break;
+        case "BloodTimeVaryingElastance":
+          this.addBloodTimeVaryingElastance()
+          break;
+        case "BloodResistor":
+          this.addBloodResistor()
+          break;
+        case "BloodValve":
+          this.addBloodValve()
+          break;
+        case "BloodDiffusor":
+          this.addBloodDiffusor()
+          break;
+        case "BloodPump":
+          this.addBloodPump()
+          break;
+      }
+
+    },
+    addBloodCompartment() {
+      this.selectedNewModelProps = [
+        {
+          "caption": "name",
+          "target": "name",
+          "type": "string",
+          "value": "ddddd",
+        },
+        {
+          "caption": "description",
+          "target": "description",
+          "type": "string",
+          "value": "",
+        },
+        {
+          "caption": "is enabled",
+          "target": "is_enabled",
+          "type": "boolean",
+          "value": false,
+        },
+        {
+          "caption": "fixed composition",
+          "target": "fixed_composition",
+          "type": "boolean",
+          "value": false,
+        },
+        {
+          "caption": "unstressed volume (l)",
+          "target": "u_vol",
+          "type": "number",
+          "ul": 100,
+          "ll": 0,
+          "delta": 0.001,
+          "value": 0.001,
+          "state_changed": false
+        },
+        {
+          "caption": "volume (l)",
+          "target": "vol",
+          "type": "number",
+          "ul": 100,
+          "ll": 0,
+          "delta": 0.001,
+          "value": 0.001,
+          "state_changed": false
+        },
+        {
+          "caption": "baseline elastance (mmHg/l)",
+          "target": "el_base",
+          "type": "number",
+          "ul": 1000000000,
+          "ll": 1,
+          "delta": 10,
+          "value": 1000,
+          "state_changed": false
+        },
+        {
+          "caption": "non-linear elastance (mmHg/l)",
+          "target": "el_k",
+          "type": "number",
+          "ul": 10000000000000,
+          "ll": 0,
+          "delta": 100,
+          "value": 1,
+          "state_changed": false
+        },
+      ]
+
+
+    },
+    addBloodTimeVaryingElastance() {
+      this.selectedNewModelProps = []
+
+    },
+    addBloodResistor() {
+      this.selectedNewModelProps = []
+
+    },
+    addBloodValve() {
+      this.selectedNewModelProps = []
+
+    },
+    addBloodDiffusor() {
+
+    },
+    addBloodPump() {
+
+    },
     collapsEditor() {
 
       if (this.isEnabled) {
@@ -184,7 +392,11 @@ export default {
         this.isEnabled = true
         this.collaps_icon = "fa-solid fa-chevron-down"
       }
-
+    },
+    changeNewPropState(param, arg) {
+      this.state_changed = true
+      param.state_changed = true
+      this.redraw += 1
     },
     changePropState(param, arg) {
       this.state_changed = true
@@ -395,6 +607,7 @@ export default {
           })
         }
       })
+
     },
     processAvailableModels() {
       this.modelNames = []
