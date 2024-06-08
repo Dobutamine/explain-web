@@ -225,6 +225,16 @@ export class Gas {
     // set the flag to model is initialized
     this._is_initialized = true;
   }
+  set_gas_properties(model_name) {
+    this._model_engine.models[model_name].pres_atm = this.pres_atm;
+    console.log("setting gas composition on: ", model_name);
+    set_gas_composition(
+      this._model_engine.models[model_name],
+      this._model_engine.models[model_name].fo2,
+      this._model_engine.models[model_name].temp,
+      this._model_engine.models[model_name].humidity
+    );
+  }
 
   step_model() {
     if (this.is_enabled && this._is_initialized) {

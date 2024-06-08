@@ -324,7 +324,7 @@ export class Blood {
         model.model_type === "BloodCapacitance" ||
         model.model_type === "BloodTimeVaryingElastance"
       ) {
-        if (!model.aboxy) {
+        if (Object.keys(model.aboxy).length === 0) {
           console.log("setting blood composition");
           model.aboxy = { ...this.aboxy };
           model.solutes = { ...this.solutes };
@@ -346,6 +346,23 @@ export class Blood {
   step_model() {
     if (this.is_enabled && this._is_initialized) {
       this.calc_model();
+    }
+  }
+
+  set_blood_properties(model_name) {
+    // set the aboxy and solutes if not set by the state which is loaded
+    if (
+      this._model_engine.models[model_name].model_type === "BloodCapacitance" ||
+      this._model_engine.models[model_name].model_type ===
+        "BloodTimeVaryingElastance"
+    ) {
+      if (
+        Object.keys(this._model_engine.models[model_name].aboxy).length === 0
+      ) {
+        console.log("setting blood composition on " + model_name);
+        this._model_engine.models[model_name].aboxy = { ...this.aboxy };
+        this._model_engine.models[model_name].solutes = { ...this.solutes };
+      }
     }
   }
 

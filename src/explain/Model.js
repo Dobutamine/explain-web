@@ -61,6 +61,14 @@ export default class Model {
     // this.modelDefinition = this.loadBakedInModelDefinition("baseline_neonate");
   }
 
+  addNewModelToEngine(model_type, model_props) {
+    this.sendMessageToModelEngine({
+      type: "add_model",
+      message: model_type,
+      payload: model_props,
+    });
+  }
+
   sendMessageToModelEngine(message) {
     if (this.modelEngine) {
       message.message = message.message;

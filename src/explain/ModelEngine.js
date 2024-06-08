@@ -140,6 +140,9 @@ onmessage = (e) => {
     case "stop_debug":
       debug = false;
       break;
+    case "add_model":
+      add_model_to_engine(e.data.message, e.data.payload);
+      break;
     case "wake_up":
       if (debug) {
         console.info(e.data.message);
@@ -218,6 +221,45 @@ const get_props = function (model_name) {
     message: model_name,
     payload: JSON.stringify(model_props),
   });
+};
+
+const add_model_to_engine = function (model_type, model_props) {
+  // check if the model is available in the available model list
+  let index = available_models.findIndex(
+    (available_model) => available_model.model_type === model_props.model_type
+  );
+  // if the component model was found then instantiate a model
+  if (index > -1) {
+    // instantiate the new component and give it a name, pass the model type and a reference to the whole model
+    let new_sub_model = new available_models[index](
+      model,
+      model_props.name,
+      model_props.model_type
+    );
+    // add the new component to the model object
+    model.models[model_props.name] = new_sub_model;
+    // copy the model interface object
+    model.models[model_props.name].model_interface = [
+      ...available_models[index].model_interface,
+    ];
+  }
+  // initialize the model with the correct properties stored in the model definition
+  let args = [];
+  Object.entries(model_props).forEach(([key, value]) => {
+    args.push({ key, value });
+  });
+  model.models[model_props.name].init_model(args);
+  // now we need specific code to initialize some models which contain properties that are dependent on other models
+  if (
+    model_props.model_type === "BloodCapacitance" ||
+    model_props.model_type === "BloodTimeVaryingElastance" ||
+    model_props.model_type === "BloodPump"
+  ) {
+    model.models["Blood"].set_blood_properties(model_props.name);
+  }
+  if (model_props.model_type === "GasCapacitance") {
+    model.models["Gas"].set_gas_properties(model_props.name);
+  }
 };
 
 const process_model_definition = function (model_definition) {
