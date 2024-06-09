@@ -7,13 +7,13 @@ export class BloodDiffusor {
       target: "is_enabled",
       caption: "is enabled",
       type: "boolean",
-      optional: true,
+      default: true,
     },
     {
       target: "dif_o2",
       caption: "oxygen diffusion constant (mmol/mmHg*sec) ",
       type: "number",
-      optional: false,
+      default: 0.01,
       factor: 1,
       delta: 0.01,
       rounding: 2,
@@ -24,7 +24,7 @@ export class BloodDiffusor {
       target: "dif_co2",
       caption: "carbon dioxide diffusion constant (mmol/mmHg*sec) ",
       type: "number",
-      optional: true,
+      default: 0.01,
       factor: 1,
       delta: 0.01,
       rounding: 2,
@@ -32,18 +32,31 @@ export class BloodDiffusor {
       ll: -10000000.0,
     },
     {
+      target: "comp_blood1",
+      caption: "blood compartment 1",
+      type: "list",
+      options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+    },
+    {
+      target: "comp_blood2",
+      caption: "blood compartment 2",
+      type: "list",
+      options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+    },
+
+    {
       target: "reconnect",
       caption: "reconnect diffusor",
       type: "function",
       optional: true,
       args: [
         {
-          target: "comp_from",
+          target: "comp_blood1",
           type: "list",
           options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
         },
         {
-          target: "comp_to",
+          target: "comp_blood2",
           type: "list",
           options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
         },

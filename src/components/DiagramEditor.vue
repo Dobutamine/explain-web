@@ -985,6 +985,9 @@ export default {
           this.findDiagramComponents("Oxygenator");
           break;
         case "Pump":
+          this.findDiagramComponents("BloodCompartment");
+          this.findDiagramComponents("BloodPump");
+          this.findDiagramComponents("Oxygenator");
           break;
         case "Oxygenator":
           break;

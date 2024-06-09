@@ -308,10 +308,13 @@ export default {
       }
       // add the properties
       this.selectedNewModelProps.forEach(prop => {
-        new_model[prop.target] = prop.value
-        if (prop.type == 'number') {
-          new_model[prop.target] = parseFloat(prop.value)
+        if (prop.type !== 'function') {
+          new_model[prop.target] = prop.value
+          if (prop.type == 'number') {
+            new_model[prop.target] = parseFloat(prop.value)
+          }
         }
+
       })
       // set to the model for processing
       explain.addNewModelToEngine(this.selectedModelType, new_model)

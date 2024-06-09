@@ -5,19 +5,19 @@ export class BloodPump {
       target: "is_enabled",
       caption: "is enabled",
       type: "boolean",
-      optional: false,
+      default: true,
     },
     {
       target: "fixed_composition",
       caption: "fixed composition",
       type: "boolean",
-      optional: false,
+      default: true,
     },
     {
       target: "pump_rpm",
       caption: "rotations per minute",
       type: "number",
-      optional: false,
+      default: 0.0,
       factor: 1,
       delta: 10,
       rounding: 0,
@@ -25,10 +25,21 @@ export class BloodPump {
       ll: -100000000.0,
     },
     {
+      target: "vol",
+      caption: "volume (l)",
+      type: "number",
+      default: 0.01,
+      factor: 1,
+      delta: 0.0001,
+      rounding: 4,
+      ul: 100000000.0,
+      ll: 0.0,
+    },
+    {
       target: "u_vol",
       caption: "unstressed volume (l)",
       type: "number",
-      optional: false,
+      default: 0,
       factor: 1,
       delta: 0.0001,
       rounding: 4,
@@ -39,7 +50,7 @@ export class BloodPump {
       target: "el_base",
       caption: "baseline elastance (mmHg/l)",
       type: "number",
-      optional: false,
+      default: 10000,
       factor: 1,
       delta: 1,
       rounding: 0,
@@ -50,12 +61,24 @@ export class BloodPump {
       target: "el_k",
       caption: "non-linear elastance (mmHg/l^2)",
       type: "number",
-      optional: false,
+      default: 1,
       factor: 1,
       delta: 0.01,
       rounding: 2,
       ul: 100000000.0,
       ll: 1,
+    },
+    {
+      target: "inlet",
+      caption: "inlet compartment",
+      type: "list",
+      options: ["BloodResistor", "BloodValve"],
+    },
+    {
+      target: "outlet",
+      caption: "outlet compartment",
+      type: "list",
+      options: ["BloodResistor", "BloodValve"],
     },
     {
       target: "connect_pump",
@@ -66,12 +89,12 @@ export class BloodPump {
         {
           target: "inlet",
           type: "list",
-          options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+          options: ["BloodResistor", "BloodValve"],
         },
         {
           target: "outlet",
           type: "list",
-          options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+          options: ["BloodResistor", "BloodValve"],
         },
       ],
     },
@@ -179,6 +202,20 @@ export class BloodPump {
     }
   }
 
+  connect_pump(_in, _out) {
+    if (typeof _in == "string") {
+      this._inlet_res = this._model_engine.models[_in];
+    } else {
+      this._inlet_res = _in;
+    }
+
+    if (typeof _out == "string") {
+      this._outlet_res = this._model_engine.models[_out];
+    } else {
+      this._outlet_res = _out;
+    }
+  }
+
   calc_model() {
     // conect the pump
     this.connect_pump(this.inlet, this.outlet);
@@ -249,24 +286,6 @@ export class BloodPump {
     this.pres_ext = 0.0;
     this.pres_cc = 0.0;
     this.pres_mus = 0.0;
-  }
-
-  freeze_scaling() {}
-
-  freeze_factors() {}
-
-  connect_pump(_in, _out) {
-    if (typeof _in == "string") {
-      this._inlet_res = this._model_engine.models[_in];
-    } else {
-      this._inlet_res = _in;
-    }
-
-    if (typeof _out == "string") {
-      this._outlet_res = this._model_engine.models[_out];
-    } else {
-      this._outlet_res = _out;
-    }
   }
 
   analyze() {

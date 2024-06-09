@@ -33,7 +33,7 @@ export class BloodResistor {
     },
     {
       target: "r_back",
-      caption: "forward flow resistance (mmHg*sec/l)",
+      caption: "backward flow resistance (mmHg*sec/l)",
       type: "number",
       factor: 1,
       delta: 1,
