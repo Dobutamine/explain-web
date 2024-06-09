@@ -202,9 +202,9 @@ export default {
       advancedMode: true,
       editorMode: 0,
       title: "DIAGRAM EDITOR",
-      generalSettingsCollapsed: false,
+      generalSettingsCollapsed: true,
       componentSettingsCollapsed: false,
-      collapsed: false,
+      collapsed: true,
       modelsTree: {},
       selectedModelType: [],
       selectedModelItems: [],
@@ -534,7 +534,6 @@ export default {
           this.$bus.emit("rebuild_diagram");
           break;
       }
-      // this.cancelDiagramBuild();
     },
     cancelDiagramBuild() {
       this.clearFields();
@@ -1046,6 +1045,12 @@ export default {
       // build the grouperItem tree from the ui store
       this.modelsTree = {};
     },
+    addToDiagramFromOutside(new_element) {
+      // translate the new_element to an element which can be added to the diagram
+      // add the new element to the diagram
+
+      console.log(new_element)
+    }
   },
   beforeUnmount() {
     // remove the model state event listener
@@ -1089,6 +1094,10 @@ export default {
     );
 
     this.$bus.on("diagram_loaded", () => this.getAllDiagramComponents());
+
+    this.$bus.on("addNewModelToDiagram", (new_element) => {
+      this.addToDiagramFromOutside(new_element);
+    });
   },
 };
 </script>

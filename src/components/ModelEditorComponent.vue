@@ -1,230 +1,236 @@
 <template>
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
-    <div class="q-mt-es row gutter text-overline justify-center" @click="isEnabled = !isEnabled">
+    <div class="row text-overline justify-center" @click="collapsed = !collapsed">
+      {{ title }}
     </div>
-    <!-- add model part -->
-    <div>
-      <div class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center row">
-        <q-select class="q-pa-xs col" v-model="selectedModelType" style="font-size: 12px" square label="add new model"
-          hide-hint :options="availableModelTypes" dense dark stack-label @update:model-value="addNewModel" />
-        <q-btn v-if="selectedModelType" class="col-1 q-ma-xs q-mt-sm" color="grey-9" size="xs" dense
-          icon="fa-solid fa-xmark" @click="cancelAddModel" style="font-size: 8px"><q-tooltip>clear model
-            editor</q-tooltip></q-btn>
-      </div>
-      <div v-if="redraw > 0.0" class="q-ma-sm q-mb-md">
-        <div v-for="(field, index) in selectedNewModelProps" :key="index">
-          <!-- boolean -->
-          <div v-if="field.type == 'boolean'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-white row" :style="{ 'font-size': '12px' }">
-              <div class="col">
-                {{ field.caption }}
-              </div>
-              <div class="col-2 text-white" :style="{ 'font-size': '10px' }">
-                <q-toggle v-model="field.value" color="primary" size="sm"
-                  @update:model-value="changePropState(field, arg)" hide-hint filled dense style="font-size: 12px"
-                  class="q-mb-sm">
-                </q-toggle>
-              </div>
-            </div>
-          </div>
-
+    <div v-if="!collapsed">
+      <!-- add model part -->
+      <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
+        <div class="q-mt-es row gutter text-overline justify-center" @click="isEnabled = !isEnabled">
         </div>
-        <div v-for="(field, index) in selectedNewModelProps" :key="index">
-          <!-- number -->
-          <div v-if="field.type == 'number'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              <div class="text-white" :style="{ 'font-size': '10px' }">
-                <q-input v-model="field.value" :label="field.caption" :max="field.ul" :min="field.ll"
-                  :step="field.delta" color="blue" hide-hint filled dense stack-label type="number"
-                  @update:model-value="changePropState(field, arg)" style="font-size: 12px" class="q-mb-sm" squared>
-                </q-input>
-              </div>
-            </div>
+        <div>
+          <div class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center row">
+            <q-select class="q-pa-xs col" v-model="selectedModelType" style="font-size: 12px" square
+              label="add new model" hide-hint :options="availableModelTypes" dense dark stack-label
+              @update:model-value="addNewModel" />
+            <q-btn v-if="selectedModelType" class="col-1 q-ma-xs q-mt-sm" color="grey-9" size="xs" dense
+              icon="fa-solid fa-xmark" @click="cancelAddModel" style="font-size: 8px"><q-tooltip>clear model
+                editor</q-tooltip></q-btn>
           </div>
+          <div v-if="redraw > 0.0" class="q-ma-sm q-mb-md">
+            <div v-for="(field, index) in selectedNewModelProps" :key="index">
+              <!-- boolean -->
+              <div v-if="field.type == 'boolean'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-white row" :style="{ 'font-size': '12px' }">
+                  <div class="col">
+                    {{ field.caption }}
+                  </div>
+                  <div class="col-2 text-white" :style="{ 'font-size': '10px' }">
+                    <q-toggle v-model="field.value" color="primary" size="sm"
+                      @update:model-value="changePropState(field, arg)" hide-hint filled dense style="font-size: 12px"
+                      class="q-mb-sm">
+                    </q-toggle>
+                  </div>
+                </div>
+              </div>
 
-          <!-- string -->
-          <div v-if="field.type == 'string'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              <div class="text-white" :style="{ 'font-size': '10px' }">
-                <q-input v-model="field.value" :label="field.caption" color="blue"
-                  @update:model-value="changePropState(field, arg)" hide-hint filled dense stack-label
-                  style="font-size: 12px" class="q-mb-sm" squared>
-                </q-input>
+            </div>
+            <div v-for="(field, index) in selectedNewModelProps" :key="index">
+              <!-- number -->
+              <div v-if="field.type == 'number'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '12px' }">
+                  <div class="text-white" :style="{ 'font-size': '10px' }">
+                    <q-input v-model="field.value" :label="field.caption" :max="field.ul" :min="field.ll"
+                      :step="field.delta" color="blue" hide-hint filled dense stack-label type="number"
+                      @update:model-value="changePropState(field, arg)" style="font-size: 12px" class="q-mb-sm" squared>
+                    </q-input>
+                  </div>
+                </div>
+              </div>
+
+              <!-- string -->
+              <div v-if="field.type == 'string'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '12px' }">
+                  <div class="text-white" :style="{ 'font-size': '10px' }">
+                    <q-input v-model="field.value" :label="field.caption" color="blue"
+                      @update:model-value="changePropState(field, arg)" hide-hint filled dense stack-label
+                      style="font-size: 12px" class="q-mb-sm" squared>
+                    </q-input>
+                  </div>
+                </div>
+              </div>
+              <!-- list -->
+              <div v-if="field.type == 'list'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '12px' }">
+                  <div class="text-white" :style="{ 'font-size': '10px' }">
+                    <q-select v-model="field.value" :label="field.caption" :options="field.choices"
+                      @update:model-value="changePropState(field, arg)" color="blue" hide-hint filled dense stack-label
+                      style="font-size: 12px" class="q-mb-sm" squared>
+                    </q-select>
+                  </div>
+                </div>
+              </div>
+              <!-- multiple list -->
+              <div v-if="field.type == 'multiple-list'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '12px' }">
+                  {{ field.caption }}
+                  <div class="text-white" :style="{ 'font-size': '10px' }">
+                    <q-select v-model="field.value" :label="field.caption" :options="field.choices"
+                      @update:model-value="changePropState(field, arg)" multiple color="blue" hide-hint filled dense
+                      stack-label style="font-size: 12px" class="q-mb-sm" squared>
+                    </q-select>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <!-- list -->
-          <div v-if="field.type == 'list'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              <div class="text-white" :style="{ 'font-size': '10px' }">
-                <q-select v-model="field.value" :label="field.caption" :options="field.choices"
-                  @update:model-value="changePropState(field, arg)" color="blue" hide-hint filled dense stack-label
-                  style="font-size: 12px" class="q-mb-sm" squared>
-                </q-select>
-              </div>
+            <!-- error message -->
+            <div v-if="newModelErrorFlag" :class="newModelErrorClass" :style="{ 'font-size': '12px' }">
+              {{ newModelErrorMessage }}
             </div>
-          </div>
-          <!-- multiple list -->
-          <div v-if="field.type == 'multiple-list'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.caption }}
-              <div class="text-white" :style="{ 'font-size': '10px' }">
-                <q-select v-model="field.value" :label="field.caption" :options="field.choices"
-                  @update:model-value="changePropState(field, arg)" multiple color="blue" hide-hint filled dense
-                  stack-label style="font-size: 12px" class="q-mb-sm" squared>
-                </q-select>
-              </div>
+            <div v-if="selectedNewModelProps.length > 0" class="row q-ma-sm">
+              <q-btn class="col q-ma-sm" color="primary" size="xs" dense icon="fa-solid fa-add"
+                @click="addNewModelToEngine" style="font-size: 10px"><q-tooltip>add new model</q-tooltip></q-btn>
+              <q-btn class="col q-ma-sm" color="negative" size="xs" dense icon="fa-solid fa-cancel"
+                @click="cancelAddModel" style="font-size: 10px"></q-btn>
             </div>
+
           </div>
         </div>
-        <!-- error message -->
-        <div v-if="newModelErrorFlag" :class="newModelErrorClass" :style="{ 'font-size': '12px' }">
-          {{ newModelErrorMessage }}
+      </q-card>
+
+      <!-- edit model part -->
+      <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
+        <div class="q-mt-es row gutter text-overline justify-center" @click="isEnabled = !isEnabled">
         </div>
-        <div v-if="selectedNewModelProps.length > 0" class="row q-ma-md">
-          <q-btn class="col q-ma-sm" color="primary" size="xs" dense icon="fa-solid fa-add" @click="addNewModelToEngine"
-            style="font-size: 10px"><q-tooltip>add new model</q-tooltip></q-btn>
-          <q-btn class="col q-ma-sm" color="negative" size="xs" dense icon="fa-solid fa-cancel" @click="cancelAddModel"
-            style="font-size: 10px"></q-btn>
-        </div>
-      </div>
-    </div>
-  </q-card>
-
-
-  <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
-    <div class="q-mt-es row gutter text-overline justify-center" @click="isEnabled = !isEnabled">
-    </div>
-    <!-- edit model part -->
-    <div>
-      <div class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center row">
-        <q-select class="q-pa-xs col" v-model="selectedModelName" square label="edit existing model" hide-hint
-          :options="modelNames" dense dark stack-label @update:model-value="modelChanged" />
-        <q-btn v-if="selectedModelName" class="col-1 q-ma-xs q-mt-sm" color="grey-9" size="xs" dense
-          icon="fa-solid fa-xmark" @click="cancel" style="font-size: 8px"><q-tooltip>clear model
-            editor</q-tooltip></q-btn>
-      </div>
-
-
-      <div v-if="redraw > 0.0" class="q-ma-sm q-mb-md">
-        <div v-for="(field, index) in selectedModelProps" :key="index">
-
-          <div v-if="field.type == 'number'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.caption }}
-              <div class="text-white" :style="{ 'font-size': '10px' }">
-                <q-input v-model="field.value" :max="field.ul" :min="field.ll" :step="field.delta" color="blue"
-                  hide-hint filled dense @update:model-value="changePropState(field, arg)" stack-label type="number"
-                  style="font-size: 14px" class="q-mb-sm" squared>
-                </q-input>
-              </div>
-            </div>
+        <div>
+          <div class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center row">
+            <q-select class="q-pa-xs col" v-model="selectedModelName" square label="edit existing model" hide-hint
+              :options="modelNames" dense dark stack-label @update:model-value="modelChanged" />
+            <q-btn v-if="selectedModelName" class="col-1 q-ma-xs q-mt-sm" color="grey-9" size="xs" dense
+              icon="fa-solid fa-xmark" @click="cancel" style="font-size: 8px"><q-tooltip>clear model
+                editor</q-tooltip></q-btn>
           </div>
 
-          <div v-if="field.type == 'boolean'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary row" :style="{ 'font-size': '14px' }">
-              <div class="col">
-                {{ field.caption }}
-              </div>
-              <div class="col-1 text-white" :style="{ 'font-size': '10px' }">
-                <q-toggle v-model="field.value" color="primary" size="sm" hide-hint filled dense
-                  @update:model-value="changePropState(field, arg)" style="font-size: 14px" class="q-mb-sm">
-                </q-toggle>
-              </div>
-            </div>
-          </div>
 
-          <div v-if="field.type == 'string'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.caption }}
-              <div class="text-white" :style="{ 'font-size': '10px' }">
-                <q-input v-model="field.value" color="blue" hide-hint filled dense
-                  @update:model-value="changePropState(field, arg)" stack-label style="font-size: 14px" class="q-mb-sm"
-                  squared>
-                </q-input>
-              </div>
-            </div>
-          </div>
+          <div v-if="redraw > 0.0" class="q-ma-sm q-mb-md">
+            <div v-for="(field, index) in selectedModelProps" :key="index">
 
-          <div v-if="field.type == 'list'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.caption }}
-              <div class="text-white" :style="{ 'font-size': '10px' }">
-                <q-select v-model="field.value" :options="field.choices" color="blue" hide-hint filled dense
-                  @update:model-value="changePropState(field, arg)" stack-label style="font-size: 14px" class="q-mb-sm"
-                  squared>
-                </q-select>
+              <div v-if="field.type == 'number'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '12px' }">
+                  <div class="text-white" :style="{ 'font-size': '10px' }">
+                    <q-input v-model="field.value" :label="field.caption" :max="field.ul" :min="field.ll"
+                      :step="field.delta" color="blue" hide-hint filled dense
+                      @update:model-value="changePropState(field, arg)" stack-label type="number"
+                      style="font-size: 12px" class="q-mb-sm" squared>
+                    </q-input>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <div v-if="field.type == 'multiple-list'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.caption }}
-              <div class="text-white" :style="{ 'font-size': '10px' }">
-                <q-select v-model="field.value" :options="field.choices" multiple color="blue" hide-hint filled dense
-                  @update:model-value="changePropState(field, arg)" stack-label style="font-size: 14px" class="q-mb-sm"
-                  squared>
-                </q-select>
+              <div v-if="field.type == 'boolean'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary row" :style="{ 'font-size': '12px' }">
+                  <div class="col">
+                    {{ field.caption }}
+                  </div>
+                  <div class="col-2 text-white" :style="{ 'font-size': '10px' }">
+                    <q-toggle v-model="field.value" color="primary" size="sm" hide-hint filled dense
+                      @update:model-value="changePropState(field, arg)" style="font-size: 12px" class="q-mb-sm">
+                    </q-toggle>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <div v-if="field.type == 'function'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.caption }}
-            </div>
-            <div v-for="(arg, index_arg) in field.args" :key="index_arg">
-              <!-- <div class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '10px' }">
+              <div v-if="field.type == 'string'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '12px' }">
+                  <div class="text-white" :style="{ 'font-size': '10px' }">
+                    <q-input v-model="field.value" :label="field.caption" color="blue" hide-hint filled dense
+                      @update:model-value="changePropState(field, arg)" stack-label style="font-size: 12px"
+                      class="q-mb-sm" squared>
+                    </q-input>
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="field.type == 'list'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '12px' }">
+                  <div class="text-white" :style="{ 'font-size': '10px' }">
+                    <q-select v-model="field.value" :label="field.caption" :options="field.choices" color="blue"
+                      hide-hint filled dense @update:model-value="changePropState(field, arg)" stack-label
+                      style="font-size: 12px" class="q-mb-sm" squared>
+                    </q-select>
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="field.type == 'multiple-list'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '12px' }">
+                  <div class="text-white" :style="{ 'font-size': '10px' }">
+                    <q-select v-model="field.value" :label="field.caption" :options="field.choices" multiple
+                      color="blue" hide-hint filled dense @update:model-value="changePropState(field, arg)" stack-label
+                      style="font-size: 12px" class="q-mb-sm" squared>
+                    </q-select>
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="field.type == 'function'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '12px' }">
+                  {{ field.caption }}
+                </div>
+                <div v-for="(arg, index_arg) in field.args" :key="index_arg">
+                  <!-- <div class="q-ml-md q-mr-md text-left text-white" :style="{ 'font-size': '10px' }">
                         {{ arg.caption }}
                     </div> -->
-              <div v-if="arg.type == 'number' && !arg.hidden">
-                <q-input v-model.number="arg.value" :label="arg.caption" type="number" :max="arg.ul" :min="arg.ll"
-                  :step="arg.delta" color="blue" hide-hint filled dense
-                  @update:model-value="changePropState(field, arg)" stack-label style="font-size: 14px"
-                  class="q-ml-md q-mr-md q-mb-sm" squared>
-                </q-input>
-              </div>
-              <div v-if="arg.type == 'boolean' && !arg.hidden" class="q-ml-sm col-1">
-                <q-toggle v-model="arg.value" :label="arg.caption" color="primary" size="xs" hide-hint filled dense
-                  @update:model-value="changePropState(field, arg)" style="font-size: 10px"
-                  class="q-ml-md q-mt-xs q-mb-sm">
-                </q-toggle>
-              </div>
-              <div v-if="arg.type == 'string' && !arg.hidden">
-                <q-input v-model="arg.value" :label="arg.caption" color="blue" hide-hint filled dense
-                  @update:model-value="changePropState(field, arg)" stack-label style="font-size: 14px"
-                  class="q-ml-md q-mr-md q-mb-sm" squared>
-                </q-input>
-              </div>
-              <div v-if="arg.type == 'list' && !arg.hidden">
-                <q-select v-model="arg.value" :label="arg.target" :options="arg.choices" color="blue" hide-hint filled
-                  dense @update:model-value="changePropState(field, arg)" stack-label style="font-size: 14px"
-                  class="q-ml-md q-mr-md q-mb-sm" squared>
-                </q-select>
-              </div>
-              <div v-if="arg.type == 'multiple-list' && !arg.hidden">
-                <q-select v-model="arg.value" :options="arg.choices" :label="arg.target" multiple color="blue" hide-hint
-                  filled dense @update:model-value="changePropState(field, arg)" stack-label style="font-size: 14px"
-                  class="q-ml-md q-mr-md q-mb-sm" squared>
-                </q-select>
-              </div>
+                  <div v-if="arg.type == 'number' && !arg.hidden">
+                    <q-input v-model.number="arg.value" :label="arg.caption" type="number" :max="arg.ul" :min="arg.ll"
+                      :step="arg.delta" color="blue" hide-hint filled dense
+                      @update:model-value="changePropState(field, arg)" stack-label style="font-size: 12px"
+                      class="q-ml-md q-mr-md q-mb-sm" squared>
+                    </q-input>
+                  </div>
+                  <div v-if="arg.type == 'boolean' && !arg.hidden" class="q-ml-sm col-1">
+                    <q-toggle v-model="arg.value" :label="arg.caption" color="primary" size="xs" hide-hint filled dense
+                      @update:model-value="changePropState(field, arg)" style="font-size: 10px"
+                      class="q-ml-md q-mt-xs q-mb-sm">
+                    </q-toggle>
+                  </div>
+                  <div v-if="arg.type == 'string' && !arg.hidden">
+                    <q-input v-model="arg.value" :label="arg.caption" color="blue" hide-hint filled dense
+                      @update:model-value="changePropState(field, arg)" stack-label style="font-size: 12px"
+                      class="q-ml-md q-mr-md q-mb-sm" squared>
+                    </q-input>
+                  </div>
+                  <div v-if="arg.type == 'list' && !arg.hidden">
+                    <q-select v-model="arg.value" :label="arg.target" :options="arg.choices" color="blue" hide-hint
+                      filled dense @update:model-value="changePropState(field, arg)" stack-label style="font-size: 12px"
+                      class="q-ml-md q-mr-md q-mb-sm" squared>
+                    </q-select>
+                  </div>
+                  <div v-if="arg.type == 'multiple-list' && !arg.hidden">
+                    <q-select v-model="arg.value" :options="arg.choices" :label="arg.target" multiple color="blue"
+                      hide-hint filled dense @update:model-value="changePropState(field, arg)" stack-label
+                      style="font-size: 12px" class="q-ml-md q-mr-md q-mb-sm" squared>
+                    </q-select>
+                  </div>
 
+                </div>
+              </div>
             </div>
           </div>
+
+          <div v-if="selectedModelName && state_changed" class="row q-ma-md">
+
+            <q-select label-color="white" class="q-ml-md q-mr-md col" v-model="changeInTime" :options="timeOptions"
+              label="apply changes in (sec)" style="font-size: 12px" hide-hint dense dark stack-label />
+            <q-btn class="col-4 q-ma-sm" color="negative" size="xs" dense icon="fa-solid fa-play" @click="updateValue"
+              style="font-size: 8px"><q-tooltip>apply property changes</q-tooltip></q-btn>
+          </div>
+
+
         </div>
-      </div>
-
-      <div v-if="selectedModelName && state_changed" class="row q-ma-md">
-
-        <q-select label-color="white" class="q-ml-md q-mr-md col" v-model="changeInTime" :options="timeOptions"
-          label="apply changes in (sec)" style="font-size: 12px" hide-hint dense dark stack-label />
-        <q-btn class="col-4 q-ma-sm" color="negative" size="xs" dense icon="fa-solid fa-play" @click="updateValue"
-          style="font-size: 8px"><q-tooltip>apply property changes</q-tooltip></q-btn>
-      </div>
-
-
+      </q-card>
     </div>
+
   </q-card>
 </template>
 
@@ -244,12 +250,14 @@ export default {
   },
   data() {
     return {
-      title: "SUBMODEL EDITOR",
+      title: "MODEL EDITOR",
+      collapsed: false,
       isEnabled: true,
       redraw: 1,
       availableModelTypes: [],
       selectedModelType: "",
       selectedNewModelPropsChoices: [],
+      showNewModelInDiagram: false,
       newModelErrorFlag: false,
       noNewModelError: "q-ml-md q-mr-md q-mt-md text-secondary text-center",
       newModelError: "q-ml-md q-mr-md q-mt-md text-negative text-center",
@@ -309,7 +317,9 @@ export default {
       explain.addNewModelToEngine(this.selectedModelType, new_model)
 
       // send the model to the diagram editor for rendering
-      this.$bus.emit("addNewModelToDiagram", new_model)
+      if (this.showNewModelInDiagram) {
+        this.$bus.emit("addNewModelToDiagram", new_model)
+      }
 
       this.resetNewModel()
       this.selectedModelType = ""

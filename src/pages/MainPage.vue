@@ -38,10 +38,11 @@
                   <ModelEditor></ModelEditor>
                 </div>
 
-                <q-btn class="q-pb-xs q-pt-xs q-ma-sm" color="grey-9" size="xs" icon="fa-solid fa-plus"
+                <!-- <q-btn class="q-pb-xs q-pt-xs q-ma-sm" color="grey-9" size="xs" icon="fa-solid fa-plus"
                   @click="addModelEditor" style="font-size: 8px; width: 95%;"></q-btn>
                 <q-btn v-if="no_of_modeleditor > 1" class="q-pb-xs q-pt-xs q-ma-sm" color="negative" size="xs"
-                  icon="fa-solid fa-minus" @click="removeModelEditor" style="font-size: 8px; width: 95%;"></q-btn>
+                  icon="fa-solid fa-minus" @click="removeModelEditor" style="font-size: 8px; width: 95%;"></q-btn> -->
+                <DiagramEditorComponent></DiagramEditorComponent>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="circulatory_system">
@@ -98,7 +99,7 @@
                 <div v-for="item in state.configuration.enabled_controllers.others">
                   <NiceController :config="state.configuration.controllers[item]"></NiceController>
                 </div>
-                <DiagramEditorComponent></DiagramEditorComponent>
+
 
               </q-scroll-area>
             </q-tab-panel>
