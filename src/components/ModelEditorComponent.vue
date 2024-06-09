@@ -2,6 +2,7 @@
   <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
     <div class="q-mt-es row gutter text-overline justify-center" @click="isEnabled = !isEnabled">
     </div>
+    <!-- add model part -->
     <div>
       <div class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center row">
         <q-select class="q-pa-xs col" v-model="selectedModelType" style="font-size: 12px" square label="add new model"
@@ -9,67 +10,71 @@
       </div>
       <div v-if="redraw > 0.0" class="q-ma-sm q-mb-md">
         <div v-for="(field, index) in selectedNewModelProps" :key="index">
-          <div v-if="field.type == 'number'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.caption }}
-              <div class="text-white" :style="{ 'font-size': '10px' }">
-                <q-input v-model="field.value" :max="field.ul" :min="field.ll" :step="field.delta" color="blue"
-                  hide-hint filled dense stack-label type="number" @update:model-value="changePropState(field, arg)"
-                  style="font-size: 14px" class="q-mb-sm" squared>
-                </q-input>
-              </div>
-            </div>
-          </div>
-
+          <!-- boolean -->
           <div v-if="field.type == 'boolean'">
-            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary row" :style="{ 'font-size': '14px' }">
+            <div class="q-ml-md q-mr-md q-mt-md text-left text-white row" :style="{ 'font-size': '12px' }">
               <div class="col">
                 {{ field.caption }}
               </div>
-              <div class="col-1 text-white" :style="{ 'font-size': '10px' }">
+              <div class="col-2 text-white" :style="{ 'font-size': '10px' }">
                 <q-toggle v-model="field.value" color="primary" size="sm"
-                  @update:model-value="changePropState(field, arg)" hide-hint filled dense style="font-size: 14px"
+                  @update:model-value="changePropState(field, arg)" hide-hint filled dense style="font-size: 12px"
                   class="q-mb-sm">
                 </q-toggle>
               </div>
             </div>
           </div>
 
-          <div v-if="field.type == 'string'">
+        </div>
+        <div v-for="(field, index) in selectedNewModelProps" :key="index">
+          <!-- number -->
+          <div v-if="field.type == 'number'">
             <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.caption }}
               <div class="text-white" :style="{ 'font-size': '10px' }">
-                <q-input v-model="field.value" color="blue" @update:model-value="changePropState(field, arg)" hide-hint
-                  filled dense stack-label style="font-size: 14px" class="q-mb-sm" squared>
+                <q-input v-model="field.value" :label="field.caption" :max="field.ul" :min="field.ll"
+                  :step="field.delta" color="blue" hide-hint filled dense stack-label type="number"
+                  @update:model-value="changePropState(field, arg)" style="font-size: 12px" class="q-mb-sm" squared>
                 </q-input>
               </div>
             </div>
           </div>
 
+          <!-- string -->
+          <div v-if="field.type == 'string'">
+            <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
+              <div class="text-white" :style="{ 'font-size': '10px' }">
+                <q-input v-model="field.value" :label="field.caption" color="blue"
+                  @update:model-value="changePropState(field, arg)" hide-hint filled dense stack-label
+                  style="font-size: 12px" class="q-mb-sm" squared>
+                </q-input>
+              </div>
+            </div>
+          </div>
+          <!-- list -->
           <div v-if="field.type == 'list'">
             <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
-              {{ field.caption }}
               <div class="text-white" :style="{ 'font-size': '10px' }">
-                <q-select v-model="field.value" :options="selectedNewModelPropsChoices"
+                <q-select v-model="field.value" :label="field.caption" :options="field.choices"
                   @update:model-value="changePropState(field, arg)" color="blue" hide-hint filled dense stack-label
-                  style="font-size: 14px" class="q-mb-sm" squared>
+                  style="font-size: 12px" class="q-mb-sm" squared>
                 </q-select>
               </div>
             </div>
           </div>
-
+          <!-- multiple list -->
           <div v-if="field.type == 'multiple-list'">
             <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '14px' }">
               {{ field.caption }}
               <div class="text-white" :style="{ 'font-size': '10px' }">
-                <q-select v-model="field.value" :options="selectedNewModelPropsChoices"
+                <q-select v-model="field.value" :label="field.caption" :options="field.choices"
                   @update:model-value="changePropState(field, arg)" multiple color="blue" hide-hint filled dense
-                  stack-label style="font-size: 14px" class="q-mb-sm" squared>
+                  stack-label style="font-size: 12px" class="q-mb-sm" squared>
                 </q-select>
               </div>
             </div>
           </div>
         </div>
+        <!-- error message -->
         <div v-if="newModelErrorFlag" :class="newModelErrorClass" :style="{ 'font-size': '14px' }">
           {{ newModelErrorMessage }}
         </div>
@@ -79,6 +84,8 @@
         </div>
       </div>
     </div>
+
+    <!-- edit model part -->
     <div>
       <div class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md text-overline justify-center row">
         <q-select class="q-pa-xs col" v-model="selectedModelName" square label="edit existing model" hide-hint
@@ -88,9 +95,6 @@
         <q-btn v-if="selectedModelName && isEnabled" class="col-1 q-ma-xs q-mt-sm" :color="optionals_color" size="xs"
           dense icon="fa-solid fa-bars" @click="showOptionals" style="font-size: 8px"><q-tooltip>{{ optionals_text
             }}</q-tooltip></q-btn>
-        <!-- <q-btn v-if="selectedModelName && isEnabled" class="col-1 q-ma-xs q-mt-sm" :color="relatives_color" size="xs"
-          dense icon="fa-solid fa-calculator" @click="showRelatives" style="font-size: 8px"><q-tooltip>{{ relatives_text
-            }}</q-tooltip></q-btn> -->
         <q-btn v-if="selectedModelName" class="col-1 q-ma-xs q-mt-sm" color="grey-9" size="xs" dense
           icon="fa-solid fa-xmark" @click="cancel" style="font-size: 8px"><q-tooltip>clear model
             editor</q-tooltip></q-btn>
@@ -307,8 +311,67 @@ export default {
       this.redraw += 1
     },
     addNewModel() {
+      // reset the new model properties
       this.resetNewModel()
+
+      // get the model interface of the selected model
       explain.getModelInterface(this.selectedModelType)
+    },
+    processModelInterface(model_type, model_props) {
+      console.log("received model interface of ", model_type)
+      console.log(model_props)
+      // we have to convert the model properties to a format which the editor can understand, this is an array of objects and store in selectedNewModelProps
+      // clear the current selectedNewModelProps holding the new model properties
+      this.selectedNewModelProps = []
+      // add a new name and description field
+      this.selectedNewModelProps.push({
+        "caption": "name",
+        "target": "name",
+        "type": "string",
+        "value": "",
+      })
+      this.selectedNewModelProps.push({
+        "caption": "description",
+        "target": "description",
+        "type": "string",
+        "value": "",
+      })
+      // process the model interface
+      model_props.forEach(prop => {
+        prop['value'] = prop['default']
+        // if the property is a list then add the options to the choices
+        if (prop.type == 'list') {
+          prop['choices'] = []
+          if (prop['option_default']) {
+            prop['choices'] = prop['options_default']
+          }
+          if (prop.options) {
+            Object.values(explain.modelState.models).forEach(model => {
+              if (prop.options.includes(model.model_type)) {
+                prop["choices"].push(model.name)
+              }
+            })
+
+          }
+        }
+        if (prop.type == 'multiple-list') {
+          prop['choices'] = []
+          if (prop['option_default']) {
+            prop['choices'] = prop['options_default']
+          }
+          if (prop.options) {
+            Object.values(explain.modelState.models).forEach(model => {
+              if (prop.options.includes(model.model_type)) {
+                prop["choices"].push(model.name)
+              }
+            })
+          }
+        }
+        this.selectedNewModelProps.push(prop)
+      })
+      this.redraw += 1
+
+
     },
     collapsEditor() {
 
@@ -548,10 +611,7 @@ export default {
     processAvailableModelTypes(data) {
       this.availableModelTypes = data
     },
-    processModelInterface(model_type, model_props) {
-      console.log("received model interface of ", model_type)
-      console.log(model_props)
-    },
+
   },
   beforeUnmount() {
     this.state_changed = false
@@ -559,8 +619,6 @@ export default {
     document.removeEventListener("model_types", (data) => { this.processAvailableModelTypes(data.model_types) });
   },
   mounted() {
-    this.$bus.on("state", this.processAvailableModels)
-
     try {
       document.removeEventListener("model_interface", (data) => { this.processModelInterface(data.model_type, data.model_props) });
     } catch { }
@@ -571,7 +629,11 @@ export default {
     } catch { }
     document.addEventListener("model_types", (data) => { this.processAvailableModelTypes(data.model_types) });
 
+    // get all available model types
     explain.getModelTypes()
+
+    // update if state changes
+    this.$bus.on("state", this.processAvailableModels)
 
   },
 };
