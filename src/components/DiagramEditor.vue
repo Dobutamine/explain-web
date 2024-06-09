@@ -77,6 +77,7 @@
           class="q-pa-sm q-mt-xs q-mb-sm q-ml-md q-mr-md row text-overline justify-center">
           {{ compType }}
           <div :style="{ 'font-size': '10px', width: '100%' }">
+            <q-toggle label="enabled" v-model="compEnabled" dense size="sm" style="width: 100%" />
             <q-input label="name" v-model="compName" square hide-hint dense dark stack-label style="width: 100%" />
             <q-input label="label" v-model="compLabel" square hide-hint dense dark stack-label style="width: 100%" />
             <q-select class="col-9" label="models" v-model="compModelSelection" :options="compModels" hide-bottom-space
