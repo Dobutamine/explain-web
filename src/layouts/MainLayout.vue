@@ -234,6 +234,7 @@ export default defineComponent({
       }
       if (result) {
         console.log("state loaded")
+        explain.loadModelDefinition(this.state.model_definition);
         this.showLoadStatePopUp = false
         this.$bus.emit('reset')
       }

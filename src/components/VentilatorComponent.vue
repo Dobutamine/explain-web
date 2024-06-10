@@ -762,8 +762,8 @@ export default {
           this.seconds += 0.005;
         }
 
-        if (this.x_axis.length > this.rtWindowValidated * 200.0) {
-          let too_many = this.x_axis.length - (this.rtWindowValidated * 200.0)
+        if (this.x_axis.length > this.rtWindowValidated * 100.0) {
+          let too_many = this.x_axis.length - (this.rtWindowValidated * 100.0)
           this.x_axis.splice(0, too_many)
           this.y1_axis.splice(0, too_many)
           this.y2_axis.splice(0, too_many)
@@ -801,7 +801,7 @@ export default {
           }
 
           if (this.show_summary) {
-            this.analyzeDataRt()
+            //this.analyzeDataRt()
           }
 
         }
