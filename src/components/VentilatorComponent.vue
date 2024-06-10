@@ -8,7 +8,7 @@
     <!-- chart -->
     <div v-if="!show_loops">
       <div class="q-mt-sm row text-overline justify-center">pressure (cmh2o)</div>
-      <Line v-if="isEnabled && !show_loops" id="my-chart-vent-pres" :options="chartOptionsPres" :data="chartDataPres"
+      <Line v-if="isEnabled && !show_loops" id="my-chart-vent-pres" :options="chartOptions" :data="chartData"
         style="max-height: 250px;" />
       <!-- <div class="row text-overline justify-center">flow (l/min)</div> -->
       <!-- <Line v-if="isEnabled && !show_loops" id="my-chart-vent-flow" :options="chartOptionsFlow" :data="chartDataFlow"
@@ -211,7 +211,7 @@ import { useStateStore } from "src/stores/state";
 import { explain } from "../boot/explain";
 import { Bar, Line, Scatter } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 import * as Stat from "simple-statistics";
 import XYChartComponent from "./XYChartComponent.vue";
 
@@ -219,24 +219,15 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale,
 export default {
   setup() {
     const state = useStateStore()
+
     // make the chartdata reactive
-    let chartDataPres = ref({
-      labels: [],
-      backgroundColor: '#888888',
-      datasets: [{ data: [] }]
-    })
-    let chartDataFlow = ref({
-      labels: [],
-      backgroundColor: '#888888',
-      datasets: [{ data: [] }]
-    })
-    let chartDataVol = ref({
+    let chartData = shallowRef({
       labels: [],
       backgroundColor: '#888888',
       datasets: [{ data: [] }]
     })
 
-    let chartOptionsPres = ref({
+    let chartOptions = shallowRef({
       responsive: true,
       animation: false,
       spanGaps: true,
@@ -271,87 +262,12 @@ export default {
         }
       }
     })
-    // let chartOptionsFlow = ref({
-    //   responsive: true,
-    //   animation: false,
-    //   spanGaps: true,
-    //   showLine: true,
-    //   plugins: {
-    //     legend: {
-    //       display: false
-    //     }
-    //   },
-    //   datasets: {
-    //     line: {
-    //       pointRadius: 0 // disable for all `'line'` datasets
-    //     }
-    //   },
-    //   scales: {
-    //     x: {
-    //       display: false,
-    //       grid: {
-    //         color: '#444444'
-    //       },
-    //       border: {
-    //         display: false
-    //       }
-    //     },
-    //     y: {
-    //       grid: {
-    //         color: '#333333'
-    //       },
-    //       border: {
-    //         display: false
-    //       }
-    //     }
-    //   }
-    // })
-    // let chartOptionsVol = ref({
-    //   responsive: true,
-    //   animation: false,
-    //   spanGaps: true,
-    //   showLine: true,
-    //   plugins: {
-    //     legend: {
-    //       display: false
-    //     }
-    //   },
-    //   datasets: {
-    //     line: {
-    //       pointRadius: 0 // disable for all `'line'` datasets
-    //     }
-    //   },
-    //   scales: {
-    //     x: {
-    //       display: false,
-    //       grid: {
-    //         color: '#444444'
-    //       },
-    //       border: {
-    //         display: false
-    //       }
-    //     },
-    //     y: {
-    //       grid: {
-    //         color: '#333333'
-    //       },
-    //       border: {
-    //         display: false
-    //       }
-    //     }
-    //   }
-    // })
 
 
     return {
       state,
-      chartDataPres,
-      chartDataFlow,
-      chartDataVol,
-      chartOptionsPres
-      // chartOptionsFlow,
-      // chartOptionsVol
-
+      chartData,
+      chartOptions
     }
 
   },
@@ -404,42 +320,20 @@ export default {
       multipliersEnabled: true,
       scaling: false,
       chart1_factor: 1.0,
-      chart2_factor: 1.0,
-      chart3_factor: 1.0,
       exportEnabled: true,
       title: "MECHANICAL VENTILATOR",
       selectedModel1: "Ventilator",
-      selectedProp1: "flow",
-      p1: "Ventilator.flow",
+      selectedProp1: "pres",
+      p1: "Ventilator.pres",
       p1_max: 0.0,
       p1_min: 0.0,
       p1_sd: 0.0,
       p1_mean: 0.0,
       p1_permin: 0.0,
       p1_perbeat: 0.0,
-      selectedModel2: "Ventilator",
-      selectedProp2: "flow",
-      p2: "Ventilator.flow",
-      p2_max: 0.0,
-      p2_min: 0.0,
-      p2_sd: 0.0,
-      p2_mean: 0.0,
-      p2_permin: 0.0,
-      p2_perbeat: 0.0,
-      selectedModel3: "Ventilator",
-      selectedProp3: "vol",
-      p3: "Ventilator.vol",
-      p3_max: 0.0,
-      p3_min: 0.0,
-      p3_sd: 0.0,
-      p3_mean: 0.0,
-      p3_permin: 0.0,
-      p3_perbeat: 0.0,
       seconds: 0,
       x_axis: [],
       y1_axis: [],
-      y2_axis: [],
-      y3_axis: [],
       redrawInterval: 0.015,
       redrawTimer: 0.0,
       debug_mode: true,
@@ -459,18 +353,12 @@ export default {
     toggleCurveParam() {
       if (this.curve_param == "pres") {
         this.p1 = "Ventilator.pres"
-        this.p2 = "Ventilator.flow"
-        this.p3 = "Ventilator.vol"
       }
       if (this.curve_param == "flow") {
         this.p1 = "Ventilator.flow"
-        this.p2 = "Ventilator.vol"
-        this.p3 = "Ventilator.pres"
       }
       if (this.curve_param == "vol") {
         this.p1 = "Ventilator.vol"
-        this.p2 = "Ventilator.pres"
-        this.p3 = "Ventilator.flow"
       }
 
     },
@@ -603,18 +491,10 @@ export default {
       this.p1 = "Ventilator.pres"
       this.selectedModel1 = "Ventilator"
       this.selectedProp1 = "pres"
-      this.p2 = "Ventilator.flow"
-      this.selectedModel2 = "Ventilator"
-      this.selectedProp2 = "flow"
-      this.p3 = "Ventilator.flow"
-      this.selectedModel3 = "Ventilator"
-      this.selectedProp3 = "flow"
     },
     toggleFactors() {
       if (!this.scaling) {
         this.chart1_factor = 1.0
-        this.chart2_factor = 1.0
-        this.chart3_factor = 1.0
       }
     },
     updateRtWindow() {
@@ -635,20 +515,6 @@ export default {
       this.p1_mean = 0.0
       this.p1_permin = 0.0
       this.p1_perbeat = 0.0
-
-      this.p2_max = 0.0
-      this.p2_min = 0.0
-      this.p2_sd = 0.0
-      this.p2_mean = 0.0
-      this.p2_permin = 0.0
-      this.p2_perbeat = 0.0
-
-      this.p3_max = 0.0
-      this.p3_min = 0.0
-      this.p3_sd = 0.0
-      this.p3_mean = 0.0
-      this.p3_permin = 0.0
-      this.p3_perbeat = 0.0
     },
     analyzeDataRt() {
       if (this.p1 !== '') {
@@ -660,32 +526,13 @@ export default {
         this.p1_perbeat = 0.0
       }
 
-      if (this.p2 !== '') {
-        this.p2_max = Stat.max(this.y2_axis).toFixed(4)
-        this.p2_min = Stat.min(this.y2_axis).toFixed(4)
-        this.p2_sd = Stat.standardDeviation(this.y2_axis).toFixed(4)
-        this.p2_mean = Stat.mean(this.y2_axis).toFixed(4)
-        this.p2_permin = Stat.sum(this.y2_axis).toFixed(4)
-        this.p2_perbeat = 0.0
-      }
-
-      if (this.p3 !== '') {
-        this.p3_max = Stat.max(this.y3_axis).toFixed(4)
-        this.p3_min = Stat.min(this.y3_axis).toFixed(4)
-        this.p3_sd = Stat.standardDeviation(this.y3_axis).toFixed(4)
-        this.p3_mean = Stat.mean(this.y3_axis).toFixed(4)
-        this.p3_permin = Stat.sum(this.y3_axis).toFixed(4)
-        this.p3_perbeat = 0.0
-      }
-
     },
     analyzeData() {
 
       this.resetAnalysis()
 
       let param1 = []
-      let param2 = []
-      let param3 = []
+
 
       if (this.p1 !== '') {
         param1 = explain.modelData.map((item) => { return item[this.p1] * this.chart1_factor; });
@@ -696,28 +543,6 @@ export default {
         this.p1_permin = Stat.sum(param1).toFixed(4)
         this.p1_perbeat = 0.0
       }
-
-      if (this.p2 !== '') {
-        param2 = explain.modelData.map((item) => { return item[this.p2] * this.chart2_factor; });
-        this.p2_max = Stat.max(param2).toFixed(4)
-        this.p2_min = Stat.min(param2).toFixed(4)
-        this.p2_sd = Stat.standardDeviation(param2).toFixed(4)
-        this.p2_mean = Stat.mean(param2).toFixed(4)
-        this.p2_permin = Stat.sum(param2).toFixed(4)
-        this.p2_perbeat = 0.0
-      }
-
-      if (this.p3 !== '') {
-        param3 = explain.modelData.map((item) => { return item[this.p3] * this.chart3_factor; });
-        this.p3_max = Stat.max(param3).toFixed(4)
-        this.p3_min = Stat.min(param3).toFixed(4)
-        this.p3_sd = Stat.standardDeviation(param3).toFixed(4)
-        this.p3_mean = Stat.sum(param3).toFixed(4)
-        this.p3_permin = 0.0
-        this.p3_perbeat = 0.0
-      }
-
-
 
     },
     autoscaling() {
@@ -798,7 +623,7 @@ export default {
 
         if (this.redrawTimer > this.redrawInterval) {
           this.redrawTimer = 0;
-          this.chartDataPres = {
+          this.chartData = {
             labels: this.x_axis,
             datasets: [{
               data: [...this.y1_axis],
@@ -835,44 +660,12 @@ export default {
         }
       }
 
-      // let data_set_flow = {}
-      // if (this.p2 !== '') {
-      //   this.y2_axis = explain.modelData.map((item) => { return item[this.p2] * this.chart2_factor; });
-      //   data_set_flow = {
-      //     data: this.y2_axis,
-      //     borderColor: 'rgb(0, 192, 0)',
-      //     borderWidth: 1,
-      //     pointStyle: false
-      //   };
-      // }
-
-      // let data_set_vol = {}
-      // if (this.p3 !== '') {
-      //   this.y3_axis = explain.modelData.map((item) => { return item[this.p3] * this.chart3_factor; });
-      //   data_set_vol = {
-      //     data: this.y3_axis,
-      //     borderColor: 'rgb(0, 192, 192)',
-      //     borderWidth: 1,
-      //     pointStyle: false
-      //   };
-      // }
-
       this.x_axis = [...Array(this.y1_axis.length).keys()]
 
-      this.chartDataPres = {
+      this.chartData = {
         labels: this.x_axis,
         datasets: [data_set_pres]
       }
-      // this.chartDataFlow = {
-      //   labels: this.x_axis,
-      //   datasets: [data_set_flow]
-      // }
-      // this.chartDataVol = {
-      //   labels: this.x_axis,
-      //   datasets: [data_set_vol]
-      // }
-
-
 
       if (this.show_summary) {
         this.analyzeDataRt()
@@ -881,8 +674,6 @@ export default {
       this.seconds = 0
       this.x_axis = []
       this.y1_axis = []
-      this.y2_axis = []
-      this.y3_axis = []
 
     },
     exportData() {
@@ -897,16 +688,6 @@ export default {
         header += h1
         data[h1] = explain.modelData.map((item) => { return (parseFloat(item[this.p1])).toFixed(5) });
       }
-      // if (this.p2 !== "") {
-      //   let h2 = this.selectedModel2.toUpperCase() + this.selectedProp2.toUpperCase() + "_";
-      //   header += h2
-      //   data[h2] = explain.modelData.map((item) => { return (parseFloat(item[this.p2])).toFixed(5) });
-      // }
-      // if (this.p3 !== "") {
-      //   let h3 = this.selectedModel3.toUpperCase() + this.selectedProp3.toUpperCase();
-      //   header += h3
-      //   data[h3] = explain.modelData.map((item) => { return (parseFloat(item[this.p3])).toFixed(5) });
-      // }
       this.exportFileName = `time_vs_${header}.csv`;
       this.writeDataToDisk(data)
 

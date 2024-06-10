@@ -125,7 +125,7 @@ import { useStateStore } from "src/stores/state";
 import { explain } from "../boot/explain";
 import { Bar, Line, Scatter } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Filler } from 'chart.js'
-import { ref } from 'vue'
+import { ref, shallowRef } from 'vue'
 import * as Stat from "simple-statistics";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Filler)
@@ -135,13 +135,13 @@ export default {
   setup() {
     const state = useStateStore()
     // make the chartdata reactive
-    let chartData = ref({
+    let chartData = shallowRef({
       labels: [],
       backgroundColor: '#888888',
       datasets: [{ data: [] }]
     })
 
-    let chartOptions = ref({
+    let chartOptions = shallowRef({
       responsive: true,
       animation: false,
       spanGaps: true,
