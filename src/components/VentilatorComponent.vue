@@ -8,8 +8,8 @@
     <!-- chart -->
     <div v-if="!show_loops">
       <div class="q-mt-sm row text-overline justify-center">pressure (cmh2o)</div>
-      <Line v-if="isEnabled && !show_loops" id="my-chart-vent-pres" :options="chartOptions" :data="chartData"
-        style="max-height: 250px;" />
+      <Line v-if="isEnabled && !show_loops" ref="myTest" id="my-chart-vent-pres" :options="chartOptions"
+        :data="chartData" style="max-height: 250px;" />
       <!-- <div class="row text-overline justify-center">flow (l/min)</div> -->
       <!-- <Line v-if="isEnabled && !show_loops" id="my-chart-vent-flow" :options="chartOptionsFlow" :data="chartDataFlow"
         style="max-height: 100px;" />
@@ -224,7 +224,12 @@ export default {
     let chartData = shallowRef({
       labels: [],
       backgroundColor: '#888888',
-      datasets: [{ data: [] }]
+      datasets: [{
+        data: [],
+        borderColor: 'rgb(192, 0, 0)',
+        borderWidth: 2,
+        pointStyle: false
+      }],
     })
 
     let chartOptions = shallowRef({
@@ -607,6 +612,7 @@ export default {
 
     },
     dataUpdateRt() {
+
       if (this.alive) {
         // update is every 0.015 ms and the data is sampled with 0.005 ms resolution (so 3 data points per 0.015 sec = 200 datapoints per second)
         for (let i = 0; i < explain.modelData.length; i++) {
@@ -622,16 +628,14 @@ export default {
         }
 
         if (this.redrawTimer > this.redrawInterval) {
+
           this.redrawTimer = 0;
-          this.chartData = {
-            labels: this.x_axis,
-            datasets: [{
-              data: [...this.y1_axis],
-              borderColor: 'rgb(0, 192, 192)',
-              borderWidth: 1,
-              pointStyle: false
-            }]
-          }
+          const myChart = this.$refs.myTest.chart
+          myChart.data.labels = this.x_axis
+          myChart.data.datasets[0].data = [...this.y1_axis]
+          requestAnimationFrame(() => {
+            myChart.update()
+          })
 
           if (this.show_summary) {
             this.analyzeDataRt()
