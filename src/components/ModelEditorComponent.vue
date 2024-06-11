@@ -311,7 +311,7 @@ export default {
         if (prop.type !== 'function') {
           new_model[prop.target] = prop.value
           if (prop.type == 'number') {
-            new_model[prop.target] = parseFloat(prop.value)
+            new_model[prop.target] = parseFloat(prop.value / prop.factor)
           }
         }
 
@@ -361,7 +361,11 @@ export default {
       })
       // process the model interface
       model_props.forEach(prop => {
-        prop['value'] = prop['default']
+        if (prop.type == 'number') {
+          prop['value'] = prop['default'] * prop['factor']
+        } else {
+          prop['value'] = prop['default']
+        }
         // if the property is a list then add the options to the choices
         if (prop.type == 'list') {
           prop['choices'] = []
