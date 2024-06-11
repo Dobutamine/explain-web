@@ -233,7 +233,8 @@ export default defineComponent({
         result = await this.state.getStateFromServer(this.general.apiUrl, this.user.name, this.selectedState, this.user.token)
       }
       if (result) {
-        console.log("state loaded")
+        // console.log("state loaded")
+        // console.log(this.state.model_definition)
         explain.loadModelDefinition(this.state.model_definition);
         this.showLoadStatePopUp = false
         this.$bus.emit('reset')

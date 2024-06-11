@@ -570,6 +570,11 @@ export class Ecls {
     this.ecls_clamped = state;
   }
   calc_model() {
+    // make sure all components are enabled
+    this._ecls_parts.forEach((ecls_part) => {
+      ecls_part.is_enabled = true;
+    });
+
     // set the number of rotations of the pump
     this._pump.pump_rpm = this.pump_rpm;
 
@@ -650,10 +655,6 @@ export class Ecls {
     }
     this._update_counter += this._t;
   }
-
-  freeze_scaling() {}
-
-  freeze_factors() {}
 
   calc_volume(length, diameter) {
     // return the volume in liters

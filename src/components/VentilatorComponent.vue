@@ -736,6 +736,13 @@ export default {
     },
     processModelState() {
       if (explain.modelState.models) {
+        this.ventilator_running = explain.modelState.models["Ventilator"].vent_running
+        if (this.ventilator_running) {
+          this.mode = explain.modelState.models["Ventilator"].vent_mode
+          explain.watchModelProps(["Ventilator.pres", "Ventilator.flow", "Ventilator.vol", "Ventilator.co2", "Ventilator.etco2", "Breathing.breathing_enabled"])
+        } else {
+          this.mode = "OFF"
+        }
         this.et_tube_diameter = explain.modelState.models["Ventilator"].ettube_diameter
         this.et_tube_length = explain.modelState.models["Ventilator"].ettube_length
         this.temp = explain.modelState.models["Ventilator"].temp
@@ -752,6 +759,7 @@ export default {
         this.hfo_map_cmh2o = explain.modelState.models["Ventilator"].hfo_map_cmh2o
         this.hfo_freq = explain.modelState.models["Ventilator"].hfo_freq
         this.hfo_bias_flow = explain.modelState.models["Ventilator"].hfo_bias_flow
+        this.spont_breathing = explain.modelState.models["Breathing"].breathing_enabled
 
       }
     }
@@ -760,7 +768,7 @@ export default {
     this.$bus.on("rtf", () => this.dataUpdateRt());
     this.$bus.on("data", () => this.dataUpdate())
     this.$bus.on("state", this.processModelState)
-    explain.watchModelProps(["Ventilator.pres", "Ventilator.flow", "Ventilator.vol", "Ventilator.co2", "Ventilator.etco2"])
+    explain.watchModelProps(["Ventilator.pres", "Ventilator.flow", "Ventilator.vol", "Ventilator.co2", "Ventilator.etco2", "Breathing.breathing_enabled"])
 
     // check whether hires is enabled
     this.toggleHires()

@@ -344,7 +344,6 @@ export default {
                 watched_models_pump.push(m + ".aboxy.to2")
                 watched_models_pump.push(m + ".pump_rpm")
               })
-              console.log(watched_models_pump)
               explain.watchModelProps(watched_models_pump)
               break;
             case "LymphCompartment":
