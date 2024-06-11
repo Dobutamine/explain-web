@@ -613,7 +613,7 @@ export default {
     },
     dataUpdateRt() {
 
-      if (this.alive) {
+      if (this.alive && !this.show_loops) {
         // update is every 0.015 ms and the data is sampled with 0.005 ms resolution (so 3 data points per 0.015 sec = 200 datapoints per second)
         for (let i = 0; i < explain.modelData.length; i++) {
           this.y1_axis.push(explain.modelData[i][this.p1] * this.chart1_factor)

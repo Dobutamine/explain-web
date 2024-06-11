@@ -16,7 +16,7 @@
     </div>
 
     <!-- chart -->
-    <Scatter v-if="isEnabled" id="my-chart-id-xy" :options="chartOptions" :data="chartData"
+    <Scatter v-if="isEnabled" ref="myChart" id="my-chart-id-xy" :options="chartOptions" :data="chartData"
       style="max-height: 300px;" />
     <!-- bottom buttons -->
     <div v-if="isEnabled" class="q-ma-sm text-overline justify-center q-gutter-sm row">
@@ -110,11 +110,17 @@ export default {
   setup() {
     const state = useStateStore()
     // make the chartdata reactive
-    let chartData = shallowRef({
+    let chartData = {
       labels: [],
       backgroundColor: '#888888',
-      datasets: [{ data: [] }]
-    })
+      datasets: [{
+        data: [],
+        borderColor: 'rgb(192, 0, 0)',
+        borderWidth: 1,
+        pointStyle: false
+      }
+      ]
+    }
 
     let chartOptions = shallowRef({
       responsive: true,
@@ -467,7 +473,7 @@ export default {
       }
     },
     dataUpdateRt() {
-      if (this.alive) {
+      if (this.alive && this.$refs.myChart) {
         // update is every 0.015 ms and the data is sampled with 0.005 ms resolution (so 3 data points per 0.015 sec = 200 datapoints per second)
         for (let i = 0; i < explain.modelData.length; i++) {
           this.y1_axis.push({ x: explain.modelData[i][this.p1] * this.chart1_factor, y: explain.modelData[i][this.p2] * this.chart2_factor })
@@ -486,15 +492,12 @@ export default {
 
         if (this.redrawTimer > this.redrawInterval) {
           this.redrawTimer = 0;
-          this.chartData = {
-            // labels: this.x_axis,
-            datasets: [{
-              data: [...this.y1_axis],
-              borderColor: 'rgb(192, 0, 0)',
-              borderWidth: 1,
-              pointStyle: false
-            }]
-          }
+          const myChart = this.$refs.myChart.chart
+          myChart.data.labels = this.x_axis
+          myChart.data.datasets[0].data = [...this.y1_axis]
+          requestAnimationFrame(() => {
+            myChart.update()
+          })
 
           if (this.show_summary) {
             this.analyzeDataRt()

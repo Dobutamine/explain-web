@@ -8,13 +8,13 @@
     <!-- chart -->
     <div v-if="!show_loops">
       <div class="q-mt-sm row text-overline justify-center">pressure (cmh2o)</div>
-      <Line v-if="isEnabled && !show_loops" id="my-chart-heart-pres" :options="chartOptionsPres" :data="chartDataPres"
-        style="max-height: 150px;" />
+      <Line v-if="isEnabled && !show_loops" ref="myChartPres" id="my-chart-heart-pres" :options="chartOptionsPres"
+        :data="chartDataPres" style="max-height: 150px;" />
       <div class="q-mt-sm row text-overline justify-center">flow (l/s)</div>
-      <Line v-if="isEnabled && !show_loops" id="my-chart-heart-flow" :options="chartOptionsFlow" :data="chartDataFlow"
-        style="max-height: 150px;" />
+      <Line v-if="isEnabled && !show_loops" ref="myChartFlow" id="my-chart-heart-flow" :options="chartOptionsFlow"
+        :data="chartDataFlow" style="max-height: 150px;" />
       <div class="row text-overline justify-center">volume (ml)</div>
-      <Line v-if="isEnabled" id="my-chart-vent-vol" :options="chartOptionsVol" :data="chartDataVol"
+      <Line v-if="isEnabled" ref="myChartVol" id="my-chart-vent-vol" :options="chartOptionsVol" :data="chartDataVol"
         style="max-height: 150px;" />
     </div>
 
@@ -58,7 +58,7 @@ import { useStateStore } from "src/stores/state";
 import { explain } from "../boot/explain";
 import { Bar, Line, Scatter } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'
-import { ref } from 'vue'
+import { ref, shallowRef } from 'vue'
 import * as Stat from "simple-statistics";
 import XYChartComponent from "./XYChartComponent.vue";
 
@@ -66,24 +66,79 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale,
 export default {
   setup() {
     const state = useStateStore()
-    // make the chartdata reactive
-    let chartDataPres = ref({
-      labels: [],
-      backgroundColor: '#888888',
-      datasets: [{ data: [] }]
-    })
-    let chartDataFlow = ref({
-      labels: [],
-      backgroundColor: '#888888',
-      datasets: [{ data: [] }]
-    })
-    let chartDataVol = ref({
-      labels: [],
-      backgroundColor: '#888888',
-      datasets: [{ data: [] }]
-    })
 
-    let chartOptionsPres = ref({
+    let p1_color = ref("rgb(192, 0, 0)")
+    let p2_color = ref("rgb(0, 192, 0)")
+    let p3_color = ref("rgb(0, 192, 192)")
+    let p4_color = ref("rgb(192, 0, 192)")
+    let p5_color = ref("rgb(192, 192, 0)")
+    let p6_color = ref("rgb(0, 192, 192)")
+    let p7_color = ref("rgb(192, 192, 192)")
+
+    // make the chartdata reactive
+    let chartDataPres = {
+      labels: [],
+      backgroundColor: '#888888',
+      datasets: [{
+        data: [],
+        borderColor: p1_color,
+        borderWidth: 1,
+        pointStyle: false
+      },
+      {
+        data: [],
+        borderColor: p2_color,
+        borderWidth: 1,
+        pointStyle: false
+      },
+      {
+        data: [],
+        borderColor: p3_color,
+        borderWidth: 1,
+        pointStyle: false
+      },
+      ]
+    }
+
+
+    let chartDataFlow = {
+      labels: [],
+      backgroundColor: '#888888',
+      datasets: [{
+        data: [],
+        borderColor: p5_color,
+        borderWidth: 1,
+        pointStyle: false
+      },
+      {
+        data: [],
+        borderColor: p6_color,
+        borderWidth: 1,
+        pointStyle: false
+      }
+      ]
+    }
+
+
+    let chartDataVol = {
+      labels: [],
+      backgroundColor: '#888888',
+      datasets: [{
+        data: [],
+        borderColor: p4_color,
+        borderWidth: 1,
+        pointStyle: false
+      },
+      {
+        data: [],
+        borderColor: p7_color,
+        borderWidth: 1,
+        pointStyle: false
+      }
+      ]
+    }
+
+    let chartOptionsPres = shallowRef({
       responsive: true,
       animation: false,
       spanGaps: true,
@@ -118,7 +173,7 @@ export default {
         }
       }
     })
-    let chartOptionsFlow = ref({
+    let chartOptionsFlow = shallowRef({
       responsive: true,
       animation: false,
       spanGaps: true,
@@ -153,7 +208,7 @@ export default {
         }
       }
     })
-    let chartOptionsVol = ref({
+    let chartOptionsVol = shallowRef({
       responsive: true,
       animation: false,
       spanGaps: true,
@@ -197,7 +252,14 @@ export default {
       chartDataVol,
       chartOptionsPres,
       chartOptionsFlow,
-      chartOptionsVol
+      chartOptionsVol,
+      p1_color,
+      p2_color,
+      p3_color,
+      p4_color,
+      p5_color,
+      p6_color,
+      p7_color
 
     }
 
@@ -262,7 +324,6 @@ export default {
       selectedModel1: "LV",
       selectedProp1: "pres",
       p1: "LV.pres",
-      p1_color: "rgb(192, 0, 0)",
       p1_max: 0.0,
       p1_min: 0.0,
       p1_sd: 0.0,
@@ -272,7 +333,6 @@ export default {
       selectedModel2: "LA",
       selectedProp2: "pres",
       p2: "LA.pres",
-      p2_color: "rgb(0, 192, 0)",
       p2_max: 0.0,
       p2_min: 0.0,
       p2_sd: 0.0,
@@ -282,7 +342,6 @@ export default {
       selectedModel3: "AA",
       selectedProp3: "pres",
       p3: "AA.pres",
-      p3_color: "rgb(0, 192, 192)",
       p3_max: 0.0,
       p3_min: 0.0,
       p3_sd: 0.0,
@@ -292,7 +351,6 @@ export default {
       selectedModel4: "LV",
       selectedProp4: "vol",
       p4: "LV.vol",
-      p4_color: "rgb(192, 0, 0)",
       p4_max: 0.0,
       p4_min: 0.0,
       p4_sd: 0.0,
@@ -302,7 +360,6 @@ export default {
       selectedModel5: "LV_AA",
       selectedProp5: "flow",
       p5: "LV_AA.flow",
-      p5_color: "rgb(192, 0, 0)",
       p5_max: 0.0,
       p5_min: 0.0,
       p5_sd: 0.0,
@@ -312,7 +369,6 @@ export default {
       selectedModel6: "LA_LV",
       selectedProp6: "flow",
       p6: "LA_LV.flow",
-      p6_color: "rgb(0, 192, 0)",
       p6_max: 0.0,
       p6_min: 0.0,
       p6_sd: 0.0,
@@ -322,7 +378,6 @@ export default {
       selectedModel7: "LA",
       selectedProp7: "vol",
       p7: "LA.vol",
-      p7_color: "rgb(0, 192, 0)",
       p7_max: 0.0,
       p7_min: 0.0,
       p7_sd: 0.0,
@@ -723,7 +778,7 @@ export default {
 
     },
     dataUpdateRt() {
-      if (this.alive) {
+      if (this.alive && !this.show_loops) {
         // update is every 0.015 ms and the data is sampled with 0.005 ms resolution (so 3 data points per 0.015 sec = 200 datapoints per second)
         for (let i = 0; i < explain.modelData.length; i++) {
           this.y1_axis.push(explain.modelData[i][this.p1] * this.chart1_factor)
@@ -751,59 +806,37 @@ export default {
 
         if (this.redrawTimer > this.redrawInterval) {
           this.redrawTimer = 0;
-          this.chartDataPres = {
-            labels: this.x_axis,
-            datasets: [{
-              data: [...this.y1_axis],
-              borderColor: this.p1_color,
-              borderWidth: 1,
-              pointStyle: false
-            },
-            {
-              data: [...this.y2_axis],
-              borderColor: this.p2_color,
-              borderWidth: 1,
-              pointStyle: false
-            },
-            {
-              data: [...this.y3_axis],
-              borderColor: this.p3_color,
-              borderWidth: 1,
-              pointStyle: false
-            }
-            ]
-          }
-          this.chartDataFlow = {
-            labels: this.x_axis,
-            datasets: [{
-              data: [...this.y5_axis],
-              borderColor: this.p5_color,
-              borderWidth: 1,
-              pointStyle: false
-            },
-            {
-              data: [...this.y6_axis],
-              borderColor: this.p6_color,
-              borderWidth: 1,
-              pointStyle: false
-            }
-            ]
-          }
-          this.chartDataVol = {
-            labels: this.x_axis,
-            datasets: [{
-              data: [...this.y4_axis],
-              borderColor: this.p4_color,
-              borderWidth: 1,
-              pointStyle: false
-            },
-            {
-              data: [...this.y7_axis],
-              borderColor: this.p7_color,
-              borderWidth: 1,
-              pointStyle: false
-            }]
-          }
+          const myChartPres = this.$refs.myChartPres.chart
+          const myChartFlow = this.$refs.myChartFlow.chart
+          const myChartVol = this.$refs.myChartVol.chart
+
+          myChartPres.data.labels = this.x_axis
+          myChartPres.data.datasets[0].data = [...this.y1_axis]
+          myChartPres.data.datasets[0].borderColor = this.p1_color
+          myChartPres.data.datasets[1].data = [...this.y2_axis]
+          myChartPres.data.datasets[1].borderColor = this.p2_color
+          myChartPres.data.datasets[2].data = [...this.y3_axis]
+          myChartPres.data.datasets[2].borderColor = this.p3_color
+
+          myChartFlow.data.labels = this.x_axis
+          myChartFlow.data.datasets[0].data = [...this.y5_axis]
+          myChartFlow.data.datasets[0].borderColor = this.p5_color
+          myChartFlow.data.datasets[1].data = [...this.y6_axis]
+          myChartFlow.data.datasets[1].borderColor = this.p6_color
+
+          myChartVol.data.labels = this.x_axis
+          myChartVol.data.datasets[0].data = [...this.y4_axis]
+          myChartVol.data.datasets[0].borderColor = this.p4_color
+          myChartVol.data.datasets[1].data = [...this.y7_axis]
+          myChartVol.data.datasets[1].borderColor = this.p7_color
+
+
+          requestAnimationFrame(() => {
+            myChartPres.update()
+            myChartFlow.update()
+            myChartVol.update()
+          })
+
 
           if (this.show_summary) {
             this.analyzeDataRt()
