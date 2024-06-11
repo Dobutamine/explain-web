@@ -14,6 +14,20 @@
   "modeling_stepsize": 0.0005,
   "model_time_total": 2418.640000263367,
   "models": {
+    "ISL": {
+      "name": "ISL",
+      "model_type": "LymphCapacitance",
+      "description": "interstitial space lungs",
+      "is_enabled": true,
+      "dependencies": [],
+      "fixed_composition": false,
+      "u_vol": 0.2,
+      "vol": 0.2,
+      "el_rest": 0,
+      "el_base": 1000,
+      "el_k": 0,
+      "pacemaker": false
+    },
     "IS": {
       "name": "IS",
       "model_type": "LymphCapacitance",
@@ -357,6 +371,19 @@
       "targets": [
         "IL","LT","LD"
       ]
+    },
+    "ISL_LD": {
+      "name": "ISL_LD",
+      "description": "interstitial space lungs to lymphatic ducts",
+      "model_type": "LymphResistor",
+      "is_enabled": true,
+      "no_flow": false,
+      "no_back_flow": true,
+      "comp_from": "ISL",
+      "comp_to": "LD",
+      "r_for": 50,
+      "r_back": 50,
+      "r_k": 0
     },
     "IS_IL": {
       "name": "IS_IL",
@@ -1130,8 +1157,8 @@
       "flow_lmin": 0.000047543369209864655,
       "flow_lmin_avg": 0.000047817807273842066
     },
-    "RL_IS": {
-      "name": "RL_IS",
+    "RL_ISL": {
+      "name": "RL_ISL",
       "model_type": "LymphStarling",
       "description": "arteries right lung to interstitial space",
       "is_enabled": true,
@@ -1140,7 +1167,7 @@
       "S": 50,
       "sigma": 0.7,
       "comp_from": "RL",
-      "comp_to": "IS",
+      "comp_to": "ISL",
       "i": 1,
       "R": 0.08206,
       "T": 37,
@@ -1151,7 +1178,7 @@
         "RL"
       ],
       "target_to": [
-        "IS"
+        "ISL"
       ],
       "flow_h": 0.0000011160881957817287,
       "flow_o": -1.8932625794191998e-7,
@@ -1160,8 +1187,8 @@
       "flow_lmin": 0.000050716933979929976,
       "flow_lmin_avg": 0.00005055908642085722
     },
-    "LL_IS": {
-      "name": "LL_IS",
+    "LL_ISL": {
+      "name": "LL_ISL",
       "model_type": "LymphStarling",
       "description": "arteries left lung to interstitial space",
       "is_enabled": true,
@@ -1170,7 +1197,7 @@
       "S": 50,
       "sigma": 0.7,
       "comp_from": "LL",
-      "comp_to": "IS",
+      "comp_to": "ISL",
       "i": 1,
       "R": 0.08206,
       "T": 37,
@@ -1181,7 +1208,7 @@
         "LL"
       ],
       "target_to": [
-        "IS"
+        "ISL"
       ],
       "flow_h": 0.0000011160881957817287,
       "flow_o": -1.8932625794191998e-7,
@@ -16679,7 +16706,8 @@
         "PV",
         "LL",
         "RL",
-        "LD"
+        "LD",
+        "ISL"
       ],
       "u_vol": 0.311530303030303,
       "el_base": 69.81664315937941,
@@ -21203,9 +21231,11 @@
         "KID_IS",
         "RLB_IS",
         "LS_IS",
-        "RUB_IS",
-        "LL_IS",
-        "RL_IS"
+        "RUB_IS"
+      ],
+      "ISlungs": [
+        "LL_ISL",
+        "RL_ISL"
       ],
       "model_interface": [],
       "solutes": {

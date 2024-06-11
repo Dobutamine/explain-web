@@ -19,7 +19,7 @@
     </div>
 
     <!-- chart -->
-    <Line v-if="isEnabled" id="my-chart-id" :options="chartOptions" :data="chartData" style="max-height: 300px;" />
+    <Line v-if="isEnabled" ref="myChart" id="my-chart-id" :options="chartOptions" :data="chartData" style="max-height: 300px;" />
     <!-- presets -->
     <div v-if="isEnabled && showPresets" class="text-overline justify-center q-gutter-xs row q-mb-sm">
       <div class="q-mb-sm text-left text-secondary" :style="{ 'font-size': '12px' }">
@@ -122,23 +122,49 @@
 import { explain } from "../boot/explain";
 import { Bar, Line, Scatter } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Filler } from 'chart.js'
-import { ref } from 'vue'
+import { ref, shallowRef } from 'vue'
 import * as Stat from "simple-statistics";
-import { TextureUvs } from "pixi.js";
+
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Filler)
 
 
 export default {
   setup() {
+
+    let y1_axis_fill = false
+    let y2_axis_fill = false
+    let y3_axis_fill = false
+
     // make the chartdata reactive
-    let chartData = ref({
+    let chartData = {
       labels: [],
       backgroundColor: '#888888',
-      datasets: [{ data: [] }]
-    })
+      datasets: [
+        { data: [],
+          fill: y1_axis_fill,
+          borderColor: 'rgb(192, 0, 0, 1.0)',
+          backgroundColor: 'rgb(192, 0, 0, 0.3)',
+          borderWidth: 1,
+          pointStyle: false
+        },
+        { data: [],
+          fill: y2_axis_fill,
+          borderColor: 'rgb(192, 0, 0, 1.0)',
+          backgroundColor: 'rgb(192, 0, 0, 0.3)',
+          borderWidth: 1,
+          pointStyle: false
+        },
+        { data: [],
+          fill: y3_axis_fill,
+          borderColor: 'rgb(192, 0, 0, 1.0)',
+          backgroundColor: 'rgb(192, 0, 0, 0.3)',
+          borderWidth: 1,
+          pointStyle: false
+        }]
+    }
 
-    let chartOptions = ref({
+    let chartOptions = shallowRef({
       responsive: true,
       animation: false,
       spanGaps: true,
@@ -176,7 +202,10 @@ export default {
 
     return {
       chartData,
-      chartOptions
+      chartOptions,
+      y1_axis_fill,
+      y2_axis_fill,
+      y3_axis_fill
     }
 
   },
@@ -249,9 +278,6 @@ export default {
       y2_axis: [],
       y3_axis: [],
       chart_fill: false,
-      y1_axis_fill: false,
-      y2_axis_fill: false,
-      y3_axis_fill: false,
       redrawInterval: -1,
       redrawTimer: 0.0,
       debug_mode: true,
@@ -719,32 +745,14 @@ export default {
 
         if (this.redrawTimer > this.redrawInterval) {
           this.redrawTimer = 0;
-          this.chartData = {
-            labels: this.x_axis,
-            datasets: [
-              {
-                data: [...this.y1_axis],
-                fill: this.y1_axis_fill,
-                borderColor: 'rgb(192, 0, 0, 1.0)',
-                backgroundColor: 'rgba(192, 0, 0, 0.3)',
-                borderWidth: 1,
-                pointStyle: false
-              }, {
-                data: [...this.y2_axis],
-                fill: this.y2_axis_fill,
-                borderColor: 'rgb(0, 192, 0, 1.0)',
-                backgroundColor: 'rgba(0, 192, 0, 0.3)',
-                borderWidth: 1,
-                pointStyle: false
-              }, {
-                data: [...this.y3_axis],
-                fill: this.y3_axis_fill,
-                borderColor: 'rgb(0, 192, 192, 1.0)',
-                backgroundColor: 'rgb(0, 192, 192, 0.3)',
-                borderWidth: 1,
-                pointStyle: false
-              }]
-          }
+          const myChart = this.$refs.myChart.chart
+          myChart.data.labels = this.x_axis
+          myChart.data.datasets[0].data = [...this.y1_axis]
+          myChart.data.datasets[1].data = [...this.y2_axis]
+          myChart.data.datasets[2].data = [...this.y3_axis]
+          requestAnimationFrame(() => {
+            myChart.update()
+          })
 
           if (this.show_summary) {
             this.analyzeDataRt()

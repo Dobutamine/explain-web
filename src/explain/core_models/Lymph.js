@@ -20,6 +20,10 @@ export class Lymph {
     "LL_IS",
     "RL_IS",
   ];
+  ISlungs = [
+    "LL_IS",
+    "RL_IS"
+  ]
 
   feedback_enabled = false;
   min_mflow = 0.0;
@@ -62,6 +66,7 @@ export class Lymph {
   il_lt_flow = 0.0;
   lt_ld_flow = 0.0;
   ld_svc_flow = 0.0;
+  isl_flow = 0.0;
 
   is_flowmlkgmin = 0.0;
 
@@ -76,6 +81,7 @@ export class Lymph {
   _cum_il_lt_flow = 0.0;
   _cum_lt_ld_flow = 0.0;
   _cum_ld_svc_flow = 0.0;
+  _cum_isl_flow = 0.0;
 
   _update_window = 0.015;
   _update_counter = 0.0;
@@ -159,6 +165,7 @@ export class Lymph {
 
   calc_model() {
     if (this._analysis_counter > this._analysis_interval) {
+      this.isl_flow = (this._cum_isl_flow / this._analysis_counter) * 60.0;
       this.is_flow = (this._cum_is_flow / this._analysis_counter) * 60.0;
       this.is_flowmlkgmin = this.is_flow *1000 / this._model_engine.weight
       this.is_il_flow = (this._cum_is_il_flow / this._analysis_counter) * 60.0;
@@ -166,18 +173,23 @@ export class Lymph {
       this.lt_ld_flow = (this._cum_lt_ld_flow / this._analysis_counter) * 60.0;
       this.ld_svc_flow =
         (this._cum_ld_svc_flow / this._analysis_counter) * 60.0;
+      
 
       this._cum_is_flow = 0.0;
       this._cum_is_il_flow = 0.0;
       this._cum_il_lt_flow = 0.0;
       this._cum_lt_ld_flow = 0.0;
       this._cum_ld_svc_flow = 0.0;
+      this._cum_isl_flow = 0.0;
 
       this._analysis_counter = 0.0;
     }
 
     this.starlings.forEach((cap) => {
       this._cum_is_flow += this._model_engine.models[cap].flow * this._t;
+    });
+    this.ISlungs.forEach((pv) => {
+      this._cum_isl_flow += this._model_engine.models[pv].flow * this._t;
     });
     this._cum_is_il_flow += this._model_engine.models["IS_IL"].flow * this._t;
     this._cum_il_lt_flow += this._model_engine.models["IL_LT"].flow * this._t;
