@@ -78,6 +78,8 @@ export class BloodCapacitance {
   pres_cc = 0.0;
   pres_atm = 0.0;
   pres_mus = 0.0;
+  pres_cor = 0.0;
+  pres_cor_factor = 1.0;
 
   act_factor = 0.0;
   ans_activity_factor = 1.0;
@@ -109,6 +111,9 @@ export class BloodCapacitance {
   pres_max = 0.0;
   pres_min = 0.0;
   pres_mean = 0.0;
+  pres_cor_max = 0.0;
+  pres_cor_min = 0.0;
+  pres_cor_mean = 0.0;
 
   // local parameters
   _model_engine = {};
@@ -206,6 +211,9 @@ export class BloodCapacitance {
     // calculate the total pressure
     this.pres = this.pres_in + this.pres_out;
 
+    // corrected pressure
+    this.pres_cor = this.pres * this.pres_cor_factor;
+
     // analyze the pressures and volume
     this.analyze();
 
@@ -244,6 +252,9 @@ export class BloodCapacitance {
       this.pres_max = this._temp_pres_max;
       this.pres_min = this._temp_pres_min;
       this.pres_mean = (2.0 * this.pres_min + this.pres_max) / 3.0;
+      this.pres_cor_max = this.pres_max * this.pres_cor_factor;
+      this.pres_cor_min = this.pres_min * this.pres_cor_factor;
+      this.pres_cor_mean = (2.0 * this.pres_cor_min + this.pres_cor_max) / 3.0;
       this.vol_max = this._temp_vol_max;
       this.vol_min = this._temp_vol_min;
       this.vol_sv = this.vol_max - this.vol_min;

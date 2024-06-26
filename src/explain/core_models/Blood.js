@@ -28,6 +28,24 @@ export class Blood {
       ],
     },
     {
+      target: "set_pres_cor_factor",
+      caption: "cor factor",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "pres_cor_factor",
+          type: "number",
+          optional: false,
+          factor: 1,
+          delta: 0.1,
+          rounding: 1,
+          ul: 10.0,
+          ll: 0.1,
+        },
+      ],
+    },
+    {
       target: "set_na_conc",
       caption: "sodium concentration (mmol/l)",
       type: "function",
@@ -240,6 +258,7 @@ export class Blood {
   right_atrium = "RA";
   viscosity = 6.0;
   blood_containing_components = [];
+  pres_cor_factor = 1.0;
 
   // dependent parameters
   ph = 0.0;
@@ -346,6 +365,22 @@ export class Blood {
   step_model() {
     if (this.is_enabled && this._is_initialized) {
       this.calc_model();
+    }
+  }
+
+  set_pres_cor_factor(new_factor) {
+    console.log(new_factor);
+    this.pres_cor_factor = parseFloat(new_factor);
+    for (let [_, model] of Object.entries(this._model_engine.models)) {
+      if (
+        (model.model_type === "BloodCapacitance" ||
+          model.model_type === "BloodTimeVaryingElastance") &&
+        !model.fixed_composition
+      ) {
+        if (model.is_enabled) {
+          model.pres_cor_factor = parseFloat(new_factor);
+        }
+      }
     }
   }
 

@@ -352,8 +352,8 @@ export default {
         "PDA Doppler": {
           props: ["Shunts.da_velocity"],
           autoscale: false,
-          y_min: -5,
-          y_max: 5,
+          y_min: -2,
+          y_max: 3,
           factors: false,
           fill: true,
           chart1_factor: 1.0,

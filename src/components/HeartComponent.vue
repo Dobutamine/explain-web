@@ -323,7 +323,7 @@ export default {
       title: "HEART AND CIRCULATION",
       selectedModel1: "LV",
       selectedProp1: "pres",
-      p1: "LV.pres",
+      p1: "LV.pres_cor",
       p1_max: 0.0,
       p1_min: 0.0,
       p1_sd: 0.0,
@@ -332,7 +332,7 @@ export default {
       p1_perbeat: 0.0,
       selectedModel2: "LA",
       selectedProp2: "pres",
-      p2: "LA.pres",
+      p2: "LA.pres_cor",
       p2_max: 0.0,
       p2_min: 0.0,
       p2_sd: 0.0,
@@ -341,7 +341,7 @@ export default {
       p2_perbeat: 0.0,
       selectedModel3: "AA",
       selectedProp3: "pres",
-      p3: "AA.pres",
+      p3: "AA.pres_cor",
       p3_max: 0.0,
       p3_min: 0.0,
       p3_sd: 0.0,
@@ -398,10 +398,10 @@ export default {
       debug_mode: true,
       presets: {},
       presets_loops: {
-        "LV LOOP": ["LV.vol", "LV.pres"],
-        "LA LOOP": ["LA.vol", "LA.pres"],
-        "RV LOOP": ["RV.vol", "RV.pres"],
-        "RA LOOP": ["RA.vol", "RA.pres"],
+        "LV LOOP": ["LV.vol", "LV.pres_cor_cor"],
+        "LA LOOP": ["LA.vol", "LA.pres_cor_cor"],
+        "RV LOOP": ["RV.vol", "RV.pres_cor_cor"],
+        "RA LOOP": ["RA.vol", "RA.pres_cor_cor"],
       },
       update_model: true
     };
@@ -421,13 +421,13 @@ export default {
     select_heart_chamber() {
       switch (this.mode) {
         case "LEFT":
-          this.p1 = "LV.pres"
+          this.p1 = "LV.pres_cor"
           this.selectedModel1 = "LV"
           this.selectedProp1 = "pres"
-          this.p2 = "LA.pres"
+          this.p2 = "LA.pres_cor"
           this.selectedModel2 = "LA"
           this.selectedProp2 = "pres"
-          this.p3 = "AA.pres"
+          this.p3 = "AA.pres_cor"
           this.selectedModel3 = "AA"
           this.selectedProp3 = "pres"
           this.p4 = "LV.vol"
@@ -445,13 +445,13 @@ export default {
 
           break;
         case "RIGHT":
-          this.p1 = "RV.pres"
+          this.p1 = "RV.pres_cor"
           this.selectedModel1 = "RV"
           this.selectedProp1 = "pres"
-          this.p2 = "RA.pres"
+          this.p2 = "RA.pres_cor"
           this.selectedModel2 = "RA"
           this.selectedProp2 = "pres"
-          this.p3 = "PA.pres"
+          this.p3 = "PA.pres_cor"
           this.selectedModel3 = "PA"
           this.selectedProp3 = "pres"
           this.p4 = "RV.vol"
@@ -470,13 +470,13 @@ export default {
       }
     },
     clearProps() {
-      this.p1 = "LV.pres"
+      this.p1 = "LV.pres_cor"
       this.selectedModel1 = "LV"
       this.selectedProp1 = "pres"
-      this.p2 = "LA.pres"
+      this.p2 = "LA.pres_cor"
       this.selectedModel2 = "LA"
       this.selectedProp2 = "pres"
-      this.p3 = "AA.pres"
+      this.p3 = "AA.pres_cor"
       this.selectedModel3 = "AA"
       this.selectedProp3 = "pres"
       this.p4 = "LV.vol"
@@ -1056,7 +1056,7 @@ export default {
     this.$bus.on("rtf", () => this.dataUpdateRt());
     this.$bus.on("data", () => this.dataUpdate())
     this.$bus.on("state", this.processModelState)
-    explain.watchModelProps(["LV.pres", "LV.vol", "LA.pres", "LA.vol", "AA.pres", "LA_LV.flow", "LV_AA.flow", "RV.pres", "RV.vol", "RA.pres", "RA.vol", "PA.pres", "RA_RV.flow", "RV_PA.flow"])
+    explain.watchModelProps(["LV.pres_cor", "LV.vol", "LA.pres_cor", "LA.vol", "AA.pres_cor", "LA_LV.flow", "LV_AA.flow", "RV.pres_cor", "RV.vol", "RA.pres_cor", "RA.vol", "PA.pres_cor", "RA_RV.flow", "RV_PA.flow"])
 
     // check whether hires is enabled
     this.toggleHires()

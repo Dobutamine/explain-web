@@ -91,8 +91,8 @@ export default {
           this.hr = this.currentData["Heart.heart_rate"].toFixed(0)
           this.spo2_pre = this.currentData["Blood.so2_pre"].toFixed(0)
           this.spo2_post = this.currentData["Blood.so2_post"].toFixed(0)
-          this.abp = this.currentData["AD.pres_max"].toFixed(0) + "/" + this.currentData["AD.pres_min"].toFixed(0)
-          this.abp_mean = "(" + this.currentData["AD.pres_mean"].toFixed(0) + ")"
+          this.abp = this.currentData["AD.pres_cor_max"].toFixed(0) + "/" + this.currentData["AD.pres_cor_min"].toFixed(0)
+          this.abp_mean = "(" + this.currentData["AD.pres_cor_mean"].toFixed(0) + ")"
           this.rr = this.currentData["Breathing.resp_rate"].toFixed(0)
           this.vent_rate = this.currentData["Ventilator.vent_rate"].toFixed(0)
         } catch { }
