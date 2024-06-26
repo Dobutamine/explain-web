@@ -55,8 +55,4 @@ export class Liver {
   }
 
   calc_model() {}
-
-  freeze_scaling() {}
-
-  freeze_factors() {}
 }

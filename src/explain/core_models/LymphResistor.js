@@ -54,8 +54,4 @@ export class LymphResistor {
   }
 
   calc_model() {}
-
-  freeze_scaling() {}
-
-  freeze_factors() {}
 }

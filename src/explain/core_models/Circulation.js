@@ -269,10 +269,6 @@ export class Circulation {
     this._update_counter += this._t;
   }
 
-  freeze_scaling() {}
-
-  freeze_factors() {}
-
   change_coarc(change_forward, change_backward = -1) {
     console.log("Change coarctatio with factor: ", change_forward);
     if (change_forward > 0.0) {

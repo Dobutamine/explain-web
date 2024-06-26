@@ -283,10 +283,6 @@ export class BloodValve {
     }
   }
 
-  freeze_scaling() {}
-
-  freeze_factors() {}
-
   analyze() {
     this._flow_counter += this._t;
     this._analytics_timer += this._t;

@@ -54,8 +54,4 @@ export class LymphCapacitance {
   }
 
   calc_model() {}
-
-  freeze_scaling() {}
-
-  freeze_factors() {}
 }

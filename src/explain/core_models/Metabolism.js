@@ -154,8 +154,4 @@ export class Metabolism {
       this._model_engine.models[model].aboxy.tco2 = new_tco2;
     }
   }
-
-  freeze_scaling() {}
-
-  freeze_factors() {}
 }

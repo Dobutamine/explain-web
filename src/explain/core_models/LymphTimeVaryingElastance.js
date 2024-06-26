@@ -54,8 +54,4 @@ export class LymphTimeVaryingElastance {
   }
 
   calc_model() {}
-
-  freeze_scaling() {}
-
-  freeze_factors() {}
 }

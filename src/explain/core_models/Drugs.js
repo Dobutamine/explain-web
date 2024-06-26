@@ -55,8 +55,4 @@ export class Drugs {
   }
 
   calc_model() {}
-
-  freeze_scaling() {}
-
-  freeze_factors() {}
 }

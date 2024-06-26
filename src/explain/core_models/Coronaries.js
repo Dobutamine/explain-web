@@ -135,8 +135,4 @@ export class Coronaries {
     this._cor_ra.r_for = this.res_out * this.res_out_factor;
     this._cor_ra.r_back = this.res_out * this.res_out_factor;
   }
-
-  freeze_scaling() {}
-
-  freeze_factors() {}
 }

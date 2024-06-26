@@ -472,10 +472,6 @@ export class Shunts {
     }
   }
 
-  freeze_scaling() {}
-
-  freeze_factors() {}
-
   init_da() {
     // define a blood capacitance which represents the ductus arteriosus
     this._da = this._model_engine.models[this.da];

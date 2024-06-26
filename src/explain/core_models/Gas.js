@@ -255,10 +255,6 @@ export class Gas {
     this._update_counter += this._t;
   }
 
-  freeze_scaling() {}
-
-  freeze_factors() {}
-
   set_total_gas_volume(new_gas_volume) {
     let current_gas_volume = this.get_total_gas_volume();
     let gas_volume_change = new_gas_volume / current_gas_volume;

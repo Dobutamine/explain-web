@@ -503,10 +503,6 @@ export class Blood {
     }
   }
 
-  freeze_scaling() {}
-
-  freeze_factors() {}
-
   calc_model() {
     if (this._update_counter > this._update_interval) {
       this._update_counter = 0;

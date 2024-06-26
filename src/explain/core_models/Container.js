@@ -218,10 +218,6 @@ export class Container {
     }
   }
 
-  freeze_scaling() {}
-
-  freeze_factors() {}
-
   analyze() {
     // analyze the pressures
     if (this.pres > this._temp_pres_max) {

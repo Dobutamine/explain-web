@@ -259,10 +259,6 @@ export class BloodTimeVaryingElastance {
     this.pres_mus = 0.0;
   }
 
-  freeze_scaling() {}
-
-  freeze_factors() {}
-
   analyze() {
     // analyze the pressures
     if (this.pres > this._temp_pres_max) {
