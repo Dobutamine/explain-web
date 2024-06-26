@@ -447,7 +447,7 @@ export class Shunts {
     let da_area = Math.pow((this.da_diameter * 0.001) / 2.0, 2.0) * Math.PI; // in m^2
     // flow is in l/s
     if (da_area > 0) {
-      this.da_velocity = ((this.da_flow * 0.001) / da_area) * 1.2;
+      this.da_velocity = ((this.da_flow * 0.001) / da_area) * 1.4;
     }
 
     this.ips_flow = this._ips.flow;
