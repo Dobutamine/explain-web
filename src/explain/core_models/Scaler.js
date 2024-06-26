@@ -37,6 +37,8 @@ export class Scaler {
   ans_active = false;
   mob_active = false;
   live_update = true;
+  blood_containing_components = [];
+  gas_containing_components = [];
 
   // preprogrammed scaling factors
   patients = {};
@@ -180,6 +182,42 @@ export class Scaler {
     this.vt_rr_ratio_scaling_factor =
       this._model_engine.models["Breathing"].vt_rr_ratio_scaling_factor;
 
+    // set blood containing components
+    this.left_atrium.forEach((comp) => {
+      this.blood_containing_components.push(comp);
+    });
+    this.right_atrium.forEach((comp) => {
+      this.blood_containing_components.push(comp);
+    });
+    this.left_ventricle.forEach((comp) => {
+      this.blood_containing_components.push(comp);
+    });
+    this.right_ventricle.forEach((comp) => {
+      this.blood_containing_components.push(comp);
+    });
+    this.coronaries.forEach((comp) => {
+      this.blood_containing_components.push(comp);
+    });
+    this.systemic_arteries.forEach((comp) => {
+      this.blood_containing_components.push(comp);
+    });
+    this.pulmonary_arteries.forEach((comp) => {
+      this.blood_containing_components.push(comp);
+    });
+    this.capillaries.forEach((comp) => {
+      this.blood_containing_components.push(comp);
+    });
+    this.systemic_veins.forEach((comp) => {
+      this.blood_containing_components.push(comp);
+    });
+    this.pulmonary_veins.forEach((comp) => {
+      this.blood_containing_components.push(comp);
+    });
+
+    this.lungs.forEach((comp) => {
+      this.gas_containing_components.push(comp);
+    });
+
     // get the current total blood volume
     this.blood_volume_kg =
       this.get_total_blood_volume() / this._model_engine.weight;
@@ -265,10 +303,6 @@ export class Scaler {
     }
     this._update_counter += this._t;
   }
-
-  freeze_scaling() {}
-
-  freeze_factors() {}
 
   // scale by weight function where the global scaler is dependent on the weight change
   scale_weight(new_weight) {
@@ -716,30 +750,23 @@ export class Scaler {
 
   get_total_blood_volume() {
     let total_volume = 0.0;
-    for (let [_, model] of Object.entries(this._model_engine.models)) {
-      if (
-        model.model_type === "BloodCapacitance" ||
-        model.model_type === "BloodTimeVaryingElastance"
-      ) {
-        if (model.is_enabled && model.scalable) {
-          total_volume += model.vol;
-        }
+    this.blood_containing_components.forEach((c) => {
+      if (this._model_engine.models[c].is_enabled) {
+        total_volume += this._model_engine.models[c].vol;
       }
-    }
-
+    });
+    this.total_blood_volume = total_volume;
     return total_volume;
   }
 
   get_total_gas_volume() {
     let total_volume = 0.0;
-    for (let [_, model] of Object.entries(this._model_engine.models)) {
-      if (model.model_type === "GasCapacitance") {
-        if (model.is_enabled && !model.fixed_composition && model.scalable) {
-          total_volume += model.vol;
-        }
+    this.gas_containing_components.forEach((c) => {
+      if (this._model_engine.models[c].is_enabled) {
+        total_volume += this._model_engine.models[c].vol;
       }
-    }
-
+    });
+    this.total_gas_volume = total_volume;
     return total_volume;
   }
 }
