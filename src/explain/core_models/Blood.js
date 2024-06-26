@@ -343,6 +343,8 @@ export class Blood {
         model.model_type === "BloodCapacitance" ||
         model.model_type === "BloodTimeVaryingElastance"
       ) {
+        // set the correction factor
+        this.set_pres_cor_factor(this.pres_cor_factor);
         if (Object.keys(model.aboxy).length === 0) {
           console.log("setting blood composition");
           model.aboxy = { ...this.aboxy };
