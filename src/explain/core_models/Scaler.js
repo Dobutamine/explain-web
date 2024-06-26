@@ -213,7 +213,6 @@ export class Scaler {
     this.pulmonary_veins.forEach((comp) => {
       this.blood_containing_components.push(comp);
     });
-
     this.lungs.forEach((comp) => {
       this.gas_containing_components.push(comp);
     });
