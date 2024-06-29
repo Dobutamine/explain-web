@@ -1,6 +1,228 @@
 export class Lungs {
   static model_type = "Lungs";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "change_atelectasis",
+      caption: "change atelectasis",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "atelectasis_change",
+          caption: "",
+          type: "number",
+          default: 1,
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 300,
+          ll: 0.01,
+        },
+      ],
+    },
+    {
+      target: "change_dead_space",
+      caption: "change dead space",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "dead_space_change",
+          caption: "",
+          type: "number",
+          default: 1,
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 300,
+          ll: 0.01,
+        },
+      ],
+    },
+    {
+      target: "change_dif_o2",
+      caption: "change dif o2",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "dif_o2_change",
+          caption: "",
+          type: "number",
+          default: 1,
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 300,
+          ll: 0.01,
+        },
+      ],
+    },
+    {
+      target: "change_dif_co2",
+      caption: "change dif co2",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "dif_co2_change",
+          caption: "",
+          type: "number",
+          default: 1,
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 300,
+          ll: 0.01,
+        },
+      ],
+    },
+    {
+      target: "change_thorax_compliance",
+      caption: "change thorax compliance",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "thorax_comp_change",
+          caption: "",
+          type: "number",
+          default: 1,
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 300,
+        },
+      ],
+    },
+    {
+      target: "change_lung_compliance",
+      caption: "change lung compliance",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "lung_comp_change",
+          caption: "",
+          type: "number",
+          default: 1,
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 300,
+        },
+      ],
+    },
+    {
+      target: "change_chestwall_compliance",
+      caption: "change chestwall compliance",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "chestwall_comp_change",
+          caption: "",
+          type: "number",
+          default: 1,
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 300,
+        },
+      ],
+    },
+    {
+      target: "change_upper_airway_resistance",
+      caption: "change upper airway resistance",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "upper_aw_res_change",
+          caption: "",
+          type: "number",
+          default: 1,
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 300,
+        },
+      ],
+    },
+    {
+      target: "change_lower_airway_resistance",
+      caption: "change lower airway resistance",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "lower_aw_res_change",
+          caption: "",
+          type: "number",
+          default: 1,
+          factor: 1,
+          delta: 0.01,
+          rounding: 2,
+          ul: 300,
+        },
+      ],
+    },
+    {
+      target: "upper_airways",
+      caption: "upper airways",
+      type: "multiple-list",
+      optional: false,
+      options: ["GasResistor"],
+    },
+    {
+      target: "dead_space",
+      caption: "dead space",
+      type: "multiple-list",
+      optional: false,
+      options: ["GasCapacitance"],
+    },
+    {
+      target: "thorax",
+      caption: "thorax",
+      type: "single-list",
+      optional: false,
+      options: ["Container"],
+    },
+    {
+      target: "chestwall",
+      caption: "chestwall",
+      type: "multiple-list",
+      optional: false,
+      options: ["Container"],
+    },
+    {
+      target: "alveolar_spaces",
+      caption: "alveolar spaces",
+      type: "multiple-list",
+      optional: false,
+      options: ["GasCapacitance"],
+    },
+    {
+      target: "lower_airways",
+      caption: "lower airways",
+      type: "multiple-list",
+      optional: false,
+      options: ["GasResistor"],
+    },
+    {
+      target: "gas_exchangers",
+      caption: "gas exchangers",
+      type: "multiple-list",
+      optional: false,
+      options: ["GasExchanger"],
+    },
+  ];
   // independent parameters
   name = "";
   model_type = "";
@@ -109,6 +331,7 @@ export class Lungs {
   calc_model() {}
 
   change_lung_shunt(change_forward, change_backward = -1) {
+    console.log(change_forward, change_backward);
     if (change_forward > 0.0) {
       this.lung_shunt_change = change_forward;
       this._lung_shunts.forEach((target) => {

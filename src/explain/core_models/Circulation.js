@@ -2,6 +2,12 @@ export class Circulation {
   static model_type = "Circulation";
   static model_interface = [
     {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
       target: "set_total_blood_volume",
       caption: "set total blood volume (ml)",
       type: "function",
