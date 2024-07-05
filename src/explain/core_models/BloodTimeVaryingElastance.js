@@ -95,6 +95,7 @@ export class BloodTimeVaryingElastance {
   el_min_ans_factor = 1.0;
   el_min_drug_factor = 1.0;
   el_min_scaling_factor = 1.0;
+  el_min_mob_factor = 1.0;
 
   el_max_factor = 1.0;
   el_max_ans_factor = 1.0;
@@ -183,7 +184,8 @@ export class BloodTimeVaryingElastance {
       (this.el_min_factor * _e_min_base - _e_min_base) +
       (this.el_min_ans_factor * _e_min_base - _e_min_base) *
         this.ans_activity_factor +
-      (this.el_min_drug_factor * _e_min_base - _e_min_base);
+      (this.el_min_drug_factor * _e_min_base - _e_min_base) +
+      (this.el_min_mob_factor * _e_min_base - _e_min_base);
 
     // calculate the maximal elastance depending on the scaling factor
     let _e_max_base = this.el_max * this.el_max_scaling_factor;
@@ -221,8 +223,11 @@ export class BloodTimeVaryingElastance {
     // calculate the volume difference
     let vol_diff = this.vol - _u_vol;
 
+    // make the minimal elastance volume dependent
+    _e_min += _el_k * vol_diff * vol_diff;
+
     // calculate the end diastolic pressure
-    this.pres_ed = _e_min * vol_diff + _el_k * Math.pow(vol_diff, 2);
+    this.pres_ed = _e_min * vol_diff;
 
     this.el = ((_e_max - _e_min) * this.act_factor) / 1000.0;
 

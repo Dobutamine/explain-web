@@ -5,25 +5,21 @@ export class BloodValve {
       target: "is_enabled",
       caption: "is enabled",
       type: "boolean",
-      optional: false,
     },
     {
       target: "no_flow",
       caption: "no flow allowed",
       type: "boolean",
-      optional: false,
     },
     {
       target: "no_back_flow",
       caption: "no back flow allowed",
       type: "boolean",
-      optional: false,
     },
     {
       target: "r_for",
       caption: "forward flow resistance (mmHg*sec/l)",
       type: "number",
-      optional: false,
       factor: 1,
       delta: 1,
       rounding: 0,
@@ -32,9 +28,8 @@ export class BloodValve {
     },
     {
       target: "r_back",
-      caption: "forward flow resistance (mmHg*sec/l)",
+      caption: "backward flow resistance (mmHg*sec/l)",
       type: "number",
-      optional: false,
       factor: 1,
       delta: 1,
       rounding: 0,
@@ -45,12 +40,23 @@ export class BloodValve {
       target: "r_k",
       caption: "non-linear resistance (sec/l)",
       type: "number",
-      optional: false,
       factor: 1,
       delta: 1,
       rounding: 0,
       ul: 100000000.0,
       ll: -10000000.0,
+    },
+    {
+      target: "comp_from",
+      caption: "model from ",
+      type: "list",
+      options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+    },
+    {
+      target: "comp_to",
+      caption: "model to ",
+      type: "list",
+      options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
     },
     {
       target: "reconnect",
@@ -78,7 +84,6 @@ export class BloodValve {
   description = "";
   is_enabled = false;
   dependencies = [];
-  scalable = true;
   no_flow = false;
   no_back_flow = true;
   comp_from = "";
@@ -89,14 +94,7 @@ export class BloodValve {
   r_back_factor = 1.0;
   r_k = 0.0;
   r_k_factor = 1.0;
-
-  r_mob_factor = 1.0;
-  r_ans_factor = 1.0;
-  r_drug_factor = 1.0;
   r_scaling_factor = 1.0;
-
-  act_factor = 0.0;
-  ans_activity_factor = 0.0;
 
   // dependent parameters
   flow = 0.0;
@@ -203,43 +201,23 @@ export class BloodValve {
 
     // calculate the resistances
     let _r_for_base = this.r_for * this.r_scaling_factor;
-    let _r_for =
-      _r_for_base +
-      (this.r_for_factor * _r_for_base - _r_for_base) +
-      (this.r_ans_factor * _r_for_base - _r_for_base) *
-        this.ans_activity_factor +
-      (this.r_mob_factor * _r_for_base - _r_for_base) +
-      (this.r_drug_factor * _r_for_base - _r_for_base) +
-      this.r_k *
-        this.r_k_factor *
-        this.r_scaling_factor *
-        this.flow *
-        this.flow;
-
     let _r_back_base = this.r_back * this.r_scaling_factor;
-    let _r_back =
-      _r_back_base +
-      (this.r_back_factor * _r_back_base - _r_back_base) +
-      (this.r_ans_factor * _r_back_base - _r_back_base) *
-        this.ans_activity_factor +
-      (this.r_mob_factor * _r_back_base - _r_back_base) +
-      (this.r_drug_factor * _r_back_base - _r_back_base) +
-      this.r_k *
-        this.r_k_factor *
-        this.r_scaling_factor *
-        this.flow *
-        this.flow;
+    let _r_k_base = this.r_k * this.r_scaling_factor;
 
-    // check if the resistances are not too small for the current stepsize
+    let _r_for = _r_for_base + (this.r_for_factor - 1) * _r_for_base;
+    let _r_back = _r_back_base + (this.r_back_factor - 1) * _r_back_base;
+    let _r_k = _r_k_base + (this.r_k_factor - 1) * _r_k_base;
+
+    // make the resistances flow dependent
+    _r_for = _r_for + _r_k * this.flow * this.flow;
     if (_r_for < 20.0) {
       _r_for = 20.0;
     }
 
+    _r_back = _r_back + _r_k * this.flow * this.flow;
     if (_r_back < 20.0) {
       _r_back = 20.0;
     }
-
-    this.p1 = this.ans_activity_factor;
 
     // calculate the flow
     if (this.no_flow || (_p1 <= _p2 && this.no_back_flow)) {
@@ -254,6 +232,7 @@ export class BloodValve {
       this._cum_backward_flow += this.flow * this._t;
     }
 
+    // analyze state
     this.analyze();
 
     let vol_not_removed = 0.0;
@@ -301,6 +280,7 @@ export class BloodValve {
       this._cum_backward_flow = 0.0;
       this._flow_counter = 0.0;
 
+      // prevent startup avergaing problems
       this._flow_mov_avg_counter += 1;
       if (this._flow_mov_avg_counter > 5) {
         this._flow_mov_avg_counter = 5;

@@ -65,6 +65,7 @@ export class BloodCapacitance {
   description = "";
   is_enabled = false;
   dependencies = [];
+
   fixed_composition = false;
   u_vol = 0.0;
   el_base = 0.0;
@@ -169,10 +170,9 @@ export class BloodCapacitance {
     let _el =
       _el_base +
       this.act_factor +
-      (this.el_base_factor * _el_base - _el_base) +
-      (this.el_base_ans_factor * _el_base - _el_base) *
-        this.ans_activity_factor +
-      (this.el_base_drug_factor * _el_base - _el_base);
+      (this.el_base_factor - 1) * _el_base +
+      (this.el_base_ans_factor - 1) * _el_base * this.ans_activity_factor +
+      (this.el_base_drug_factor - 1) * _el_base;
 
     // calculate the non-linear elastance factor depending on the scaling factor
     let _el_k_base = this.el_k * this.el_k_scaling_factor;
@@ -180,10 +180,9 @@ export class BloodCapacitance {
     // adjust the non-linear elastance depending on the activity of the external factor, autonomic nervous system and the drug model
     let _el_k =
       _el_k_base +
-      (this.el_k_factor * _el_k_base - _el_k_base) +
-      (this.el_k_ans_factor * _el_k_base - _el_k_base) *
-        this.ans_activity_factor +
-      (this.el_k_drug_factor * _el_k_base - _el_k_base);
+      (this.el_k_factor - 1) * _el_k_base +
+      (this.el_k_ans_factor - 1) * _el_k_base * this.ans_activity_factor +
+      (this.el_k_drug_factor - 1) * _el_k_base;
 
     // calculate the unstressed volume depending on the scaling factor
     let _u_vol_base = this.u_vol * this.u_vol_scaling_factor;
@@ -191,19 +190,22 @@ export class BloodCapacitance {
     // adjust the unstressed volume depending on the activity of the external factor, autonomic nervous system and the drug model
     let _u_vol =
       _u_vol_base +
-      (_u_vol_base * this.u_vol_factor - _u_vol_base) +
-      (_u_vol_base * this.u_vol_ans_factor - _u_vol_base) *
-        this.ans_activity_factor +
-      (_u_vol_base * this.u_vol_drug_factor - _u_vol_base);
+      (this.u_vol_factor - 1) * _u_vol_base +
+      (this.u_vol_ans_factor - 1) * _u_vol_base * this.ans_activity_factor +
+      (this.u_vol_drug_factor - 1) * _u_vol_base;
+
+    // calculate the volume difference
+    let vol_diff = this.vol - _u_vol;
+
+    // make the elastances volume dependent
+    _el += _el_k * vol_diff * vol_diff;
 
     // calculate the recoil pressure depending on the volume, unstressed volume and elastance
-    this.pres_in =
-      _el * (this.vol - _u_vol) +
-      _el_k * Math.pow(this.vol - _u_vol, 2) +
-      this.pres_atm;
+    this.pres_in = _el * vol_diff;
 
     // calculate the pressures exerted by the surrounding tissues or other forces
-    this.pres_out = this.pres_ext + this.pres_cc + this.pres_mus;
+    this.pres_out =
+      this.pres_ext + this.pres_cc + this.pres_mus + this.pres_atm;
 
     // calculate the transmural pressure
     this.pres_tm = this.pres_in - this.pres_out;

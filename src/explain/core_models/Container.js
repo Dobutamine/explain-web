@@ -55,7 +55,6 @@ export class Container {
   description = "";
   is_enabled = false;
   dependencies = [];
-  fixed_composition = false;
   contained_components = [];
   u_vol = 0.0;
   el_base = 0.0;
@@ -67,20 +66,16 @@ export class Container {
   pres_mus = 0.0;
 
   act_factor = 0.0;
-  ans_activity_factor = 1.0;
 
   u_vol_factor = 1.0;
-  u_vol_ans_factor = 1.0;
   u_vol_drug_factor = 1.0;
   u_vol_scaling_factor = 1.0;
 
   el_base_factor = 1.0;
-  el_base_ans_factor = 1.0;
   el_base_drug_factor = 1.0;
   el_base_scaling_factor = 1.0;
 
   el_k_factor = 1.0;
-  el_k_ans_factor = 1.0;
   el_k_drug_factor = 1.0;
   el_k_scaling_factor = 1.0;
 
@@ -100,13 +95,14 @@ export class Container {
 
   // local parameters
   _model_engine = {};
-  _heart = {};
   _is_initialized = false;
   _t = 0.0005;
   _temp_pres_max = -1000.0;
   _temp_pres_min = 1000.0;
   _temp_vol_max = -1000.0;
   _temp_vol_min = 1000.0;
+  _analytics_timer = 0.0;
+  _analytics_window = 2.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
@@ -126,9 +122,6 @@ export class Container {
       this[arg["key"]] = arg["value"];
     });
 
-    // reference to the heart
-    this._heart = this._model_engine.models["Heart"];
-
     // set the modeling step size
     this._t = this._model_engine.modeling_stepsize;
 
@@ -144,58 +137,44 @@ export class Container {
 
   calc_model() {
     // set the volume
-    this.vol = this.vol_extra / 1000.0;
+    this.vol = this.vol_extra;
 
     // get the current volume from all contained models
     for (const c of this.contained_components) {
-      // if (isNaN(this._model_engine.models[c].vol)) {
-      //   console.log(this._model_engine.models[c].name);
-      // }
       this.vol += this._model_engine.models[c].vol;
     }
 
-    // calculate the baseline elastance depending on the scaling factor
+    // calculate the elastances and unstressed volumes
     let _el_base = this.el_base * this.el_base_scaling_factor;
+    let _el_k_base = this.el_k * this.el_k_scaling_factor;
+    let _u_vol_base = this.u_vol * this.u_vol_scaling_factor;
 
     // adjust the elastance depending on the activity of the external factor, autonomic nervous system and the drug model
     let _el =
       _el_base +
       this.act_factor +
-      (this.el_base_factor * _el_base - _el_base) +
-      (this.el_base_ans_factor * _el_base - _el_base) *
-        this.ans_activity_factor +
-      (this.el_base_drug_factor * _el_base - _el_base);
-
-    // calculate the non-linear elastance factor depending on the scaling factor
-    let _el_k_base = this.el_k * this.el_k_scaling_factor;
+      (this.el_base_factor - 1) * _el_base +
+      (this.el_base_drug_factor - 1) * _el_base;
 
     // adjust the non-linear elastance depending on the activity of the external factor, autonomic nervous system and the drug model
     let _el_k =
       _el_k_base +
-      (this.el_k_factor * _el_k_base - _el_k_base) +
-      (this.el_k_ans_factor * _el_k_base - _el_k_base) *
-        this.ans_activity_factor +
-      (this.el_k_drug_factor * _el_k_base - _el_k_base);
-
-    // calculate the unstressed volume depending on the scaling factor
-    let _u_vol_base = this.u_vol * this.u_vol_scaling_factor;
+      (this.el_k_factor - 1) * _el_k_base +
+      (this.el_k_drug_factor - 1) * _el_k_base;
 
     // adjust the unstressed volume depending on the activity of the external factor, autonomic nervous system and the drug model
     let _u_vol =
       _u_vol_base +
-      (_u_vol_base * this.u_vol_factor - _u_vol_base) +
-      (_u_vol_base * this.u_vol_ans_factor - _u_vol_base) *
-        this.ans_activity_factor +
-      (_u_vol_base * this.u_vol_drug_factor - _u_vol_base);
+      (this.u_vol_factor - 1) * _u_vol_base +
+      (this.u_vol_drug_factor - 1) * _u_vol_base;
 
     // calculate the recoil pressure depending on the volume, unstressed volume and elastance
     this.pres_in =
-      _el * (this.vol - _u_vol) +
-      _el_k * Math.pow(this.vol - _u_vol, 2) +
-      this.pres_atm;
+      _el * (this.vol - _u_vol) + _el_k * Math.pow(this.vol - _u_vol, 2);
 
     // calculate the pressures exerted by the surrounding tissues or other forces
-    this.pres_out = this.pres_ext + this.pres_cc + this.pres_mus;
+    this.pres_out =
+      this.pres_ext + this.pres_cc + this.pres_mus + this.pres_atm;
 
     // calculate the transmural pressure
     this.pres_tm = this.pres_in - this.pres_out;
@@ -233,8 +212,10 @@ export class Container {
       this._temp_vol_min = this.vol;
     }
 
+    this._analytics_timer += this._t;
     // set the max and min pressures
-    if (this._heart.ncc_ventricular === 1) {
+    if (this._analytics_timer > this._analytics_window) {
+      this._analytics_timer = 0.0;
       this.pres_max = this._temp_pres_max;
       this.pres_min = this._temp_pres_min;
       this.pres_mean = (2.0 * this.pres_min + this.pres_max) / 3.0;

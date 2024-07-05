@@ -17,11 +17,6 @@ export class BloodResistor {
       type: "boolean",
     },
     {
-      target: "diffusion_enabled",
-      caption: "diffusion allowed",
-      type: "boolean",
-    },
-    {
       target: "r_for",
       caption: "forward flow resistance (mmHg*sec/l)",
       type: "number",
@@ -50,36 +45,6 @@ export class BloodResistor {
       rounding: 0,
       ul: 100000000.0,
       ll: -10000000.0,
-    },
-    {
-      target: "dif_o2",
-      caption: "o2 diffusion coefficient",
-      type: "number",
-      factor: 1,
-      delta: 0.001,
-      rounding: 3,
-      ul: 100000000000000.0,
-      ll: 0.0,
-    },
-    {
-      target: "dif_co2",
-      caption: "co2 diffusion coefficient ",
-      type: "number",
-      factor: 1,
-      delta: 0.001,
-      rounding: 3,
-      ul: 100000000000000.0,
-      ll: 0.0,
-    },
-    {
-      target: "dif_co2",
-      caption: "co2 diffusion coefficient ",
-      type: "list",
-      factor: 1,
-      delta: 0.001,
-      rounding: 3,
-      ul: 100000000000000.0,
-      ll: 0.0,
     },
     {
       target: "comp_from",
@@ -119,7 +84,6 @@ export class BloodResistor {
   description = "";
   is_enabled = false;
   dependencies = [];
-  scalable = true;
   no_flow = false;
   no_back_flow = true;
   comp_from = "";
@@ -130,15 +94,6 @@ export class BloodResistor {
   r_back_factor = 1.0;
   r_k = 0.0;
   r_k_factor = 1.0;
-
-  diffusion_enabled = false;
-  dif_o2 = 0.001;
-  dif_o2_factor = 1.0;
-  dif_o2_scaling_factor = 1.0;
-  dif_co2 = 0.001;
-  dif_co2_factor = 1.0;
-  dif_co2_scaling_factor = 1.0;
-
   r_mob_factor = 1.0;
   r_ans_factor = 1.0;
   r_drug_factor = 1.0;
@@ -153,8 +108,6 @@ export class BloodResistor {
   flow_lmin_avg = 0.0;
   flow_forward_lmin = 0.0;
   flow_backward_lmin = 0.0;
-  flux_o2 = 0;
-  flux_co2 = 0;
 
   p1 = 0.0;
   p2 = 0.0;
@@ -254,43 +207,40 @@ export class BloodResistor {
 
     // calculate the resistances
     let _r_for_base = this.r_for * this.r_scaling_factor;
+    let _r_back_base = this.r_back * this.r_scaling_factor;
+    let _r_k_base = this.r_k * this.r_scaling_factor;
+
     let _r_for =
       _r_for_base +
-      (this.r_for_factor * _r_for_base - _r_for_base) +
-      (this.r_ans_factor * _r_for_base - _r_for_base) *
-        this.ans_activity_factor +
-      (this.r_mob_factor * _r_for_base - _r_for_base) +
-      (this.r_drug_factor * _r_for_base - _r_for_base) +
-      this.r_k *
-        this.r_k_factor *
-        this.r_scaling_factor *
-        this.flow *
-        this.flow;
+      (this.r_for_factor - 1) * _r_for_base +
+      (this.r_ans_factor - 1) * _r_for_base * this.ans_activity_factor +
+      (this.r_mob_factor - 1) * _r_for_base +
+      (this.r_drug_factor - 1) * _r_for_base;
 
-    let _r_back_base = this.r_back * this.r_scaling_factor;
     let _r_back =
       _r_back_base +
-      (this.r_back_factor * _r_back_base - _r_back_base) +
-      (this.r_ans_factor * _r_back_base - _r_back_base) *
-        this.ans_activity_factor +
-      (this.r_mob_factor * _r_back_base - _r_back_base) +
-      (this.r_drug_factor * _r_back_base - _r_back_base) +
-      this.r_k *
-        this.r_k_factor *
-        this.r_scaling_factor *
-        this.flow *
-        this.flow;
+      (this.r_back_factor - 1) * _r_back_base +
+      (this.r_ans_factor - 1) * _r_back_base * this.ans_activity_factor +
+      (this.r_mob_factor - 1) * _r_back_base +
+      (this.r_drug_factor - 1) * _r_back_base;
 
-    // check if the resistances are not too small for the current stepsize
+    let _r_k =
+      _r_k_base +
+      (this.r_k_factor - 1) * _r_k_base +
+      (this.r_ans_factor - 1) * _r_k_base * this.ans_activity_factor +
+      (this.r_mob_factor - 1) * _r_k_base +
+      (this.r_drug_factor - 1) * _r_k_base;
+
+    // make the resistances flow dependent
+    _r_for = _r_for + _r_k * this.flow * this.flow;
     if (_r_for < 20.0) {
       _r_for = 20.0;
     }
 
+    _r_back = _r_back + _r_k * this.flow * this.flow;
     if (_r_back < 20.0) {
       _r_back = 20.0;
     }
-
-    this.p1 = this.ans_activity_factor;
 
     // calculate the flow
     if (this.no_flow || (_p1 <= _p2 && this.no_back_flow)) {
@@ -305,11 +255,7 @@ export class BloodResistor {
       this._cum_backward_flow += this.flow * this._t;
     }
 
-    // calculate the diffusion only when the two have birectional connection
-    if (!this.no_flow && !this.no_back_flow && this.diffusion_enabled) {
-      this.diffusion(_r_for, _r_back);
-    }
-
+    // analyze state
     this.analyze();
 
     let vol_not_removed = 0.0;
@@ -337,76 +283,6 @@ export class BloodResistor {
       );
       return;
     }
-  }
-
-  diffusion(_r_for, _r_back) {
-    // we need to po2 and pco2 so we need to calculate the blood composition
-    // get the partial pressures and gas concentrations from the components
-
-    let to2_comp_blood1 = this._model_comp_from.aboxy.to2;
-    let tco2_comp_blood1 = this._model_comp_from.aboxy.tco2;
-
-    let to2_comp_blood2 = this._model_comp_to.aboxy.to2;
-    let tco2_comp_blood2 = this._model_comp_to.aboxy.tco2;
-
-    // calculate the O2 and CO2 flux
-    this.flux_o2 =
-      (to2_comp_blood1 - to2_comp_blood2) *
-      this.dif_o2 *
-      this.dif_o2_factor *
-      this.dif_o2_scaling_factor *
-      this._t;
-    this.flux_co2 =
-      (tco2_comp_blood1 - tco2_comp_blood2) *
-      this.dif_co2 *
-      this.dif_co2_factor *
-      this.dif_co2_scaling_factor *
-      this._t;
-
-    // incorporate the resistances which are a surrogate of the contact area, so high resistance is less diffusion
-    if (this.flow >= 0.0) {
-      this.flux_o2 = this.flux_o2 / _r_for;
-      this.flux_co2 = this.flux_co2 / _r_for;
-    } else {
-      this.flux_o2 = this.flux_o2 / _r_back;
-      this.flux_co2 = this.flux_co2 / _r_back;
-    }
-
-    // calculate the new O2 and CO2 concentrations
-    let new_to2_comp_blood1 =
-      (to2_comp_blood1 * this._model_comp_from.vol - this.flux_o2) /
-      this._model_comp_from.vol;
-    if (new_to2_comp_blood1 < 0) {
-      new_to2_comp_blood1 = 0;
-    }
-
-    let new_to2_comp_blood2 =
-      (to2_comp_blood2 * this._model_comp_to.vol + this.flux_o2) /
-      this._model_comp_to.vol;
-    if (new_to2_comp_blood2 < 0) {
-      new_to2_comp_blood2 = 0;
-    }
-
-    let new_tco2_comp_blood1 =
-      (tco2_comp_blood1 * this._model_comp_from.vol - this.flux_co2) /
-      this._model_comp_from.vol;
-    if (new_tco2_comp_blood1 < 0) {
-      new_tco2_comp_blood1 = 0;
-    }
-
-    let new_tco2_comp_blood2 =
-      (tco2_comp_blood2 * this._model_comp_to.vol + this.flux_co2) /
-      this._model_comp_to.vol;
-    if (new_tco2_comp_blood2 < 0) {
-      new_tco2_comp_blood2 = 0;
-    }
-
-    // set the new concentrations
-    this._model_comp_from.aboxy.to2 = new_to2_comp_blood1;
-    this._model_comp_from.aboxy.tco2 = new_tco2_comp_blood1;
-
-    this._model_comp_to.aboxy.to2 = new_to2_comp_blood2;
-    this._model_comp_to.aboxy.tco2 = new_tco2_comp_blood2;
   }
 
   analyze() {
