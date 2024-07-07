@@ -687,11 +687,12 @@ export class Heart {
     // calculate the heartrate from the reference value and all other influences
     this.heart_rate =
       this.heart_rate_ref +
-      (this.hr_ans_factor * this.heart_rate_ref - this.heart_rate_ref) *
+      (this.hr_ans_factor - 1.0) *
+        this.heart_rate_ref *
         this.ans_activity_factor +
-      (this.hr_mob_factor * this.heart_rate_ref - this.heart_rate_ref) +
-      (this.hr_temp_factor * this.heart_rate_ref - this.heart_rate_ref) +
-      (this.hr_drug_factor * this.heart_rate_ref - this.heart_rate_ref);
+      (this.hr_mob_factor - 1.0) * this.heart_rate_ref +
+      (this.hr_temp_factor - 1.0) * this.heart_rate_ref +
+      (this.hr_drug_factor - 1.0) * this.heart_rate_ref;
 
     // override the heart rate if switch is on
     if (this.heart_rate_override) {

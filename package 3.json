@@ -1,0 +1,35 @@
+{
+  "name": "explain-web",
+  "version": "0.0.1",
+  "description": "Explanatory models in neonatology",
+  "productName": "Explain",
+  "author": "dobutamine <tajantonius@gmail.com>",
+  "private": true,
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 0",
+    "dev": "quasar dev",
+    "build": "quasar build"
+  },
+  "dependencies": {
+    "@quasar/cli": "^2.4.0",
+    "@quasar/extras": "^1.16.4",
+    "chart.js": "^4.4.1",
+    "pinia": "^2.0.11",
+    "pixi.js": "7.4",
+    "quasar": "^2.8.0",
+    "simple-statistics": "^7.8.3",
+    "vue": "^3.2.29",
+    "vue-chartjs": "^5.3.0",
+    "vue-router": "^4.0.12"
+  },
+  "devDependencies": {
+    "@quasar/app-vite": "^1.4.3",
+    "autoprefixer": "^10.4.2",
+    "postcss": "^8.4.14"
+  },
+  "engines": {
+    "node": "^20 || ^18 || ^16",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  }
+}

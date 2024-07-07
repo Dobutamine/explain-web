@@ -300,6 +300,8 @@ export class Blood {
   hco3_ven = 0.0;
   be_ven = 0.0;
   so2_ven = 0.0;
+  to2 = 0.0;
+  tco2 = 0.0;
 
   // local parameters
   _model_engine = {};
@@ -312,9 +314,6 @@ export class Blood {
   _ivci = {};
   _svc = {};
   _ra = {};
-
-  to2 = 0.0;
-  tco2 = 0.0;
 
   // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
   constructor(model_ref, name = "", type = "") {
