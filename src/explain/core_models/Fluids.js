@@ -262,8 +262,8 @@ export class Fluid {
         this.site.aboxy[solute] += d_solute / this.site.vol;
       }
       for (let [solute, conc] of Object.entries(this.solutes)) {
-        let d_solute = (conc - this.site.aboxy[solute]) * this.delta_vol;
-        this.site.aboxy[solute] += d_solute / this.site.vol;
+        let d_solute = (conc - this.site.solutes[solute]) * this.delta_vol;
+        this.site.solutes[solute] += d_solute / this.site.vol;
       }
     }
 
