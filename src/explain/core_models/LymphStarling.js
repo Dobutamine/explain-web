@@ -18,10 +18,6 @@ export class LymphStarling {
   T = 37; // temperature in degrees Celcius
   mm = 66500; // molar mass in g/mol
 
-  // #PSt = 0.0202        # permeability surface product albumin [ml/s]
-  // #alphaLP = 0.05
-  // #alphaSP = 0.6
-
   // dependent parameters
   flow = 0.0;
 

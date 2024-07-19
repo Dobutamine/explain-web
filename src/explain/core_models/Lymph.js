@@ -44,13 +44,6 @@ export class Lymph {
   g_me_mpres = 0.0;
   d_me_mpres = 0.0;
 
-  // min_ISpres = -4.5;
-  // set_ISpres = -3.5;
-  // max_ISpres = -2.5;
-
-  // tc_me_ISpres = 3.0;
-  // g_me_ISpres = 111500;
-
   me = 0.0;
   me_ref = 45000;
   
@@ -207,21 +200,7 @@ export class Lymph {
         this._pres.reduce(
           (accumulator, currentValue) => accumulator + currentValue,
           0
-        ) / this._data_window_pres
-
-      // this._isflow = 0.0;
-      // this.starlings.forEach((cap) => {
-      //   this._isflow += this._model_engine.models[cap].flow;
-      // });
-      // this._setflow.unshift(this._isflow);
-
-      // this._setflow.pop();      
-
-      // this.msetflow = 
-      //   this._setflow.reduce(
-      //     (accumulator, currentValue) => accumulator + currentValue,
-      //     0
-      //   ) / this._data_window*60000/this._model_engine.weight;  
+        ) / this._data_window_pres 
 
       let a_mflow = this.activation_function(this.mflow, this.max_mflow, this.set_mflow, this.min_mflow)
       this.d_me_mflow = this.time_constant(this.tc_me_mflow, this.d_me_mflow, a_mflow, this._update_window)

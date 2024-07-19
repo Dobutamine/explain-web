@@ -107,7 +107,6 @@ export class LymphExtrinsicPump {
             2*Math.PI/this._model_engine.models[target].durEXT*(this.total_time + this._model_engine.models[target].phase))) 
 
       this._model_engine.models[target].el_conEXT = el_conEXT;
-      // this._model_engine.models[target].el_base += el_conEXT;
       })
 
     // increase the timers

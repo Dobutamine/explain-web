@@ -300,22 +300,6 @@ export class LymphCapacitance {
     if (this.vol <= 0) {
       return;
     }
-
-    // process the solutes, aboxy's (some of them) and drugs
-    // ["to2", "tco2", "hemoglobin", "albumin"].forEach((solute) => {
-    //   let d_solute = (comp_from.aboxy[solute] - this.aboxy[solute]) * dvol;
-    //   this.aboxy[solute] += d_solute / this.vol;
-    // });
-
-    // for (let [solute, conc] of Object.entries(this.solutes)) {
-    //   let d_solute = (comp_from.solutes[solute] - conc) * dvol;
-    //   conc += d_solute / this.vol;
-    // }
-
-    // for (let [drug, conc] of Object.entries(this.drugs)) {
-    //   let d_drug = (comp_from.drugs[drug] - conc) * dvol;
-    //   conc += d_drug / this.vol;
-    // }
   }
 
   volume_out(dvol) {
