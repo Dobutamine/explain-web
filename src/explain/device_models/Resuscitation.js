@@ -104,6 +104,7 @@ export class Resuscitation {
       // }
     }
   }
+
   calc_model() {
     // y(t) = A sin(2PIft+o)
     // A = amplitude, f = frequency in Hz, t is time, o = phase shift

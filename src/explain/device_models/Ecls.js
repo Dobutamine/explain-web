@@ -252,7 +252,7 @@ export class Ecls {
       { key: "u_vol", value: this.pump_volume },
       { key: "el_base", value: this.tubing_elastance },
       { key: "inlet", value: this._tubing_in_pump },
-      { key: "outlet", value: this._pump_oxy },
+      { key: "outlet", value: this._bridge_oxy },
     ]);
     // set the electrolytes
     this._pump.solutes = { ...this._model_engine.models["AA"].solutes };
@@ -569,6 +569,7 @@ export class Ecls {
   toggle_clamp(state) {
     this.ecls_clamped = state;
   }
+
   calc_model() {
     // make sure all components are enabled
     this._ecls_parts.forEach((ecls_part) => {

@@ -239,6 +239,7 @@ export class Ventilator {
       this.ettube_length = new_length;
     }
   }
+
   set_ettube_diameter(new_diameter) {
     // diameter in mm
     if (new_diameter > 1.5) {
@@ -248,6 +249,7 @@ export class Ventilator {
       this._b = -14.375 * new_diameter + 65.9374;
     }
   }
+
   calc_ettube_resistance(flow) {
     let res =
       (this._a * flow + this._b) *
@@ -257,6 +259,7 @@ export class Ventilator {
     }
     return res;
   }
+  
   set_tubing_length(new_length) {}
 
   set_fio2(new_fio2) {
