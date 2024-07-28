@@ -243,7 +243,7 @@ export class LymphResistor {
       this._model_comp_from = this.comp_from;
     }
 
-    if (typeof this.comp_from == "string") {
+    if (typeof this.comp_to == "string") {
       this._model_comp_to = this._model_engine.models[this.comp_to];
     } else {
       this._model_comp_to = this.comp_to;

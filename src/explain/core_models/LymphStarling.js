@@ -63,7 +63,7 @@ export class LymphStarling {
       this._model_comp_from = this.comp_from;
     }
 
-    if (typeof this.comp_from == "string") {
+    if (typeof this.comp_to == "string") {
       this._model_comp_to = this._model_engine.models[this.comp_to];
     } else {
       this._model_comp_to = this.comp_to;
@@ -103,7 +103,6 @@ export class LymphStarling {
 
     // calculate transcapillary flow
     this.flow = this.L * this._model_engine.models["Lymph"].S * (hP1 - hP2 - this.sigma * (oP1 - oP2));
-
     this.flow_h = this.L * this._model_engine.models["Lymph"].S * (hP1 - hP2);
     this.flow_o = -(this.L * this._model_engine.models["Lymph"].S * this.sigma * (oP1 - oP2));
 
