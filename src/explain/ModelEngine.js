@@ -728,12 +728,14 @@ const save_model_state_json = function (target) {
     models: {},
     scaler_settings: model["scaler_settings"],
   };
+  console.log(new_json)
 
   // process the model definition file to find the necessary properties
   for (let [mn, m] of Object.entries(model.models)) {
     new_json["models"][mn] = {};
     for (let [pn, pv] of Object.entries(m)) {
-      if (pn[0] !== "_" && pn !== "model_interface") {
+      console.log(pn,pv)
+      if (pn[0] !== "_" && pn !== "model_interface" && pv !== null) {
         if (typeof pv == "object" && pv.hasOwnProperty("name")) {
           new_json["models"][mn][pn] = pv.name;
         } else {
