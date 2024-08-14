@@ -728,7 +728,6 @@ const save_model_state_json = function (target) {
     models: {},
     scaler_settings: model["scaler_settings"],
   };
-  console.log(new_json)
 
   // process the model definition file to find the necessary properties
   for (let [mn, m] of Object.entries(model.models)) {
