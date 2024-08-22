@@ -83,14 +83,14 @@ export const useStateStore = defineStore("state", {
         },
         body: JSON.stringify({
           user: "timothy",
-          name: "baseline neonate",
+          name: "baseline neonate experimental",
         }),
       });
 
       if (response.status === 200) {
         let data = await response.json();
         this.user = userName.toLowerCase();
-        this.name = "baseline neonate";
+        this.name = "baseline neonate experimental";
         this.protected = true;
         this.shared = data.shared;
         this.dateCreated = data.dateCreated;
