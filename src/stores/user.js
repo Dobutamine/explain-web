@@ -15,7 +15,7 @@ export const useUserStore = defineStore("user", {
     },
     additionalData: {},
     loggedIn: false,
-    defaultState: "baseline neonate experimental",
+    defaultState: "baseline neonate",
     errorText: "",
     token: "",
   }),
@@ -38,7 +38,7 @@ export const useUserStore = defineStore("user", {
       this.additionalData = {};
       this.token = "";
       this.admin = false;
-      this.defaultState = "baseline neonate experimental";
+      this.defaultState = "baseline neonate";
       this.loggedIn = false;
       this.errorText = "";
     },
@@ -110,7 +110,7 @@ export const useUserStore = defineStore("user", {
             subscriptionAutoRenew: false,
           },
           additionalData: additionalData,
-          defaultState: "baseline neonate experimental",
+          defaultState: "baseline neonate",
         }),
       });
 
@@ -137,7 +137,7 @@ export const useUserStore = defineStore("user", {
         this.token = "";
         this.admin = false;
         this.loggedIn = false;
-        this.defaultState = "baseline neonate experimental";
+        this.defaultState = "baseline neonate";
         return false;
       }
     },

@@ -74,6 +74,7 @@ export const useStateStore = defineStore("state", {
       }
     },
     async getDefaultStateFromServer(apiUrl, userName, token) {
+      console.log('Fetching general default state from server.')
       const url = `${apiUrl}/api/states/get_user_state?token=${token}`;
       let response = await fetch(url, {
         method: "POST",
@@ -83,14 +84,14 @@ export const useStateStore = defineStore("state", {
         },
         body: JSON.stringify({
           user: "timothy",
-          name: "baseline neonate experimental",
+          name: "baseline neonate",
         }),
       });
 
       if (response.status === 200) {
         let data = await response.json();
         this.user = userName.toLowerCase();
-        this.name = "baseline neonate experimental";
+        this.name = "baseline neonate";
         this.protected = true;
         this.shared = data.shared;
         this.dateCreated = data.dateCreated;

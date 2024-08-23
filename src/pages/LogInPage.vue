@@ -296,7 +296,6 @@ export default {
         });
       }
     });
-
     this.load_general_default_state = this.state.$onAction(({ name, after }) => {
       if (name === "getDefaultStateFromServer") {
         after((result) => {

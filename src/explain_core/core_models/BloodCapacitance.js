@@ -1,266 +1,97 @@
 export class BloodCapacitance {
+  // static properties
   static model_type = "BloodCapacitance";
-  static model_interface = [
-    {
-      target: "is_enabled",
-      caption: "is enabled",
-      type: "boolean",
-      default: true,
-    },
-    {
-      target: "fixed_composition",
-      caption: "fixed composition",
-      type: "boolean",
-      default: false,
-    },
-    {
-      target: "vol",
-      caption: "volume (l)",
-      type: "number",
-      default: 0.001,
-      factor: 1,
-      delta: 0.0001,
-      rounding: 4,
-      ul: 100000000.0,
-      ll: -10000000.0,
-    },
-    {
-      target: "u_vol",
-      caption: "unstressed volume (l)",
-      type: "number",
-      default: 0.001,
-      factor: 1,
-      delta: 0.0001,
-      rounding: 4,
-      ul: 100000000.0,
-      ll: -10000000.0,
-    },
-    {
-      target: "el_base",
-      caption: "baseline elastance (mmHg/l)",
-      type: "number",
-      default: 1000.0,
-      factor: 1,
-      delta: 1,
-      rounding: 0,
-      ul: 100000000.0,
-      ll: 1,
-    },
-    {
-      target: "el_k",
-      caption: "non-linear elastance (mmHg/l^2)",
-      type: "number",
-      default: 1.0,
-      factor: 1,
-      delta: 1,
-      rounding: 0,
-      ul: 100000000.0,
-      ll: 0,
-    },
-  ];
+  static model_interface = [];
 
-  // independent parameters
-  name = "";
-  model_type = "BloodCapacitance";
-  description = "";
-  is_enabled = false;
-  dependencies = [];
-
-  fixed_composition = false;
-  u_vol = 0.0;
-  el_base = 0.0;
-  el_k = 0.0;
-  solutes = {};
-  aboxy = {};
-  drugs = {};
-  temp = 37.0;
-
-  pres_ext = 0.0;
-  pres_cc = 0.0;
-  pres_atm = 0.0;
-  pres_mus = 0.0;
-  pres_cor = 0.0;
-  pres_cor_factor = 1.0;
-
-  act_factor = 0.0;
-  ans_activity_factor = 1.0;
-
-  u_vol_factor = 1.0;
-  u_vol_ans_factor = 1.0;
-  u_vol_drug_factor = 1.0;
-  u_vol_scaling_factor = 1.0;
-
-  el_base_factor = 1.0;
-  el_base_ans_factor = 1.0;
-  el_base_drug_factor = 1.0;
-  el_base_scaling_factor = 1.0;
-
-  el_k_factor = 1.0;
-  el_k_ans_factor = 1.0;
-  el_k_drug_factor = 1.0;
-  el_k_scaling_factor = 1.0;
-
-  // dependent parameters
-  vol = 0.0;
-  vol_max = 0.0;
-  vol_min = 0.0;
-  vol_sv = 0.0;
-  pres = 0.0;
-  pres_in = 0.0;
-  pres_out = 0.0;
-  pres_tm = 0.0;
-  pres_max = 0.0;
-  pres_min = 0.0;
-  pres_mean = 0.0;
-  pres_cor_max = 0.0;
-  pres_cor_min = 0.0;
-  pres_cor_mean = 0.0;
-
-  // local parameters
-  _model_engine = {};
-  _heart = {};
-  _is_initialized = false;
-  _t = 0.0005;
-  _temp_pres_max = -1000.0;
-  _temp_pres_min = 1000.0;
-  _temp_vol_max = -1000.0;
-  _temp_vol_min = 1000.0;
-  _analytics_timer = 0.0;
-  _analytics_window = 2.0;
-
-  // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
-  constructor(model_ref, name = "", type = "") {
-    // name of the model
+  constructor(model_ref, name = "") {
+    // initialize independent properties
     this.name = name;
+    this.description = "";
+    this.is_enabled = false;
+    this.dependencies = [];
+    this.fixed_composition = false;
+    this.aboxy = {};
+    this.solutes = {};
+    this.drugs = {};
 
-    // model type
-    this.model_type = type;
+    // initialize independent properties
+    this.u_vol = this.u_vol_factor = this.u_vol_ans_factor = 1.0;
+    this.u_vol_drug_factor = this.u_vol_scaling_factor = 1.0;
+    this.el_base = this.el_base_factor = this.el_base_ans_factor = 1.0;
+    this.el_base_drug_factor = this.el_base_scaling_factor = 1.0;
+    this.el_k = this.el_k_factor = this.el_k_ans_factor = 1.0;
+    this.el_k_drug_factor = this.el_k_scaling_factor = 1.0;
+    this.pres_ext = this.pres_cc = this.pres_atm = this.pres_mus = 0.0;
+    this.act_factor = this.ans_activity_factor = 1.0;
 
-    // reference to the model engine
+    // initialize dependent properties
+    this.vol = this.vol_max = this.vol_min = this.vol_sv = 0.0;
+    this.pres = this.pres_in = this.pres_out = this.pres_tm = 0.0;
+    this.po2 = this.pco2 = this.ph = this.so2 = 0.0;
+
+    // initialize local properties
     this._model_engine = model_ref;
+    this._t = model_ref.modeling_stepsize;
+    this._is_initialized = false;
   }
 
   init_model(args) {
-    // process the parameters
+    // set the values of the properties as passed in the arguments
     args.forEach((arg) => {
       this[arg["key"]] = arg["value"];
     });
 
-    // reference to the heart
-    this._heart = this._model_engine.models["Heart"];
-
-    // set the modeling step size
-    this._t = this._model_engine.modeling_stepsize;
-
-    // set the flag to model is initialized
+    // flag that the model is initialized
     this._is_initialized = true;
   }
 
+  // this method is called during every model step by the model engine
   step_model() {
     if (this.is_enabled && this._is_initialized) {
       this.calc_model();
     }
   }
 
+  // actual model calculations are done here
   calc_model() {
-    // calculate the baseline elastance depending on the scaling factor
-    let _el_base = this.el_base * this.el_base_scaling_factor;
+    // Calculate the baseline elastance and unstressed volume
+    const _el_base = this.el_base * this.el_base_scaling_factor;
+    const _el_k_base = this.el_k * this.el_k_scaling_factor;
+    const _u_vol_base = this.u_vol * this.u_vol_scaling_factor;
 
-    // adjust the elastance depending on the activity of the external factor, autonomic nervous system and the drug model
-    let _el =
+    // Adjust for factors
+    let _el = 
       _el_base +
-      this.act_factor +
       (this.el_base_factor - 1) * _el_base +
       (this.el_base_ans_factor - 1) * _el_base * this.ans_activity_factor +
       (this.el_base_drug_factor - 1) * _el_base;
 
-    // calculate the non-linear elastance factor depending on the scaling factor
-    let _el_k_base = this.el_k * this.el_k_scaling_factor;
-
-    // adjust the non-linear elastance depending on the activity of the external factor, autonomic nervous system and the drug model
-    let _el_k =
+    let _el_k = 
       _el_k_base +
       (this.el_k_factor - 1) * _el_k_base +
       (this.el_k_ans_factor - 1) * _el_k_base * this.ans_activity_factor +
       (this.el_k_drug_factor - 1) * _el_k_base;
 
-    // calculate the unstressed volume depending on the scaling factor
-    let _u_vol_base = this.u_vol * this.u_vol_scaling_factor;
-
-    // adjust the unstressed volume depending on the activity of the external factor, autonomic nervous system and the drug model
-    let _u_vol =
+    let _u_vol = 
       _u_vol_base +
       (this.u_vol_factor - 1) * _u_vol_base +
       (this.u_vol_ans_factor - 1) * _u_vol_base * this.ans_activity_factor +
       (this.u_vol_drug_factor - 1) * _u_vol_base;
 
     // calculate the volume difference
-    let vol_diff = this.vol - _u_vol;
+    const vol_diff = this.vol - _u_vol;
 
     // make the elastances volume dependent
     _el += _el_k * vol_diff * vol_diff;
 
-    // calculate the recoil pressure depending on the volume, unstressed volume and elastance
+    // Calculate pressures
     this.pres_in = _el * vol_diff;
-
-    // calculate the pressures exerted by the surrounding tissues or other forces
-    this.pres_out =
-      this.pres_ext + this.pres_cc + this.pres_mus + this.pres_atm;
-
-    // calculate the transmural pressure
+    this.pres_out = this.pres_ext + this.pres_cc + this.pres_mus + this.pres_atm;
     this.pres_tm = this.pres_in - this.pres_out;
-
-    // calculate the total pressure
     this.pres = this.pres_in + this.pres_out;
 
-    // corrected pressure
-    this.pres_cor = this.pres * this.pres_cor_factor;
-
-    // analyze the pressures and volume
-    this.analyze();
-
-    // reset the pressure which are recalculated every model iterattion
-    this.pres_ext = 0.0;
-    this.pres_cc = 0.0;
-    this.pres_mus = 0.0;
-  }
-
-  analyze() {
-    // analyze the pressures
-    if (this.pres > this._temp_pres_max) {
-      this._temp_pres_max = this.pres;
-    }
-    if (this.pres < this._temp_vol_min) {
-      this._temp_pres_min = this.pres;
-    }
-    if (this.vol > this._temp_vol_max) {
-      this._temp_vol_max = this.vol;
-    }
-    if (this.vol < this._temp_vol_min) {
-      this._temp_vol_min = this.vol;
-    }
-
-    this._analytics_timer += this._t;
-    // set the max and min pressures
-    if (
-      this._heart.ncc_ventricular === 1 ||
-      this._analytics_timer > this._analytics_window
-    ) {
-      this._analytics_timer = 0.0;
-      this.pres_max = this._temp_pres_max;
-      this.pres_min = this._temp_pres_min;
-      this.pres_mean = (2.0 * this.pres_min + this.pres_max) / 3.0;
-      this.pres_cor_max = this.pres_max * this.pres_cor_factor;
-      this.pres_cor_min = this.pres_min * this.pres_cor_factor;
-      this.pres_cor_mean = (2.0 * this.pres_cor_min + this.pres_cor_max) / 3.0;
-      this.vol_max = this._temp_vol_max;
-      this.vol_min = this._temp_vol_min;
-      this.vol_sv = this.vol_max - this.vol_min;
-      this._temp_pres_max = -1000.0;
-      this._temp_pres_min = 1000.0;
-      this._temp_vol_max = -1000.0;
-      this._temp_vol_min = 1000.0;
-    }
+    // Reset external pressures
+    this.pres_ext = this.pres_cc = this.pres_mus = 0.0;
   }
 
   volume_in(dvol, comp_from) {
@@ -272,52 +103,40 @@ export class BloodCapacitance {
     // increase the volume
     this.vol += dvol;
 
-    // return id the volume is zero or lower
-    if (this.vol <= 0) {
+    // return if the volume is zero or lower
+    if (this.vol <= 0.0) {
       return;
     }
 
-    // process the solutes, aboxy's (some of them) and drugs
-    if (comp_from.model_type !== "LymphCapacitance") {
-      ["to2", "tco2", "hemoglobin", "albumin"].forEach((solute) => {
-        let d_solute = (comp_from.aboxy[solute] - this.aboxy[solute]) * dvol;
-        this.aboxy[solute] += d_solute / this.vol;
-      });
+    // process the solutes and drugs
+    for (let solute in this.solutes) {
+      this.solutes[solute] += 
+        ((comp_from.solutes[solute] - this.solutes[solute]) * dvol) / this.vol;
+    }
 
-      for (let [solute, conc] of Object.entries(this.solutes)) {
-        let d_solute = (comp_from.solutes[solute] - conc) * dvol;
-        conc += d_solute / this.vol;
-      }
+    for (let drug in this.drugs) {
+      this.drugs[drug] += 
+        ((comp_from.drugs[drug] - this.drugs[drug]) * dvol) / this.vol;
+    }
 
-      for (let [drug, conc] of Object.entries(this.drugs)) {
-        let d_drug = (comp_from.drugs[drug] - conc) * dvol;
-        conc += d_drug / this.vol;
-      }
+    // process the aboxy relevant properties
+    const ab_solutes = ["to2", "tco2", "hemoglobin", "albumin"];
+    for (let ab_sol of ab_solutes) {
+      this.aboxy[ab_sol] += 
+        ((comp_from.aboxy[ab_sol] - this.aboxy[ab_sol]) * dvol) / this.vol;
     }
   }
 
   volume_out(dvol) {
     // do not change the volume if the composition is fixed
     if (this.fixed_composition) {
-      return 0;
+      return 0.0;
     }
-
-    // assume all dvol can be removed
-    let vol_not_removed = 0.0;
-
-    // decrease the volume
-    this.vol -= dvol;
 
     // guard against negative volumes
-    if (this.vol < 0) {
-      // so we need to remove more volume then we have which is not possible. Calculate how much volume can be removed
-      // this is an undesirable situation and it means that the modeling stepsize is too large
-      vol_not_removed = -this.vol;
-      // reset the volume to zero
-      this.vol = 0.0;
-    }
-
-    // return the amount of volume that could not be removed
+    const vol_not_removed = Math.max(0.0, -this.vol + dvol);
+    this.vol = Math.max(0.0, this.vol - dvol);
+    
     return vol_not_removed;
   }
 }

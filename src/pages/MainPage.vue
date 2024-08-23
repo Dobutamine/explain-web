@@ -364,7 +364,7 @@ export default defineComponent({
       }
     },
     updateWatchlist() {
-      explain.watchModelPropsSlow(["Heart.heart_rate", "Blood.so2_pre", "Blood.so2_post", "AD.pres_max", "AD.pres_min", "AD.pres_mean", "AD.pres_cor_max", "AD.pres_cor_min", "AD.pres_cor_mean", "Breathing.resp_rate", "Ventilator.vent_rate"])
+      // explain.watchModelPropsSlow(["Heart.heart_rate", "Blood.so2_pre", "Blood.so2_post", "AD.pres_max", "AD.pres_min", "AD.pres_mean", "AD.pres_cor_max", "AD.pres_cor_min", "AD.pres_cor_mean", "Breathing.resp_rate", "Ventilator.vent_rate"])
 
       Object.keys(this.state.configuration.enabled_monitors).forEach(enabled_monitor_category => {
         this.state.configuration.enabled_monitors[enabled_monitor_category].forEach((monitor) => {

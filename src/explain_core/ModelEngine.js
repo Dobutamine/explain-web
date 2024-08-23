@@ -203,6 +203,7 @@ const clear_watchlist_slow = function () {
 };
 
 const watch_props = function (args) {
+
   args.forEach((prop) => {
     model.DataCollector.add_to_watchlist(prop);
   });
@@ -360,6 +361,7 @@ const process_model_definition = function (model_definition) {
       ];
     } else {
       errors += 1;
+      console.log('not found: ', sub_model_def.model_type)
       sendMessage({
         type: "error",
         message: sub_model_def.model_type + " model not found",

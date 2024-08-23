@@ -125,28 +125,30 @@ export default class DataCollector {
         prop1: "",
         prop2: "",
       };
-      if (this._model_engine.models[p[0]]) {
-        switch (p.length) {
-          case 2:
-            watch_list_item = {
-              label: prop,
-              model: this._model_engine.models[p[0]],
-              prop1: p[1],
-            };
-            this.watch_list[prop] = watch_list_item;
-
-            break;
-          case 3:
-            watch_list_item = {
-              label: prop,
-              model: this._model_engine.models[p[0]],
-              prop1: p[1],
-              prop2: p[2],
-            };
-            this.watch_list[prop] = watch_list_item;
-            break;
+      try {
+        if (this._model_engine.models[p[0]]) {
+          switch (p.length) {
+            case 2:
+              watch_list_item = {
+                label: prop,
+                model: this._model_engine.models[p[0]],
+                prop1: p[1],
+              };
+              this.watch_list[prop] = watch_list_item;
+  
+              break;
+            case 3:
+              watch_list_item = {
+                label: prop,
+                model: this._model_engine.models[p[0]],
+                prop1: p[1],
+                prop2: p[2],
+              };
+              this.watch_list[prop] = watch_list_item;
+              break;
+          }
         }
-      }
+      } catch {}
     });
   }
 
@@ -168,28 +170,31 @@ export default class DataCollector {
         prop1: "",
         prop2: "",
       };
-      if (this._model_engine.models[p[0]]) {
-        switch (p.length) {
-          case 2:
-            watch_list_item = {
-              label: prop,
-              model: this._model_engine.models[p[0]],
-              prop1: p[1],
-            };
-            this.watch_list_slow[prop] = watch_list_item;
-
-            break;
-          case 3:
-            watch_list_item = {
-              label: prop,
-              model: this._model_engine.models[p[0]],
-              prop1: p[1],
-              prop2: p[2],
-            };
-            this.watch_list_slow[prop] = watch_list_item;
-            break;
+      try {
+        if (this._model_engine.models[p[0]]) {
+          switch (p.length) {
+            case 2:
+              watch_list_item = {
+                label: prop,
+                model: this._model_engine.models[p[0]],
+                prop1: p[1],
+              };
+              this.watch_list_slow[prop] = watch_list_item;
+  
+              break;
+            case 3:
+              watch_list_item = {
+                label: prop,
+                model: this._model_engine.models[p[0]],
+                prop1: p[1],
+                prop2: p[2],
+              };
+              this.watch_list_slow[prop] = watch_list_item;
+              break;
+          }
         }
-      }
+      } catch {}
+
     });
   }
 
