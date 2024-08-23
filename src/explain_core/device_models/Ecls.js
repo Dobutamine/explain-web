@@ -104,8 +104,8 @@ export class Ecls {
     });
 
     this.build_blood_part();
-    // this.build_gas_part();
-    // this.build_gasexchanger();
+    this.build_gas_part();
+    this.build_gasexchanger();
 
     this._is_initialized = true;
   }
@@ -477,15 +477,17 @@ export class Ecls {
 
   build_gas_part() {
     this._gas_in = this._model_engine.models["ECLS_GASIN"];
-    this._gas_in.init_model({
-      is_enabled: false,
-      fixed_composition: true,
-      vol: 5.4,
-      u_vol: 5.0,
-      el_base: 1000.0,
-      el_k: 0.0,
-      pres_atm: this.pres_atm,
-    });
+    this._gas_in.init_model(
+      this.build_args_list({
+        is_enabled: false,
+        fixed_composition: true,
+        vol: 5.4,
+        u_vol: 5.0,
+        el_base: 1000.0,
+        el_k: 0.0,
+        pres_atm: this.pres_atm,
+      })
+    );
 
     this._gas_in.calc_model();
     set_gas_composition(
@@ -497,15 +499,17 @@ export class Ecls {
     this._ecls_parts.push(this._gas_in);
 
     this._gas_oxy = this._model_engine.models["ECLS_GASOXY"];
-    this._gas_oxy.init_model({
-      is_enabled: false,
-      fixed_composition: false,
-      vol: 0.1,
-      u_vol: 0.1,
-      el_base: 10000.0,
-      el_k: 0.0,
-      pres_atm: this.pres_atm,
-    });
+    this._gas_oxy.init_model(
+      this.build_args_list({
+        is_enabled: false,
+        fixed_composition: false,
+        vol: 0.1,
+        u_vol: 0.1,
+        el_base: 10000.0,
+        el_k: 0.0,
+        pres_atm: this.pres_atm,
+      })
+    );
 
     this._gas_oxy.calc_model();
     set_gas_composition(
@@ -517,58 +521,66 @@ export class Ecls {
     this._ecls_parts.push(this._gas_oxy);
 
     this._gas_out = this._model_engine.models["ECLS_GASOUT"];
-    this._gas_out.init_model({
-      is_enabled: false,
-      fixed_composition: true,
-      vol: 5.0,
-      u_vol: 5.0,
-      el_base: 1000.0,
-      el_k: 0.0,
-      pres_atm: this.pres_atm,
-    });
+    this._gas_out.init_model(
+      this.build_args_list({
+        is_enabled: false,
+        fixed_composition: true,
+        vol: 5.0,
+        u_vol: 5.0,
+        el_base: 1000.0,
+        el_k: 0.0,
+        pres_atm: this.pres_atm,
+      })
+    );
 
     this._gas_out.calc_model();
     set_gas_composition(this._gas_out, 0.205, 20.0, 0.5);
     this._ecls_parts.push(this._gas_out);
 
     this._gas_in_oxy = this._model_engine.models["ECLS_GASIN_OXY"];
-    this._gas_in_oxy.init_model({
-      is_enabled: false,
-      no_flow: false,
-      no_back_flow: false,
-      comp_from: this._gas_in,
-      comp_to: this._gas_oxy,
-      r_for: 2000.0,
-      r_back: 2000.0,
-      r_k: 0.0,
-    });
+    this._gas_in_oxy.init_model(
+      this.build_args_list({
+        is_enabled: false,
+        no_flow: false,
+        no_back_flow: false,
+        comp_from: this._gas_in,
+        comp_to: this._gas_oxy,
+        r_for: 2000.0,
+        r_back: 2000.0,
+        r_k: 0.0,
+      })
+    );
 
     this._ecls_parts.push(this._gas_in_oxy);
 
     this._gas_oxy_out = this._model_engine.models["ECLS_OXY_GASOUT"];
-    this._gas_oxy_out.init_model({
-      is_enabled: false,
-      no_flow: false,
-      no_back_flow: false,
-      comp_from: this._gas_oxy,
-      comp_to: this._gas_out,
-      r_for: 50.0,
-      r_back: 50.0,
-      r_k: 0.0,
-    });
+    this._gas_oxy_out.init_model(
+      this.build_args_list({
+        is_enabled: false,
+        no_flow: false,
+        no_back_flow: false,
+        comp_from: this._gas_oxy,
+        comp_to: this._gas_out,
+        r_for: 50.0,
+        r_back: 50.0,
+        r_k: 0.0,
+      })
+    );
 
     this._ecls_parts.push(this._gas_oxy_out);
   }
 
   build_gasexchanger() {
     this._gasex = this._model_engine.models["ECLS_GASEX"];
-    this._gasex.init_model({
-      is_enabled: false,
-      comp_blood: this._oxy,
-      comp_gas: this._gas_oxy,
-      dif_o2: this.diff_o2,
-      dif_co2: this.diff_co2,
-    });
+    this._gasex.init_model(
+      this.build_args_list({
+        is_enabled: false,
+        comp_blood: this._oxy,
+        comp_gas: this._gas_oxy,
+        dif_o2: this.diff_o2,
+        dif_co2: this.diff_co2,
+      })
+    );
 
     this._ecls_parts.push(this._gasex);
   }
