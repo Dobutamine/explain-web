@@ -1,231 +1,101 @@
 export class Container {
   static model_type = "Container";
-  static model_interface = [
-    {
-      target: "is_enabled",
-      caption: "is enabled",
-      type: "boolean",
-    },
-    {
-      target: "contained_components",
-      caption: "contained components",
-      type: "multiple-list",
-      options: [
-        "BloodCapacitance",
-        "GasCapacitance",
-        "BloodTimeVaryingElastance",
-        "Container",
-      ],
-    },
-    {
-      target: "u_vol",
-      caption: "unstressed volume (l)",
-      type: "number",
-      factor: 1,
-      delta: 0.0001,
-      rounding: 4,
-      ul: 100000000.0,
-      ll: 0.0,
-    },
-    {
-      target: "el_base",
-      caption: "baseline elastance (mmHg/l)",
-      type: "number",
-      factor: 1,
-      delta: 1,
-      rounding: 0,
-      ul: 100000000.0,
-      ll: 1,
-    },
-    {
-      target: "el_k",
-      caption: "non-linear elastance (mmHg/l^2)",
-      type: "number",
-      factor: 1,
-      delta: 0.0001,
-      rounding: 4,
-      ul: 100000000.0,
-      ll: 0,
-    },
-  ];
+  static model_interface = [];
 
-  // independent parameters
-  name = "";
-  model_type = "";
-  description = "";
-  is_enabled = false;
-  dependencies = [];
-  contained_components = [];
-  u_vol = 0.0;
-  el_base = 0.0;
-  el_k = 0.0;
+  constructor(model_ref, name = "") {
+      // Independent properties
+      this.name = name;
+      this.description = "";
+      this.is_enabled = false;
+      this.dependencies = [];
+      this.contained_components = [];
 
-  pres_ext = 0.0;
-  pres_cc = 0.0;
-  pres_atm = 0.0;
-  pres_mus = 0.0;
+      // Initialize independent properties
+      this.u_vol = this.u_vol_factor = 1.0;
+      this.u_vol_drug_factor = this.u_vol_scaling_factor = 1.0;
+      this.vol_extra = 0.0;
+      this.el_base = this.el_base_factor = 1.0;
+      this.el_base_drug_factor = this.el_base_scaling_factor = 1.0;
+      this.el_k = this.el_k_factor = 1.0;
+      this.el_k_drug_factor = this.el_k_scaling_factor = 1.0;
+      this.pres_ext = this.pres_cc = this.pres_atm = this.pres_mus = 0.0;
+      this.act_factor = 1.0;
 
-  act_factor = 0.0;
+      // Dependent properties
+      this.vol = this.vol_max = this.vol_min = this.vol_sv = 0.0;
+      this.pres = this.pres_in = this.pres_out = this.pres_tm = 0.0;
 
-  u_vol_factor = 1.0;
-  u_vol_drug_factor = 1.0;
-  u_vol_scaling_factor = 1.0;
-
-  el_base_factor = 1.0;
-  el_base_drug_factor = 1.0;
-  el_base_scaling_factor = 1.0;
-
-  el_k_factor = 1.0;
-  el_k_drug_factor = 1.0;
-  el_k_scaling_factor = 1.0;
-
-  // dependent parameters
-  vol = 0.0;
-  vol_max = 0.0;
-  vol_min = 0.0;
-  vol_sv = 0.0;
-  vol_extra = 0.0;
-  pres = 0.0;
-  pres_in = 0.0;
-  pres_out = 0.0;
-  pres_tm = 0.0;
-  pres_max = 0.0;
-  pres_min = 0.0;
-  pres_mean = 0.0;
-
-  // local parameters
-  _model_engine = {};
-  _is_initialized = false;
-  _t = 0.0005;
-  _temp_pres_max = -1000.0;
-  _temp_pres_min = 1000.0;
-  _temp_vol_max = -1000.0;
-  _temp_vol_min = 1000.0;
-  _analytics_timer = 0.0;
-  _analytics_window = 2.0;
-
-  // the constructor builds a bare bone modelobject of the correct type and with the correct name and stores a reference to the modelengine object
-  constructor(model_ref, name = "", type = "") {
-    // name of the model
-    this.name = name;
-
-    // model type
-    this.model_type = type;
-
-    // reference to the model engine
-    this._model_engine = model_ref;
+      // Local properties
+      this._model_engine = model_ref;
+      this._is_initialized = false;
+      this._t = model_ref.modeling_stepsize;
   }
 
   init_model(args) {
-    // process the parameters
+    // set the values of the properties as passed in the arguments
     args.forEach((arg) => {
       this[arg["key"]] = arg["value"];
     });
 
-    // set the modeling step size
-    this._t = this._model_engine.modeling_stepsize;
-
-    // set the flag to model is initialized
-    this._is_initialized = true;
+      // Flag that the model is initialized
+      this._is_initialized = true;
   }
 
+  // This method is called during every model step by the model engine
   step_model() {
-    if (this.is_enabled && this._is_initialized) {
-      this.calc_model();
-    }
+      if (this.is_enabled && this._is_initialized) {
+          this.calc_model();
+      }
   }
 
+  // Actual model calculations are done here
   calc_model() {
-    // set the volume
-    this.vol = this.vol_extra;
+      // Set the starting volume
+      this.vol = this.vol_extra;
 
-    // get the current volume from all contained models
-    for (const c of this.contained_components) {
-      this.vol += this._model_engine.models[c].vol;
-    }
+      // Get the cumulative volume from all contained models
+      this.contained_components.forEach(c => {
+          this.vol += this._model_engine.models[c].vol;
+      });
 
-    // calculate the elastances and unstressed volumes
-    let _el_base = this.el_base * this.el_base_scaling_factor;
-    let _el_k_base = this.el_k * this.el_k_scaling_factor;
-    let _u_vol_base = this.u_vol * this.u_vol_scaling_factor;
+      // Calculate the baseline elastance and unstressed volume
+      const _el_base = this.el_base * this.el_base_scaling_factor;
+      const _el_k_base = this.el_k * this.el_k_scaling_factor;
+      const _u_vol_base = this.u_vol * this.u_vol_scaling_factor;
 
-    // adjust the elastance depending on the activity of the external factor, autonomic nervous system and the drug model
-    let _el =
-      _el_base +
-      this.act_factor +
-      (this.el_base_factor - 1) * _el_base +
-      (this.el_base_drug_factor - 1) * _el_base;
+      // Adjust for factors
+      let _el = _el_base +
+          this.act_factor +
+          (this.el_base_factor - 1) * _el_base +
+          (this.el_base_drug_factor - 1) * _el_base;
 
-    // adjust the non-linear elastance depending on the activity of the external factor, autonomic nervous system and the drug model
-    let _el_k =
-      _el_k_base +
-      (this.el_k_factor - 1) * _el_k_base +
-      (this.el_k_drug_factor - 1) * _el_k_base;
+      let _el_k = _el_k_base +
+          (this.el_k_factor - 1) * _el_k_base +
+          (this.el_k_drug_factor - 1) * _el_k_base;
 
-    // adjust the unstressed volume depending on the activity of the external factor, autonomic nervous system and the drug model
-    let _u_vol =
-      _u_vol_base +
-      (this.u_vol_factor - 1) * _u_vol_base +
-      (this.u_vol_drug_factor - 1) * _u_vol_base;
+      let _u_vol = _u_vol_base +
+          (this.u_vol_factor - 1) * _u_vol_base +
+          (this.u_vol_drug_factor - 1) * _u_vol_base;
 
-    // calculate the recoil pressure depending on the volume, unstressed volume and elastance
-    this.pres_in =
-      _el * (this.vol - _u_vol) + _el_k * Math.pow(this.vol - _u_vol, 2);
+      // Calculate the volume difference
+      const vol_diff = this.vol - _u_vol;
 
-    // calculate the pressures exerted by the surrounding tissues or other forces
-    this.pres_out =
-      this.pres_ext + this.pres_cc + this.pres_mus + this.pres_atm;
+      // Make the elastances volume dependent
+      _el += _el_k * vol_diff * vol_diff;
 
-    // calculate the transmural pressure
-    this.pres_tm = this.pres_in - this.pres_out;
+      // Calculate pressures
+      this.pres_in = _el * vol_diff;
+      this.pres_out = this.pres_ext + this.pres_cc + this.pres_mus + this.pres_atm;
+      this.pres_tm = this.pres_in - this.pres_out;
+      this.pres = this.pres_in + this.pres_out;
 
-    // calculate the total pressure
-    this.pres = this.pres_in + this.pres_out;
+      // Reset external pressures
+      this.pres_ext = this.pres_cc = this.pres_mus = 0.0;
+      this.act_factor = 0.0;
 
-    // analyze the pressures and volume
-    this.analyze();
-
-    // reset the pressure which are recalculated every model iterattion
-    this.pres_ext = 0.0;
-    this.pres_cc = 0.0;
-    this.pres_mus = 0.0;
-    this.act_factor = 0.0;
-
-    // transfer the pressures to the models the container contains
-    for (const c of this.contained_components) {
-      this._model_engine.models[c].pres_ext += this.pres;
-    }
-  }
-
-  analyze() {
-    // analyze the pressures
-    if (this.pres > this._temp_pres_max) {
-      this._temp_pres_max = this.pres;
-    }
-    if (this.pres < this._temp_vol_min) {
-      this._temp_pres_min = this.pres;
-    }
-    if (this.vol > this._temp_vol_max) {
-      this._temp_vol_max = this.vol;
-    }
-    if (this.vol < this._temp_vol_min) {
-      this._temp_vol_min = this.vol;
-    }
-
-    this._analytics_timer += this._t;
-    // set the max and min pressures
-    if (this._analytics_timer > this._analytics_window) {
-      this._analytics_timer = 0.0;
-      this.pres_max = this._temp_pres_max;
-      this.pres_min = this._temp_pres_min;
-      this.pres_mean = (2.0 * this.pres_min + this.pres_max) / 3.0;
-      this.vol_max = this._temp_vol_max;
-      this.vol_min = this._temp_vol_min;
-      this.vol_sv = this.vol_max - this.vol_min;
-      this._temp_pres_max = -1000.0;
-      this._temp_pres_min = 1000.0;
-      this._temp_vol_max = -1000.0;
-      this._temp_vol_min = 1000.0;
-    }
+      // Transfer the pressures to the models the container contains
+      this.contained_components.forEach(c => {
+          this._model_engine.models[c].pres_ext += this.pres;
+      });
   }
 }
