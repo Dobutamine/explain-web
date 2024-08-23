@@ -43,12 +43,11 @@ export class Resuscitation {
     this._analytics_timer = 0.0;
   }
 
-  init_model(args = {}) {
-    // Set the values of the independent properties
-    for (const [key, value] of Object.entries(args)) {
-      this[key] = value;
-    }
-
+  init_model(args) {
+    // process the parameters
+    args.forEach((arg) => {
+      this[arg["key"]] = arg["value"];
+    });
     // Flag that the model is initialized
     this._is_initialized = true;
   }
