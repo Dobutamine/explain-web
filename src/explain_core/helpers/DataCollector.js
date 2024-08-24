@@ -135,7 +135,7 @@ export default class DataCollector {
                 prop1: p[1],
               };
               this.watch_list[prop] = watch_list_item;
-  
+
               break;
             case 3:
               watch_list_item = {
@@ -180,7 +180,7 @@ export default class DataCollector {
                 prop1: p[1],
               };
               this.watch_list_slow[prop] = watch_list_item;
-  
+
               break;
             case 3:
               watch_list_item = {
@@ -194,7 +194,6 @@ export default class DataCollector {
           }
         }
       } catch {}
-
     });
   }
 

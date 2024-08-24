@@ -31,16 +31,15 @@ export class Blood {
     args.forEach((arg) => {
       this[arg["key"]] = arg["value"];
     });
-    
 
     // set the aboxy and solutes if not set by the state which is loaded
     for (let model of this.blood_containing_components) {
       const modelInstance = this._model_engine.models[model];
-      
-      if (!modelInstance.hasOwnProperty('aboxy')) {
+
+      if (!modelInstance.hasOwnProperty("aboxy")) {
         modelInstance.aboxy = { ...this.aboxy };
       }
-      if (!modelInstance.hasOwnProperty('solutes')) {
+      if (!modelInstance.hasOwnProperty("solutes")) {
         modelInstance.solutes = { ...this.solutes };
       }
     }
