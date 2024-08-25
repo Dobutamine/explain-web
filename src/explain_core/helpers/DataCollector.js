@@ -38,12 +38,35 @@ export default class DataCollector {
       model: this._model_engine.models["Heart"],
       prop1: "ncc_atrial",
     };
-
-    console.log(model_ref.datacollector);
+    this.ncc_breathing_insp = {
+      label: "Breathing.ncc_insp",
+      model: this._model_engine.models["Breathing"],
+      prop1: "ncc_insp",
+    };
+    this.ncc_breathing_exp = {
+      label: "Breathing.ncc_exp",
+      model: this._model_engine.models["Breathing"],
+      prop1: "ncc_exp",
+    };
+    this.ncc_ventilator_insp = {
+      label: "Ventilator.ncc_insp",
+      model: this._model_engine.models["Ventilator"],
+      prop1: "ncc_insp",
+    };
+    this.ncc_ventilator_exp = {
+      label: "Ventilator.ncc_exp",
+      model: this._model_engine.models["Ventilator"],
+      prop1: "ncc_exp",
+    };
 
     // add the two always there
     this.watch_list[this.ncc_atrial["label"]] = this.ncc_atrial;
     this.watch_list[this.ncc_ventricular["label"]] = this.ncc_ventricular;
+    this.watch_list[this.ncc_breathing_insp["label"]] = this.ncc_breathing_insp;
+    this.watch_list[this.ncc_breathing_exp["label"]] = this.ncc_breathing_exp;
+    this.watch_list[this.ncc_ventilator_insp["label"]] =
+      this.ncc_ventilator_insp;
+    this.watch_list[this.ncc_ventilator_exp["label"]] = this.ncc_ventilator_exp;
 
     // define the data list
     this.collected_data = [];
@@ -67,6 +90,11 @@ export default class DataCollector {
     // add the two always there
     this.watch_list[this.ncc_atrial["label"]] = this.ncc_atrial;
     this.watch_list[this.ncc_ventricular["label"]] = this.ncc_ventricular;
+    this.watch_list[this.ncc_breathing_insp["label"]] = this.ncc_breathing_insp;
+    this.watch_list[this.ncc_breathing_exp["label"]] = this.ncc_breathing_exp;
+    this.watch_list[this.ncc_ventilator_insp["label"]] =
+      this.ncc_ventilator_insp;
+    this.watch_list[this.ncc_ventilator_exp["label"]] = this.ncc_ventilator_exp;
   }
 
   clear_watchlist_slow() {
