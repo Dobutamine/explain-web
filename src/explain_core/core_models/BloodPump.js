@@ -13,17 +13,20 @@ export class BloodPump {
     this.aboxy = {};
     this.solutes = {};
     this.drugs = {};
-    this.pump_mode = 0;  // 0 = centrifugal, 1 = roller pump
+    this.pump_mode = 0; // 0 = centrifugal, 1 = roller pump
     this.pump_pressure = 0.0;
     this.pump_rpm = 0.0;
     this.inlet = "";
     this.outlet = "";
+    this.analysis_enabled = false;
 
     // initialize independent properties
     this.u_vol = this.u_vol_factor = this.u_vol_scaling_factor = 1.0;
     this.el_base = this.el_base_factor = this.el_base_scaling_factor = 1.0;
     this.el_k = this.el_k_factor = this.el_k_scaling_factor = 1.0;
     this.pres_ext = this.pres_atm = 0.0;
+    this.pres_min = this.pres_max = this.pres_mean = 0.0;
+    this.vol_min = this.vol_max = this.sv = 0.0;
 
     // initialize dependent properties
     this.vol = 0.0;
@@ -36,6 +39,10 @@ export class BloodPump {
     this._is_initialized = false;
     this._inlet_res = null;
     this._outlet_res = null;
+    this._temp_min_pres = 1000.0;
+    this._temp_max_pres = -1000.0;
+    this._temp_min_vol = 1000.0;
+    this._temp_max_vol = -1000.0;
   }
 
   init_model(args) {
@@ -129,19 +136,19 @@ export class BloodPump {
 
     // process the solutes and drugs
     for (let solute in this.solutes) {
-      this.solutes[solute] += 
+      this.solutes[solute] +=
         ((comp_from.solutes[solute] - this.solutes[solute]) * dvol) / this.vol;
     }
 
     for (let drug in this.drugs) {
-      this.drugs[drug] += 
+      this.drugs[drug] +=
         ((comp_from.drugs[drug] - this.drugs[drug]) * dvol) / this.vol;
     }
 
     // process the aboxy relevant properties
     const ab_solutes = ["to2", "tco2", "hemoglobin", "albumin"];
     for (let ab_sol of ab_solutes) {
-      this.aboxy[ab_sol] += 
+      this.aboxy[ab_sol] +=
         ((comp_from.aboxy[ab_sol] - this.aboxy[ab_sol]) * dvol) / this.vol;
     }
   }
@@ -157,5 +164,27 @@ export class BloodPump {
     this.vol = Math.max(0.0, this.vol - dvol);
 
     return vol_not_removed;
+  }
+
+  analyze() {
+    this._temp_max_pres = Math.max(this._temp_max_pres, this.pres);
+    this._temp_min_pres = Math.min(this._temp_min_pres, this.pres);
+
+    this._temp_max_vol = Math.max(this._temp_max_vol, this.vol);
+    this._temp_min_vol = Math.min(this._temp_min_vol, this.vol);
+
+    if (this._model_engine.ncc_ventricular == 1) {
+      this.pres_max = this._temp_max_pres;
+      this.pres_min = this._temp_min_pres;
+      this.pres_mean = (this.pres_min * 2 + this.pres_max) / 3.0;
+
+      this.vol_max = this._temp_max_vol;
+      this.vol_min = this._temp_min_vol;
+
+      this._temp_max_pres = -1000.0;
+      this._temp_min_pres = 1000.0;
+      this._temp_max_vol = -1000.0;
+      this._temo_min_vol = 1000.0;
+    }
   }
 }

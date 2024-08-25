@@ -13,18 +13,27 @@ export class BloodTimeVaryingElastance {
     this.aboxy = {};
     this.solutes = {};
     this.drugs = {};
+    this.analysis_enabled = false;
 
     // initialize independent properties
     this.u_vol = this.u_vol_factor = this.u_vol_ans_factor = 1.0;
     this.u_vol_drug_factor = this.u_vol_scaling_factor = 1.0;
     this.el_min = this.el_min_factor = this.el_min_ans_factor = 1.0;
-    this.el_min_drug_factor = this.el_min_scaling_factor = this.el_min_mob_factor = 1.0;
+    this.el_min_drug_factor =
+      this.el_min_scaling_factor =
+      this.el_min_mob_factor =
+        1.0;
     this.el_max = this.el_max_factor = this.el_max_ans_factor = 1.0;
-    this.el_max_drug_factor = this.el_max_scaling_factor = this.el_max_mob_factor = 1.0;
+    this.el_max_drug_factor =
+      this.el_max_scaling_factor =
+      this.el_max_mob_factor =
+        1.0;
     this.el_k = this.el_k_factor = this.el_k_ans_factor = 1.0;
     this.el_k_drug_factor = this.el_k_scaling_factor = 1.0;
     this.pres_ext = this.pres_cc = this.pres_atm = this.pres_mus = 0.0;
     this.act_factor = this.ans_activity_factor = 1.0;
+    this.pres_min = this.pres_max = this.pres_mean = 0.0;
+    this.vol_min = this.vol_max = this.sv = 0.0;
 
     // initialize dependent properties
     this.el = 0.0;
@@ -37,6 +46,10 @@ export class BloodTimeVaryingElastance {
     this._model_engine = model_ref;
     this._t = model_ref.modeling_stepsize;
     this._is_initialized = false;
+    this._temp_min_pres = 1000.0;
+    this._temp_max_pres = -1000.0;
+    this._temp_min_vol = 1000.0;
+    this._temp_max_vol = -1000.0;
   }
 
   init_model(args) {
@@ -65,24 +78,28 @@ export class BloodTimeVaryingElastance {
     const _u_vol_base = this.u_vol * this.u_vol_scaling_factor;
 
     // Adjust for factors
-    let _el_min = _el_min_base +
+    let _el_min =
+      _el_min_base +
       (this.el_min_factor - 1) * _el_min_base +
       (this.el_min_ans_factor - 1) * _el_min_base * this.ans_activity_factor +
       (this.el_min_mob_factor - 1) * _el_min_base +
       (this.el_min_drug_factor - 1) * _el_min_base;
 
-    let _el_max = _el_max_base +
+    let _el_max =
+      _el_max_base +
       (this.el_max_factor - 1) * _el_max_base +
       (this.el_max_ans_factor - 1) * _el_max_base * this.ans_activity_factor +
       (this.el_max_mob_factor - 1) * _el_max_base +
       (this.el_max_drug_factor - 1) * _el_max_base;
 
-    let _el_k = _el_k_base +
+    let _el_k =
+      _el_k_base +
       (this.el_k_factor - 1) * _el_k_base +
       (this.el_k_ans_factor - 1) * _el_k_base * this.ans_activity_factor +
       (this.el_k_drug_factor - 1) * _el_k_base;
 
-    let _u_vol = _u_vol_base +
+    let _u_vol =
+      _u_vol_base +
       (this.u_vol_factor - 1) * _u_vol_base +
       (this.u_vol_ans_factor - 1) * _u_vol_base * this.ans_activity_factor +
       (this.u_vol_drug_factor - 1) * _u_vol_base;
@@ -106,13 +123,20 @@ export class BloodTimeVaryingElastance {
     }
 
     // Calculate pressures
-    this.pres_in = this.act_factor * (this.pres_ms - this.pres_ed) + this.pres_ed;
-    this.pres_out = this.pres_ext + this.pres_cc + this.pres_mus + this.pres_atm;
+    this.pres_in =
+      this.act_factor * (this.pres_ms - this.pres_ed) + this.pres_ed;
+    this.pres_out =
+      this.pres_ext + this.pres_cc + this.pres_mus + this.pres_atm;
     this.pres_tm = this.pres_in - this.pres_out;
     this.pres = this.pres_in + this.pres_out;
 
     // Reset external pressures
     this.pres_ext = this.pres_cc = this.pres_mus = 0.0;
+
+    // do the analysis if necessary
+    if (this.analysis_enabled) {
+      this.analyze();
+    }
   }
 
   volume_in(dvol, comp_from) {
@@ -131,19 +155,19 @@ export class BloodTimeVaryingElastance {
 
     // process the solutes and drugs
     for (let solute in this.solutes) {
-      this.solutes[solute] += 
+      this.solutes[solute] +=
         ((comp_from.solutes[solute] - this.solutes[solute]) * dvol) / this.vol;
     }
 
     for (let drug in this.drugs) {
-      this.drugs[drug] += 
+      this.drugs[drug] +=
         ((comp_from.drugs[drug] - this.drugs[drug]) * dvol) / this.vol;
     }
 
     // process the aboxy relevant properties
     const ab_solutes = ["to2", "tco2", "hemoglobin", "albumin"];
     for (let ab_sol of ab_solutes) {
-      this.aboxy[ab_sol] += 
+      this.aboxy[ab_sol] +=
         ((comp_from.aboxy[ab_sol] - this.aboxy[ab_sol]) * dvol) / this.vol;
     }
   }
@@ -159,6 +183,27 @@ export class BloodTimeVaryingElastance {
     this.vol = Math.max(0.0, this.vol - dvol);
 
     return vol_not_removed;
+  }
+
+  analyze() {
+    this._temp_max_pres = Math.max(this._temp_max_pres, this.pres_in);
+    this._temp_min_pres = Math.min(this._temp_min_pres, this.pres_in);
+
+    this._temp_max_vol = Math.max(this._temp_max_vol, this.vol);
+    this._temp_min_vol = Math.min(this._temp_min_vol, this.vol);
+
+    if (this._model_engine.ncc_ventricular == 1) {
+      this.pres_max = this._temp_max_pres;
+      this.pres_min = this._temp_min_pres;
+
+      this.vol_max = this._temp_max_vol;
+      this.vol_min = this._temp_min_vol;
+
+      this._temp_max_pres = -1000.0;
+      this._temp_min_pres = 1000.0;
+      this._temp_max_vol = -1000.0;
+      this._temo_min_vol = 1000.0;
+    }
   }
 }
 

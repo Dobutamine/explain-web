@@ -1,5 +1,3 @@
-import * as models from "./ModelIndex";
-
 export default class Model {
   // declare an object holding the worker thread which does the heavy llifting
   modelEngine = {};
@@ -132,20 +130,11 @@ export default class Model {
     this.modelEngine.onmessage = (e) => {
       switch (e.data.type) {
         case "model_props":
-          if (this.debug) {
-            console.log(JSON.parse(e.data.payload));
-          }
           document.dispatchEvent(this._props_event);
           break;
         case "prop_value":
-          if (this.debug) {
-            console.log(JSON.parse(e.data.payload));
-          }
           break;
         case "info":
-          if (this.debug) {
-            console.info(e.data.message);
-          }
           // store the message in the log
           this.info_message = e.data.message;
           this.logMessage("info", e.data.message);
@@ -153,10 +142,6 @@ export default class Model {
           document.dispatchEvent(this._info_event);
           break;
         case "status":
-          if (this.debug) {
-            console.info(e.data.message);
-          }
-
           // store the message in the log
           this.status_message = e.data.message;
           this.logMessage("status", e.data.message);
@@ -164,9 +149,6 @@ export default class Model {
           document.dispatchEvent(this._status_event);
           break;
         case "error":
-          if (this.debug) {
-            console.info(e.data.message);
-          }
           // store the message in the log
           this.error_message = e.data.message;
           this.logMessage("error", e.data.message);
@@ -174,9 +156,6 @@ export default class Model {
           document.dispatchEvent(this._error_event);
           break;
         case "script":
-          if (this.debug) {
-            console.info(e.data.message);
-          }
           // store the message in the log
           this.script_message = e.data.message;
           this.logMessage("script", e.data.message);
@@ -184,55 +163,33 @@ export default class Model {
           document.dispatchEvent(this._script_event);
           break;
         case "state":
-          if (this.debug) {
-            console.log(`Model: received model engine state.`);
-          }
-
           this.modelState = e.data.payload[0];
           document.dispatchEvent(this._state_event);
 
           break;
         case "data":
-          if (this.debug) {
-            console.log(`Model: received model data.`);
-          }
           this.modelData = e.data.payload[0];
           document.dispatchEvent(this._data_event);
           break;
         case "data_slow":
-          if (this.debug) {
-            console.log(`Model: received model data slow.`);
-          }
           this.modelDataSlow = e.data.payload[0];
           document.dispatchEvent(this._data_slow_event);
           break;
         case "rtf":
-          if (this.debug) {
-            console.log(`Model: received model engine rt data.`);
-          }
           this.modelData = e.data.payload[0];
           document.dispatchEvent(this._rtf_event);
           break;
         case "rts":
-          if (this.debug) {
-            console.log(`Model: received model engine rt data slow.`);
-          }
           this.modelDataSlow = e.data.payload[0];
           document.dispatchEvent(this._rts_event);
           break;
 
         case "model_types":
-          if (this.debug) {
-            console.log(`Model: received model types.`);
-          }
           this._model_types_event["model_types"] = JSON.parse(e.data.payload);
           document.dispatchEvent(this._model_types_event);
           break;
 
         case "model_interface":
-          if (this.debug) {
-            console.log(`Model: received model interface.`);
-          }
           this._model_interface_event["model_type"] = e.data.message;
           this._model_interface_event["model_props"] = JSON.parse(
             e.data.payload

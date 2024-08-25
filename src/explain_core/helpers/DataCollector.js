@@ -4,6 +4,7 @@ export default class DataCollector {
   sample_interval = 0.005;
   sample_interval_slow = 1.0;
   watch_list = {};
+  watch_list_complex = {};
   watch_list_slow = {};
   ncc_ventricular = {};
   ncc_atrial = {};
@@ -207,6 +208,12 @@ export default class DataCollector {
                 model: this._model_engine.models[p[0]],
                 prop1: p[1],
               };
+              // enable the analysis if it's min/max/mean/flow_min
+              if (
+                ["pres_min", "pres_max", "pres_mean", "flow_min"].includes(p[1])
+              ) {
+                this._model_engine.models[p[0]].analysis_enabled = true;
+              }
               this.watch_list_slow[prop] = watch_list_item;
 
               break;
@@ -221,7 +228,9 @@ export default class DataCollector {
               break;
           }
         }
-      } catch {}
+      } catch {
+        console.log("error adding to watchlist slow");
+      }
     });
   }
 

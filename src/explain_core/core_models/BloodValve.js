@@ -21,6 +21,7 @@ export class BloodValve {
     this.ans_activity_factor = this.act_factor = 0.0;
     this.p1_ext = this.p2_ext = 0.0;
     this.p1_ext_factor = this.p2_ext_factor = 0.0;
+    this.analysis_enabled = false;
 
     // initialize dependent properties
     this.flow = 0.0;
@@ -79,25 +80,25 @@ export class BloodValve {
     const _r_back_base = this.r_back * this.r_scaling_factor;
     const _r_k_base = this.r_k * this.r_scaling_factor;
 
-    let _r_for = 
-      _r_for_base + 
-      (this.r_for_factor - 1) * _r_for_base + 
-      (this.r_ans_factor - 1) * _r_for_base * this.ans_activity_factor + 
-      (this.r_mob_factor - 1) * _r_for_base + 
+    let _r_for =
+      _r_for_base +
+      (this.r_for_factor - 1) * _r_for_base +
+      (this.r_ans_factor - 1) * _r_for_base * this.ans_activity_factor +
+      (this.r_mob_factor - 1) * _r_for_base +
       (this.r_drug_factor - 1) * _r_for_base;
 
-    let _r_back = 
-      _r_back_base + 
-      (this.r_back_factor - 1) * _r_back_base + 
-      (this.r_ans_factor - 1) * _r_back_base * this.ans_activity_factor + 
-      (this.r_mob_factor - 1) * _r_back_base + 
+    let _r_back =
+      _r_back_base +
+      (this.r_back_factor - 1) * _r_back_base +
+      (this.r_ans_factor - 1) * _r_back_base * this.ans_activity_factor +
+      (this.r_mob_factor - 1) * _r_back_base +
       (this.r_drug_factor - 1) * _r_back_base;
 
-    let _r_k = 
-      _r_k_base + 
-      (this.r_k_factor - 1) * _r_k_base + 
-      (this.r_ans_factor - 1) * _r_k_base * this.ans_activity_factor + 
-      (this.r_mob_factor - 1) * _r_k_base + 
+    let _r_k =
+      _r_k_base +
+      (this.r_k_factor - 1) * _r_k_base +
+      (this.r_ans_factor - 1) * _r_k_base * this.ans_activity_factor +
+      (this.r_mob_factor - 1) * _r_k_base +
       (this.r_drug_factor - 1) * _r_k_base;
 
     // make the resistances flow dependent
@@ -124,11 +125,17 @@ export class BloodValve {
     if (this.flow > 0) {
       // Flow is from comp_from to comp_to
       vol_not_removed = this._model_comp_from.volume_out(this.flow * this._t);
-      this._model_comp_to.volume_in(this.flow * this._t - vol_not_removed, this._model_comp_from);
+      this._model_comp_to.volume_in(
+        this.flow * this._t - vol_not_removed,
+        this._model_comp_from
+      );
     } else if (this.flow < 0) {
       // Flow is from comp_to to comp_from
       vol_not_removed = this._model_comp_to.volume_out(-this.flow * this._t);
-      this._model_comp_from.volume_in(-this.flow * this._t - vol_not_removed, this._model_comp_to);
+      this._model_comp_from.volume_in(
+        -this.flow * this._t - vol_not_removed,
+        this._model_comp_to
+      );
     }
   }
 
@@ -151,4 +158,3 @@ export class BloodValve {
     }
   }
 }
-

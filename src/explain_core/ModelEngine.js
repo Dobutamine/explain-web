@@ -327,6 +327,12 @@ const process_model_definition = function (model_definition) {
     rebuildExecutionListFlag: false,
     execution_list: {},
     dependency_list: [],
+    ncc_atrial: 0,
+    ncc_ventricular: 0,
+    ncc_breathing_insp: 0,
+    ncc_breathing_exp: 0,
+    ncc_ventilator_insp: 0,
+    ncc_ventilator_exp: 0,
   };
 
   // initialize the model parameters, except the model components key which needs special processing
