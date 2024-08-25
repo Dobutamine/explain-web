@@ -33,6 +33,8 @@ export class Breathing {
     this.exp_tidal_volume = 0.0;
     this.insp_tidal_volume = 0.0;
     this.resp_muscle_pressure = 0.0;
+    this.ncc_insp = 0;
+    this.ncc_exp = 0;
 
     // local properties
     this._model_engine = model_ref;
@@ -45,11 +47,9 @@ export class Breathing {
     this._breath_interval = 60.0;
     this._insp_running = false;
     this._insp_timer = 0.0;
-    this._ncc_insp = 0;
     this._temp_insp_volume = 0.0;
     this._exp_running = false;
     this._exp_timer = 0.0;
-    this._ncc_exp = 0;
     this._temp_exp_volume = 0.0;
   }
 
@@ -112,7 +112,7 @@ export class Breathing {
       this._breath_timer = 0.0;
       this._insp_running = true;
       this._insp_timer = 0.0;
-      this._ncc_insp = 0.0;
+      this.ncc_insp = 0.0;
     }
 
     // has the inspiration time elapsed?
@@ -120,7 +120,7 @@ export class Breathing {
       this._insp_timer = 0.0;
       this._insp_running = false;
       this._exp_running = true;
-      this._ncc_exp = 0.0;
+      this.ncc_exp = 0.0;
       this._temp_exp_volume = 0.0;
       this.insp_tidal_volume = -this._temp_insp_volume;
     }
@@ -160,7 +160,7 @@ export class Breathing {
 
     if (this._insp_running) {
       this._insp_timer += this._t;
-      this._ncc_insp += 1;
+      this.ncc_insp += 1;
       if (this._model_engine.models["MOUTH_DS"].flow > 0) {
         this._temp_insp_volume +=
           this._model_engine.models["MOUTH_DS"].flow * this._t;
@@ -169,7 +169,7 @@ export class Breathing {
 
     if (this._exp_running) {
       this._exp_timer += this._t;
-      this._ncc_exp += 1;
+      this.ncc_exp += 1;
       if (this._model_engine.models["MOUTH_DS"].flow < 0) {
         this._temp_exp_volume +=
           this._model_engine.models["MOUTH_DS"].flow * this._t;
@@ -220,13 +220,13 @@ export class Breathing {
 
     // inspiration
     if (this._insp_running) {
-      mp = (this._ncc_insp / (this._ti / this._t)) * this.rmp_gain;
+      mp = (this.ncc_insp / (this._ti / this._t)) * this.rmp_gain;
     }
 
     // expiration
     if (this._exp_running) {
       mp =
-        ((Math.pow(Math.E, -4.0 * (this._ncc_exp / (this._te / this._t))) -
+        ((Math.pow(Math.E, -4.0 * (this.ncc_exp / (this._te / this._t))) -
           this._eMin4) /
           (1.0 - this._eMin4)) *
         this.rmp_gain;

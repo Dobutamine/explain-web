@@ -59,6 +59,8 @@ export class Ventilator {
     this.hfo_mv = 0.0;
     this.synchronized = false;
     this.vent_sync = false;
+    this.ncc_insp = 0;
+    this.ncc_exp = 0;
 
     this._model_engine = model_ref;
     this._is_initialized = false;
@@ -102,8 +104,6 @@ export class Ventilator {
     this._hfo_exp_tv_counter = 0;
     this._hfo_state = 0;
     this._prev_hfo_state = 0;
-    this._ncc_insp = 0;
-    this._ncc_exp = 0;
   }
 
   init_model(args) {
@@ -479,7 +479,7 @@ export class Ventilator {
       this._insp_tidal_volume_counter = 0.0;
       this._inspiration = false;
       this._expiration = true;
-      this._ncc_exp = 0;
+      this.ncc_exp = 0;
       this._triggered_breath = false;
       this._block_trigger_counter = 0.0;
       this._block_trigger = true;
@@ -495,7 +495,7 @@ export class Ventilator {
       this._inspiration = true;
       this._expiration = false;
       this._triggered_breath = false;
-      this._ncc_insp = 0;
+      this.ncc_insp = 0;
       this.vol = 0.0;
       this.exp_tidal_volume = -this._exp_tidal_volume_counter;
       this.etco2 = this._model_engine.models["DS"].pco2;
@@ -533,7 +533,7 @@ export class Ventilator {
       if (this._et_tube.flow > this._prev_et_tube_flow) {
         this._inspiration = true;
         this._expiration = false;
-        this._ncc_insp = 0;
+        this.ncc_insp = 0;
         if (this._et_tube.flow > this._peak_flow) {
           this._peak_flow = this._et_tube.flow;
         }
@@ -554,7 +554,7 @@ export class Ventilator {
       this._prev_et_tube_flow = 0.0;
       this._inspiration = false;
       this._expiration = true;
-      this._ncc_exp = 0;
+      this.ncc_exp = 0;
       this._exp_tidal_volume_counter += this._et_tube.flow * this._t;
     }
   }
@@ -602,7 +602,7 @@ export class Ventilator {
 
   pressure_control() {
     if (this._inspiration) {
-      this._ncc_insp += 1;
+      this.ncc_insp += 1;
       this._exp_valve.no_flow = true;
       this._insp_valve.no_flow = false;
       this._insp_valve.no_back_flow = true;
@@ -622,7 +622,7 @@ export class Ventilator {
     }
 
     if (this._expiration) {
-      this._ncc_exp += 1;
+      this.ncc_exp += 1;
       this._pres_reached = false;
       this._insp_valve.no_flow = true;
       this._exp_valve.no_flow = false;
@@ -639,7 +639,7 @@ export class Ventilator {
 
   pressure_support() {
     if (this._inspiration) {
-      this._ncc_insp += 1;
+      this.ncc_insp += 1;
       this._exp_valve.no_flow = true;
       this._insp_valve.no_flow = false;
       this._insp_valve.no_back_flow = true;
@@ -659,7 +659,7 @@ export class Ventilator {
     }
 
     if (this._expiration) {
-      this._ncc_exp += 1;
+      this.ncc_exp += 1;
       this._pres_reached = false;
       this._insp_valve.no_flow = true;
       this._exp_valve.no_flow = false;
