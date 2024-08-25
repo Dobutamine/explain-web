@@ -203,7 +203,6 @@ const clear_watchlist_slow = function () {
 };
 
 const watch_props = function (args) {
-
   args.forEach((prop) => {
     model.DataCollector.add_to_watchlist(prop);
   });
@@ -242,6 +241,7 @@ const get_model_types = function () {
     payload: JSON.stringify(model_types),
   });
 };
+
 const get_model_interface = function (model_type) {
   let index = available_models.findIndex(
     (available_model) => available_model.model_type === model_type
@@ -361,7 +361,7 @@ const process_model_definition = function (model_definition) {
       ];
     } else {
       errors += 1;
-      console.log('not found: ', sub_model_def.model_type)
+      console.log("not found: ", sub_model_def.model_type);
       sendMessage({
         type: "error",
         message: sub_model_def.model_type + " model not found",
@@ -445,6 +445,7 @@ const build_execution_list = function () {
   // reset model execution list flaf
   model.rebuildExecutionListFlag = false;
 };
+
 // prepare for a model run
 const prepare_for_execution = function () {
   // iterate over the models and add the models which should be executed to the list
@@ -735,7 +736,7 @@ const save_model_state_json = function (target) {
   for (let [mn, m] of Object.entries(model.models)) {
     new_json["models"][mn] = {};
     for (let [pn, pv] of Object.entries(m)) {
-      console.log(pn,pv)
+      console.log(pn, pv);
       if (pn[0] !== "_" && pn !== "model_interface" && pv !== null) {
         if (typeof pv == "object" && pv.hasOwnProperty("name")) {
           new_json["models"][mn][pn] = pv.name;
