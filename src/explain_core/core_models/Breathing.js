@@ -77,7 +77,8 @@ export class Breathing {
 
     // if the patient is intubated, the minute volume is calculated differently
     if (this.is_intubated) {
-      this.exp_tidal_volume = this._model_engine.models["Ventilator"].exp_tidal_volume;
+      this.exp_tidal_volume =
+        this._model_engine.models["Ventilator"].exp_tidal_volume;
     }
 
     // calculate the target minute volume
@@ -130,7 +131,8 @@ export class Breathing {
       this._exp_running = false;
       this._temp_insp_volume = 0.0;
       if (this.is_intubated) {
-        this.exp_tidal_volume = this._model_engine.models["Ventilator"].exp_tidal_volume;
+        this.exp_tidal_volume =
+          this._model_engine.models["Ventilator"].exp_tidal_volume;
       } else {
         this.exp_tidal_volume = -this._temp_exp_volume;
       }
@@ -224,9 +226,9 @@ export class Breathing {
     // expiration
     if (this._exp_running) {
       mp =
-        (Math.pow(Math.E, -4.0 * (this._ncc_exp / (this._te / this._t))) -
+        ((Math.pow(Math.E, -4.0 * (this._ncc_exp / (this._te / this._t))) -
           this._eMin4) /
-        (1.0 - this._eMin4) *
+          (1.0 - this._eMin4)) *
         this.rmp_gain;
     }
 
@@ -246,6 +248,6 @@ export class Breathing {
   }
 
   set_vt_rr_ratio(vt_rr_ratio) {
-      this.vt_rr_ratio = vt_rr_ratio;
+    this.vt_rr_ratio = vt_rr_ratio;
   }
 }

@@ -1,5 +1,3 @@
-import { GasExchanger } from "../ModelIndex";
-
 export default class DataCollector {
   collected_data = [];
   collected_data_slow = [];
@@ -7,9 +5,9 @@ export default class DataCollector {
   sample_interval_slow = 1.0;
   watch_list = {};
   watch_list_slow = {};
-
   ncc_ventricular = {};
   ncc_atrial = {};
+
   // local parameters
   _model_engine = {};
   _interval_counter = 0;
@@ -40,6 +38,8 @@ export default class DataCollector {
       model: this._model_engine.models["Heart"],
       prop1: "ncc_atrial",
     };
+
+    console.log(model_ref.datacollector);
 
     // add the two always there
     this.watch_list[this.ncc_atrial["label"]] = this.ncc_atrial;
