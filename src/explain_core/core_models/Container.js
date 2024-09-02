@@ -129,6 +129,7 @@ export class Container {
 
       this.vol_max = this._temp_max_vol;
       this.vol_min = this._temp_min_vol;
+      this.sv = this.vol_max - this.vol_min;
 
       this._temp_max_pres = -1000.0;
       this._temp_min_pres = 1000.0;

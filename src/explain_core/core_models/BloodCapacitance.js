@@ -40,6 +40,8 @@ export class BloodCapacitance {
     this._temp_max_pres = -1000.0;
     this._temp_min_vol = 1000.0;
     this._temp_max_vol = -1000.0;
+    this._temp_cum_pres = 0.0;
+    this._analysis_counter = 0.0;
   }
 
   init_model(args) {
@@ -154,24 +156,31 @@ export class BloodCapacitance {
   }
 
   analyze() {
-    this._temp_max_pres = Math.max(this._temp_max_pres, this.pres);
-    this._temp_min_pres = Math.min(this._temp_min_pres, this.pres);
+    this._temp_max_pres = Math.max(this._temp_max_pres, this.pres_in);
+    this._temp_min_pres = Math.min(this._temp_min_pres, this.pres_in);
 
     this._temp_max_vol = Math.max(this._temp_max_vol, this.vol);
     this._temp_min_vol = Math.min(this._temp_min_vol, this.vol);
 
+    this._temp_cum_pres += this.pres_in;
+
+    this._analysis_counter += 1;
+
     if (this._model_engine.ncc_ventricular == 1) {
       this.pres_max = this._temp_max_pres;
       this.pres_min = this._temp_min_pres;
-      this.pres_mean = (this.pres_min * 2 + this.pres_max) / 3.0;
+      this.pres_mean = this._temp_cum_pres / this._analysis_counter;
 
       this.vol_max = this._temp_max_vol;
       this.vol_min = this._temp_min_vol;
+      this.sv = this.vol_max - this.vol_min;
 
       this._temp_max_pres = -1000.0;
       this._temp_min_pres = 1000.0;
       this._temp_max_vol = -1000.0;
-      this._temo_min_vol = 1000.0;
+      this._temp_min_vol = 1000.0;
+      this._temp_cum_pres = 0.0;
+      this._analysis_counter = 0.0;
     }
   }
 }

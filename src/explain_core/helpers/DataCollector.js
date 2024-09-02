@@ -210,7 +210,15 @@ export default class DataCollector {
               };
               // enable the analysis if it's min/max/mean/flow_min
               if (
-                ["pres_min", "pres_max", "pres_mean", "flow_min"].includes(p[1])
+                [
+                  "pres_min",
+                  "pres_max",
+                  "pres_mean",
+                  "flow_min",
+                  "vol_min",
+                  "vol_max",
+                  "vol_sv",
+                ].includes(p[1])
               ) {
                 this._model_engine.models[p[0]].analysis_enabled = true;
               }
