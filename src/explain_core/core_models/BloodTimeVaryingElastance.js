@@ -52,6 +52,13 @@ export class BloodTimeVaryingElastance {
     this._temp_max_vol = -1000.0;
     this._temp_cum_pres = 0.0;
     this._analysis_counter = 0.0;
+    this._pres_max_avg_queue = [];
+    this._pres_max_avg_sum = 0.0;
+    this._pres_min_avg_queue = [];
+    this._pres_min_avg_sum = 0.0;
+    this._pres_mean_avg_queue = [];
+    this._pres_mean_avg_sum = 0.0;
+    this._pres_avg_no_heartbeats = 5;
   }
 
   init_model(args) {
@@ -213,6 +220,27 @@ export class BloodTimeVaryingElastance {
       this._temp_min_vol = 1000.0;
       this._temp_cum_pres = 0.0;
       this._analysis_counter = 0;
+
+      // calculate a moving average over a number of heartbeats
+      this._pres_max_avg_queue.push(this.pres_max);
+      this._pres_min_avg_queue.push(this.pres_min);
+      this._pres_mean_avg_queue.push(this.pres_mean);
+
+      this._pres_max_avg_sum += this.pres_max;
+      this._pres_min_avg_sum += this.pres_min;
+      this._pres_mean_avg_sum += this.pres_mean;
+
+      if (this._pres_max_avg_queue.length > this._pres_avg_no_heartbeats) {
+        this._pres_max_avg_sum -= this._pres_max_avg_queue.shift();
+        this._pres_min_avg_sum -= this._pres_min_avg_queue.shift();
+        this._pres_mean_avg_sum -= this._pres_mean_avg_queue.shift();
+      }
+      this.pres_max_avg =
+        this._pres_max_avg_sum / this._pres_max_avg_queue.length;
+      this.pres_min_avg =
+        this._pres_min_avg_sum / this._pres_max_avg_queue.length;
+      this.pres_mean_avg =
+        this._pres_mean_avg_sum / this._pres_max_avg_queue.length;
     }
   }
 }

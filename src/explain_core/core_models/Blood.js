@@ -17,6 +17,11 @@ export class Blood {
     this.solutes = null;
     this.aboxy = null;
     this.viscosity = 6.0;
+    this.ph = 0.0;
+    this.pco2 = 0.0;
+    this.po2 = 0.0;
+    this.hco3 = 0.0;
+    this.be = 0.0;
 
     // local properties
     this._model_engine = model_ref;
