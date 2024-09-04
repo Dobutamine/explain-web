@@ -1,3 +1,4 @@
+import { COLOR_MASK_BITS } from "pixi.js";
 import { set_gas_composition } from "../helpers/GasComposition";
 
 export class Ventilator {
@@ -129,7 +130,9 @@ export class Ventilator {
     this._vent_circuit.is_enabled = this.vent_running;
     this._vent_out.is_enabled = this.vent_running;
     this._insp_valve.is_enabled = this.vent_running;
+    this._insp_valve.no_flow = !this.vent_running;
     this._exp_valve.is_enabled = this.vent_running;
+    this._exp_valve.no_flow = !this.vent_running;
     this._et_tube.is_enabled = this.vent_running;
     this._et_tube.no_flow = !this.vent_running;
 
@@ -169,6 +172,9 @@ export class Ventilator {
         this.volume_control();
         break;
       case "PC":
+        this.time_cycling();
+        this.pressure_control();
+        break;
       case "PRVC":
         this.time_cycling();
         this.pressure_control();
@@ -464,6 +470,8 @@ export class Ventilator {
     this._insp_valve.is_enabled = state;
     this._exp_valve.is_enabled = state;
     this._et_tube.is_enabled = state;
+    // rebuild the execution list
+    this._model_engine.rebuildExecutionListFlag = true;
   }
 
   trigger_breath() {
@@ -628,6 +636,7 @@ export class Ventilator {
       this._exp_valve.no_flow = false;
       this._exp_valve.no_back_flow = true;
       this._exp_valve.r_for = 10;
+
       this._vent_out.vol =
         this._peep / this._vent_out.el_base + this._vent_out.u_vol;
 

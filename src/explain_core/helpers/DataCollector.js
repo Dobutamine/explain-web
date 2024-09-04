@@ -164,6 +164,26 @@ export default class DataCollector {
                 prop1: p[1],
               };
               this.watch_list[prop] = watch_list_item;
+              // enable the analysis if it's min/max/mean/flow_min
+              if (
+                [
+                  "pres_min",
+                  "pres_max",
+                  "pres_mean",
+                  "pres_min_avg",
+                  "pres_max_avg",
+                  "pres_mean_avg",
+                  "flow_lmin",
+                  "flow_lmin_avg",
+                  "flow_lmin_forward",
+                  "flow_lmin_backward",
+                  "vol_min",
+                  "vol_max",
+                  "vol_sv",
+                ].includes(p[1])
+              ) {
+                this._model_engine.models[p[0]].analysis_enabled = true;
+              }
 
               break;
             case 3:
