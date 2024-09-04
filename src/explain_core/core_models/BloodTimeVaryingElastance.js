@@ -58,6 +58,10 @@ export class BloodTimeVaryingElastance {
     this._pres_min_avg_sum = 0.0;
     this._pres_mean_avg_queue = [];
     this._pres_mean_avg_sum = 0.0;
+    this._vol_max_avg_queue = [];
+    this._vol_max_avg_sum = 0.0;
+    this._vol_min_avg_queue = [];
+    this._vol_min_avg_sum = 0.0;
     this._pres_avg_no_heartbeats = 5;
   }
 
@@ -203,6 +207,12 @@ export class BloodTimeVaryingElastance {
 
     this._temp_cum_pres += this.pres_in;
 
+    this._vol_max_avg_queue.push(this.vol_max);
+    this._vol_min_avg_queue.push(this.vol_min);
+
+    this._vol_max_avg_sum += this.vol_max;
+    this._vol_min_avg_sum += this.vol_min;
+
     this._analysis_counter += 1;
 
     if (this._model_engine.ncc_ventricular == 1) {
@@ -234,6 +244,9 @@ export class BloodTimeVaryingElastance {
         this._pres_max_avg_sum -= this._pres_max_avg_queue.shift();
         this._pres_min_avg_sum -= this._pres_min_avg_queue.shift();
         this._pres_mean_avg_sum -= this._pres_mean_avg_queue.shift();
+
+        this._vol_max_avg_sum -= this._vol_max_avg_queue.shift();
+        this._vol_min_avg_sum -= this._vol_min_avg_queue.shift();
       }
       this.pres_max_avg =
         this._pres_max_avg_sum / this._pres_max_avg_queue.length;
@@ -241,6 +254,9 @@ export class BloodTimeVaryingElastance {
         this._pres_min_avg_sum / this._pres_max_avg_queue.length;
       this.pres_mean_avg =
         this._pres_mean_avg_sum / this._pres_max_avg_queue.length;
+
+      this.vol_max_avg = this._vol_max_avg_sum / this._vol_max_avg_queue.length;
+      this.vol_min_avg = this._vol_min_avg_sum / this._vol_max_avg_queue.length;
     }
   }
 }

@@ -206,10 +206,19 @@ export class BloodCapacitance {
       this._pres_min_avg_sum += this.pres_min;
       this._pres_mean_avg_sum += this.pres_mean;
 
+      this._vol_max_avg_queue.push(this.vol_max);
+      this._vol_min_avg_queue.push(this.vol_min);
+
+      this._vol_max_avg_sum += this.vol_max;
+      this._vol_min_avg_sum += this.vol_min;
+
       if (this._pres_max_avg_queue.length > this._pres_avg_no_heartbeats) {
         this._pres_max_avg_sum -= this._pres_max_avg_queue.shift();
         this._pres_min_avg_sum -= this._pres_min_avg_queue.shift();
         this._pres_mean_avg_sum -= this._pres_mean_avg_queue.shift();
+
+        this._vol_max_avg_sum -= this._vol_max_avg_queue.shift();
+        this._vol_min_avg_sum -= this._vol_min_avg_queue.shift();
       }
       this.pres_max_avg =
         this._pres_max_avg_sum / this._pres_max_avg_queue.length;
@@ -217,6 +226,9 @@ export class BloodCapacitance {
         this._pres_min_avg_sum / this._pres_max_avg_queue.length;
       this.pres_mean_avg =
         this._pres_mean_avg_sum / this._pres_max_avg_queue.length;
+
+      this.vol_max_avg = this._vol_max_avg_sum / this._vol_max_avg_queue.length;
+      this.vol_min_avg = this._vol_min_avg_sum / this._vol_max_avg_queue.length;
     }
   }
 }
