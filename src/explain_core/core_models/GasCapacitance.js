@@ -21,6 +21,7 @@ export class GasCapacitance {
     this.pres_ext = this.pres_cc = this.pres_atm = this.pres_mus = 0.0;
     this.act_factor = this.ans_activity_factor = 1.0;
     this.pres_min = this.pres_max = this.pres_mean = 0.0;
+    this.pres_min_avg = this.pres_max_avg = this.pres_mean_avg = 0.0;
     this.vol_min = this.vol_max = this.sv = 0.0;
 
     // Initialize dependent properties
@@ -45,6 +46,23 @@ export class GasCapacitance {
     this._temp_max_pres = -1000.0;
     this._temp_min_vol = 1000.0;
     this._temp_max_vol = -1000.0;
+    this._temp_cum_pres = 0.0;
+    this._analysis_window = 5.0;
+    this._analysis_counter = 0.0;
+
+    this._pres_max_avg_queue = [];
+    this._pres_max_avg_sum = 0.0;
+    this._pres_min_avg_queue = [];
+    this._pres_min_avg_sum = 0.0;
+    this._pres_mean_avg_queue = [];
+    this._pres_mean_avg_sum = 0.0;
+
+    this._vol_max_avg_queue = [];
+    this._vol_max_avg_sum = 0.0;
+    this._vol_min_avg_queue = [];
+    this._vol_min_avg_sum = 0.0;
+
+    this._pres_avg_analysis_windows = 5;
   }
 
   init_model(args) {
@@ -232,16 +250,20 @@ export class GasCapacitance {
   }
 
   analyze() {
-    this._temp_max_pres = Math.max(this._temp_max_pres, this.pres);
-    this._temp_min_pres = Math.min(this._temp_min_pres, this.pres);
+    this._temp_max_pres = Math.max(this._temp_max_pres, this.pres_in);
+    this._temp_min_pres = Math.min(this._temp_min_pres, this.pres_in);
 
     this._temp_max_vol = Math.max(this._temp_max_vol, this.vol);
     this._temp_min_vol = Math.min(this._temp_min_vol, this.vol);
 
-    if (this._model_engine.ncc_ventricular == 1) {
+    this._temp_cum_pres += this.pres_in;
+
+    this._analysis_counter += 1;
+
+    if (this._analysis_counter > this._analysis_window / this._t) {
       this.pres_max = this._temp_max_pres;
       this.pres_min = this._temp_min_pres;
-      this.pres_mean = (this.pres_min * 2 + this.pres_max) / 3.0;
+      this.pres_mean = this._temp_cum_pres / this._analysis_counter;
 
       this.vol_max = this._temp_max_vol;
       this.vol_min = this._temp_min_vol;
@@ -250,7 +272,42 @@ export class GasCapacitance {
       this._temp_max_pres = -1000.0;
       this._temp_min_pres = 1000.0;
       this._temp_max_vol = -1000.0;
-      this._temo_min_vol = 1000.0;
+      this._temp_min_vol = 1000.0;
+      this._temp_cum_pres = 0.0;
+      this._analysis_counter = 0.0;
+
+      // calculate a moving average over a number of heartbeats
+      this._pres_max_avg_queue.push(this.pres_max);
+      this._pres_min_avg_queue.push(this.pres_min);
+      this._pres_mean_avg_queue.push(this.pres_mean);
+
+      this._pres_max_avg_sum += this.pres_max;
+      this._pres_min_avg_sum += this.pres_min;
+      this._pres_mean_avg_sum += this.pres_mean;
+
+      this._vol_max_avg_queue.push(this.vol_max);
+      this._vol_min_avg_queue.push(this.vol_min);
+
+      this._vol_max_avg_sum += this.vol_max;
+      this._vol_min_avg_sum += this.vol_min;
+
+      if (this._pres_max_avg_queue.length > this._pres_avg_analysis_windows) {
+        this._pres_max_avg_sum -= this._pres_max_avg_queue.shift();
+        this._pres_min_avg_sum -= this._pres_min_avg_queue.shift();
+        this._pres_mean_avg_sum -= this._pres_mean_avg_queue.shift();
+
+        this._vol_max_avg_sum -= this._vol_max_avg_queue.shift();
+        this._vol_min_avg_sum -= this._vol_min_avg_queue.shift();
+      }
+      this.pres_max_avg =
+        this._pres_max_avg_sum / this._pres_max_avg_queue.length;
+      this.pres_min_avg =
+        this._pres_min_avg_sum / this._pres_max_avg_queue.length;
+      this.pres_mean_avg =
+        this._pres_mean_avg_sum / this._pres_max_avg_queue.length;
+
+      this.vol_max_avg = this._vol_max_avg_sum / this._vol_max_avg_queue.length;
+      this.vol_min_avg = this._vol_min_avg_sum / this._vol_max_avg_queue.length;
     }
   }
 }

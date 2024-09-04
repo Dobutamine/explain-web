@@ -31,6 +31,13 @@ export class GasResistor {
     this._is_initialized = false;
     this._model_comp_from = null;
     this._model_comp_to = null;
+    this._temp_flow_forward = 0.0;
+    this._temp_flow_backward = 0.0;
+    this._flow_avg_queue = [];
+    this._flow_avg_sum = 0.0;
+    this._flow_avg_analysis_windows = 5;
+    this._analysis_window = 5.0;
+    this._analysis_counter = 0.0;
   }
 
   init_model(args = {}) {
@@ -137,6 +144,15 @@ export class GasResistor {
         this._model_comp_to
       );
     }
+
+    // do the anaylis if enabled
+    if (this.analysis_enabled) {
+      this.analyze();
+    } else {
+      this.flow_lmin = 0.0;
+      this.flow_lmin_forward = 0.0;
+      this.flow_lmin_backward = 0.0;
+    }
   }
 
   reconnect(comp_from, comp_to) {
@@ -155,6 +171,38 @@ export class GasResistor {
       this._model_comp_to = this._model_engine.models[this.comp_to];
     } else {
       this._model_comp_to = this.comp_to;
+    }
+  }
+
+  analyze() {
+    if (this.flow > 0.0) {
+      this._temp_flow_forward += this.flow * this._t;
+    } else {
+      this._temp_flow_backward += this.flow * this._t;
+    }
+    this._analysis_counter += this._t;
+
+    if (this._analysis_counter == this._analysis_window) {
+      this.flow_lmin =
+        ((this._temp_flow_forward + this._temp_flow_backward) /
+          this._analysis_counter) *
+        60.0;
+      this.flow_lmin_forward =
+        (this._temp_flow_forward / this._analysis_counter) * 60.0;
+      this.flow_lmin_backward =
+        (this._temp_flow_backward / this._analysis_counter) * 60.0;
+
+      this._temp_flow_forward = 0.0;
+      this._temp_flow_backward = 0.0;
+      this._analysis_counter = 0.0;
+
+      // calculate a moving average over a number of heartbeats
+      this._flow_avg_queue.push(this.flow_lmin);
+      this._flow_avg_sum += this.flow_lmin;
+      if (this._flow_avg_queue.length > this._flow_avg_analysis_windows) {
+        this._flow_avg_sum -= this._flow_avg_queue.shift();
+      }
+      this.flow_lmin_avg = this._flow_avg_sum / this._flow_avg_queue.length;
     }
   }
 }
