@@ -17,11 +17,20 @@ export class Blood {
     this.solutes = null;
     this.aboxy = null;
     this.viscosity = 6.0;
-    this.ph = 0.0;
-    this.pco2 = 0.0;
-    this.po2 = 0.0;
-    this.hco3 = 0.0;
-    this.be = 0.0;
+
+    // dependent properties
+    this.ph_art = 0.0;
+    this.pco2_art = 0.0;
+    this.po2_art = 0.0;
+    this.hco3_art = 0.0;
+    this.be_art = 0.0;
+    this.ph_ven = 0.0;
+    this.pco2_ven = 0.0;
+    this.po2_ven = 0.0;
+    this.hco3_ven = 0.0;
+    this.be_ven = 0.0;
+    this.so2_art = 0.0;
+    this.so2_ven = 0.0;
 
     // local properties
     this._model_engine = model_ref;
@@ -70,6 +79,25 @@ export class Blood {
         // update the blood composition
         set_blood_composition(this._model_engine.models[m]);
       }
+
+      // set the arterial en venous blood gasses on the blood model
+      this.ph_art = this._model_engine.models["AD"].ph;
+      this.ph_ven = this._model_engine.models["RA"].ph;
+
+      this.po2_art = this._model_engine.models["AD"].po2;
+      this.po2_ven = this._model_engine.models["RA"].po2;
+
+      this.pco2_art = this._model_engine.models["AD"].pco2;
+      this.pco2_ven = this._model_engine.models["RA"].pco2;
+
+      this.hco3_art = this._model_engine.models["AD"].hco3;
+      this.hco3_ven = this._model_engine.models["RA"].hco3;
+
+      this.be_art = this._model_engine.models["AD"].be;
+      this.be_ven = this._model_engine.models["RA"].be;
+
+      this.so2_art = this._model_engine.models["AD"].so2;
+      this.so2_ven = this._model_engine.models["RA"].so2;
     }
   }
 }

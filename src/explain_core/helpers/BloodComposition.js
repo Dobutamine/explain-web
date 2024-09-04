@@ -54,6 +54,8 @@ export function set_blood_composition(bc) {
   if (bg.valid_ab) {
     bc.ph = bg.ph;
     bc.pco2 = bg.pco2;
+    bc.hco3 = bg.hco3;
+    bc.be = bg.be;
     aboxy.ph = bg.ph;
     aboxy.pco2 = bg.pco2;
     aboxy.hco3 = bg.hco3;

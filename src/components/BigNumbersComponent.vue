@@ -108,11 +108,11 @@ export default {
           this.spo2_pre = this.currentData["AA.so2"].toFixed(0);
           this.spo2_post = this.currentData["AD.so2"].toFixed(0);
           this.abp =
-            this.currentData["AAR.pres_max_avg"].toFixed(0) +
+            this.currentData["AD.pres_max_avg"].toFixed(0) +
             "/" +
-            this.currentData["AAR.pres_min_avg"].toFixed(0);
+            this.currentData["AD.pres_min_avg"].toFixed(0);
           this.abp_mean =
-            "(" + this.currentData["AAR.pres_mean_avg"].toFixed(0) + ")";
+            "(" + this.currentData["AD.pres_mean_avg"].toFixed(0) + ")";
           this.rr = this.currentData["Breathing.resp_rate"].toFixed(0);
           this.vent_rate = this.currentData["Ventilator.vent_rate"].toFixed(0);
         } catch {}
@@ -140,9 +140,9 @@ export default {
       "AD.so2",
       "Breathing.resp_rate",
       "Ventilator.vent_rate",
-      "AAR.pres_mean_avg",
-      "AAR.pres_max_avg",
-      "AAR.pres_min_avg",
+      "AD.pres_mean_avg",
+      "AD.pres_max_avg",
+      "AD.pres_min_avg",
     ]);
   },
 };

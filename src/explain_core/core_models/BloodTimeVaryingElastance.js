@@ -40,7 +40,7 @@ export class BloodTimeVaryingElastance {
     this.vol = 0.0;
     this.pres = this.pres_in = this.pres_out = this.pres_tm = 0.0;
     this.pres_ed = this.pres_ms = 0.0;
-    this.po2 = this.pco2 = this.ph = this.so2 = 0.0;
+    this.po2 = this.pco2 = this.ph = this.so2 = this.hco3 = this.be = 0.0;
 
     // initialize local properties
     this._model_engine = model_ref;
