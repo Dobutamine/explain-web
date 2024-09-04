@@ -1,7 +1,64 @@
 export class BloodCapacitance {
   // static properties
   static model_type = "BloodCapacitance";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      default: true,
+    },
+    {
+      target: "fixed_composition",
+      caption: "fixed composition",
+      type: "boolean",
+      default: false,
+    },
+    {
+      target: "vol",
+      caption: "volume (l)",
+      type: "number",
+      default: 0.001,
+      factor: 1,
+      delta: 0.0001,
+      rounding: 4,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+    {
+      target: "u_vol",
+      caption: "unstressed volume (l)",
+      type: "number",
+      default: 0.001,
+      factor: 1,
+      delta: 0.0001,
+      rounding: 4,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+    {
+      target: "el_base",
+      caption: "baseline elastance (mmHg/l)",
+      type: "number",
+      default: 1000.0,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 1,
+    },
+    {
+      target: "el_k",
+      caption: "non-linear elastance (mmHg/l^2)",
+      type: "number",
+      default: 1.0,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 0,
+    },
+  ];
 
   constructor(model_ref, name = "") {
     // initialize independent properties

@@ -1,7 +1,83 @@
 export class BloodResistor {
   // static properties
   static model_type = "BloodResistor";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+    },
+    {
+      target: "no_flow",
+      caption: "no flow allowed",
+      type: "boolean",
+    },
+    {
+      target: "no_back_flow",
+      caption: "no back flow allowed",
+      type: "boolean",
+    },
+    {
+      target: "r_for",
+      caption: "forward flow resistance (mmHg*sec/l)",
+      type: "number",
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 10.0,
+    },
+    {
+      target: "r_back",
+      caption: "backward flow resistance (mmHg*sec/l)",
+      type: "number",
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 10.0,
+    },
+    {
+      target: "r_k",
+      caption: "non-linear resistance (sec/l)",
+      type: "number",
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+    {
+      target: "comp_from",
+      caption: "model from ",
+      type: "list",
+      options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+    },
+    {
+      target: "comp_to",
+      caption: "model to ",
+      type: "list",
+      options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+    },
+    {
+      target: "reconnect",
+      caption: "reconnect resistor",
+      type: "function",
+      optional: true,
+      args: [
+        {
+          target: "comp_from",
+          type: "list",
+          options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+        },
+        {
+          target: "comp_to",
+          type: "list",
+          options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+        },
+      ],
+    },
+  ];
 
   constructor(model_ref, name = "") {
     // initialize independent properties

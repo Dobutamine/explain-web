@@ -1,7 +1,67 @@
 export class BloodDiffusor {
   // static properties
   static model_type = "BloodDiffusor";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      default: true,
+    },
+    {
+      target: "dif_o2",
+      caption: "oxygen diffusion constant (mmol/mmHg*sec) ",
+      type: "number",
+      default: 0.01,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+    {
+      target: "dif_co2",
+      caption: "carbon dioxide diffusion constant (mmol/mmHg*sec) ",
+      type: "number",
+      default: 0.01,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+    {
+      target: "comp_blood1",
+      caption: "blood compartment 1",
+      type: "list",
+      options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+    },
+    {
+      target: "comp_blood2",
+      caption: "blood compartment 2",
+      type: "list",
+      options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+    },
+
+    {
+      target: "reconnect",
+      caption: "reconnect diffusor",
+      type: "function",
+      optional: true,
+      args: [
+        {
+          target: "comp_blood1",
+          type: "list",
+          options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+        },
+        {
+          target: "comp_blood2",
+          type: "list",
+          options: ["BloodCapacitance", "BloodTimeVaryingElastance"],
+        },
+      ],
+    },
+  ];
 
   constructor(model_ref, name = "") {
     // independent properties
@@ -66,46 +126,53 @@ export class BloodDiffusor {
   calc_model() {
     // diffuse the solutes
     for (let solute of this.solutes) {
-      let d_sol = 
-        (this._comp_blood1.solutes[solute] - this._comp_blood2.solutes[solute]) *
-        this.dif_cap * this.dif_cap_factor * this.dif_cap_scaling_factor;
+      let d_sol =
+        (this._comp_blood1.solutes[solute] -
+          this._comp_blood2.solutes[solute]) *
+        this.dif_cap *
+        this.dif_cap_factor *
+        this.dif_cap_scaling_factor;
 
-      this._comp_blood2.solutes[solute] = 
-        (this._comp_blood2.solutes[solute] * this._comp_blood2.vol + d_sol) / 
+      this._comp_blood2.solutes[solute] =
+        (this._comp_blood2.solutes[solute] * this._comp_blood2.vol + d_sol) /
         this._comp_blood2.vol;
 
-      this._comp_blood1.solutes[solute] = 
-        (this._comp_blood1.solutes[solute] * this._comp_blood1.vol - d_sol) / 
+      this._comp_blood1.solutes[solute] =
+        (this._comp_blood1.solutes[solute] * this._comp_blood1.vol - d_sol) /
         this._comp_blood1.vol;
     }
 
     // diffuse the drugs
     for (let drug of this.drugs) {
-      let d_drug = 
-        (this._comp_blood1.drugs[drug] - this._comp_blood2.drugs[drug]) * 
-        this.dif_cap * this.dif_cap_factor * this.dif_cap_scaling_factor;
+      let d_drug =
+        (this._comp_blood1.drugs[drug] - this._comp_blood2.drugs[drug]) *
+        this.dif_cap *
+        this.dif_cap_factor *
+        this.dif_cap_scaling_factor;
 
-      this._comp_blood2.drugs[drug] = 
-        (this._comp_blood2.drugs[drug] * this._comp_blood2.vol + d_drug) / 
+      this._comp_blood2.drugs[drug] =
+        (this._comp_blood2.drugs[drug] * this._comp_blood2.vol + d_drug) /
         this._comp_blood2.vol;
 
-      this._comp_blood1.drugs[drug] = 
-        (this._comp_blood1.drugs[drug] * this._comp_blood1.vol - d_drug) / 
+      this._comp_blood1.drugs[drug] =
+        (this._comp_blood1.drugs[drug] * this._comp_blood1.vol - d_drug) /
         this._comp_blood1.vol;
     }
 
     // diffuse the aboxy
     for (let abox of this.aboxy) {
-      let d_abox = 
-        (this._comp_blood1.aboxy[abox] - this._comp_blood2.aboxy[abox]) * 
-        this.dif_cap * this.dif_cap_factor * this.dif_cap_scaling_factor;
+      let d_abox =
+        (this._comp_blood1.aboxy[abox] - this._comp_blood2.aboxy[abox]) *
+        this.dif_cap *
+        this.dif_cap_factor *
+        this.dif_cap_scaling_factor;
 
-      this._comp_blood2.aboxy[abox] = 
-        (this._comp_blood2.aboxy[abox] * this._comp_blood2.vol + d_abox) / 
+      this._comp_blood2.aboxy[abox] =
+        (this._comp_blood2.aboxy[abox] * this._comp_blood2.vol + d_abox) /
         this._comp_blood2.vol;
 
-      this._comp_blood1.aboxy[abox] = 
-        (this._comp_blood1.aboxy[abox] * this._comp_blood1.vol - d_abox) / 
+      this._comp_blood1.aboxy[abox] =
+        (this._comp_blood1.aboxy[abox] * this._comp_blood1.vol - d_abox) /
         this._comp_blood1.vol;
     }
   }

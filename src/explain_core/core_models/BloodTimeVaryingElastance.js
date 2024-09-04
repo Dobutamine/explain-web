@@ -1,7 +1,64 @@
 export class BloodTimeVaryingElastance {
   // static properties
   static model_type = "BloodTimeVaryingElastance";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "fixed_composition",
+      caption: "fixed composition",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "u_vol",
+      caption: "unstressed volume (l)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 0.0001,
+      rounding: 4,
+      ul: 100000000.0,
+      ll: 0,
+    },
+    {
+      target: "el_min",
+      caption: "minimal elastance (mmHg/l)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 1,
+    },
+    {
+      target: "el_max",
+      caption: "maximal elastance (mmHg/l)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 1,
+    },
+    {
+      target: "el_k",
+      caption: "non-linear elastance (mmHg/l^2)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 0.0001,
+      rounding: 4,
+      ul: 100000000.0,
+      ll: -100000000.0,
+    },
+  ];
 
   constructor(model_ref, name = "") {
     // initialize independent properties
