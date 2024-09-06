@@ -1,6 +1,53 @@
 export class Container {
   static model_type = "Container";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+    },
+    {
+      target: "contained_components",
+      caption: "contained components",
+      type: "multiple-list",
+      options: [
+        "BloodCapacitance",
+        "GasCapacitance",
+        "BloodTimeVaryingElastance",
+        "Container",
+      ],
+    },
+    {
+      target: "u_vol",
+      caption: "unstressed volume (l)",
+      type: "number",
+      factor: 1,
+      delta: 0.0001,
+      rounding: 4,
+      ul: 100000000.0,
+      ll: 0.0,
+    },
+    {
+      target: "el_base",
+      caption: "baseline elastance (mmHg/l)",
+      type: "number",
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 1,
+    },
+    {
+      target: "el_k",
+      caption: "non-linear elastance (mmHg/l^2)",
+      type: "number",
+      factor: 1,
+      delta: 0.0001,
+      rounding: 4,
+      ul: 100000000.0,
+      ll: 0,
+    },
+  ];
 
   constructor(model_ref, name = "") {
     // Independent properties

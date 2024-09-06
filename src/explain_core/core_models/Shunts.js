@@ -1,6 +1,245 @@
 export class Shunts {
   static model_type = "Shunts";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "da_enabled",
+      caption: "ductus arteriosus enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "da_el_base",
+      caption: "ductus arteriosus elastance base (mmHg/ml)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 0.1,
+    },
+    {
+      target: "da_u_vol",
+      caption: "ductus arteriosus unstressed volume (l)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 0.0001,
+      rounding: 4,
+      ul: 10000.0,
+      ll: 0.0,
+    },
+    {
+      target: "da_el_k",
+      caption: "ductus arteriosus non-linear elastance factor",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 10,
+      rounding: 0,
+      ul: 100000000000.0,
+      ll: 0.0,
+    },
+    {
+      target: "da_in_res",
+      caption: "ductus arteriosus inlet resistance (mmHg*sec/l)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 1000000000.0,
+      ll: 20.0,
+    },
+    {
+      target: "da_in_r_k",
+      caption: "ductus inlet non-linear resistance factor",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 1000000000.0,
+      ll: 0.0,
+    },
+    {
+      target: "da_diameter",
+      caption: "ductus arteriosus diameter (mm)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 10.0,
+      ll: 0.1,
+    },
+    {
+      target: "da_length",
+      caption: "ductus arteriosus length (mm)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 1000.0,
+      ll: 0.1,
+    },
+    {
+      target: "da_out_r_k",
+      caption: "ductus outlet non-linear resistance factor",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 1000000000.0,
+      ll: 0.0,
+    },
+
+    {
+      target: "fo_enabled",
+      caption: "foramen ovale enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "fo_diameter",
+      caption: "foramen ovale diameter (mm)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 10.0,
+      ll: 0.1,
+    },
+    {
+      target: "fo_length",
+      caption: "foramen ovale length (mm)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 10000.0,
+      ll: 0.1,
+    },
+    {
+      target: "fo_res_backflow_factor",
+      caption: "foramen ovale backflow resistance factor",
+      type: "number",
+      optional: false,
+      relative: false,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 10000000.0,
+      ll: 0.1,
+    },
+    {
+      target: "fo_r_k",
+      caption: "foramen ovale non-linear resistance factor",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 1000000000.0,
+      ll: 0.0,
+    },
+    {
+      target: "ips_enabled",
+      caption: "intrapulmonary shunt enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "ips_res",
+      caption: "intrapulmonary shunt resistance (mmHg*sec/l)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 1.0,
+    },
+    {
+      target: "ips_res_backflow_factor",
+      caption: "intrapulmonary shunt backflow resistance factor",
+      type: "number",
+      optional: false,
+      relative: false,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 100000000.0,
+      ll: 0.1,
+    },
+    {
+      target: "ips_r_k",
+      caption: "foramen ovale non-linear resistance factor",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 1000000000.0,
+      ll: 0.0,
+    },
+
+    {
+      target: "vsd_enabled",
+      caption: "vsd enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "vsd_diameter",
+      caption: "vsd diameter (mm)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 10.0,
+      ll: 0.1,
+    },
+    {
+      target: "vsd_length",
+      caption: "vsd length (mm)",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 10000.0,
+      ll: 0.1,
+    },
+    {
+      target: "vsd_res_backflow_factor",
+      caption: "vsd backflow resistance factor",
+      type: "number",
+      optional: false,
+      relative: false,
+      factor: 1,
+      delta: 0.1,
+      rounding: 1,
+      ul: 100000000.0,
+      ll: 0.1,
+    },
+    {
+      target: "vsd_r_k",
+      caption: "vsd non-linear resistance factor",
+      type: "number",
+      optional: false,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 1000000000.0,
+      ll: 0.0,
+    },
+  ];
 
   constructor(model_ref, name = "") {
     // Independent properties
@@ -71,10 +310,10 @@ export class Shunts {
   }
 
   init_model(args) {
-      // set the values of the properties as passed in the arguments
-      args.forEach((arg) => {
-        this[arg["key"]] = arg["value"];
-      });
+    // set the values of the properties as passed in the arguments
+    args.forEach((arg) => {
+      this[arg["key"]] = arg["value"];
+    });
 
     // Build the shunts
     this.init_da();
@@ -275,8 +514,7 @@ export class Shunts {
       const radius_meters = diameter / 2 / 1000.0;
 
       let res =
-        (8.0 * n_pas * length_meters) /
-        (Math.PI * Math.pow(radius_meters, 4));
+        (8.0 * n_pas * length_meters) / (Math.PI * Math.pow(radius_meters, 4));
 
       res = res * 0.00000750062;
       return res;

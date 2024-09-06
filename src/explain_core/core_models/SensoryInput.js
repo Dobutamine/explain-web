@@ -1,7 +1,85 @@
 export class SensoryInput {
   // static properties
   static model_type = "SensoryInput";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      default: true,
+    },
+    {
+      target: "min_value",
+      caption: "minimal value",
+      type: "number",
+      default: 0,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+    {
+      target: "set_value",
+      caption: "setpoint value",
+      type: "number",
+      default: 0,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+    {
+      target: "max_value",
+      caption: "maximal value",
+      type: "number",
+      default: 0,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: -10000000.0,
+    },
+    {
+      target: "time_constant",
+      caption: "time_constant (s)",
+      type: "number",
+      default: 1,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 0.0,
+    },
+    {
+      target: "set_input_site",
+      caption: "input site",
+      type: "function",
+      optional: true,
+      args: [
+        {
+          target: "input_site",
+          type: "list",
+          options: [
+            "BloodCapacitance",
+            "BloodTimeVaryingElastance",
+            "BloodResistor",
+            "BloodValve",
+            "Container",
+            "GasCapacitance",
+            "GasResistor",
+          ],
+        },
+      ],
+    },
+    {
+      target: "input_parameter",
+      caption: "input parameter",
+      type: "string",
+      default: "",
+    },
+  ];
 
   constructor(model_ref, name = "") {
     // independent properties
@@ -10,7 +88,7 @@ export class SensoryInput {
     this.is_enabled = false;
     this.dependencies = [];
     this.receptor_type = "";
-   
+
     this.input_parameter = "";
     this.input_site = "";
     this.min_value = 0.0;
@@ -59,6 +137,11 @@ export class SensoryInput {
     }
   }
 
+  set_input_site(new_site) {
+    // get a reference to the input site
+    this._input_site = this._model_engine.models[new_site];
+  }
+
   // actual model calculations are done here
   calc_model() {
     // for performance reasons the update is done only every 15 ms instead of every step
@@ -82,17 +165,25 @@ export class SensoryInput {
       // calculate the gain
       if (_activation > 0) {
         // calculate the gain for positive activation
-        this._gain = (this.max_firing_rate - this.set_firing_rate) / (this.max_value - this.set_value);
+        this._gain =
+          (this.max_firing_rate - this.set_firing_rate) /
+          (this.max_value - this.set_value);
       } else {
         // calculate the gain for negative activation
-        this._gain = (this.set_firing_rate - this.min_firing_rate) / (this.set_value - this.min_value);
+        this._gain =
+          (this.set_firing_rate - this.min_firing_rate) /
+          (this.set_value - this.min_value);
       }
 
       // calculate the firing rate of the receptor
       const _new_firing_rate = this.set_firing_rate + this._gain * _activation;
 
       // incorporate the time constant to calculate the firing rate
-      this.firing_rate = this._update_window * ((1.0 / this.time_constant) * (-this.firing_rate + _new_firing_rate)) + this.firing_rate;
+      this.firing_rate =
+        this._update_window *
+          ((1.0 / this.time_constant) *
+            (-this.firing_rate + _new_firing_rate)) +
+        this.firing_rate;
     }
   }
 }

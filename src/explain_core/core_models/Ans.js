@@ -1,7 +1,34 @@
 export class Ans {
   // static properties
   static model_type = "Ans";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      default: true,
+    },
+    {
+      target: "ans_active",
+      caption: "ans active",
+      type: "boolean",
+      default: true,
+    },
+    {
+      target: "sensors",
+      caption: "sensors",
+      type: "ans_sensor_list",
+      optional: false,
+      args: [],
+    },
+    {
+      target: "effectors",
+      caption: "effectors",
+      type: "ans_effector_list",
+      optional: false,
+      args: [],
+    },
+  ];
 
   constructor(model_ref, name = "") {
     // independent properties
@@ -13,7 +40,7 @@ export class Ans {
 
     // sensory inputs
     this.sensors = [
-      { name: "cr pco2", input: "CR_PCO2", effector: "mv", weight: 1.0 }
+      { name: "cr pco2", input: "CR_PCO2", effector: "mv", weight: 1.0 },
     ];
 
     // effectors
@@ -23,8 +50,8 @@ export class Ans {
         cum_mxe_high: 10.0,
         cum_mxe_low: 0.1,
         tc: 5.0,
-        effector_change: 0.0
-      }
+        effector_change: 0.0,
+      },
     };
 
     // dependent properties
@@ -44,11 +71,11 @@ export class Ans {
     args.forEach((arg) => {
       this[arg["key"]] = arg["value"];
     });
-    
+
     // initialize the effectors with references to the necessary models
     for (let [effector_name, effector] of Object.entries(this.effectors)) {
       const target = effector.target.split(".");
-      
+
       this._effectors[effector_name] = {
         target_model: this._model_engine.models[target[0]],
         target_prop: target[1],
@@ -57,7 +84,7 @@ export class Ans {
         cum_firing_rate: effector.cum_firing_rate || 0.0,
         cum_weight: effector.cum_weight || 0.0,
         tc: effector.tc,
-        effector_change: effector.effector_change
+        effector_change: effector.effector_change,
       };
     }
 
@@ -67,7 +94,7 @@ export class Ans {
         input: this._model_engine.models[sensor.input],
         effector: sensor.effector,
         weight: sensor.weight,
-        sensor_activity: 0.0
+        sensor_activity: 0.0,
       };
     }
 
@@ -119,18 +146,24 @@ export class Ans {
       const tc = _effector.tc;
 
       // Determine the total average firing rate
-      const _firing_rate_avg = cum_weight === 0.0 ? 50.0 : cum_firing_rate / cum_weight;
+      const _firing_rate_avg =
+        cum_weight === 0.0 ? 50.0 : cum_firing_rate / cum_weight;
 
       // Translate the average firing rate to the effect factor
       let _effector_change;
       if (_firing_rate_avg >= 50.0) {
-        _effector_change = 1.0 + ((cum_mxe_high - 1.0) / 50.0) * (_firing_rate_avg - 50.0);
+        _effector_change =
+          1.0 + ((cum_mxe_high - 1.0) / 50.0) * (_firing_rate_avg - 50.0);
       } else {
-        _effector_change = cum_mxe_low + (1.0 - cum_mxe_low) / 50.0 * _firing_rate_avg;
+        _effector_change =
+          cum_mxe_low + ((1.0 - cum_mxe_low) / 50.0) * _firing_rate_avg;
       }
 
       // Incorporate the time constant for the effector change
-      const new_effector_change = this._update_window * ((1.0 / tc) * (-effector_change_current + _effector_change)) + effector_change_current;
+      const new_effector_change =
+        this._update_window *
+          ((1.0 / tc) * (-effector_change_current + _effector_change)) +
+        effector_change_current;
 
       _effector.effector_change = new_effector_change;
 
@@ -141,5 +174,23 @@ export class Ans {
       _effector.cum_firing_rate = 0.0;
       _effector.cum_weight = 0.0;
     }
+  }
+
+  set_sensor_properties(new_props) {
+    // re-initialize the sensors with references to the necessary models
+    this.sensors = [...new_props];
+
+    for (let sensor of this.sensors) {
+      if (this._model_engine.models[sensor.input]) {
+        this._sensors[sensor.name].input =
+          this._model_engine.models[sensor.input];
+        this._sensors[sensor.name].effector = sensor.effector;
+        this._sensors[sensor.name].weight = parseFloat(sensor.weight);
+      } else {
+        console.log("Ans sensor not found!");
+      }
+    }
+
+    console.log(this._sensors);
   }
 }

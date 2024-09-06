@@ -1,7 +1,78 @@
 export class Breathing {
   // static properties
   static model_type = "Breathing";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "breathing_enabled",
+      caption: "spontaneous breathing",
+      type: "boolean",
+      optional: false,
+    },
+    {
+      target: "minute_volume_ref",
+      caption: "reference minute volume (l/kg/min)",
+      type: "number",
+      optional: false,
+      factor: 1.0,
+      delta: 0.001,
+      rounding: 3,
+      ul: 100000000.0,
+      ll: 0.0,
+    },
+    {
+      target: "vt_rr_ratio",
+      caption: "tidal volume/respiration rate ratio",
+      type: "number",
+      optional: false,
+      factor: 1000,
+      delta: 0.001,
+      rounding: 3,
+      ul: 10,
+      ll: 0.001,
+    },
+    {
+      target: "ie_ratio",
+      caption: "inspiration/expiration time ratio",
+      type: "number",
+      optional: false,
+      factor: 1.0,
+      delta: 0.01,
+      rounding: 2,
+      ul: 1.0,
+      ll: 0.01,
+    },
+    {
+      target: "rmp_gain_max",
+      caption: "max respiratory muscle pressure gain",
+      type: "number",
+      optional: false,
+      factor: 1.0,
+      delta: 0.1,
+      rounding: 1,
+      ul: 100000000.0,
+      ll: 0.1,
+    },
+    {
+      target: "targets",
+      caption: "resp muscle pressure targets",
+      type: "multiple-list",
+      optional: false,
+      options: ["Container", "GasCapacitance"],
+    },
+    {
+      target: "tv_source",
+      caption: "tidal volume source",
+      type: "list",
+      optional: false,
+      options: ["GasResistor"],
+    },
+  ];
 
   constructor(model_ref, name = "") {
     // initialize independent properties

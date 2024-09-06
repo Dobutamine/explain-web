@@ -1,7 +1,105 @@
 export class BloodPump {
   // static properties
   static model_type = "BloodPump";
-  static model_interface = [];
+  static model_interface = [
+    {
+      target: "is_enabled",
+      caption: "is enabled",
+      type: "boolean",
+      default: true,
+    },
+    {
+      target: "fixed_composition",
+      caption: "fixed composition",
+      type: "boolean",
+      default: true,
+    },
+    {
+      target: "pump_rpm",
+      caption: "rotations per minute",
+      type: "number",
+      default: 0.0,
+      factor: 1,
+      delta: 10,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: -100000000.0,
+    },
+    {
+      target: "vol",
+      caption: "volume (l)",
+      type: "number",
+      default: 0.01,
+      factor: 1,
+      delta: 0.0001,
+      rounding: 4,
+      ul: 100000000.0,
+      ll: 0.0,
+    },
+    {
+      target: "u_vol",
+      caption: "unstressed volume (l)",
+      type: "number",
+      default: 0,
+      factor: 1,
+      delta: 0.0001,
+      rounding: 4,
+      ul: 100000000.0,
+      ll: 0.0,
+    },
+    {
+      target: "el_base",
+      caption: "baseline elastance (mmHg/l)",
+      type: "number",
+      default: 10000,
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+      ul: 100000000.0,
+      ll: 1,
+    },
+    {
+      target: "el_k",
+      caption: "non-linear elastance (mmHg/l^2)",
+      type: "number",
+      default: 1,
+      factor: 1,
+      delta: 0.01,
+      rounding: 2,
+      ul: 100000000.0,
+      ll: 1,
+    },
+    {
+      target: "inlet",
+      caption: "inlet compartment",
+      type: "list",
+      options: ["BloodResistor", "BloodValve"],
+    },
+    {
+      target: "outlet",
+      caption: "outlet compartment",
+      type: "list",
+      options: ["BloodResistor", "BloodValve"],
+    },
+    {
+      target: "connect_pump",
+      caption: "pump connectors",
+      type: "function",
+      optional: false,
+      args: [
+        {
+          target: "inlet",
+          type: "list",
+          options: ["BloodResistor", "BloodValve"],
+        },
+        {
+          target: "outlet",
+          type: "list",
+          options: ["BloodResistor", "BloodValve"],
+        },
+      ],
+    },
+  ];
 
   constructor(model_ref, name = "") {
     // initialize independent properties
