@@ -9,6 +9,7 @@ export { BloodValve } from "./core_models/BloodValve";
 export { Breathing } from "./core_models/Breathing";
 export { Circulation } from "./core_models/Circulation";
 export { Container } from "./core_models/Container";
+export { Effector } from "./core_models/Effector";
 export { Fluids } from "./core_models/Fluids";
 export { Gas } from "./core_models/Gas";
 export { GasCapacitance } from "./core_models/GasCapacitance";
@@ -23,6 +24,5 @@ export { Ecls } from "./device_models/Ecls";
 export { Resuscitation } from "./device_models/Resuscitation";
 export { Ventilator } from "./device_models/Ventilator";
 export { Scaler } from "./core_models/Scaler";
-export { SensoryInput } from "./core_models/SensoryInput"
+export { SensoryInput } from "./core_models/SensoryInput";
 export { Shunts } from "./core_models/Shunts";
-

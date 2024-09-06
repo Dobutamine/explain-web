@@ -114,65 +114,65 @@ export class Ans {
     this._update_counter += this._t;
     if (this._update_counter >= this._update_window) {
       this._update_counter = 0.0;
-    }
 
-    // Get the sensor values into the effectors
-    for (let _sensor_name in this._sensors) {
-      const _sensor = this._sensors[_sensor_name];
+      // Get the sensor values into the effectors
+      for (let _sensor_name in this._sensors) {
+        const _sensor = this._sensors[_sensor_name];
 
-      // Get the firing rate
-      const _firing_rate = _sensor.input.firing_rate;
+        // Get the firing rate
+        const _firing_rate = _sensor.input.firing_rate;
 
-      // Fetch the effector name and its weight once
-      const effector_name = _sensor.effector;
-      const sensor_weight = _sensor.weight;
+        // Fetch the effector name and its weight once
+        const effector_name = _sensor.effector;
+        const sensor_weight = _sensor.weight;
 
-      // Access the effector dictionary once
-      const _effector = this._effectors[effector_name];
+        // Access the effector dictionary once
+        const _effector = this._effectors[effector_name];
 
-      // Add the firing rate to the effector
-      _effector.cum_firing_rate += _firing_rate * sensor_weight;
-      _effector.cum_weight += sensor_weight;
-    }
-
-    // calculate the effectors
-    for (let _effector_name in this._effectors) {
-      const _effector = this._effectors[_effector_name];
-      const cum_weight = _effector.cum_weight;
-      const cum_firing_rate = _effector.cum_firing_rate;
-      const cum_mxe_high = _effector.cum_mxe_high;
-      const cum_mxe_low = _effector.cum_mxe_low;
-      const effector_change_current = _effector.effector_change;
-      const tc = _effector.tc;
-
-      // Determine the total average firing rate
-      const _firing_rate_avg =
-        cum_weight === 0.0 ? 50.0 : cum_firing_rate / cum_weight;
-
-      // Translate the average firing rate to the effect factor
-      let _effector_change;
-      if (_firing_rate_avg >= 50.0) {
-        _effector_change =
-          1.0 + ((cum_mxe_high - 1.0) / 50.0) * (_firing_rate_avg - 50.0);
-      } else {
-        _effector_change =
-          cum_mxe_low + ((1.0 - cum_mxe_low) / 50.0) * _firing_rate_avg;
+        // Add the firing rate to the effector
+        _effector.cum_firing_rate += _firing_rate * sensor_weight;
+        _effector.cum_weight += sensor_weight;
       }
 
-      // Incorporate the time constant for the effector change
-      const new_effector_change =
-        this._update_window *
-          ((1.0 / tc) * (-effector_change_current + _effector_change)) +
-        effector_change_current;
+      // calculate the effectors
+      for (let _effector_name in this._effectors) {
+        const _effector = this._effectors[_effector_name];
+        const cum_weight = _effector.cum_weight;
+        const cum_firing_rate = _effector.cum_firing_rate;
+        const cum_mxe_high = _effector.cum_mxe_high;
+        const cum_mxe_low = _effector.cum_mxe_low;
+        const effector_change_current = _effector.effector_change;
+        const tc = _effector.tc;
 
-      _effector.effector_change = new_effector_change;
+        // Determine the total average firing rate
+        const _firing_rate_avg =
+          cum_weight === 0.0 ? 50.0 : cum_firing_rate / cum_weight;
 
-      // Transfer the effect factor to the target model
-      _effector.target_model[_effector.target_prop] = new_effector_change;
+        // Translate the average firing rate to the effect factor
+        let _effector_change;
+        if (_firing_rate_avg >= 50.0) {
+          _effector_change =
+            1.0 + ((cum_mxe_high - 1.0) / 50.0) * (_firing_rate_avg - 50.0);
+        } else {
+          _effector_change =
+            cum_mxe_low + ((1.0 - cum_mxe_low) / 50.0) * _firing_rate_avg;
+        }
 
-      // Reset the effect factor and number of effectors
-      _effector.cum_firing_rate = 0.0;
-      _effector.cum_weight = 0.0;
+        // Incorporate the time constant for the effector change
+        const new_effector_change =
+          this._update_window *
+            ((1.0 / tc) * (-effector_change_current + _effector_change)) +
+          effector_change_current;
+
+        _effector.effector_change = new_effector_change;
+
+        // Transfer the effect factor to the target model
+        _effector.target_model[_effector.target_prop] = new_effector_change;
+
+        // Reset the effect factor and number of effectors
+        _effector.cum_firing_rate = 0.0;
+        _effector.cum_weight = 0.0;
+      }
     }
   }
 
