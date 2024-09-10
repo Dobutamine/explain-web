@@ -18,13 +18,13 @@ export class EfferentPathway {
     this.dependencies = [];
     this.target = "";
 
-    this.cum_mxe_high = 0.0;
-    this.cum_mxe_low = 0.0;
+    this.mxe_high = 0.0;
+    this.mxe_low = 0.0;
     this.tc = 0.0;
 
     // dependent properties
-    this.cum_firing_rate = 0.0;
-    this.cum_weight = 1.0;
+    this.firing_rate = 0.0;
+    this.weight = 1.0;
     this.effector_change = 0.0;
 
     // local properties
@@ -68,17 +68,16 @@ export class EfferentPathway {
 
       // Determine the total average firing rate
       const _firing_rate_avg =
-        this.cum_weight === 0.0 ? 50.0 : this.cum_firing_rate / this.cum_weight;
+        this.weight === 0.0 ? 50.0 : this.firing_rate / this.weight;
 
       // Translate the average firing rate to the effect factor
       let _effector_change;
       if (_firing_rate_avg >= 50.0) {
         _effector_change =
-          1.0 + ((this.cum_mxe_high - 1.0) / 50.0) * (_firing_rate_avg - 50.0);
+          1.0 + ((this.mxe_high - 1.0) / 50.0) * (_firing_rate_avg - 50.0);
       } else {
         _effector_change =
-          this.cum_mxe_low +
-          ((1.0 - this.cum_mxe_low) / 50.0) * _firing_rate_avg;
+          this.mxe_low + ((1.0 - this.mxe_low) / 50.0) * _firing_rate_avg;
       }
 
       // Incorporate the time constant for the effector change
@@ -93,14 +92,14 @@ export class EfferentPathway {
       this._target_model[this._target_prop] = new_effector_change;
 
       // Reset the effect factor and number of effectors
-      this.cum_firing_rate = 0.0;
-      this.cum_weight = 0.0;
+      this.firing_rate = 0.0;
+      this.weight = 0.0;
     }
   }
 
   // set effector firing rate
   update_effector(_firing_rate, _weight) {
-    this.cum_firing_rate += _firing_rate * _weight;
-    this.cum_weight += _weight;
+    this.firing_rate += _firing_rate * _weight;
+    this.weight += _weight;
   }
 }

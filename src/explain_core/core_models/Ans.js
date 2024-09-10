@@ -81,22 +81,4 @@ export class Ans {
       }
     }
   }
-
-  set_pathway_properties(new_props) {
-    // re-initialize the sensors with references to the necessary models
-    this.sensors = [...new_props];
-
-    for (let sensor of this.sensors) {
-      if (this._model_engine.models[sensor.input]) {
-        this._sensors[sensor.name].input =
-          this._model_engine.models[sensor.input];
-        this._sensors[sensor.name].effector = sensor.effector;
-        this._sensors[sensor.name].weight = parseFloat(sensor.weight);
-      } else {
-        console.log("Ans sensor not found!");
-      }
-    }
-
-    console.log(this._sensors);
-  }
 }
