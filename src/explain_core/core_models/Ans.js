@@ -14,20 +14,6 @@ export class Ans {
       type: "boolean",
       default: true,
     },
-    {
-      target: "sensors",
-      caption: "sensors",
-      type: "ans_sensor_list",
-      optional: false,
-      args: [],
-    },
-    {
-      target: "effectors",
-      caption: "effectors",
-      type: "ans_effector_list",
-      optional: false,
-      args: [],
-    },
   ];
 
   constructor(model_ref, name = "") {
@@ -68,8 +54,6 @@ export class Ans {
       };
     }
 
-    console.log(this._pathways);
-
     // flag that the model is initialized
     this._is_initialized = true;
   }
@@ -89,34 +73,16 @@ export class Ans {
 
       // Connect the sensor with the effector
       for (let t in this._pathways) {
-        console.log(this._pathways[t]);
+        let _pathway = this._pathways[t];
         _pathway.effector.update_effector(
-          _pathway.sensor.firing_rate * _pathway.sensor.weight,
-          _pathway.sensor.weight
+          _pathway.sensor.firing_rate * _pathway.weight,
+          _pathway.weight
         );
-
-        // // Get the firing rate
-        // const _firing_rate = _sensor.input.firing_rate;
-
-        // // Fetch the effector name and its weight once
-        // const effector_name = _sensor.effector;
-        // const sensor_weight = _sensor.weight;
-
-        // // Access the effector dictionary once
-        // const _effector = this._model_engine.models[effector_name];
-
-        // // Add the firing rate to the effector
-        // if (_effector) {
-        //   _effector.update_effector(
-        //     _firing_rate * sensor_weight,
-        //     sensor_weight
-        //   );
-        // }
       }
     }
   }
 
-  set_sensor_properties(new_props) {
+  set_pathway_properties(new_props) {
     // re-initialize the sensors with references to the necessary models
     this.sensors = [...new_props];
 
