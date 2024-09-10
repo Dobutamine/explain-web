@@ -16,8 +16,8 @@ export class Effector {
     this.description = "";
     this.is_enabled = false;
     this.dependencies = [];
-    this.target_model = {};
-    this.target_prop = "";
+    this.target = "";
+
     this.cum_mxe_high = 0.0;
     this.cum_mxe_low = 0.0;
     this.tc = 0.0;
@@ -30,6 +30,8 @@ export class Effector {
     // local properties
     this._model_engine = model_ref;
     this._is_initialized = false;
+    this._target_model = {};
+    this._target_prop = "";
     this._t = model_ref.modeling_stepsize;
     this._update_window = 0.015;
     this._update_counter = 0.0;
@@ -40,6 +42,12 @@ export class Effector {
     args.forEach((arg) => {
       this[arg["key"]] = arg["value"];
     });
+
+    // find the targets
+
+    let [model, prop] = this.target.split(".");
+    this._target_model = this._model_engine.models[model];
+    this._target_prop = prop;
 
     // flag that the model is initialized
     this._is_initialized = true;
@@ -69,19 +77,20 @@ export class Effector {
           1.0 + ((this.cum_mxe_high - 1.0) / 50.0) * (_firing_rate_avg - 50.0);
       } else {
         _effector_change =
-          this.cum_mxe_low + ((1.0 - cum_mxe_low) / 50.0) * _firing_rate_avg;
+          this.cum_mxe_low +
+          ((1.0 - this.cum_mxe_low) / 50.0) * _firing_rate_avg;
       }
 
       // Incorporate the time constant for the effector change
       const new_effector_change =
         this._update_window *
-          ((1.0 / tc) * (-this.effector_change + _effector_change)) +
+          ((1.0 / this.tc) * (-this.effector_change + _effector_change)) +
         this.effector_change;
 
       this.effector_change = new_effector_change;
 
       // Transfer the effect factor to the target model
-      this.target_model[this.target_prop] = new_effector_change;
+      this._target_model[this._target_prop] = new_effector_change;
 
       // Reset the effect factor and number of effectors
       this.cum_firing_rate = 0.0;
