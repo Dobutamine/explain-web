@@ -49,6 +49,7 @@ export class Ans {
       this._pathways[pathway.name] = {
         sensor: this._model_engine.models[pathway.sensor],
         effector: this._model_engine.models[pathway.effector],
+        active: pathway.active,
         weight: pathway.weight,
         pathway_activity: 0.0,
       };
@@ -74,10 +75,12 @@ export class Ans {
       // Connect the sensor with the effector
       for (let t in this._pathways) {
         let _pathway = this._pathways[t];
-        _pathway.effector.update_effector(
-          _pathway.sensor.firing_rate * _pathway.weight,
-          _pathway.weight
-        );
+        if (_pathway.active) {
+          _pathway.effector.update_effector(
+            _pathway.sensor.firing_rate * _pathway.weight,
+            _pathway.weight
+          );
+        }
       }
     }
   }
