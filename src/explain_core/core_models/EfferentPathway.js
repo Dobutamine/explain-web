@@ -17,13 +17,12 @@ export class EfferentPathway {
     this.is_enabled = false;
     this.dependencies = [];
     this.target = "";
-
     this.mxe_high = 0.0;
     this.mxe_low = 0.0;
     this.tc = 0.0;
 
     // dependent properties
-    this.firing_rate = 0.0;
+    this.firing_rate = 50.0;
     this.weight = 1.0;
     this.effector_change = 0.0;
 
