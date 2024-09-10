@@ -1,6 +1,6 @@
-export class SensoryInput {
+export class AfferentPathway {
   // static properties
-  static model_type = "SensoryInput";
+  static model_type = "AfferentPathway";
   static model_interface = [
     {
       target: "is_enabled",

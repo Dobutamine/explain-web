@@ -1,6 +1,6 @@
-export class Effector {
+export class EfferentPathway {
   // static properties
-  static model_type = "Effector";
+  static model_type = "EfferentPathway";
   static model_interface = [
     {
       target: "is_enabled",
