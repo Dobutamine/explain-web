@@ -73,13 +73,15 @@ export class Ans {
       this._update_counter = 0.0;
 
       // Connect the sensor with the effector
-      for (let t in this._pathways) {
-        let _pathway = this._pathways[t];
-        if (_pathway.active) {
-          _pathway.effector.update_effector(
-            _pathway.sensor.firing_rate,
-            _pathway.effect_weight
-          );
+      if (this.ans_active) {
+        for (let t in this._pathways) {
+          let _pathway = this._pathways[t];
+          if (_pathway.active) {
+            _pathway.effector.update_effector(
+              _pathway.sensor.firing_rate,
+              _pathway.effect_weight
+            );
+          }
         }
       }
     }

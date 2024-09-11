@@ -22,7 +22,7 @@ export class Scaler {
     },
     {
       target: "scale_total_blood_volume",
-      caption: "blood volume per kg",
+      caption: "blood volume per kg (DIRECT)",
       type: "function",
       optional: false,
       args: [
@@ -41,7 +41,7 @@ export class Scaler {
     },
     {
       target: "scale_total_lung_volume",
-      caption: "lung volume per kg",
+      caption: "lung volume per kg (DIRECT)",
       type: "function",
       optional: false,
       args: [
@@ -507,6 +507,8 @@ export class Scaler {
     this.reference_weight = 3.545;
     this.weight = 3.5;
     this.age = 0.0;
+    this.ans_active = true;
+    this.mob_active = true;
     this.gestational_age = 40.0;
     this.map_ref = 40.0;
     this.hr_ref = 140.0;
@@ -593,6 +595,8 @@ export class Scaler {
     this._model_engine = model_ref;
     this._is_initialized = false;
     this._t = model_ref.modeling_stepsize;
+    this._update_interval = 1.0;
+    this._update_counter = 0.0;
   }
 
   init_model(args) {
@@ -615,6 +619,13 @@ export class Scaler {
 
   calc_model() {
     // Placeholder for actual model calculations
+    if (this._update_counter > this._update_interval) {
+      this._update_counter = 0.0;
+      this.ans_active = this._model_engine.models["Ans"].ans_active;
+      this.hr_ref = this._model_engine.models["Heart"].heart_rate_ref;
+      this.mob_active = this._model_engine.models["Mob"].mob_active;
+    }
+    this._update_counter += this._t;
   }
 
   scale_patient() {
@@ -648,7 +659,7 @@ export class Scaler {
     this.global_scale_factor = new_weight / this.reference_weight;
     this.weight = new_weight;
     this._model_engine.weight = new_weight;
-    this.scale_patient();
+    //this.scale_patient();
   }
 
   scale_total_blood_volume(new_blood_volume_kg) {
@@ -675,6 +686,15 @@ export class Scaler {
     for (let th of this.thorax) {
       this._model_engine.models[th].vol *= scale_factor;
     }
+  }
+  scale_ans_hr(hr_ref) {
+    this.hr_ref = hr_ref;
+    this.scale_ans(this.hr_ref, this.map_ref);
+  }
+
+  scale_ans_map(map_ref) {
+    this.map_ref = map_ref;
+    this.scale_ans(this.hr_ref, this.map_ref);
   }
 
   scale_ans(hr_ref, map_ref) {
@@ -894,5 +914,15 @@ export class Scaler {
     }
     this.total_gas_volume = total_volume;
     return total_volume;
+  }
+
+  toggle_ans(state) {
+    this.ans_active = state;
+    this._model_engine.models["Ans"].ans_active = state;
+  }
+
+  toggle_mob(state) {
+    this.mob_active = this.mob_active;
+    this._model_engine.models["Mob"].mob_active = state;
   }
 }
