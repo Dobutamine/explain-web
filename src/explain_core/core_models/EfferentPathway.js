@@ -22,9 +22,8 @@ export class EfferentPathway {
     this.tc = 0.0;
 
     // dependent properties
-    this.firing_rate = 50.0;
-    this.weight = 1.0;
-    this.effector_change = 0.0;
+    this.firing_rate = 0.5;
+    this.effector_change = 1.0;
 
     // local properties
     this._model_engine = model_ref;
@@ -34,6 +33,7 @@ export class EfferentPathway {
     this._t = model_ref.modeling_stepsize;
     this._update_window = 0.015;
     this._update_counter = 0.0;
+    this._avg_counter = 1.0;
   }
 
   init_model(args) {
@@ -42,8 +42,7 @@ export class EfferentPathway {
       this[arg["key"]] = arg["value"];
     });
 
-    // find the targets
-
+    // find the target
     let [model, prop] = this.target.split(".");
     this._target_model = this._model_engine.models[model];
     this._target_prop = prop;
@@ -67,16 +66,18 @@ export class EfferentPathway {
 
       // Determine the total average firing rate
       const _firing_rate_avg =
-        this.weight === 0.0 ? 50.0 : this.firing_rate / this.weight;
+        this._avg_counter > 0.0
+          ? this.firing_rate / this._avg_counter
+          : this.firing_rate;
 
       // Translate the average firing rate to the effect factor
       let _effector_change;
-      if (_firing_rate_avg >= 50.0) {
+      if (_firing_rate_avg >= 0.5) {
         _effector_change =
-          1.0 + ((this.mxe_high - 1.0) / 50.0) * (_firing_rate_avg - 50.0);
+          1.0 + ((this.mxe_high - 1.0) / 0.5) * (_firing_rate_avg - 0.5);
       } else {
         _effector_change =
-          this.mxe_low + ((1.0 - this.mxe_low) / 50.0) * _firing_rate_avg;
+          this.mxe_low + ((1.0 - this.mxe_low) / 0.5) * _firing_rate_avg;
       }
 
       // Incorporate the time constant for the effector change
@@ -91,14 +92,14 @@ export class EfferentPathway {
       this._target_model[this._target_prop] = new_effector_change;
 
       // Reset the effect factor and number of effectors
-      this.firing_rate = 0.0;
-      this.weight = 0.0;
+      this.firing_rate = 0.5;
+      this._avg_counter = 0.0;
     }
   }
 
   // set effector firing rate
   update_effector(_firing_rate, _weight) {
-    this.firing_rate += _firing_rate * _weight;
-    this.weight += _weight;
+    this.firing_rate += (_firing_rate - 0.5) * _weight;
+    this._avg_counter += 1.0;
   }
 }

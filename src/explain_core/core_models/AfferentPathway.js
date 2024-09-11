@@ -87,16 +87,11 @@ export class AfferentPathway {
     this.description = "";
     this.is_enabled = false;
     this.dependencies = [];
-    this.receptor_type = "";
 
-    this.input_parameter = "";
-    this.input_site = "";
+    this.input = "";
     this.min_value = 0.0;
     this.set_value = 0.0;
     this.max_value = 0.0;
-    this.max_firing_rate = 100.0;
-    this.set_firing_rate = 50.0;
-    this.min_firing_rate = 0.0;
     this.time_constant = 1.0;
 
     // dependent properties
@@ -108,8 +103,12 @@ export class AfferentPathway {
     this._is_initialized = false;
     this._update_window = 0.015;
     this._update_counter = 0.0;
+    this._max_firing_rate = 1.0;
+    this._set_firing_rate = 0.5;
+    this._min_firing_rate = 0.0;
     this._t = model_ref.modeling_stepsize;
     this._input_site = null;
+    this._input_prop = "";
     this._gain = 0.0;
   }
 
@@ -120,11 +119,13 @@ export class AfferentPathway {
     });
 
     // get a reference to the input site
-    this._input_site = this._model_engine.models[this.input_site];
+    let [model, prop] = this.input.split(".");
+    this._input_site = this._model_engine.models[model];
+    this._input_prop = prop;
 
     // set the initial values
-    this.current_value = this._input_site[this.input_parameter];
-    this.firing_rate = this.set_firing_rate;
+    this.current_value = this._input_site[this._input_prop];
+    this.firing_rate = this._set_firing_rate;
 
     // flag that the model is initialized
     this._is_initialized = true;
@@ -137,11 +138,6 @@ export class AfferentPathway {
     }
   }
 
-  set_input_site(new_site) {
-    // get a reference to the input site
-    this._input_site = this._model_engine.models[new_site];
-  }
-
   // actual model calculations are done here
   calc_model() {
     // for performance reasons the update is done only every 15 ms instead of every step
@@ -150,7 +146,7 @@ export class AfferentPathway {
       this._update_counter = 0.0;
 
       // get the input value
-      this.input_value = this._input_site[this.input_parameter];
+      this.input_value = this._input_site[this._input_prop];
 
       // calculate the activation value
       let _activation = 0.0;
@@ -166,17 +162,17 @@ export class AfferentPathway {
       if (_activation > 0) {
         // calculate the gain for positive activation
         this._gain =
-          (this.max_firing_rate - this.set_firing_rate) /
+          (this._max_firing_rate - this._set_firing_rate) /
           (this.max_value - this.set_value);
       } else {
         // calculate the gain for negative activation
         this._gain =
-          (this.set_firing_rate - this.min_firing_rate) /
+          (this._set_firing_rate - this._min_firing_rate) /
           (this.set_value - this.min_value);
       }
 
       // calculate the firing rate of the receptor
-      const _new_firing_rate = this.set_firing_rate + this._gain * _activation;
+      const _new_firing_rate = this._set_firing_rate + this._gain * _activation;
 
       // incorporate the time constant to calculate the firing rate
       this.firing_rate =
