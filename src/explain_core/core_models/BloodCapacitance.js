@@ -84,6 +84,7 @@ export class BloodCapacitance {
     this.pres_min = this.pres_max = this.pres_mean = 0.0;
     this.pres_min_avg = this.pres_max_avg = this.pres_mean_avg = 0.0;
     this.vol_min = this.vol_max = this.sv = 0.0;
+    this.vol_min_avg = this.vol_max_avg = this.sv_avg = 0.0;
 
     // initialize dependent properties
     this.vol = this.vol_max = this.vol_min = this.vol_sv = 0.0;
@@ -286,6 +287,7 @@ export class BloodCapacitance {
 
       this.vol_max_avg = this._vol_max_avg_sum / this._vol_max_avg_queue.length;
       this.vol_min_avg = this._vol_min_avg_sum / this._vol_max_avg_queue.length;
+      this.sv_avg = this.vol_max_avg - this.vol_min_avg;
     }
   }
 }

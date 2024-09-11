@@ -180,6 +180,9 @@ export default class DataCollector {
                   "vol_min",
                   "vol_max",
                   "vol_sv",
+                  "vol_min_svg",
+                  "vol_max_svg",
+                  "vol_sv_svg",
                 ].includes(p[1])
               ) {
                 this._model_engine.models[p[0]].analysis_enabled = true;
@@ -244,6 +247,9 @@ export default class DataCollector {
                   "vol_min",
                   "vol_max",
                   "vol_sv",
+                  "vol_min_svg",
+                  "vol_max_svg",
+                  "vol_sv_svg",
                 ].includes(p[1])
               ) {
                 this._model_engine.models[p[0]].analysis_enabled = true;
