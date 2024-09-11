@@ -265,12 +265,6 @@ export class BloodTimeVaryingElastance {
 
     this._temp_cum_pres += this.pres_in;
 
-    this._vol_max_avg_queue.push(this.vol_max);
-    this._vol_min_avg_queue.push(this.vol_min);
-
-    this._vol_max_avg_sum += this.vol_max;
-    this._vol_min_avg_sum += this.vol_min;
-
     this._analysis_counter += 1;
 
     if (this._model_engine.ncc_ventricular == 1) {
