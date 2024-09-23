@@ -61,7 +61,10 @@ export default class TaskScheduler {
           task.it -= this._update_interval;
           switch (task.type) {
             case "number":
-              if (Math.abs(task.v - task.t) < Math.abs(task.step)) {
+              if (
+                Math.abs(task.v - task.t) < Math.abs(task.step) ||
+                Math.abs(task.v - task.t) === 0.0
+              ) {
                 task.v = parseFloat(task.t);
                 task.status = "completed";
                 completed = true;
