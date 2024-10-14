@@ -279,16 +279,16 @@ export class Placenta {
       this._plf.u_vol = this.plf_u_vol;
       this._plf.u_vol_factor = this.plf_u_vol_factor;
 
-      this._plm.aboxy["to2"] = this.mat_to2;
-      this._plm.aboxy["tco2"] = this.mat_tco2;
+      this._plm.to2 = this.mat_to2;
+      this._plm.tco2 = this.mat_tco2;
 
       this._pl_gasex.dif_co2 = this.dif_co2;
       this._pl_gasex.dif_o2 = this.dif_o2;
       this._pl_gasex.dif_co2_factor = this.dif_co2_factor;
       this._pl_gasex.dif_o2_factor = this.dif_o2_factor;
 
-      this.mat_po2 = this._plm.aboxy["po2"];
-      this.mat_pco2 = this._plm.aboxy["pco2"];
+      this.mat_po2 = this._plm.po2;
+      this.mat_pco2 = this._plm.pco2;
 
       this.umb_art_flow = this._umb_art.flow;
       this.umb_art_flow_lmin = this._umb_art.umb_art_flow_lmin;

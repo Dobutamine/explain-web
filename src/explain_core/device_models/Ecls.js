@@ -208,7 +208,10 @@ export class Ecls {
     this._tubing_in.init_model(args);
 
     this._tubing_in.solutes = { ...this._model_engine.models["AA"].solutes };
-    this._tubing_in.aboxy = { ...this._model_engine.models["AA"].aboxy };
+    this._tubing_in.to2 = this._model_engine.models["AA"].to2;
+    this._tubing_in.tco2 = this._model_engine.models["AA"].tco2;
+    this._tubing_in.temp = this._model_engine.models["AA"].temp;
+    this._tubing_in.viscosity = this._model_engine.models["AA"].viscosity;
 
     this._tubing_in.calc_model();
     this._ecls_parts.push(this._tubing_in);
@@ -232,7 +235,10 @@ export class Ecls {
     this._tubing_out.init_model(args);
 
     this._tubing_out.solutes = { ...this._model_engine.models["AA"].solutes };
-    this._tubing_out.aboxy = { ...this._model_engine.models["AA"].aboxy };
+    this._tubing_out.to2 = this._model_engine.models["AA"].to2;
+    this._tubing_out.tco2 = this._model_engine.models["AA"].tco2;
+    this._tubing_out.temp = this._model_engine.models["AA"].temp;
+    this._tubing_out.viscosity = this._model_engine.models["AA"].viscosity;
 
     this._tubing_out.calc_model();
     this._ecls_parts.push(this._tubing_out);
@@ -257,7 +263,10 @@ export class Ecls {
     );
 
     this._bridge.solutes = { ...this._model_engine.models["AA"].solutes };
-    this._bridge.aboxy = { ...this._model_engine.models["AA"].aboxy };
+    this._bridge.to2 = this._model_engine.models["AA"].to2;
+    this._bridge.tco2 = this._model_engine.models["AA"].tco2;
+    this._bridge.temp = this._model_engine.models["AA"].temp;
+    this._bridge.viscosity = this._model_engine.models["AA"].viscosity;
 
     this._bridge.calc_model();
     this._ecls_parts.push(this._bridge);
@@ -274,7 +283,10 @@ export class Ecls {
     );
 
     this._oxy.solutes = { ...this._model_engine.models["AA"].solutes };
-    this._oxy.aboxy = { ...this._model_engine.models["AA"].aboxy };
+    this._oxy.to2 = this._model_engine.models["AA"].to2;
+    this._oxy.tco2 = this._model_engine.models["AA"].tco2;
+    this._oxy.temp = this._model_engine.models["AA"].temp;
+    this._oxy.viscosity = this._model_engine.models["AA"].viscosity;
 
     this._oxy.calc_model();
     this._ecls_parts.push(this._oxy);
@@ -294,7 +306,10 @@ export class Ecls {
     );
 
     this._pump.solutes = { ...this._model_engine.models["AA"].solutes };
-    this._pump.aboxy = { ...this._model_engine.models["AA"].aboxy };
+    this._pump.to2 = this._model_engine.models["AA"].to2;
+    this._pump.tco2 = this._model_engine.models["AA"].tco2;
+    this._pump.temp = this._model_engine.models["AA"].temp;
+    this._pump.viscosity = this._model_engine.models["AA"].viscosity;
 
     this._pump.calc_model();
     this._ecls_parts.push(this._pump);

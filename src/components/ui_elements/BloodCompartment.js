@@ -135,7 +135,7 @@ export default class BloodCompartment {
     this.models.forEach((model) => {
       volume += data[model + ".vol"];
       volumes.push(data[model + ".vol"]);
-      to2s.push(data[model + ".aboxy.to2"]);
+      to2s.push(data[model + ".to2"]);
     });
     // calculate factors
     this.to2 = 0;

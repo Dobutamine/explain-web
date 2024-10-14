@@ -96,10 +96,10 @@ export class GasExchanger {
     set_blood_composition(this._blood);
 
     // Get the partial pressures and gas concentrations from the components
-    const po2_blood = this._blood.aboxy["po2"];
-    const pco2_blood = this._blood.aboxy["pco2"];
-    const to2_blood = this._blood.aboxy["to2"];
-    const tco2_blood = this._blood.aboxy["tco2"];
+    const po2_blood = this._blood.po2;
+    const pco2_blood = this._blood.pco2;
+    const to2_blood = this._blood.to2;
+    const tco2_blood = this._blood.tco2;
 
     const co2_gas = this._gas.co2;
     const cco2_gas = this._gas.cco2;
@@ -148,8 +148,8 @@ export class GasExchanger {
     }
 
     // Transfer the new concentrations
-    this._blood.aboxy["to2"] = new_to2_blood;
-    this._blood.aboxy["tco2"] = new_tco2_blood;
+    this._blood.to2 = new_to2_blood;
+    this._blood.tco2 = new_tco2_blood;
     this._gas.co2 = new_co2_gas;
     this._gas.cco2 = new_cco2_gas;
   }

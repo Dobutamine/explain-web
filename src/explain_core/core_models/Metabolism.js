@@ -111,8 +111,8 @@ export class Metabolism {
     for (const [model, fvo2] of Object.entries(this.metabolic_active_models)) {
       // Get the vol, tco2, and to2 from the blood compartment
       const vol = this._model_engine.models[model].vol;
-      const to2 = this._model_engine.models[model].aboxy["to2"];
-      const tco2 = this._model_engine.models[model].aboxy["tco2"];
+      const to2 = this._model_engine.models[model].to2;
+      const tco2 = this._model_engine.models[model].tco2;
 
       // Calculate the change in oxygen concentration in this step
       const dto2 = vo2_step * fvo2;
@@ -129,8 +129,8 @@ export class Metabolism {
       if (new_tco2 < 0) new_tco2 = 0;
 
       // Store the new to2 and tco2
-      this._model_engine.models[model].aboxy["to2"] = new_to2;
-      this._model_engine.models[model].aboxy["tco2"] = new_tco2;
+      this._model_engine.models[model].to2 = new_to2;
+      this._model_engine.models[model].tco2 = new_tco2;
     }
   }
 

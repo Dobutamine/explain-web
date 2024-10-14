@@ -759,6 +759,40 @@ const save_model_state_json = function (target) {
     payload: [new_json],
   });
 };
+const save_model_state_python = function (target) {
+  let new_json = {
+    name: model["name"],
+    description: model["description"],
+    weight: model["weight"],
+    height: model["height"],
+    modeling_stepsize: model["modeling_stepsize"],
+    model_time_total: model["model_time_total"],
+    models: {},
+    model_groups: {},
+  };
+
+  // process the model definition file to find the necessary properties
+  for (let [mn, m] of Object.entries(model.models)) {
+    new_json["models"][mn] = {};
+    for (let [pn, pv] of Object.entries(m)) {
+      // do not save any properties with _ as prefix
+      if (pn[0] !== "_" && pn !== "model_interface" && pv !== null) {
+        if (typeof pv == "object" && pv.hasOwnProperty("name")) {
+          // save an dictionary
+          new_json["models"][mn][pn] = pv.name;
+        } else {
+          new_json["models"][mn][pn] = pv;
+        }
+      }
+    }
+  }
+  // send data to the ui
+  postMessage({
+    type: "saved_state_python",
+    message: target,
+    payload: [new_json],
+  });
+};
 
 const sendMessage = function (message) {
   message.message = "ModelEngine: " + message.message;

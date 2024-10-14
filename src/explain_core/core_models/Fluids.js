@@ -191,10 +191,8 @@ class Fluid {
     if (fluid_comp) {
       this.fluid_comp = fluid_comp;
       this.solutes = fluid_comp.solutes ? { ...fluid_comp.solutes } : {};
-      this.aboxy = fluid_comp.aboxy ? { ...fluid_comp.aboxy } : {};
     } else {
       this.solutes = {};
-      this.aboxy = {};
     }
 
     this.site = site;
@@ -231,11 +229,6 @@ class Fluid {
     this.site.vol += this.delta_vol;
 
     if (this.fluid_comp) {
-      for (const [solute, conc] of Object.entries(this.aboxy)) {
-        const d_solute = (conc - this.site.aboxy[solute]) * this.delta_vol;
-        this.site.aboxy[solute] += d_solute / this.site.vol;
-      }
-
       for (const [solute, conc] of Object.entries(this.solutes)) {
         const d_solute = (conc - this.site.solutes[solute]) * this.delta_vol;
         this.site.solutes[solute] += d_solute / this.site.vol;

@@ -14,9 +14,11 @@ export class Blood {
     this.dependencies = [];
     this.blood_containing_components = [];
     this.acidbase_components = [];
-    this.solutes = null;
-    this.aboxy = null;
+    this.to2 = 0.0;
+    this.tco2 = 0.0;
     this.viscosity = 6.0;
+    this.temp = 0.0;
+    this.solutes = null;
 
     // dependent properties
     this.ph_art = 0.0;
@@ -46,15 +48,24 @@ export class Blood {
       this[arg["key"]] = arg["value"];
     });
 
-    // set the aboxy and solutes if not set by the state which is loaded
+    // set the solutes if not set by the state which is loaded
     for (let model of this.blood_containing_components) {
       const modelInstance = this._model_engine.models[model];
-
-      if (!modelInstance.hasOwnProperty("aboxy")) {
-        modelInstance.aboxy = { ...this.aboxy };
-      }
       if (!modelInstance.hasOwnProperty("solutes")) {
         modelInstance.solutes = { ...this.solutes };
+      }
+      // set the to2, tco2, viscosity and temp if not already set
+      if (modelInstance.to2 === 0.0) {
+        modelInstance.to2 = this.to2;
+      }
+      if (modelInstance.tco2 === 0.0) {
+        modelInstance.tco2 = this.tco2;
+      }
+      if (modelInstance.viscosity === 0.0) {
+        modelInstance.viscosity = this.viscosity;
+      }
+      if (modelInstance.temp === 0.0) {
+        modelInstance.temp = this.temp;
       }
     }
 

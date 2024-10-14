@@ -655,7 +655,7 @@ export class Heart {
     this._pc = this._model_engine.models[this.pericardium];
     this._cor = this._model_engine.models[this.coronaries];
 
-    this.input_value = this._input_site = this._model_engine.models["LL"].aboxy;
+    this.input_value = this._input_site = this._model_engine.models["LL"];
 
     // Flag that the model is initialized
     this._is_initialized = true;

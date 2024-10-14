@@ -350,8 +350,8 @@ export class Mob {
     this.hw = 7.799 + 0.004296 * this._model_engine.weight * 1000.0;
 
     // Get the necessary model properties from the coronaries
-    const to2_cor = this._cor.aboxy["to2"];
-    const tco2_cor = this._cor.aboxy["tco2"];
+    const to2_cor = this._cor.to2;
+    const tco2_cor = this._cor.tco2;
     const vol_cor = this._cor.vol;
 
     // Activation function for VO2 calculation
@@ -393,7 +393,7 @@ export class Mob {
     const co2_production = this.mvo2_step * this.resp_q;
 
     // Myocardial oxygen balance in mmol/s
-    const o2_inflow = this._aa_cor.flow * this._aa.aboxy["to2"];
+    const o2_inflow = this._aa_cor.flow * this._aa.to2;
     const o2_use = this.mvo2_step / this._t;
     this.mob = o2_inflow - o2_use + to2_cor;
 
@@ -402,15 +402,15 @@ export class Mob {
       let new_to2_cor = (to2_cor * vol_cor - this.mvo2_step) / vol_cor;
       let new_tco2_cor = (tco2_cor * vol_cor + co2_production) / vol_cor;
       if (new_to2_cor >= 0) {
-        this._cor.aboxy["to2"] = new_to2_cor;
-        this._cor.aboxy["tco2"] = new_tco2_cor;
+        this._cor.to2 = new_to2_cor;
+        this._cor.tco2 = new_tco2_cor;
       }
     }
 
     // Store blood composition of coronary blood
-    this.cor_po2 = this._cor.aboxy["po2"];
-    this.cor_pco2 = this._cor.aboxy["pco2"];
-    this.cor_so2 = this._cor.aboxy["so2"];
+    this.cor_po2 = this._cor.po2;
+    this.cor_pco2 = this._cor.pco2;
+    this.cor_so2 = this._cor.so2;
 
     // Calculate effects on heart rate, contractility, and autonomic nervous system
     this.calc_effectors(this._a_to2);

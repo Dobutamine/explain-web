@@ -136,7 +136,7 @@ export default class BloodPump {
     this.models.forEach((model) => {
       volume += data[model + ".vol"];
       volumes.push(data[model + ".vol"]);
-      to2s.push(data[model + ".aboxy.to2"]);
+      to2s.push(data[model + ".to2"]);
       rot += data[model + ".pump_rpm"];
     });
     // calculate factors

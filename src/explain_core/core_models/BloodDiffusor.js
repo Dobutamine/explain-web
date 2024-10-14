@@ -71,7 +71,6 @@ export class BloodDiffusor {
     this.dependencies = [];
     this.solutes = [];
     this.drugs = [];
-    this.aboxy = [];
     this.comp_blood1 = null;
     this.comp_blood2 = null;
     this.dif_cap = 0.01;
@@ -159,22 +158,30 @@ export class BloodDiffusor {
         this._comp_blood1.vol;
     }
 
-    // diffuse the aboxy
-    for (let abox of this.aboxy) {
-      let d_abox =
-        (this._comp_blood1.aboxy[abox] - this._comp_blood2.aboxy[abox]) *
-        this.dif_cap *
-        this.dif_cap_factor *
-        this.dif_cap_scaling_factor;
+    // diffuse the to2 and tco2
+    let do2 =
+      (this._comp_blood1.to2 - this._comp_blood2.to2) *
+      this.dif_cap *
+      this.dif_cap_factor *
+      this.dif_cap_scaling_factor;
+    this._comp_blood2.to2 =
+      (this._comp_blood2.to2 * this._comp_blood2.vol + do2) /
+      this._comp_blood2.vol;
+    this._comp_blood1.to2 =
+      (this._comp_blood1.to2 * this._comp_blood1.vol - do2) /
+      this._comp_blood1.vol;
 
-      this._comp_blood2.aboxy[abox] =
-        (this._comp_blood2.aboxy[abox] * this._comp_blood2.vol + d_abox) /
-        this._comp_blood2.vol;
-
-      this._comp_blood1.aboxy[abox] =
-        (this._comp_blood1.aboxy[abox] * this._comp_blood1.vol - d_abox) /
-        this._comp_blood1.vol;
-    }
+    let dco2 =
+      (this._comp_blood1.tco2 - this._comp_blood2.tco2) *
+      this.dif_cap *
+      this.dif_cap_factor *
+      this.dif_cap_scaling_factor;
+    this._comp_blood2.tco2 =
+      (this._comp_blood2.tco2 * this._comp_blood2.vol + dco2) /
+      this._comp_blood2.vol;
+    this._comp_blood1.tco2 =
+      (this._comp_blood1.tco2 * this._comp_blood1.vol - dco2) /
+      this._comp_blood1.vol;
   }
 
   reconnect(comp_blood1, comp_blood2) {

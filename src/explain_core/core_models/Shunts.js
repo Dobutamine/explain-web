@@ -450,7 +450,6 @@ export class Shunts {
     this._da.el_k = this.da_el_k;
 
     this._da.solutes = { ...this._model_engine.models["AA"].solutes };
-    this._da.aboxy = { ...this._model_engine.models["AA"].aboxy };
 
     this._da.calc_model();
     this._shunts.push(this._da);

@@ -23,7 +23,7 @@ let hco3 = 0.0;
 let be = 0.0;
 let to2 = 0.0;
 let hemoglobin = 0.0;
-let dpg = 0.0;
+let dpg = 5.0;
 let temp = 0.0;
 let tco2 = 0.0;
 let sid = 0.0;
@@ -33,22 +33,21 @@ let uma = 0.0;
 
 export function set_blood_composition(bc) {
   // calculate the acidbase and oxygenation
-  let aboxy = bc.aboxy;
   let sol = bc.solutes;
 
   // calculate the apparent SID
   let sid = sol.na + sol.k + 2 * sol.ca + 2 * sol.mg - sol.cl - sol.lact;
 
   let bg = get_blood_composition(
-    aboxy.to2,
-    aboxy.tco2,
+    bc.to2,
+    bc.tco2,
     sid,
-    aboxy.albumin,
-    aboxy.phosphates,
-    aboxy.uma,
-    aboxy.hemoglobin,
-    aboxy.dpg,
-    aboxy.temp
+    sol.albumin,
+    sol.phosphates,
+    sol.uma,
+    sol.hemoglobin,
+    this.dpg,
+    bc.temp
   );
 
   if (bg.valid_ab) {
@@ -56,17 +55,11 @@ export function set_blood_composition(bc) {
     bc.pco2 = bg.pco2;
     bc.hco3 = bg.hco3;
     bc.be = bg.be;
-    aboxy.ph = bg.ph;
-    aboxy.pco2 = bg.pco2;
-    aboxy.hco3 = bg.hco3;
-    aboxy.be = bg.be;
   }
 
   if (bg.valid_o2) {
     bc.po2 = bg.po2;
     bc.so2 = bg.so2;
-    aboxy.po2 = bg.po2;
-    aboxy.so2 = bg.so2;
   }
 }
 

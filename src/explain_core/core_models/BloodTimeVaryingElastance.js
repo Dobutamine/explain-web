@@ -67,7 +67,6 @@ export class BloodTimeVaryingElastance {
     this.is_enabled = false;
     this.dependencies = [];
     this.fixed_composition = false;
-    this.aboxy = {};
     this.solutes = {};
     this.drugs = {};
     this.analysis_enabled = false;
@@ -235,12 +234,9 @@ export class BloodTimeVaryingElastance {
         ((comp_from.drugs[drug] - this.drugs[drug]) * dvol) / this.vol;
     }
 
-    // process the aboxy relevant properties
-    const ab_solutes = ["to2", "tco2", "hemoglobin", "albumin"];
-    for (let ab_sol of ab_solutes) {
-      this.aboxy[ab_sol] +=
-        ((comp_from.aboxy[ab_sol] - this.aboxy[ab_sol]) * dvol) / this.vol;
-    }
+    // process the to2 and tco2
+    this.to2 += ((comp_from.to2 - this.to2) * dvol) / this.vol;
+    this.tco2 += ((comp_from.tco2 - this.tco2) * dvol) / this.vol;
   }
 
   volume_out(dvol) {
