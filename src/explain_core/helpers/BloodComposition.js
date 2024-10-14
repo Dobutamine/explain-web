@@ -46,7 +46,7 @@ export function set_blood_composition(bc) {
     sol.phosphates,
     sol.uma,
     sol.hemoglobin,
-    this.dpg,
+    dpg,
     bc.temp
   );
 

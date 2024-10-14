@@ -53,7 +53,12 @@ export class Blood {
       const modelInstance = this._model_engine.models[model];
       if (!modelInstance.hasOwnProperty("solutes")) {
         modelInstance.solutes = { ...this.solutes };
+      } else {
+        if (Object.keys(modelInstance.solutes).length === 0) {
+          modelInstance.solutes = { ...this.solutes };
+        }
       }
+
       // set the to2, tco2, viscosity and temp if not already set
       if (modelInstance.to2 === 0.0) {
         modelInstance.to2 = this.to2;

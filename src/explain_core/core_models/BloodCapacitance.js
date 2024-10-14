@@ -69,6 +69,10 @@ export class BloodCapacitance {
     this.fixed_composition = false;
     this.solutes = {};
     this.drugs = {};
+    this.to2 = 0.0;
+    this.tco2 = 0.0;
+    this.viscosity = 0.0;
+    this.temp = 0.0;
     this.analysis_enabled = false;
 
     // initialize independent properties

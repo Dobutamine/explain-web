@@ -71,6 +71,10 @@ export class BloodDiffusor {
     this.dependencies = [];
     this.solutes = [];
     this.drugs = [];
+    this.to2 = 0.0;
+    this.tco2 = 0.0;
+    this.viscosity = 0.0;
+    this.temp = 0.0;
     this.comp_blood1 = null;
     this.comp_blood2 = null;
     this.dif_cap = 0.01;

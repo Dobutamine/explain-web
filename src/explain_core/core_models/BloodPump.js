@@ -110,6 +110,10 @@ export class BloodPump {
     this.fixed_composition = false;
     this.solutes = {};
     this.drugs = {};
+    this.to2 = 0.0;
+    this.tco2 = 0.0;
+    this.viscosity = 0.0;
+    this.temp = 0.0;
     this.pump_mode = 0; // 0 = centrifugal, 1 = roller pump
     this.pump_pressure = 0.0;
     this.pump_rpm = 0.0;
