@@ -201,6 +201,10 @@ export default class Model {
           this.download_model_state(e.data.message, e.data.payload[0]);
           break;
 
+        case "saved_state_python":
+          this.download_model_state_python(e.data.message, e.data.payload[0]);
+          break;
+
         default:
           console.log("Unknown message type received from model engine");
           console.log(e.data);
@@ -215,6 +219,18 @@ export default class Model {
       let current_date = new Date();
       let filename =
         state["name"] + "_" + current_date.toLocaleTimeString() + ".json";
+      this.saveObjectAsJson(state, filename);
+    } else {
+      document.dispatchEvent(this._state_saved);
+    }
+  }
+
+  download_model_state_python(target, state) {
+    this.modelDefinition = { ...state };
+    if (target === "local") {
+      let current_date = new Date();
+      let filename =
+        state["name"] + "_" + current_date.toLocaleTimeString() + ".py";
       this.saveObjectAsJson(state, filename);
     } else {
       document.dispatchEvent(this._state_saved);
@@ -375,6 +391,14 @@ export default class Model {
   saveModelState(target) {
     this.sendMessageToModelEngine({
       type: "save_state",
+      message: target,
+      payload: [],
+    });
+  }
+
+  saveModelStatePython(target) {
+    this.sendMessageToModelEngine({
+      type: "save_state_python",
       message: target,
       payload: [],
     });

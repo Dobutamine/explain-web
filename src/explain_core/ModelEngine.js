@@ -92,6 +92,8 @@ onmessage = (e) => {
     case "save_state":
       save_model_state_json(e.data.message);
       break;
+    case "save_state_python":
+      save_model_state_python(e.data.message);
     case "get_state":
       get_state();
       break;
@@ -776,7 +778,13 @@ const save_model_state_python = function (target) {
     new_json["models"][mn] = {};
     for (let [pn, pv] of Object.entries(m)) {
       // do not save any properties with _ as prefix
-      if (pn[0] !== "_" && pn !== "model_interface" && pv !== null) {
+      if (
+        pn[0] !== "_" &&
+        pn !== "model_interface" &&
+        pv !== null &&
+        !pn !== "dependencies" &&
+        !pn !== "scalable"
+      ) {
         if (typeof pv == "object" && pv.hasOwnProperty("name")) {
           // save an dictionary
           new_json["models"][mn][pn] = pv.name;
