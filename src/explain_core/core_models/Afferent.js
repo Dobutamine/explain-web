@@ -1,6 +1,6 @@
-export class AfferentPathway {
+export class Afferent {
   // static properties
-  static model_type = "AfferentPathway";
+  static model_type = "Afferent";
   static model_interface = [
     {
       target: "is_enabled",
