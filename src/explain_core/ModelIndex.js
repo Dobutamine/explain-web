@@ -16,7 +16,7 @@ export { GasCapacitance } from "./core_models/GasCapacitance";
 export { GasExchanger } from "./core_models/GasExchanger";
 export { GasResistor } from "./core_models/GasResistor";
 export { Heart } from "./core_models/Heart";
-export { Lungs } from "./core_models/Lungs";
+export { Respiration } from "./core_models/Respiration";
 export { Metabolism } from "./core_models/Metabolism";
 export { Mob } from "./core_models/Mob";
 export { Placenta } from "./core_models/Placenta";

@@ -1,5 +1,5 @@
-export class Lungs {
-  static model_type = "Lungs";
+export class Respiration {
+  static model_type = "Respiration";
   static model_interface = [
     {
       target: "is_enabled",

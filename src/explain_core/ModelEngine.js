@@ -775,21 +775,24 @@ const save_model_state_python = function (target) {
 
   // process the model definition file to find the necessary properties
   for (let [mn, m] of Object.entries(model.models)) {
-    new_json["models"][mn] = {};
-    for (let [pn, pv] of Object.entries(m)) {
-      // do not save any properties with _ as prefix
-      if (
-        pn[0] !== "_" &&
-        pn !== "model_interface" &&
-        pv !== null &&
-        !pn !== "dependencies" &&
-        !pn !== "scalable"
-      ) {
-        if (typeof pv == "object" && pv.hasOwnProperty("name")) {
-          // save an dictionary
-          new_json["models"][mn][pn] = pv.name;
-        } else {
-          new_json["models"][mn][pn] = pv;
+    // don't export the scaler and fluids model
+    if (mn !== "Fluids" && mn !== "Scaler") {
+      new_json["models"][mn] = {};
+      for (let [pn, pv] of Object.entries(m)) {
+        // do not save any properties with _ as prefix
+        if (
+          pn[0] !== "_" &&
+          pn !== "model_interface" &&
+          pv !== null &&
+          !pn !== "dependencies" &&
+          !pn !== "scalable"
+        ) {
+          if (typeof pv == "object" && pv.hasOwnProperty("name")) {
+            // save an dictionary
+            new_json["models"][mn][pn] = pv.name;
+          } else {
+            new_json["models"][mn][pn] = pv;
+          }
         }
       }
     }
