@@ -3,40 +3,44 @@ export class Resuscitation {
   static model_interface = [];
 
   constructor(model_ref, name = "") {
-    // -----------------------------------------------
-    // initialize independent properties
-    this.cpr_enabled = false                         // determines whether cpr is enabled or not
-    this.chest_comp_freq = 100.0                     // chest compressions frequency (compressions / min)
-    this.chest_comp_max_pres = 10.0                  // maximal pressure of the chest compressions (mmHg)
-    this.chest_comp_targets = { "THORAX": 0.1}       // dictionary holding the target models of the chest compressions and the relative force
-    this.chest_comp_no = 15                          // number of compressions if not continuous
-    this.chest_comp_cont = false                     // determines whether the chest compressions are continuous
-    
-    this.vent_freq = 30.0                             // ventilations frequency (breaths / min)
-    this.vent_no = 2                                  // number of ventilatins if not continuous
-    this.vent_pres_pip = 16.0                         // peak pressure of the ventilations (cmH2O)
-    this.vent_pres_peep = 5.0                         // positive end expiratory pressure of the ventilations (cmH2O)
-    this.vent_insp_time = 1.0                         // inspiration time of the ventilations (s)
-    this.vent_fio2 = 0.21                             // fio2 of the inspired air
+    // Independent properties
+    this.name = name;
+    this.description = "";
+    this.is_enabled = false;
+    this.dependencies = [];
+    this.ventilator = [];
+    this.breathing = [];
+    this.compressions = 15.0;
+    this.chest_comp_enabled = true;
+    this.chest_comp_freq = 100.0;
+    this.chest_comp_pres = 10.0;
+    this.chest_comp_time = 1.0;
+    this.chest_comp_targets = { THORAX: 0.1 };
+    this.chest_comp_cont = false;
 
-    // -----------------------------------------------
-    // initialize dependent properties
-    this.chest_comp_pres = 0.0                        // compression pressure (mmHg)
+    this.ventilations = 2.0;
+    this.vent_freq = 30.0;
+    this.vent_pres_pip = 16.0;
+    this.vent_pres_peep = 5.0;
+    this.vent_insp_time = 1.0;
+    this.vent_fio2 = 0.21;
+    this.async_ventilation = false;
+    this.forced_hr = false;
 
-    // -----------------------------------------------
-    // local variables
+    // Dependent properties
+    this.chest_comp_force = 0.0;
+    this.overriden_hr = 30.0;
+
+    // Local properties
     this._model_engine = model_ref;
     this._is_initialized = false;
     this._t = model_ref.modeling_stepsize;
-    this._ventilator = None                           // reference to the mechanical ventilator model
-    this._breathing = None                            // reference to the breathing model
-    this._comp_timer = 0.0                            // compressions timer (s)
-    this._comp_counter = 0.0                          // counter of the number of compressions
-    this._comp_pause = False                          // determines whether the compressions are paused or not
-    this._comp_pause_interval = 2.0                   // interval of the compressions pause (s)
-    this._comp_pause_counter = 0.0                    // compressions pause counter (s)
-    this._vent_interval = 0.0                         // interval between ventilations (s)
-    this._vent_counter = 0.0                          // ventilation interval counter (s)
+    this._comp_timer = 0.0;
+    this._comp_counter = 0.0;
+    this._comp_pause = false;
+    this._comp_pause_timer = 0.0;
+    this._vent_timer = 0.0;
+    this._analytics_timer = 0.0;
   }
 
   init_model(args) {
@@ -44,14 +48,6 @@ export class Resuscitation {
     args.forEach((arg) => {
       this[arg["key"]] = arg["value"];
     });
-
-    // get references to the model on which this model depends
-    this._ventilator = self._model_engine.models["Ventilator"]
-    this._breathing = self._model_engine.models["Breathing"]
-        
-    // set the fio2 on the ventilator
-    this.set_fio2(self.vent_fio2)
-    
     // Flag that the model is initialized
     this._is_initialized = true;
   }
@@ -114,7 +110,10 @@ export class Resuscitation {
         }
       }
 
-      if (this._comp_pause_timer > this.ventilations * this.vent_insp_time * 2.0) {
+      if (
+        this._comp_pause_timer >
+        this.ventilations * this.vent_insp_time * 2.0
+      ) {
         this._comp_pause = false;
         this._vent_timer = 0.0;
       }
