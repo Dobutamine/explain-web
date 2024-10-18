@@ -131,11 +131,10 @@ export default class Model {
     receiveMessageFromModelEngine() {
       // set up a listener for messages from the model engine
       this.modelEngine.onmessage = (e) => {
-        console.log(e)
         switch (e.data.type) {
           case "model_ready":
             
-            explain.loadBakedInModelDefinition()
+            explain.loadBakedInModelDefinition("baseline_term_neonate")
             break;
           case "model_props":
             document.dispatchEvent(this._props_event);

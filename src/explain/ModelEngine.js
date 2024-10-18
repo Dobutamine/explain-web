@@ -22,6 +22,8 @@ import TaskScheduler from "./helpers/TaskScheduler";
 let available_models = [];
 Object.values(models).forEach((model) => available_models.push(model));
 
+console.log(available_models)
+
 // declare a model object holding the current model
 let model = {
   models: {},
@@ -29,8 +31,6 @@ let model = {
   dependency_list: [],
 };
 
-// declare a flag indicating whether the execution list needs to be refreshed.
-let rebuildExecutionList = true;
 
 // declare a model definition object holding the properties of the current model
 let model_definition = {};
@@ -53,7 +53,6 @@ let rtClock = null;
 // set the debug mode flag
 let debug = true;
 
-console.log("Web worker started")
 // set up a listener for messages from the main thread
 onmessage = (e) => {
   switch (e.data.type) {
@@ -65,7 +64,6 @@ onmessage = (e) => {
           payload: [],
         });
       }
-      console.log(e.data.payload[0])
       model_initialized = process_model_definition(
         JSON.parse(e.data.payload[0])
       );
@@ -310,8 +308,6 @@ const process_model_definition = function (model_definition) {
   // set model initializer to false
   model_initialized = false;
 
-  // rebuild the execution list
-  rebuildExecutionList = true;
 
   // store the model definition
   model_definition = model_definition;
@@ -352,6 +348,7 @@ const process_model_definition = function (model_definition) {
       (available_model) =>
         available_model.model_type === sub_model_def.model_type
     );
+    console.log(sub_model_def.model_type, index)
 
     // if the component model was found then instantiate a model
     if (index > -1) {
