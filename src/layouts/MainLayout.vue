@@ -6,7 +6,7 @@
     >
       <q-toolbar>
         <q-toolbar-title class="text-overline">
-          Explanatory models in neonatology (EXPLAIN)
+          Explanatory models in neonatology - local version (EXPLAIN)
         </q-toolbar-title>
 
         <div v-if="user.loggedIn" class="text-overline q-ml-sm">
@@ -25,23 +25,11 @@
           @click="logOut"
           ><q-tooltip>log out</q-tooltip></q-btn
         >
-        <q-btn
-          v-if="user.admin"
-          size="sm"
-          dense
-          color="indigo-10"
-          class="q-ml-sm q-pl-sm q-pr-sm"
-          icon="fa-solid fa-lock"
-          ><q-tooltip>admin page</q-tooltip></q-btn
-        >
       </q-toolbar>
     </q-header>
 
     <q-page-container class="black-background">
       <router-view />
-
-
-
     </q-page-container>
 
     <q-footer class="bg-grey-8 text-white footerCustomStyle">
@@ -375,6 +363,8 @@ export default defineComponent({
   },
   mounted() {
     this.$q.dark.set(true);
+
+    // set local user
     this.user.loggedIn = true
     this.user.name = "local user"
 
@@ -421,13 +411,6 @@ export default defineComponent({
         this.showPopup = true;
       });
     } catch {}
-
-    // this.$bus.on("load_new_model", (t) => {
-    //   if (t !== this.current_model_definition) {
-    //     this.current_model_definition = t;
-    //     this.selectModelDefinition();
-    //   }
-    // });
   },
 });
 </script>
