@@ -40,9 +40,9 @@ export class BloodResistor extends BaseModelClass {
   }
 
   init_model(args = {}) {
-    // set the properties of this model
-    Object.keys(args).forEach((key) => {
-      this[key] = args[key];
+    // set the values of the independent properties
+    args.forEach((arg) => {
+      this[arg["key"]] = arg["value"];
     });
 
     // find the up- and downstream components and store the references

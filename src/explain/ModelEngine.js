@@ -348,7 +348,6 @@ const process_model_definition = function (model_definition) {
       (available_model) =>
         available_model.model_type === sub_model_def.model_type
     );
-    console.log(sub_model_def.model_type, index)
 
     // if the component model was found then instantiate a model
     if (index > -1) {
@@ -479,7 +478,7 @@ const calculate = function (time_to_calculate) {
 // do a single model step
 const model_step = function () {
   // iterate over all models
-  Object.values(models).forEach((model_component) => {
+  Object.values(model.models).forEach((model_component) => {
     model_component.step_model();
   });
 

@@ -75,10 +75,10 @@ export class Mob extends BaseModelClass {
   }
 
   init_model(args = {}) {
-    // Set properties of this model
-    for (const [key, value] of Object.entries(args)) {
-      this[key] = value;
-    }
+    // set the values of the independent properties
+    args.forEach((arg) => {
+      this[arg["key"]] = arg["value"];
+    });
 
     // Store references to the models the Mob model needs
     this._aa = this._model_engine.models["AA"];

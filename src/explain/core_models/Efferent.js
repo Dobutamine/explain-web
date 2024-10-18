@@ -32,12 +32,10 @@ export class Efferent extends BaseModelClass {
   }
 
   init_model(args) {
-    // Set the properties of this model
-    for (let key in args) {
-      if (args.hasOwnProperty(key)) {
-        this[key] = args[key];
-      }
-    }
+    // set the values of the independent properties
+    args.forEach((arg) => {
+      this[arg["key"]] = arg["value"];
+    });
 
     // Get a reference to the target model property
     const [model, prop] = this.target.split(".");

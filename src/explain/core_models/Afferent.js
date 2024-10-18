@@ -31,23 +31,18 @@ export class Afferent extends BaseModelClass {
   }
 
   init_model(args) {
-    // Set the properties of this model
-    for (let key in args) {
-      if (args.hasOwnProperty(key)) {
-        this[key] = args[key];
-      }
-    }
+    // set the values of the independent properties
+    args.forEach((arg) => {
+      this[arg["key"]] = arg["value"];
+    });
 
     // Get a reference to the input site
-    console.log(this.input)
     const [model, prop] = this.input.split(".");
-    console.log(model, prop)
     this._input_site = this._model_engine.models[model];
     this._input_prop = prop;
 
     // Set the initial values
-    console.log(this._input_site)
-    //this.current_value = this._input_site[this._input_prop];
+    this.current_value = this._input_site[this._input_prop];
     this.firing_rate = this._set_firing_rate;
 
     // Flag that the model is initialized

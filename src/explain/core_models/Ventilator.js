@@ -76,9 +76,10 @@ export class Ventilator extends BaseModelClass {
   }
 
   init_model(args = {}) {
-    for (const [key, value] of Object.entries(args)) {
-      this[key] = value;
-    }
+    // set the values of the independent properties
+    args.forEach((arg) => {
+      this[arg["key"]] = arg["value"];
+    });
 
     this._breathing_model = this._model_engine.models["Breathing"];
     this._vent_gasin = this._model_engine.models["VENT_GASIN"];

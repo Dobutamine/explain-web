@@ -21,12 +21,10 @@ export class Ans extends BaseModelClass {
   }
 
   init_model(args) {
-    // set the properties of this model
-    for (let key in args) {
-      if (args.hasOwnProperty(key)) {
-        this[key] = args[key];
-      }
-    }
+    // set the values of the independent properties
+    args.forEach((arg) => {
+      this[arg["key"]] = arg["value"];
+    });
 
     // Initialize the pathways with references to the necessary models
     this.pathways.forEach((pathway) => {

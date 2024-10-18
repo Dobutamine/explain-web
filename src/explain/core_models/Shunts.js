@@ -69,9 +69,9 @@ export class Shunts extends BaseModelClass {
   }
 
   init_model(args = {}) {
-    // set the properties of this model
-    Object.keys(args).forEach((key) => {
-      this[key] = args[key];
+    // set the values of the independent properties
+    args.forEach((arg) => {
+      this[arg["key"]] = arg["value"];
     });
 
     // store the references to the models for performance reasons

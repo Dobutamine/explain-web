@@ -51,11 +51,10 @@ export class Heart extends BaseModelClass {
   }
 
   init_model(args = {}) {
-    // set the properties of this model
-    Object.keys(args).forEach((key) => {
-      this[key] = args[key];
+    // set the values of the independent properties
+    args.forEach((arg) => {
+      this[arg["key"]] = arg["value"];
     });
-
     // get a reference to the heart component models
     this._la = this._model_engine.models["LA"];
     this._lv = this._model_engine.models["LV"];

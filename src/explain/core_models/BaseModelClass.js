@@ -15,9 +15,9 @@ export class BaseModelClass {
   }
 
   init_model(args = {}) {
-    // set the properties of this model as provided by args object
-    Object.keys(args).forEach((key) => {
-      this[key] = args[key];
+    // set the values of the independent properties
+    args.forEach((arg) => {
+      this[arg["key"]] = arg["value"];
     });
 
     // flag that the model is initialized
