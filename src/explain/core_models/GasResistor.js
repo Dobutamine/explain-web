@@ -1,6 +1,10 @@
 import { BaseModelClass } from "./BaseModelClass";
 
 export class GasResistor extends BaseModelClass {
+  // static properties
+  static model_type = "GasResistor";
+  static model_interface = [];
+
   constructor(model_ref, name = "") {
     super(model_ref, name);
 

@@ -1,6 +1,10 @@
 import { BaseModelClass } from "./BaseModelClass";
 
 export class Placenta extends BaseModelClass {
+  // static properties
+  static model_type = "Placenta";
+  static model_interface = [];
+
   /*
     The Placenta class models the placental circulation and gas exchange using core models of the Explain model.
     The umbilical arteries and veins are modeled by BloodResistors connected to the descending aorta (DA) and

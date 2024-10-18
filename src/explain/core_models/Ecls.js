@@ -1,6 +1,10 @@
 import { BaseModelClass } from "./BaseModelClass";
 
 export class Ecls extends BaseModelClass {
+  // static properties
+  static model_type = "Ecls";
+  static model_interface = [];
+
   /*
     The ECLS class models an ECLS system where blood is taken out of the circulation and oxygen added and carbon dioxide removed
     and then pumped back into the circulation. It is built with standard Explain components (BloodCapacitances, BloodResistors, BloodPump, GasCapacitances, GasResistor and GasExchanger)

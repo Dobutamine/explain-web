@@ -1,6 +1,10 @@
 import { BaseModelClass } from "./BaseModelClass";
 
 export class Ventilator extends BaseModelClass {
+  // static properties
+  static model_type = "Ventilator";
+  static model_interface = [];
+
   /**
    * The Ventilator class models a mechanical ventilator.
    */

@@ -1,6 +1,10 @@
 import { BaseModelClass } from "./BaseModelClass";
 
 export class Mob extends BaseModelClass {
+  // static properties
+  static model_type = "Mob";
+  static model_interface = [];
+
   /**
    * The myocardial oxygen balance (Mob) class models the dynamic oxygen use and carbon dioxide production (metabolism) of the heart
    * and models the effect on the heart (heartrate and contractility).

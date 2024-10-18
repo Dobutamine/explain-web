@@ -1,6 +1,10 @@
 import { BaseModelClass } from "./BaseModelClass";
 
 export class Shunts extends BaseModelClass {
+  // static properties
+  static model_type = "Shunts";
+  static model_interface = [];
+
   /*
     The Shunts class calculates the resistances of the shunts (ductus arteriosus, foramen ovale, and ventricular septal defect) from the diameter and length.
     It sets the resistances on the correct models representing the shunts.

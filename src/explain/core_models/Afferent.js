@@ -1,6 +1,10 @@
 import { BaseModelClass } from "./BaseModelClass";
 
 export class Afferent extends BaseModelClass {
+  // static properties
+  static model_type = "Afferent";
+  static model_interface = [];
+
   constructor(model_ref, name = "") {
     super(model_ref, name);
 
@@ -35,12 +39,15 @@ export class Afferent extends BaseModelClass {
     }
 
     // Get a reference to the input site
+    console.log(this.input)
     const [model, prop] = this.input.split(".");
+    console.log(model, prop)
     this._input_site = this._model_engine.models[model];
     this._input_prop = prop;
 
     // Set the initial values
-    this.current_value = this._input_site[this._input_prop];
+    console.log(this._input_site)
+    //this.current_value = this._input_site[this._input_prop];
     this.firing_rate = this._set_firing_rate;
 
     // Flag that the model is initialized

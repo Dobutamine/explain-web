@@ -35,6 +35,8 @@ export default class Datacollector {
     this.collected_data = [];
   }
 
+  clean_up() {}
+  
   clear_data() {
     this.collected_data = [];
   }

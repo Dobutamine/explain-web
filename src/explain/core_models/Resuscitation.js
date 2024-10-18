@@ -1,6 +1,10 @@
 import { BaseModelClass } from "./BaseModelClass";
 
 export class Resuscitation extends BaseModelClass {
+  // static properties
+  static model_type = "Resuscitation";
+  static model_interface = [];
+
   /*
     The Resuscitation class models a resuscitation situation where chest compressions and ventilations are
     performed at various different rates.

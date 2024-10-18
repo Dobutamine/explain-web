@@ -1,6 +1,10 @@
 import { BaseModelClass } from "./BaseModelClass";
 
 export class Efferent extends BaseModelClass {
+  // static properties
+  static model_type = "Efferent";
+  static model_interface = [];
+
   /*
     The Efferent class models an autonomic nervous system efferent (effect) pathway.
     It calculates the average firing rate and translates it into an effect size on the target.

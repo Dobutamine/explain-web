@@ -1,6 +1,10 @@
 import { BaseModelClass } from "./BaseModelClass";
 
 export class Metabolism extends BaseModelClass {
+  // static properties
+  static model_type = "Metabolism";
+  static model_interface = [];
+
   /*
     The Metabolism class models the oxygen use and carbon dioxide production in various blood-containing models.
     It calculates the changes in to2 and tco2 based on the oxygen use and respiratory quotient for metabolic activity.

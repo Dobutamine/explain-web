@@ -1,6 +1,10 @@
 import { BaseModelClass } from "./BaseModelClass";
 
 export class Circulation extends BaseModelClass {
+  // static properties
+  static model_type = "Circulation";
+  static model_interface = [];
+
   /*
     The Circulation class is not a model but houses methods that influence groups of models. In case
     of the circulation class, these groups contain models related to blood circulation.

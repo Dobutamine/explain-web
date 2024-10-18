@@ -1,6 +1,10 @@
 import { BaseModelClass } from "../core_models/BaseModelClass";
 
 export class ExampleCustomModel extends BaseModelClass {
+  // static properties
+  static model_type = "ExampleCustomModel";
+  static model_interface = [];
+
   /*
     The BloodResistor model is an extension of the Resistor model as described in the paper.
     A BloodResistor model is a connector between two blood-containing models (e.g., BloodCapacitance or BloodTimeVaryingElastance), 

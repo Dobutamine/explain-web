@@ -1,6 +1,10 @@
 import { BaseModelClass } from "./BaseModelClass";
 
 export class Respiration extends BaseModelClass {
+  // static properties
+  static model_type = "Respiration";
+  static model_interface = [];
+
   /*
     The Respiration class is not a model but houses methods that influence groups of models. 
     These groups contain models related to the respiratory tract. For example, the method 
