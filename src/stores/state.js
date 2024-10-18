@@ -13,7 +13,20 @@ export const useStateStore = defineStore("state", {
       components: {},
     },
     model_definition: {},
-    configuration: {},
+    configuration: {
+      "diagram_speed": 1,
+      "diagram_scale": 1,
+      "chart_hires": false,
+      "enabled_controllers": {
+        "circulation": [],
+        "respiration": [],
+        "brain": [],
+        "others": []
+      },
+      "enabled_monitors": {},
+      "monitors": {}, 
+      "controllers": {}
+    },
     saved: false,
     default: true,
     prev_diagram_definition: {},

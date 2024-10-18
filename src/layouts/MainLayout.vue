@@ -39,159 +39,9 @@
 
     <q-page-container class="black-background">
       <router-view />
-      <q-dialog v-model="showPopup" persistent>
-        <q-card>
-          <q-card-section>
-            <div :class="popupClass">{{ popupTitle }}</div>
-          </q-card-section>
 
-          <q-card-section class="q-pt-none">
-            {{ popupMessage }}
-          </q-card-section>
 
-          <q-card-actions align="right">
-            <q-btn flat label="Close" size="sm" color="primary" v-close-popup />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
 
-      <q-dialog
-        v-model="showInputPopup"
-        persistent
-        transition-show="slide-up"
-        transition-hide="slide-down"
-      >
-        <q-card>
-          <q-card-section>
-            <div :class="inputPopupClass">{{ inputPopupTitle }}</div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <q-input
-              v-model="userInput"
-              label="new name"
-              filled
-              clearable
-              @keyup.enter="submitInput"
-            />
-          </q-card-section>
-
-          <q-card-actions align="right">
-            <q-btn
-              flat
-              label="Cancel"
-              color="primary"
-              size="sm"
-              v-close-popup
-            />
-            <q-btn
-              flat
-              label="Submit"
-              color="primary"
-              size="sm"
-              @click="submitInput"
-            />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-
-      <q-dialog
-        v-model="showLoadStatePopUp"
-        persistent
-        transition-show="slide-up"
-        transition-hide="slide-down"
-      >
-        <q-card>
-          <q-card-section>
-            <div class="text-h6">Select model state from server</div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <q-select
-              v-model="selectedState"
-              :options="stateList"
-              label="user states"
-              filled
-              dense
-            />
-            <q-checkbox
-              class="q-ma-sm"
-              v-model="sharedStates"
-              label="include shared states"
-              color="primary"
-              dense
-              dark
-              size="xs"
-              @update:model-value="toggleSharedStates"
-            />
-          </q-card-section>
-
-          <q-card-actions align="right">
-            <q-btn
-              flat
-              label="Cancel"
-              color="primary"
-              size="sm"
-              v-close-popup
-            />
-            <q-btn
-              flat
-              label="Load"
-              color="primary"
-              size="sm"
-              @click="loadSelectedState"
-            />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-
-      <q-dialog
-        v-model="showSaveStatePopUp"
-        persistent
-        transition-show="slide-up"
-        transition-hide="slide-down"
-      >
-        <q-card>
-          <q-card-section>
-            <div class="text-h6">Save model state to server</div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <q-input
-              v-model="selectedState"
-              label="state name"
-              filled
-              clearable
-            />
-            <q-checkbox
-              class="q-ma-sm"
-              v-model="state.shared"
-              label="shared state"
-              color="primary"
-              dense
-              dark
-              size="xs"
-            />
-          </q-card-section>
-
-          <q-card-actions align="right">
-            <q-btn
-              flat
-              label="Cancel"
-              color="primary"
-              size="sm"
-              v-close-popup
-            />
-            <q-btn
-              flat
-              label="Save"
-              color="primary"
-              size="sm"
-              @click="upload"
-            />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
     </q-page-container>
 
     <q-footer class="bg-grey-8 text-white footerCustomStyle">
@@ -199,114 +49,6 @@
         <q-toolbar-title class="text-overline">
           <div>{{ statusMessage }}</div>
         </q-toolbar-title>
-
-        <div v-if="!state.protected" class="text-overline" @click="renameState">
-          <b>{{ state.name }} </b>
-        </div>
-
-        <div v-if="state.protected" class="text-overline" @click="renameState">
-          <b>{{ state.name }} (protected) </b>
-        </div>
-
-        <div v-if="!state.saved" class="text-overline" @click="renameState">
-          <b>*</b>
-        </div>
-
-        <q-btn
-          v-if="user.admin && state.protected"
-          flat
-          round
-          dense
-          size="sm"
-          icon="fa-solid fa-lock"
-          color="white"
-          class="q-ml-sm"
-          @click="protectState"
-        >
-          <q-tooltip> state is protected </q-tooltip></q-btn
-        >
-
-        <q-btn
-          v-if="user.admin && !state.protected"
-          flat
-          round
-          dense
-          size="sm"
-          icon="fa-solid fa-lock-open"
-          color="white"
-          class="q-ml-sm"
-          @click="protectState"
-        >
-          <q-tooltip> state is not protected </q-tooltip></q-btn
-        >
-
-        <q-btn
-          v-if="state.default"
-          flat
-          round
-          dense
-          size="sm"
-          icon="fa-solid fa-star"
-          color="white"
-          class="q-ml-sm"
-          @click="setStateAsDefault"
-        >
-          <q-tooltip> current state is the default state </q-tooltip></q-btn
-        >
-
-        <q-btn
-          v-if="!state.default"
-          flat
-          round
-          dense
-          size="sm"
-          icon="fa-regular fa-star"
-          color="white"
-          class="q-ml-sm"
-          @click="setStateAsDefault"
-        >
-          <q-tooltip> set current state as default </q-tooltip></q-btn
-        >
-
-        <q-btn
-          flat
-          round
-          dense
-          size="sm"
-          icon="fa-solid fa-folder"
-          color="white"
-          class="q-ml-sm"
-          @click="getAllUserStates"
-        >
-          <q-tooltip> get states from server </q-tooltip></q-btn
-        >
-
-        <q-btn
-          flat
-          round
-          dense
-          size="sm"
-          icon="fa-solid fa-save"
-          color="white"
-          class="q-mr-sm q-ml-sm"
-          @click="saveState"
-        >
-          <q-tooltip> save model state to server </q-tooltip></q-btn
-        >
-
-        <q-btn
-          flat
-          round
-          dense
-          size="sm"
-          icon="fa-solid fa-file-export"
-          color="white"
-          class="q-mr-sm"
-          @click="download"
-        >
-          <q-tooltip> export model state to disk </q-tooltip></q-btn
-        >
-
         <q-btn
           flat
           round
@@ -319,7 +61,6 @@
         >
           <q-tooltip> export staet as python file </q-tooltip></q-btn
         >
-
         <q-btn
           flat
           round
@@ -381,7 +122,6 @@ import { useGeneralStore } from "src/stores/general";
 import { useUserStore } from "src/stores/user";
 import { useStateStore } from "src/stores/state";
 import { explain } from "src/boot/explain";
-import { TimeScale } from "chart.js";
 
 export default defineComponent({
   name: "MainLayout",
@@ -434,110 +174,11 @@ export default defineComponent({
       sharedStateList: [],
       userInput: "",
       durations: [1, 2, 3, 5, 10, 20, 30, 60, 120, 240, 360, 600, 1200, 1800],
-      current_model_definition: "baseline_neonate",
-      available_model_definitions: [
-        "default",
-        "coarctatio_aortae",
-        "double_outlet_right_ventricle",
-        "term_fetus",
-        "hypoplastic_left_heart_syndrome",
-        "mitral_atresia",
-        "pulmonary_atresia",
-        "total_anomalous_venous_connection",
-        "transposition_of_great_arteries",
-        "tricuspid_atresia",
-        "truncus_arteriosus",
-      ],
+      current_model_definition: "",
+      available_model_definitions: [],
     };
   },
   methods: {
-    async loadSelectedState() {
-      let result = false;
-      if (this.selectedState.includes("shared")) {
-        let stateName = this.selectedState.split(" (shared)")[0];
-        result = await this.state.getSharedStateFromServer(
-          this.general.apiUrl,
-          stateName,
-          this.user.token
-        );
-        if (result) {
-          explain.loadModelDefinition(this.state.model_definition);
-        }
-      } else {
-        result = await this.state.getStateFromServer(
-          this.general.apiUrl,
-          this.user.name,
-          this.selectedState,
-          this.user.token
-        );
-      }
-      if (result) {
-        // console.log("state loaded")
-        // console.log(this.state.model_definition)
-        explain.loadModelDefinition(this.state.model_definition);
-        this.showLoadStatePopUp = false;
-        this.$bus.emit("reset");
-      }
-      this.showLoadStatePopUp = false;
-    },
-    toggleSharedStates() {
-      this.buildStateList();
-    },
-    buildStateList() {
-      this.selectedState = "";
-      this.stateList = [...this.userStateList];
-      if (this.sharedStates) {
-        this.sharedStateList.forEach((t) => {
-          this.stateList.push(t + " (shared)");
-        });
-      }
-    },
-    async getAllUserStates() {
-      this.stateList = [];
-      this.userStateList = [];
-      this.sharedStateList = [];
-
-      this.userStateList = await this.state.getAllUserStatesFromServer(
-        this.general.apiUrl,
-        this.user.name,
-        this.user.token
-      );
-      this.sharedStateList = await this.state.getAllSharedStatesFromServer(
-        this.general.apiUrl,
-        this.user.name,
-        this.user.token
-      );
-
-      this.buildStateList();
-      this.showLoadStatePopUp = true;
-    },
-    protectState() {
-      this.state.protected = !this.state.protected;
-    },
-    setStateAsDefault() {
-      this.state.default = true;
-      this.user.defaultState = this.state.name;
-    },
-    logOut() {
-      explain.stop();
-      this.rtState = false;
-      this.playArmed = false;
-      this.butColor = "white";
-      this.butIcon = "fa-solid fa-play";
-      this.butCaption = "PLAY";
-      this.$bus.emit("rt_stop");
-      this.user.logOut();
-      this.$router.push("/login");
-    },
-    uploadDefinition() {
-      this.definition.definition = { ...explain.modelDefinition };
-      this.definition.name = explain.modelDefinition.name;
-      this.definition.saveDefinitionToServer(
-        this.general.apiUrl,
-        this.user.name,
-        this.user.token
-      );
-    },
     selectModelDefinition() {
       // stop the model
       explain.stop();
@@ -733,6 +374,10 @@ export default defineComponent({
     });
   },
   mounted() {
+    this.$q.dark.set(true);
+    this.user.loggedIn = true
+    this.user.name = "local user"
+
     try {
       document.removeEventListener("status", this.statusUpdate);
     } catch {}
@@ -777,18 +422,12 @@ export default defineComponent({
       });
     } catch {}
 
-    this.$bus.on("load_new_model", (t) => {
-      if (t !== this.current_model_definition) {
-        this.current_model_definition = t;
-        this.selectModelDefinition();
-      }
-    });
-
-    this.$bus.on("show_popup", (t) => {
-      this.popupTitle = t.title;
-      this.popupMessage = t.message;
-      this.showPopup = true;
-    });
+    // this.$bus.on("load_new_model", (t) => {
+    //   if (t !== this.current_model_definition) {
+    //     this.current_model_definition = t;
+    //     this.selectModelDefinition();
+    //   }
+    // });
   },
 });
 </script>

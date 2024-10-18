@@ -14,7 +14,7 @@ export const useUserStore = defineStore("user", {
       subscriptionAutoRenew: false,
     },
     additionalData: {},
-    loggedIn: false,
+    loggedIn: true,
     defaultState: "baseline neonate",
     errorText: "",
     token: "",
