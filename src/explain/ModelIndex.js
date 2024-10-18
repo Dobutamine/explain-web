@@ -1,5 +1,3 @@
-import { Scaler } from "src/explain_core/ModelIndex";
-
 export { Ans } from "./core_models/Ans";
 export { Blood } from "./core_models/Blood";
 export { BloodCapacitance } from "./core_models/BloodCapacitance";

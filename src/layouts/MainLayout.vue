@@ -12,19 +12,6 @@
         <div v-if="user.loggedIn" class="text-overline q-ml-sm">
           logged in as: <b>{{ user.name }} </b>
         </div>
-        <div v-if="user.admin" class="text-overline q-ml-sm">
-          <b>(admin) </b>
-        </div>
-        <q-btn
-          v-if="user.loggedIn"
-          size="sm"
-          dense
-          color="indigo-10"
-          class="q-ml-sm q-pl-sm q-pr-sm"
-          icon="fa-solid fa-right-from-bracket"
-          @click="logOut"
-          ><q-tooltip>log out</q-tooltip></q-btn
-        >
       </q-toolbar>
     </q-header>
 
@@ -215,18 +202,6 @@ export default defineComponent({
       this.showSaveStatePopUp = false;
       explain.saveModelState("server");
     },
-    toggleDebug() {
-      this.debugState = !this.debugState;
-      if (this.debugState) {
-        this.butDebugColor = "positive";
-        this.butDebugCaption = "debug";
-        explain.start_debugger();
-      } else {
-        this.butDebugColor = "negative";
-        this.butDebugCaption = "no debug";
-        explain.stop_debugger();
-      }
-    },
     togglePlay() {
       this.rtState = !this.rtState;
       if (this.rtState) {
@@ -354,12 +329,6 @@ export default defineComponent({
     document.removeEventListener("rts", this.dataSlowUpdate);
     document.removeEventListener("rtf", this.dataFastUpdate);
     document.removeEventListener("data", this.dataUpdate);
-    document.removeEventListener("state_saved", this.uploadStateToServer);
-    document.removeEventListener("show_popup", (t) => {
-      this.popupTitle = t.title;
-      this.popupMessage = t.message;
-      this.showPopup = true;
-    });
   },
   mounted() {
     this.$q.dark.set(true);
@@ -400,17 +369,7 @@ export default defineComponent({
       document.removeEventListener("data", this.dataUpdate);
     } catch {}
     document.addEventListener("data", this.dataUpdate);
-    try {
-      document.removeEventListener("state_saved", this.uploadStateToServer);
-    } catch {}
-    document.addEventListener("state_saved", this.uploadStateToServer);
-    try {
-      document.removeEventListener("show_popup", (t) => {
-        this.popupTitle = t.title;
-        this.popupMessage = t.message;
-        this.showPopup = true;
-      });
-    } catch {}
+
   },
 });
 </script>

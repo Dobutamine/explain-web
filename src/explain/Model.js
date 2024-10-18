@@ -1,3 +1,5 @@
+import { explain } from "src/boot/explain";
+
 export default class Model {
     // declare an object holding the worker thread which does the heavy llifting
     modelEngine = {};
@@ -46,7 +48,7 @@ export default class Model {
         new URL("./ModelEngine.js", import.meta.url),
         { type: "module" }
       );
-  
+      
       // set up a listener for messages from the model engine
       this.receiveMessageFromModelEngine();
   
@@ -56,11 +58,8 @@ export default class Model {
         message: "Model: He ModelEngine, wake up!",
         payload: [],
       });
-  
-      console.log("explain pypy engine instantiated.")
+      
 
-      // get the baseline term neonate
-      this.modelDefinition = this.loadBakedInModelDefinition("baseline_term_neonate");
     }
   
     getModelTypes() {
@@ -89,6 +88,7 @@ export default class Model {
   
     sendMessageToModelEngine(message) {
       if (this.modelEngine) {
+        console.log(message)
         message.message = message.message;
         this.modelEngine.postMessage(message);
       }
@@ -131,7 +131,12 @@ export default class Model {
     receiveMessageFromModelEngine() {
       // set up a listener for messages from the model engine
       this.modelEngine.onmessage = (e) => {
+        console.log(e)
         switch (e.data.type) {
+          case "model_ready":
+            
+            explain.loadBakedInModelDefinition()
+            break;
           case "model_props":
             document.dispatchEvent(this._props_event);
             break;

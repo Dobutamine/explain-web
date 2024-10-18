@@ -1,4 +1,4 @@
-export default class Scaler {
+export class Scaler {
   constructor(model_ref) {
     // Initialize independent properties
     this.referenceWeight = 3.545; // reference weight for global scaling factor (kg)

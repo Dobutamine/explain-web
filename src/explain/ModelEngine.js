@@ -51,8 +51,9 @@ let rtSlowCounter = 0.0;
 let rtClock = null;
 
 // set the debug mode flag
-let debug = false;
+let debug = true;
 
+console.log("Web worker started")
 // set up a listener for messages from the main thread
 onmessage = (e) => {
   switch (e.data.type) {
@@ -64,6 +65,7 @@ onmessage = (e) => {
           payload: [],
         });
       }
+      console.log(e.data.payload[0])
       model_initialized = process_model_definition(
         JSON.parse(e.data.payload[0])
       );
@@ -118,9 +120,6 @@ onmessage = (e) => {
     case "clear_watchlist_slow":
       clear_watchlist_slow();
       break;
-    case "build_execution_list":
-      build_execution_list();
-      break;
     case "get_model_props":
       get_props(e.data.payload);
       break;
@@ -155,8 +154,9 @@ onmessage = (e) => {
       if (debug) {
         console.info(e.data.message);
       }
+      console.log("yep waking up")
       sendMessage({
-        type: "info",
+        type: "model_ready",
         message: "Huh? What? Yeah, ok i'm awake. Don't rush me!",
         payload: [],
       });
@@ -437,108 +437,9 @@ const process_model_definition = function (model_definition) {
   }
 };
 
-const build_execution_list = function () {
-  // iterate over the models and add the models which should be executed to the list
-  model.execution_list = {};
 
-  // build the execution list
-  Object.values(model.models).forEach((model_comp) => {
-    if (model_comp.is_enabled) {
-      let key = model_comp.name;
-      model.execution_list[key] = model_comp;
-    }
-  });
-  rebuildExecutionList = false;
-
-  // reset model execution list flaf
-  model.rebuildExecutionListFlag = false;
-};
-
-// prepare for a model run
-const prepare_for_execution = function () {
-  // iterate over the models and add the models which should be executed to the list
-  model.execution_list = {};
-
-  // build the execution list
-  Object.values(model.models).forEach((model_comp) => {
-    if (model_comp.is_enabled) {
-      let key = model_comp.name;
-      model.execution_list[key] = model_comp;
-    }
-  });
-
-  // build the dependency list
-  build_dependency_list();
-
-  // check the dependencies against the execution list
-  let check_result = check_dependencies();
-
-  // handle the check result
-  if (check_result.length > 0) {
-    postMessage({
-      type: "error",
-      message: `dependency error`,
-      payload: check_result,
-    });
-    // flag that the execution list needs to be rebuild as there were errors
-    rebuildExecutionList = true;
-    return false;
-  }
-
-  // flag that the execution list does not have to be rebuilt
-  rebuildExecutionList = false;
-
-  // return that everything went well
-  return true;
-};
-
-// check whether or not all dependencies of met
-const check_dependencies = function () {
-  let dep_not_found = [];
-  // check whether the models in the executionlist match the dependency list
-  model.dependency_list.forEach((dep) => {
-    // check whether this dependency is in the execution list
-    let dep_found = false;
-    Object.values(model.execution_list).forEach((model_comp) => {
-      if (model_comp.name === dep) {
-        dep_found = true;
-      }
-    });
-    if (!dep_found) {
-      dep_not_found.push(dep);
-    }
-  });
-
-  return dep_not_found;
-};
-
-// build the dependency list
-const build_dependency_list = function () {
-  model.dependency_list = [];
-  let depList = [];
-  Object.values(model.execution_list).forEach((model_comp) => {
-    // // process the dependencies
-    model_comp.dependencies.forEach((dep) => {
-      depList.push(dep);
-    });
-    // remove duplicates
-    model.dependency_list = depList.filter(
-      (item, index) => depList.indexOf(item) === index
-    );
-  });
-};
 
 const calculate = function (time_to_calculate) {
-  // check whether the execution list needs to be rebuild
-  let exec_check = false;
-
-  // build the execution list
-  exec_check = prepare_for_execution();
-
-  // if the dependency or execution list composition check fails return and don't execute the model run
-  if (!exec_check) {
-    return;
-  }
 
   // calculate a number of seconds of the model
   if (model_initialized) {
@@ -581,7 +482,7 @@ const calculate = function (time_to_calculate) {
 // do a single model step
 const model_step = function () {
   // iterate over all models
-  Object.values(model.execution_list).forEach((model_component) => {
+  Object.values(models).forEach((model_component) => {
     model_component.step_model();
   });
 
@@ -596,10 +497,7 @@ const model_step = function () {
 };
 
 const model_step_rt = function () {
-  // does the execution list need a rebuild
-  if (rebuildExecutionList || model.rebuildExecutionListFlag) {
-    build_execution_list();
-  }
+
   // so the rt_interval determines how often the model is calculated
   const noOfSteps = rtInterval / model.modeling_stepsize;
   for (let i = 0; i < noOfSteps; i++) {
@@ -620,11 +518,6 @@ const model_step_rt = function () {
 const start = function () {
   // start the model in realtime
   if (model_initialized) {
-    // rebuilf the execution list if necessary
-    if (rebuildExecutionList) {
-      prepare_for_execution();
-    }
-
     // call the modelStep every rt_interval seconds
     clearInterval(rtClock);
     rtClock = setInterval(model_step_rt, rtInterval * 1000.0);

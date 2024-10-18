@@ -399,7 +399,7 @@ import NiceController from "src/components/NiceController.vue";
 import BigNumbersComponent from "src/components/BigNumbersComponent.vue";
 import DiagramEditorComponent from "src/components/DiagramEditor.vue";
 
-import { explain_pypy } from "src/boot/explain_pypy";
+import { explain } from "src/boot/explain";
 
 export default defineComponent({
   name: "MainPage",
@@ -441,16 +441,16 @@ export default defineComponent({
   },
   methods: {
     updateScale() {
-      explain_pypy.callModelFunction("Scaler.scale_patient", []);
+      explain.callModelFunction("Scaler.scale_patient", []);
     },
     tabLeftChanged(tabName) {
-      explain_pypy.getModelState();
+      explain.getModelState();
     },
     tabRightChanged() {
-      explain_pypy.getModelState();
+      explain.getModelState();
     },
     tabCenterChanged(tabName) {
-      explain_pypy.getModelState();
+      explain.getModelState();
       switch (tabName) {
         case "ventilator":
           this.ventilator_alive = true;
@@ -491,7 +491,7 @@ export default defineComponent({
     },
     addModelEditor() {
       this.no_of_modeleditor += 1;
-      explain_pypy.getModelState();
+      explain.getModelState();
     },
     removeModelEditor() {
       if (this.no_of_modeleditor > 1) {
@@ -499,7 +499,7 @@ export default defineComponent({
       }
     },
     updateWatchlist() {
-      // explain_pypy.watchModelPropsSlow(["Heart.heart_rate", "Blood.so2_pre", "Blood.so2_post", "AD.pres_max", "AD.pres_min", "AD.pres_mean", "AD.pres_cor_max", "AD.pres_cor_min", "AD.pres_cor_mean", "Breathing.resp_rate", "Ventilator.vent_rate"])
+      // explain.watchModelPropsSlow(["Heart.heart_rate", "Blood.so2_pre", "Blood.so2_post", "AD.pres_max", "AD.pres_min", "AD.pres_mean", "AD.pres_cor_max", "AD.pres_cor_min", "AD.pres_cor_mean", "Breathing.resp_rate", "Ventilator.vent_rate"])
 
       Object.keys(this.state.configuration.enabled_monitors).forEach(
         (enabled_monitor_category) => {
@@ -508,7 +508,7 @@ export default defineComponent({
           ].forEach((monitor) => {
             this.state.configuration.monitors[monitor].parameters.forEach(
               (p) => {
-                explain_pypy.watchModelPropsSlow([...p.props]);
+                explain.watchModelPropsSlow([...p.props]);
               }
             );
           });
@@ -527,14 +527,14 @@ export default defineComponent({
     let h = this.$q.screen.height - this.screen_offset;
     this.screen_height = "height: " + h + "px; background: black";
 
-    // make sure the modelengine watches everything which is visible on the main screen.
-    this.updateWatchlist();
+    // // make sure the modelengine watches everything which is visible on the main screen.
+    // this.updateWatchlist();
 
-    // calculate 1 second of model
-    explain_pypy.calculate(1);
+    // // calculate 1 second of model
+    // explain.calculate(1);
 
-    // get the model state
-    explain_pypy.getModelState();
+    // // get the model state
+    // explain.getModelState();
 
     this.$bus.on("reset", this.updateWatchlist);
   },

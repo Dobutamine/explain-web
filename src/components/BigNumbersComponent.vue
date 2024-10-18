@@ -134,16 +134,16 @@ export default {
     });
 
     // watch the model props
-    explain.watchModelPropsSlow([
-      "Heart.heart_rate",
-      "AA.so2",
-      "AD.so2",
-      "Breathing.resp_rate",
-      "Ventilator.vent_rate",
-      "AD.pres_mean_avg",
-      "AD.pres_max_avg",
-      "AD.pres_min_avg",
-    ]);
+    // explain.watchModelPropsSlow([
+    //   "Heart.heart_rate",
+    //   "AA.so2",
+    //   "AD.so2",
+    //   "Breathing.resp_rate",
+    //   "Ventilator.vent_rate",
+    //   "AD.pres_mean_avg",
+    //   "AD.pres_max_avg",
+    //   "AD.pres_min_avg",
+    // ]);
   },
 };
 </script>
