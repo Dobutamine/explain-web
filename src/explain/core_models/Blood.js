@@ -207,8 +207,8 @@ export class Blood extends BaseModelClass {
     this._hemoglobin = sol["hemoglobin"];
     this._temp = bc.temp;
 
-    let hp = this._brent_root_finding(
-      this._net_charge_plasma.bind(this),
+    let hp = this.brent_root_finding(
+      this.net_charge_plasma,
       this._left_hp,
       this._right_hp,
       this._max_iterations,
@@ -227,8 +227,8 @@ export class Blood extends BaseModelClass {
       bc.be = this._be;
     }
 
-    let po2 = this._brent_root_finding(
-      this._oxygen_content.bind(this),
+    let po2 = this.brent_root_finding(
+      this.oxygen_content,
       this._left_o2,
       this._right_o2,
       this._max_iterations,
@@ -241,7 +241,7 @@ export class Blood extends BaseModelClass {
     }
   }
 
-  _net_charge_plasma(hp_estimate) {
+  net_charge_plasma(hp_estimate) {
     this._ph = -Math.log10(hp_estimate / 1000.0);
 
     let cco2p =
@@ -272,8 +272,8 @@ export class Blood extends BaseModelClass {
     );
   }
 
-  _oxygen_content(po2_estimate) {
-    this._so2 = this._oxygen_dissociation_curve(po2_estimate);
+  oxygen_content(po2_estimate) {
+    this._so2 = this.oxygen_dissociation_curve(po2_estimate);
 
     let to2_new_estimate =
       (0.0031 * po2_estimate + 1.36 * (this._hemoglobin / 0.6206) * this._so2) *
@@ -288,7 +288,7 @@ export class Blood extends BaseModelClass {
     return this._to2 - to2_new_estimate;
   }
 
-  _oxygen_dissociation_curve(po2_estimate) {
+  oxygen_dissociation_curve(po2_estimate) {
     let a =
       1.04 * (7.4 - this._ph) + 0.005 * this._be + 0.07 * (this._dpg - 5.0);
     let b = 0.055 * (this._temp + 273.15 - 310.15);
@@ -300,7 +300,7 @@ export class Blood extends BaseModelClass {
     return 1.0 / (Math.exp(-y) + 1.0);
   }
 
-  _brent_root_finding(f, x0, x1, max_iter, tolerance) {
+  brent_root_finding (f, x0, x1, max_iter, tolerance) {
     let fx0 = f(x0);
     let fx1 = f(x1);
 
