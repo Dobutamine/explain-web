@@ -361,6 +361,9 @@
                 }"
               >
                 <BigNumbersComponent></BigNumbersComponent>
+                <q-btn @click="connectToSerial" label="Connect to Arduino" />
+                <q-btn @click="sendA" label="SendA" />
+                <q-btn @click="sendB" label="SendB" />
                 <div
                   v-for="enabled_numeric in state.configuration.enabled_monitors
                     .general"
@@ -437,9 +440,65 @@ export default defineComponent({
       diagram_alive: true,
       screen_offset: 135.0,
       screen_height: 100.0,
+      serialData: null,
+      port: null,
+      reader: null,
     };
   },
   methods: {
+    async connectToSerial() {
+      try {
+        // Request a port and open a connection
+        this.port = await navigator.serial.requestPort();
+        await this.port.open({ baudRate: 9600 });
+
+        const decoder = new TextDecoderStream();
+        this.reader = this.port.readable.pipeThrough(decoder).getReader();
+
+        // Read data from Arduino
+        this.readSerialData();
+      } catch (error) {
+        console.error("Error connecting to serial port:", error);
+      }
+    },
+    async readSerialData() {
+      try {
+        while (true) {
+          const { value, done } = await this.reader.read();
+          if (done) {
+            console.log("Stream closed.");
+            break;
+          }
+          if (value) {
+            this.serialData = value;
+            console.log("Message from Teensy: ", this.serialData);
+          }
+        }
+      } catch (error) {
+        console.error("Error reading from serial port:", error);
+      }
+    },
+
+    async sendSerialData(data) {
+      if (this.port && this.port.writable) {
+        const encoder = new TextEncoder();
+        const writer = this.port.writable.getWriter();
+        await writer.write(encoder.encode(data));
+        writer.releaseLock();
+      }
+    },
+    async disconnectSerial() {
+      if (this.port) {
+        await this.port.close();
+        console.log("Serial port closed");
+      }
+    },
+    async sendA() {
+      this.sendSerialData("A");
+    },
+    async sendB() {
+      this.sendSerialData("B");
+    },
     updateScale() {
       explain.callModelFunction("Scaler.scale_patient", []);
     },
