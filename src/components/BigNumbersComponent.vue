@@ -170,8 +170,8 @@ export default {
       this.dataUpdate();
     });
 
-    this.$bus.on("definition_ready", () => {
-      // watch the model props
+    // when the model is ready built the watchlist for this controller
+    this.$bus.on("model_ready", () => {
       explain.watchModelPropsSlow([
         "Monitor.heart_rate",
         "Monitor.resp_rate",

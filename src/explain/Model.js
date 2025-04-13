@@ -30,14 +30,17 @@ export default class Model {
   _error_event = new CustomEvent("error");
   _rt_start_event = new CustomEvent("rt_start");
   _rt_stop_event = new CustomEvent("rt_stop");
-
-  _rtf_event = new CustomEvent("rtf");
   _rts_event = new CustomEvent("rts");
+  _rtf_event = new CustomEvent("rtf");
+  _status_event = new CustomEvent("status");
+  _state_event = new CustomEvent("state");
   _data_event = new CustomEvent("data");
   _data_slow_event = new CustomEvent("data_slow");
+
+
   _info_event = new CustomEvent("info");
-  _state_event = new CustomEvent("state");
-  _status_event = new CustomEvent("status", { detail: { message: ""} });
+
+
 
   _script_event = new CustomEvent("script");
   _props_event = new CustomEvent("props");
@@ -92,7 +95,7 @@ export default class Model {
       switch (e.data.type) {
         case "status":
           this.status_message = e.data.message
-          document.dispatchEvent(this._status_event, { detail: {message:  this.status_message }})
+          document.dispatchEvent(this._status_event)
           break;
         case "model_ready":
           console.log("Model: ModelEngine reports model build success. Dispatching model_ready event.")
@@ -103,27 +106,6 @@ export default class Model {
           break;
         case "rt_stop":
           document.dispatchEvent(this._rt_stop_event);
-          break;
-
-        case "model_props":
-          document.dispatchEvent(this._props_event);
-          break;
-        case "prop_value":
-          break;
-        case "info":
-          document.dispatchEvent(this._info_event);
-          break;
-        case "error":
-          switch (e.data.message) {
-            case "model_failed":
-              console.log("Model: ModelEngine reports a model build failure. Dispatching model_error event.")
-              // dispatch an error event
-              document.dispatchEvent(this._error_event);
-              break;
-          }
-          break;
-        case "script":
-          document.dispatchEvent(this._script_event);
           break;
         case "state":
           this.modelState = e.data.payload[0];
@@ -145,6 +127,31 @@ export default class Model {
           this.modelDataSlow = e.data.payload[0];
           document.dispatchEvent(this._rts_event);
           break;
+
+
+
+
+        case "model_props":
+          document.dispatchEvent(this._props_event);
+          break;
+        case "prop_value":
+          break;
+        case "info":
+          document.dispatchEvent(this._info_event);
+          break;
+        case "error":
+          switch (e.data.message) {
+            case "model_failed":
+              console.log("Model: ModelEngine reports a model build failure. Dispatching model_error event.")
+              // dispatch an error event
+              document.dispatchEvent(this._error_event);
+              break;
+          }
+          break;
+        case "script":
+          document.dispatchEvent(this._script_event);
+          break;
+
         case "model_types":
           this._model_types_event["model_types"] = JSON.parse(e.data.payload);
           document.dispatchEvent(this._model_types_event);

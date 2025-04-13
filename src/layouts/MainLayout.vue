@@ -52,26 +52,19 @@ export default defineComponent({
   methods: {
     updateStatusMessage(e) {
       this.statusMessage = "STATUS: " + explain.status_message
-    },
-    modelReady() {
-      this.$bus.emit("model_ready")
-    },
-    modelError() {
-      this.$bus.emit("model_failed")
-    },
-    rtStart() {
-      this.$bus.emit("rt_start")
-    },
-    rtStop() {
-      this.$bus.emit("rt_stop")
     }
   },
   beforeUnmount() {
     document.removeEventListener("status", this.updateStatusMessage);
-    document.removeEventListener("model_ready", this.modelReady);
-    document.removeEventListener("error", this.modelError);
-    document.removeEventListener("rt_start", this.rtStart);
-    document.removeEventListener("rt_stop", this.rtStop);
+    document.removeEventListener("model_ready", () => this.$bus.emit("model_ready"));
+    document.removeEventListener("error", () => this.$bus.emit("model_failed"));
+    document.removeEventListener("rt_start", () => this.$bus.emit("rt_start"));
+    document.removeEventListener("rt_stop", () => this.$bus.emit("rt_stop"));
+    document.removeEventListener("rts", () => this.$bus.emit("rts"));
+    document.removeEventListener("rtf", () => this.$bus.emit("rtf"));
+    document.removeEventListener("state", () => this.$bus.emit("state"));
+    document.removeEventListener("data", () => this.$bus.emit("data"));
+    document.removeEventListener("data_slow", () => this.$bus.emit("data_slow"));
 
   },
   mounted() {
@@ -88,24 +81,49 @@ export default defineComponent({
     document.addEventListener("status", this.updateStatusMessage);
 
     try {
-      document.removeEventListener("model_ready", this.modelReady);
+      document.removeEventListener("model_ready", () => this.$bus.emit("model_ready"));
     } catch {}
-    document.addEventListener("model_ready", this.modelReady);
+    document.addEventListener("model_ready", () => this.$bus.emit("model_ready"));
 
     try {
-      document.removeEventListener("error", this.modelError);
+      document.removeEventListener("error", () => this.$bus.emit("model_failed"));
     } catch {}
-    document.addEventListener("error", this.modelError);
+    document.addEventListener("error", () => this.$bus.emit("model_failed"));
 
     try {
-      document.removeEventListener("rt_start", this.rtStart);
+      document.removeEventListener("rt_start", () => this.$bus.emit("rt_start"));
     } catch {}
-    document.addEventListener("rt_start", this.rtStart);
+    document.addEventListener("rt_start", () => this.$bus.emit("rt_start"));
 
     try {
-      document.removeEventListener("rt_stop", this.rtStop);
+      document.removeEventListener("rt_stop", () => this.$bus.emit("rt_stop"));
     } catch {}
-    document.addEventListener("rt_stop", this.rtStop);
+    document.addEventListener("rt_stop", () => this.$bus.emit("rt_stop"));
+
+    try {
+      document.removeEventListener("rts", () => this.$bus.emit("rts"));
+    } catch {}
+    document.addEventListener("rts", () => this.$bus.emit("rts"));
+
+    try {
+      document.removeEventListener("rtf", () => this.$bus.emit("rtf"));
+    } catch {}
+    document.addEventListener("rtf", () => this.$bus.emit("rtf"));
+
+    try {
+      document.removeEventListener("state", () => this.$bus.emit("state"));
+    } catch {}
+    document.addEventListener("state", () => this.$bus.emit("state"));
+
+    try {
+      document.removeEventListener("data", () => this.$bus.emit("data"));
+    } catch {}
+    document.addEventListener("data", () => this.$bus.emit("data"));
+
+    try {
+      document.removeEventListener("data_slow", () => this.$bus.emit("data_slow"));
+    } catch {}
+    document.addEventListener("data_slow", () => this.$bus.emit("data_slow"));
 
     // load the defaul model definition from disk
     explain.loadModelDefinition("term_neonate");

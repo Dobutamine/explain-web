@@ -124,6 +124,7 @@ self.onmessage = (e) => {
           watch_props(e.data.payload);
           break;
         case "watch_props_slow":
+          console.log("ModelEngine: updating watchlist slow.")
           watch_props_slow(e.data.payload);
           break;
       }
