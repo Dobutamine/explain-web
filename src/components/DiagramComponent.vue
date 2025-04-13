@@ -811,27 +811,27 @@ export default {
   },
   beforeUnmount() {},
   mounted() {
-    // // add the event listener for the state change
-    // this.$bus.on("state", this.processStateChanged);
+    // add the event listener for the state change
+    this.$bus.on("state", this.processStateChanged);
 
-    // // add the event listener for the diagram update
-    // this.$bus.on("rt_start", () => (this.rt_running = true));
-    // this.$bus.on("rt_stop", () => (this.rt_running = false));
-    // this.$bus.on("reset", () => this.buildDiagram());
-    // this.$bus.on("rebuild_diagram", () => this.buildDiagram());
-    // this.$bus.on("update_watchlist", () => this.update_watchlist());
-    // this.$bus.on("update_drainage_site", (new_site) => {
-    //   try {
-    //     this.state.diagram_definition.components["ECLS_DR"].dbcFrom = new_site;
-    //     this.update_component("ECLS_DR");
-    //   } catch {}
-    // });
-    // this.$bus.on("update_return_site", (new_site) => {
-    //   try {
-    //     this.state.diagram_definition.components["ECLS_RE"].dbcTo = new_site;
-    //     this.update_component("ECLS_RE");
-    //   } catch {}
-    // });
+    // add the event listener for the diagram update
+    this.$bus.on("rt_start", () => (this.rt_running = true));
+    this.$bus.on("rt_stop", () => (this.rt_running = false));
+    this.$bus.on("reset", () => this.buildDiagram());
+    this.$bus.on("rebuild_diagram", () => this.buildDiagram());
+    this.$bus.on("update_watchlist", () => this.update_watchlist());
+    this.$bus.on("update_drainage_site", (new_site) => {
+      try {
+        this.state.diagram_definition.components["ECLS_DR"].dbcFrom = new_site;
+        this.update_component("ECLS_DR");
+      } catch {}
+    });
+    this.$bus.on("update_return_site", (new_site) => {
+      try {
+        this.state.diagram_definition.components["ECLS_RE"].dbcTo = new_site;
+        this.update_component("ECLS_RE");
+      } catch {}
+    });
 
     this.$bus.on("model_ready", () => this.modelReady())
   },
