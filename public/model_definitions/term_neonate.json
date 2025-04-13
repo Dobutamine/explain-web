@@ -1,0 +1,1630 @@
+{
+    "name": "term_neonate",
+    "description": "normal 3.545 kg neonate at an age of 24h without shunts",
+    "weight": 3.545,
+    "height": 0.50,
+    "modeling_stepsize": 0.0005,
+    "model_time_total": 0.0,
+    "models": {
+        "Heart": {
+            "name": "Heart",
+            "description": "heart contraction model",
+            "model_type": "Heart",
+            "is_enabled": true,
+            "heart_rate_ref": 125.0,
+            "pq_time": 0.1,
+            "qrs_time": 0.075,
+            "qt_time": 0.25,
+            "av_delay": 0.0005,
+            "kn": 0.579,
+            "left_atrium": ["LA"],
+            "right_atrium": ["RA"],
+            "left_ventricle": ["LV"],
+            "right_ventricle": ["RV"],
+            "coronaries": ["COR"],
+            "coronary_arteries": ["AA_COR"],
+            "coronary_veins": ["COR_RA"],
+            "pericardium": ["PERICARDIUM"],
+            "aorta_valve": ["LV_AA"],
+            "pulmonary_valve": ["RV_PA"],
+            "mitral_valve": ["LA_LV"],
+            "tricuspid_valve": ["RA_RV"],
+            "aorta_valve_tga": [],
+            "pulmonary_valve_tga": [],
+            "truncus_arteriosus": [],
+            "tapvc": [],
+            "mapca": [],
+            "alcapa": [],
+            "components": {
+                "LA": {
+                    "name": "LA",
+                    "description": "timevarying elastance model of the left atrium",
+                    "model_type": "HeartChamber",
+                    "is_enabled": true,
+                    "vol": 0.0053,
+                    "u_vol": 0.0,
+                    "el_min": 1173.0,
+                    "el_max": 3053.0,
+                    "el_k": 0.0
+                },
+                "LA_LV": {
+                    "name": "LA_LV",
+                    "description": "blood valve model of the mitral valve",
+                    "model_type": "HeartValve",
+                    "is_enabled": true,
+                    "no_flow": false,
+                    "no_back_flow": true,
+                    "comp_from": "LA",
+                    "comp_to": "LV",
+                    "r_for": 55,
+                    "r_back": 55
+                },
+                "RA": {
+                    "name": "RA",
+                    "description": "timevarying elastance model of the right atrium",
+                    "model_type": "HeartChamber",
+                    "is_enabled": true,
+                    "vol": 0.0061,
+                    "u_vol": 0.0,
+                    "el_min": 1173,
+                    "el_max": 3053,
+                    "el_k": 0
+                },
+                "RA_RV": {
+                    "name": "RA_RV",
+                    "description": "blood valve model of the tricuspid valve",
+                    "model_type": "HeartValve",
+                    "is_enabled": true,
+                    "no_flow": false,
+                    "no_back_flow": true,
+                    "comp_from": "RA",
+                    "comp_to": "RV",
+                    "r_for": 55,
+                    "r_back": 55
+                },
+                "LV": {
+                    "name": "LV",
+                    "description": "timevarying elastance model of the left ventricle",
+                    "model_type": "HeartChamber",
+                    "is_enabled": true,
+                    "vol": 0.0029,
+                    "u_vol": 0.000733,
+                    "el_min": 1137.0,
+                    "el_max": 27200.0,
+                    "el_k": 0.0
+                },
+                "LV_AA": {
+                    "name": "LV_AA",
+                    "description": "blood valve model of the aortic valve",
+                    "model_type": "HeartValve",
+                    "is_enabled": true,
+                    "no_flow": false,
+                    "no_back_flow": true,
+                    "comp_from": "LV",
+                    "comp_to": "AA",
+                    "r_for": 55,
+                    "r_back": 55
+                },
+                "RV": {
+                    "name": "RV",
+                    "description": "timevarying elastance model of the right ventricle",
+                    "model_type": "HeartChamber",
+                    "is_enabled": true,
+                    "vol": 0.0051,
+                    "u_vol": 0.004,
+                    "el_min": 1079,
+                    "el_max": 22200,
+                    "el_k": 0
+                },
+                "RV_PA": {
+                    "name": "RV_PA",
+                    "description": "blood valve model of the pulmonary valve",
+                    "model_type": "HeartValve",
+                    "is_enabled": true,
+                    "no_flow": false,
+                    "no_back_flow": true,
+                    "comp_from": "RV",
+                    "comp_to": "PA",
+                    "r_for": 55,
+                    "r_back": 55
+                },
+                "PERICARDIUM": {
+                    "name": "PERICARDIUM",
+                    "description": "container model of the pericardium",
+                    "model_type": "Pericardium",
+                    "is_enabled": true,
+                    "contained_components": ["RA", "RV", "LA", "LV", "COR"],
+                    "vol": 0.019999912552092353,
+                    "u_vol": 0,
+                    "el_base": 9.960507757404796,
+                    "el_k": 1.0,
+                    "vol_extra": 0.0
+                }
+            }
+        },
+        "Breathing": {
+            "name": "Breathing",
+            "model_type": "Breathing",
+            "description": "spontanenous breathing model",
+            "is_enabled": true,
+            "breathing_enabled": true,
+            "minute_volume_ref": 0.2,
+            "vt_rr_ratio": 0.00012,
+            "rmp_gain_max": 100,
+            "ie_ratio": 0.3,
+            "resp_rate": 40.0,
+            "thorax": ["THORAX"]
+        },
+        "Metabolism": {
+            "name": "Metabolism",
+            "model_type": "Metabolism",
+            "description": "Metabolism model",
+            "is_enabled": true,
+            "vo2": 8.1,
+            "resp_q": 0.8,
+            "metabolic_active_models": {
+                "RLB": 0.15,
+                "INT": 0.15,
+                "LS": 0.1,
+                "KID": 0.1,
+                "RUB": 0.1,
+                "AA": 0.005,
+                "AD": 0.01,
+                "BR": 0.453
+            }
+        },
+        "Ans": {
+            "name": "Ans",
+            "model_type": "Ans",
+            "description": "autonomic nervous system model",
+            "is_enabled": true,
+            "ans_active": true,
+            "components": {
+                "BR_MAP": {
+                    "name": "BR_MAP",
+                    "model_type": "AnsAfferent",
+                    "description": "ans baroreceptor afferent pathway",
+                    "is_enabled": true,
+                    "min_value": 25,
+                    "set_value": 50,
+                    "max_value": 100,
+                    "time_constant": 4,
+                    "input_model": "AAR",
+                    "input_prop": "pres_in"
+                },
+                "CR_PCO2": {
+                    "name": "CR_PCO2",
+                    "model_type": "AnsAfferent",
+                    "description": "ans chemoreceptor pco2 afferent pathway",
+                    "is_enabled": true,
+                    "min_value": 15,
+                    "set_value": 40,
+                    "max_value": 75,
+                    "time_constant": 1,
+                    "input_model": "AA",
+                    "input_prop": "pco2"
+                },
+                "CR_PO2": {
+                    "name": "CR_PO2",
+                    "model_type": "AnsAfferent",
+                    "description": "ans chemoreceptor po2 afferent pathway",
+                    "is_enabled": true,
+                    "min_value": 30,
+                    "set_value": 80,
+                    "max_value": 150,
+                    "time_constant": 1,
+                    "input_model": "AA",
+                    "input_prop": "po2"
+                },
+                "CR_PH": {
+                    "name": "CR_PH",
+                    "model_type": "AnsAfferent",
+                    "description": "ans chemoreceptor ph afferent pathway",
+                    "is_enabled": true,
+                    "min_value": 6.9,
+                    "set_value": 7.4,
+                    "max_value": 7.7,
+                    "time_constant": 1,
+                    "input_model": "AA",
+                    "input_prop": "ph"
+                },
+                "EF_HR": {
+                    "name": "EF_HR",
+                    "model_type": "AnsEfferent",
+                    "description": "ans effector pathway on heartrate",
+                    "is_enabled": true,
+                    "target_model": "Heart",
+                    "target_prop": "hr_ans_factor",
+                    "effect_at_max_firing_rate": 0.428,
+                    "effect_at_min_firing_rate": 1.5,
+                    "tc": 2
+                },
+                "EF_MV": {
+                    "name": "EF_MV",
+                    "model_type": "AnsEfferent",
+                    "description": "ans effector pathway on minute volume",
+                    "is_enabled": true,
+                    "target_model": "Breathing",
+                    "target_prop": "mv_ans_factor",
+                    "effect_at_max_firing_rate": 10,
+                    "effect_at_min_firing_rate": 0.1,
+                    "tc": 5
+                }
+            },
+            "pathways": {
+                "BR_MAP_EF_HR": {
+                    "active": true,
+                    "sensor": "BR_MAP",
+                    "effector": "EF_HR",
+                    "effect_weight": 1
+                },
+                "CR_PCO2_EF_MV": {
+                    "active": true,
+                    "sensor": "CR_PCO2",
+                    "effector": "EF_MV",
+                    "effect_weight": 1
+                }
+            }
+        },
+        "Coronaries": {
+            "name": "Coronaries",
+            "model_type": "Coronaries",
+            "description": "coronary perfusion model",
+            "is_enabled": true,
+            "mob_active": true,
+            "coronaries": ["COR"],
+            "coronary_arteries": ["AA_COR"],
+            "coronary_veins": ["COR_RA"],
+            "ecc_ref": 0.00000301,
+            "pva_ref": 0.00143245,
+            "pe_ref": 0,
+            "to2_min": 0.0002,
+            "to2_ref": 0.2,
+            "bm_vo2_ref": 0.0007,
+            "bm_vo2_min": 0.00035,
+            "bm_vo2_tc": 5,
+            "resp_q": 0.1,
+            "components": {
+                "COR": {
+                    "name": "COR",
+                    "description": "timevarying elastance model of the coronaries",
+                    "model_type": "CoronaryVessel",
+                    "is_enabled": true,
+                    "vol": 0.000621944736430777,
+                    "u_vol": 0.00028,
+                    "el_min": 30000,
+                    "el_max": 90000,
+                    "el_k": 0,
+                    "components": {}
+                },
+                "COR_RA": {
+                    "name": "COR_RA",
+                    "description": "resistor model of the connection between the coronaries and the right atrium",
+                    "model_type": "BloodResistor",
+                    "is_enabled": true,
+                    "no_flow": false,
+                    "no_back_flow": false,
+                    "comp_from": "COR",
+                    "comp_to": "RA",
+                    "r_for": 15000,
+                    "r_back": 15000
+                },
+                "AA_COR": {
+                    "name": "AA_COR",
+                    "description": "resistor model of the connection between ascending aorta and the coronaries",
+                    "model_type": "BloodResistor",
+                    "is_enabled": true,
+                    "no_flow": false,
+                    "no_back_flow": false,
+                    "comp_from": "AA",
+                    "comp_to": "COR",
+                    "r_for": 60000,
+                    "r_back": 60000
+                }
+            }
+        },
+        "Ventilator": {
+            "name": "Ventilator",
+            "model_type": "Ventilator",
+            "description": "mechanical ventilator model",
+            "is_enabled": false,
+            "breathing_model": ["Breathing"],
+            "pres_atm": 760,
+            "fio2": 0.205,
+            "humidity": 1.0,
+            "temp": 37,
+            "ettube_diameter": 2.5,
+            "ettube_length": 110,
+            "_ettube_length_ref": 110,
+            "vent_mode": "PRVC",
+            "vent_rate": 40,
+            "tidal_volume": 0.015,
+            "insp_time": 0.4,
+            "insp_flow": 12,
+            "exp_flow": 3,
+            "pip_cmh2o": 14,
+            "pip_cmh2o_max": 14,
+            "peep_cmh2o": 3,
+            "trigger_volume_perc": 6,
+            "synchronized": true,
+            "components": {
+                "VENT_GASIN": {
+                    "name": "VENT_GASIN",
+                    "model_type": "GasCapacitance",
+                    "description": "gas capacitance model of the gas reservoir of the mechanical ventilator",
+                    "is_enabled": false,
+                    "fixed_composition": true,
+                    "vol": 5.4,
+                    "u_vol": 5.0,
+                    "el_base": 1000,
+                    "el_k": 0
+                },
+                "VENT_GASCIRCUIT": {
+                    "name": "VENT_GASCIRCUIT",
+                    "model_type": "GasCapacitance",
+                    "description": "gas capacitance model of the gas volume inside the tubing of the mechanical ventilator",
+                    "is_enabled": false,
+                    "fixed_composition": false,
+                    "vol": 0.262,
+                    "u_vol": 0.262,
+                    "el_base": 1130,
+                    "el_k": 0
+                },
+                "VENT_GASOUT": {
+                    "name": "VENT_GASOUT",
+                    "model_type": "GasCapacitance",
+                    "description": "gas capacitance model of the return gas reservoir of the mechanical ventilator",
+                    "is_enabled": false,
+                    "fixed_composition": true,
+                    "vol": 5.0,
+                    "u_vol": 5.0,
+                    "el_base": 1000,
+                    "el_k": 0
+                },
+                "VENT_INSP_VALVE": {
+                    "name": "VENT_INSP_VALVE",
+                    "model_type": "GasResistor",
+                    "description": "gas resistor model of the inspiratory valve of the mechanical ventilator",
+                    "is_enabled": false,
+                    "no_flow": true,
+                    "no_back_flow": false,
+                    "comp_from": "VENT_GASIN",
+                    "comp_to": "VENT_GASCIRCUIT",
+                    "r_for": 2000,
+                    "r_back": 2000,
+                    "r_k": 0
+                },
+                "VENT_ETTUBE": {
+                    "name": "VENT_ETTUBE",
+                    "model_type": "GasResistor",
+                    "description": "gas resistor model of the endotracheal tube",
+                    "is_enabled": false,
+                    "no_flow": true,
+                    "no_back_flow": false,
+                    "comp_from": "VENT_GASCIRCUIT",
+                    "comp_to": "DS",
+                    "r_for": 37.6874,
+                    "r_back": 37.6874,
+                    "r_k": 0
+                },
+                "VENT_EXP_VALVE": {
+                    "name": "VENT_EXP_VALVE",
+                    "model_type": "GasResistor",
+                    "description": "gas resistor model of the expiratory valve of the mechanical ventilator",
+                    "is_enabled": false,
+                    "no_flow": true,
+                    "no_back_flow": true,
+                    "comp_from": "VENT_GASCIRCUIT",
+                    "comp_to": "VENT_GASOUT",
+                    "r_for": 2000,
+                    "r_back": 2000,
+                    "r_k": 0
+                }
+            }
+        },
+        "Ecls": {
+            "name": "Ecls",
+            "model_type": "Ecls",
+            "description": "ecls system model",
+            "is_enabled": false,
+            "pres_atm": 760.0,                                        
+            "tubing_diameter": 0.25, 
+            "tubing_elastance": 11600,
+            "tubing_in_length": 1.0,             
+            "tubing_out_length": 1.0,                           
+            "tubing_clamped": true,                              
+            "drainage_cannula_diameter": 12,                     
+            "drainage_cannula_length": 0.11,                
+            "return_cannula_diameter": 10,                     
+            "return_cannula_length": 0.11,                      
+            "pump_volume": 0.8,
+            "oxy_volume": 0.8,
+            "oxy_resistance": 100,
+            "oxy_dif_o2": 0.001,
+            "oxy_dif_co2": 0.001,
+            "sweep_gas": 0.5,
+            "fio2_gas": 0.3,
+            "co2_gas_flow": 0.4,
+            "temp_gas": 37.0,
+            "humidity_gas": 0.5,
+            "pump_rpm": 1500,
+            "components": {
+                "ECLS_TUBIN": {
+                    "name": "ECLS_TUBIN",
+                    "model_type": "BloodCapacitance",
+                    "description": "capacitance model of the drainage tubing of ecls system",
+                    "is_enabled": false,
+                    "fixed_composition": false,
+                    "vol": 0.032,
+                    "u_vol": 0.032,
+                    "el_base": 11600,
+                    "el_k": 0,
+                    "components": {
+                        "ECLS_TUBIN_PUMP": {
+                            "name": "ECLS_TUBIN_PUMP",
+                            "model_type": "BloodResistor",
+                            "description": "resistor model of the connection between the tubing and the pump of the ecls system",
+                            "is_enabled": false,
+                            "no_flow": true,
+                            "no_back_flow": false,
+                            "comp_from": "ECLS_TUBIN",
+                            "comp_to": "ECLS_PUMP",
+                            "r_for": 50,
+                            "r_back": 50,
+                            "r_k": 0
+                        }
+                    }
+                },
+                "ECLS_PUMP": {
+                    "name": "ECLS_PUMP",
+                    "model_type": "BloodPump",
+                    "description": "blood pump model of the ecls system",
+                    "is_enabled": false,
+                    "fixed_composition": false,
+                    "vol": 0.8,
+                    "u_vol": 0.8,
+                    "el_base": 20000,
+                    "el_k": 0,
+                    "inlet": "ECLS_TUBIN_PUMP",
+                    "outlet": "ECLS_PUMP_OXY",
+                    "components": {
+                        "ECLS_PUMP_OXY": {
+                            "name": "ECLS_PUMP_OXY",
+                            "model_type": "BloodResistor",
+                            "description": "resistor model of the connection between the pump and the oxygenator of the ecls system",
+                            "is_enabled": false,
+                            "no_flow": true,
+                            "no_back_flow": false,
+                            "comp_from": "ECLS_PUMP",
+                            "comp_to": "ECLS_OXY",
+                            "r_for": 50,
+                            "r_back": 50,
+                            "r_k": 0
+                        }
+                    }
+                },
+                "ECLS_OXY": {
+                    "name": "ECLS_OXY",
+                    "model_type": "BloodCapacitance",
+                    "description": "capacitance model of the blood component of the oxygenator of ecls system",
+                    "is_enabled": false,
+                    "fixed_composition": false,
+                    "vol": 0.8,
+                    "u_vol": 0.8,
+                    "el_base": 20000,
+                    "el_k": 0,
+                    "components": {
+                        "ECLS_OXY_TUBOUT": {
+                            "name": "ECLS_OXY_TUBOUT",
+                            "model_type": "BloodResistor",
+                            "description": "resistor model of the connection between the oxygenator and tubing of the ecls system",
+                            "is_enabled": false,
+                            "no_flow": true,
+                            "no_back_flow": false,
+                            "comp_from": "ECLS_OXY",
+                            "comp_to": "ECLS_TUBOUT",
+                            "r_for": 50,
+                            "r_back": 50,
+                            "r_k": 0
+                        }
+                    }
+                },
+                "ECLS_TUBOUT": {
+                    "name": "ECLS_TUBOUT",
+                    "model_type": "BloodCapacitance",
+                    "description": "capacitance model of the blood in the tubing out of the ecls system",
+                    "is_enabled": false,
+                    "fixed_composition": false,
+                    "vol": 0.032,
+                    "u_vol": 0.032,
+                    "el_base": 11600,
+                    "el_k": 0,
+                    "components": {}
+                },
+                "ECLS_DRAINAGE": {
+                    "name": "ECLS_DRAINAGE",
+                    "model_type": "BloodResistor",
+                    "description": "resistor model of the connection between the right atrium and tubing of the ecls system (drainage cannula)",
+                    "is_enabled": false,
+                    "no_flow": true,
+                    "no_back_flow": false,
+                    "comp_from": "RA",
+                    "comp_to": "ECLS_TUBIN",
+                    "r_for": 820,
+                    "r_back": 820,
+                    "r_back_factor": 1,
+                    "r_k": 0
+                },
+                "ECLS_RETURN": {
+                    "name": "ECLS_RETURN",
+                    "model_type": "BloodResistor",
+                    "description": "resistor model of the connection between the tubing and the aortic arch of the ecls system (return cannula)",
+                    "is_enabled": false,
+                    "no_flow": true,
+                    "no_back_flow": false,
+                    "comp_from": "ECLS_TUBOUT",
+                    "comp_to": "AAR",
+                    "r_for": 1700,
+                    "r_back": 1700,
+                    "r_k": 0
+                },
+                "ECLS_GASIN": {
+                    "name": "ECLS_GASIN",
+                    "model_type": "GasCapacitance",
+                    "description": "gas capacitance model of the gas source of the ecls system",
+                    "is_enabled": false,
+                    "fixed_composition": true,
+                    "vol": 5.4,
+                    "u_vol": 5,
+                    "el_base": 1000,
+                    "el_k": 0,
+                    "components": {
+                        "ECLS_GASIN_OXY": {
+                            "name": "ECLS_GASIN_OXY",
+                            "model_type": "GasResistor",
+                            "description": "gas resistor model of the connection between gas source and the oxygenator of the ecls system",
+                            "is_enabled": false,
+                            "no_flow": true,
+                            "no_back_flow": false,
+                            "comp_from": "ECLS_GASIN",
+                            "comp_to": "ECLS_GASOXY",
+                            "r_for": 2000,
+                            "r_back": 2000,
+                            "r_k": 0
+                        }
+                    }
+                },
+                "ECLS_GASOXY": {
+                    "name": "ECLS_GASOXY",
+                    "model_type": "GasCapacitance",
+                    "description": "gas capacitance model of the gas inside the oxygenator of the ecls system",
+                    "is_enabled": false,
+                    "fixed_composition": false,
+                    "vol": 0.1,
+                    "u_vol": 0.1,
+                    "el_base": 10000,
+                    "el_k": 0,
+                    "components": {
+                        "ECLS_OXY_GASOUT": {
+                            "name": "ECLS_OXY_GASOUT",
+                            "model_type": "GasResistor",
+                            "description": "gas resistor model of the connection between oxygenator and the gas drainge component of the ecls system",
+                            "is_enabled": false,
+                            "no_flow": true,
+                            "no_back_flow": false,
+                            "comp_from": "ECLS_GASOXY",
+                            "comp_to": "ECLS_GASOUT",
+                            "r_for": 50,
+                            "r_back": 50,
+                            "r_k": 0
+                        }
+                    }
+                },
+                "ECLS_GASOUT": {
+                    "name": "ECLS_GASOUT",
+                    "model_type": "GasCapacitance",
+                    "description": "gas capacitance model of the gas drainage compartment of the ecls system",
+                    "is_enabled": false,
+                    "fixed_composition": true,
+                    "vol": 5,
+                    "u_vol": 5,
+                    "el_base": 1000,
+                    "el_k": 0,
+                    "components": {}
+                },
+                "ECLS_GASEX": {
+                    "name": "ECLS_GASEX",
+                    "model_type": "GasExchanger",
+                    "description": "gas exchanger model of gasexchange inside oxgenator of the ecls system",
+                    "is_enabled": false,
+                    "comp_blood": "ECLS_OXY",
+                    "comp_gas": "ECLS_GASOXY",
+                    "dif_o2": 0.001,
+                    "dif_co2": 0.001
+                }
+            }
+        },
+        "Placenta": {
+            "name": "Placenta",
+            "model_type": "Placenta",
+            "description": "Placenta model",
+            "is_enabled": false,
+            "umb_clamped": true,
+            "umb_art_diameter": 0.005,
+            "umb_art_length": 0.5,
+            "umb_ven_diameter": 0.005,
+            "umb_ven_length": 0.5,
+            "umb_art_res" : 30000,
+            "umb_ven_res" : 30000,
+            "plf_u_vol" : 0.15,
+            "plf_el_base" : 5000.0,
+            "plm_u_vol" : 0.5,
+            "plm_el_base" : 5000.0,
+            "dif_o2" : 0.01,
+            "dif_co2" : 0.01,
+            "mat_to2" : 7.0,
+            "mat_tco2" : 23.5,
+            "components": {
+                "PLF": {
+                    "name": "PLF",
+                    "model_type": "BloodCapacitance",
+                    "description": "capacitance model of the blood on the fetal side of the placenta",
+                    "is_enabled": false,
+                    "fixed_composition": false,
+                    "u_vol": 0.15,
+                    "el_base": 25000,
+                    "el_k": 0
+                },
+                "PLM": {
+                    "name": "PLM",
+                    "model_type": "BloodCapacitance",
+                    "description": "capacitance model of the blood on the maternal side of the placenta",
+                    "is_enabled": false,
+                    "fixed_composition": true,
+                    "u_vol": 0.5,
+                    "el_base": 5000,
+                    "el_k": 0
+                },
+                "UMB_ART": {
+                    "name": "UMB_ART",
+                    "model_type": "BloodResistor",
+                    "description": "resistor model of the connection between the descending aorta and the fetal placenta (umbilical arteries)",
+                    "is_enabled": false,
+                    "no_flow": true,
+                    "no_back_flow": false,
+                    "comp_from": "AD",
+                    "comp_to": "PLF",
+                    "r_for": 30000,
+                    "r_back": 30000,
+                    "r_k": 0
+                },
+                "UMB_VEN": {
+                    "name": "UMB_VEN",
+                    "model_type": "BloodResistor",
+                    "description": "resistor model of the connection between the fetal placenta and the inferior vena cava (umbilical vein)",
+                    "is_enabled": false,
+                    "no_flow": true,
+                    "no_back_flow": false,
+                    "comp_from": "PLF",
+                    "comp_to": "IVCI",
+                    "r_for": 30000,
+                    "r_back": 30000,
+                    "r_k": 0
+                },
+                "PL_GASEX": {
+                    "name": "PL_GASEX",
+                    "model_type": "BloodDiffusor",
+                    "description": "blood diffusor model of the diffusion across the placenta",
+                    "is_enabled": false,
+                    "comp_blood1": "PLF",
+                    "comp_blood2": "PLM",
+                    "dif_o2": 0.001,
+                    "dif_co2": 0.001,
+                    "dif_solutes": {}
+                }
+            }
+        },
+        "Circulation": {
+            "name": "Circulation",
+            "model_type": "Circulation",
+            "description": "high level circulation model",
+            "is_enabled": true,       
+            "syst_art_capacitances": ["AA", "AAR", "AD"],
+            "syst_art_resistors": ["AA_AAR", "AAR_AD", "AD_LS", "AD_INT", "AD_KID", "AD_RLB", "AA_BR", "AA_RUB"],
+            "syst_ven_capacitances": ["VLB", "IVCI", "VUB", "SVC"],
+            "syst_ven_resistors": ["LS_VLB", "INT_VLB", "KID_VLB", "VLB_IVCI", "IVCI_RA", "RLB_VLB", "BR_VUB", "RUB_VUB", "VUB_SVC", "SVC_RA"],
+            "pulm_art_capacitances": ["PA", "PAAL", "PAAR"],
+            "pulm_art_resistors": ["PA_PAAL", "PA_PAAR", "PAAL_LL", "PAAR_RL"],
+            "pulm_ven_capacitances": ["PV"],
+            "pulm_ven_resistors": ["PV_LA"],
+            "cap_capacitances": ["BR", "RUB", "LS", "INT", "KID", "RLB"],
+            "components": {
+                "LL": {
+                    "name": "LL",
+                    "description": "capacitance model of the blood compartment of the left lung",
+                    "model_type": "CapillaryBed",
+                    "is_enabled": true,
+                    "vol": 0.005898417962291056,
+                    "u_vol": 0.0012431702152874951,
+                    "el_base": 4380,
+                    "el_k": 0,
+                    "components": {
+                        "LL_PV": {
+                            "name": "LL_PV",
+                            "description": "resistor model of the connection between the blood compartment of the left lung and the pulmonary veins",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": true,
+                            "comp_from": "LL",
+                            "comp_to": "PV",
+                            "r_for": 2010,
+                            "r_back": 2010
+                        }
+                    }
+                },
+                "RL": {
+                    "name": "RL",
+                    "description": "capacitance model of the blood compartment of the right lung",
+                    "model_type": "CapillaryBed",
+                    "is_enabled": true,
+                    "vol": 0.005898417962291056,
+                    "u_vol": 0.0012431702152874951,
+                    "el_base": 4380,
+                    "el_k": 0,
+                    "components": {
+                        "RL_PV": {
+                            "name": "RL_PV",
+                            "description": "resistor model of the connection between the blood compartment of the right lung and the pulmonary veins",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": true,
+                            "comp_from": "RL",
+                            "comp_to": "PV",
+                            "r_for": 2010,
+                            "r_back": 2010
+                        }
+                    }
+                },
+                "PV": {
+                    "name": "PV",
+                    "description": "capacitance model of the pulmonary veins",
+                    "model_type": "Vein",
+                    "is_enabled": true,
+                    "vol": 0.007770162715477027,
+                    "u_vol": 0.00563081048728314,
+                    "el_base": 4517,
+                    "el_k": 0,
+                    "components": {
+                        "PV_LA": {
+                            "name": "PV_LA",
+                            "description": "resistor model of the connection between the pulmonary veins and the left atrium",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "PV",
+                            "comp_to": "LA",
+                            "r_for": 335,
+                            "r_back": 3350
+                        }
+                    }
+                },
+                "PA": {
+                    "name": "PA",
+                    "description": "capacitance model of the pulmonary artery",
+                    "model_type": "Artery",
+                    "is_enabled": true,
+                    "vol": 0.01,
+                    "u_vol": 0.0022,
+                    "el_base": 6000,
+                    "el_k": 0,
+                    "components": {
+                        "PA_PAAL": {
+                            "name": "PA_PAAL",
+                            "description": "resistor model of the connection between the pulmonary artery and the blood compartment of the left lung",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "PA",
+                            "comp_to": "PAAL",
+                            "r_for": 700,
+                            "r_back": 700
+                        },
+                        "PA_PAAR": {
+                            "name": "PA_PAAR",
+                            "description": "resistor model of the connection between the pulmonary artery and the blood compartment of the right lung",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "PA",
+                            "comp_to": "PAAR",
+                            "r_for": 700,
+                            "r_back": 700
+                        }
+                    }
+                },
+                "PAAL": {
+                    "name": "PAAL",
+                    "description": "capacitance model of the pulmonary arterioles of the left lung",
+                    "model_type": "Arteriole",
+                    "is_enabled": true,
+                    "vol": 0.0005,
+                    "u_vol": 0.0005,
+                    "el_base": 8000,
+                    "el_k": 0,
+                    "components": {
+                        "PAAL_LL": {
+                            "name": "PAAL_LL",
+                            "description": "resistor model of the connection between the pulmonary artery and the blood compartment of the left lung",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "PAAL",
+                            "comp_to": "LL",
+                            "r_for": 500,
+                            "r_back": 500
+                        }
+                    }
+                },
+                "PAAR": {
+                    "name": "PAAR",
+                    "description": "capacitance model of the pulmonary arterioles of the right lung",
+                    "model_type": "Arteriole",
+                    "is_enabled": true,
+                    "vol": 0.0005,
+                    "u_vol": 0.0005,
+                    "el_base": 8000,
+                    "el_k": 0,
+                    "components": {
+                        "PAAR_RL": {
+                            "name": "PAAR_RL",
+                            "description": "resistor model of the connection between the pulmonary artery and the blood compartment of the right lung",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "PAAR",
+                            "comp_to": "RL",
+                            "r_for": 500,
+                            "r_back": 500
+                        }
+                    }
+                },
+                "AA": {
+                    "name": "AA",
+                    "description": "capacitance model of the ascending aorta",
+                    "model_type": "Artery",
+                    "is_enabled": true,
+                    "vol": 0.0059281971406137815,
+                    "u_vol": 0.0033,
+                    "el_base": 21000,
+                    "el_k": 0,
+                    "components": {
+                        "AA_AAR": {
+                            "name": "AA_AAR",
+                            "description": "resistor model of the connection between ascending aorta and aortic arch",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "AA",
+                            "comp_to": "AAR",
+                            "r_for": 30,
+                            "r_back": 30
+                        },
+                        "AA_RUB": {
+                            "name": "AA_RUB",
+                            "description": "resistor model of the connection between ascending aorta and the upper body",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "AA",
+                            "comp_to": "RUB",
+                            "r_for": 29490,
+                            "r_back": 29490
+                        },
+                        "AA_BR": {
+                            "name": "AA_BR",
+                            "description": "resistor model of the connection between ascending aorta and the brain",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "AA",
+                            "comp_to": "BR",
+                            "r_for": 6702,
+                            "r_back": 6702
+                        }
+                    }
+                },
+                "AAR": {
+                    "name": "AAR",
+                    "description": "capacitance model of the aortic arch",
+                    "model_type": "Artery",
+                    "is_enabled": true,
+                    "vol": 0.006128775769877488,
+                    "u_vol": 0.003501795453394704,
+                    "el_base": 21000,
+                    "el_k": 0,
+                    "components": {
+                        "AAR_AD": {
+                            "name": "AAR_AD",
+                            "description": "resistor model of the connection between the aortic arch and the descending aorta",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "AAR",
+                            "comp_to": "AD",
+                            "r_for": 30,
+                            "r_back": 30
+                        }
+                    }
+                },
+                "AD": {
+                    "name": "AD",
+                    "description": "capacitance model of the descending aorta",
+                    "model_type": "Artery",
+                    "is_enabled": true,
+                    "vol": 0.022045886828499398,
+                    "u_vol": 0.019697599425345207,
+                    "el_base": 21000,
+                    "el_k": 0,
+                    "components": {
+                        "AD_RLB": {
+                            "name": "AD_RLB",
+                            "description": "resistor model of the connection between descending aorta and the lower body",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "AD",
+                            "comp_to": "RLB",
+                            "r_for": 10592,
+                            "r_back": 10592
+                        },
+                        "AD_LS": {
+                            "name": "AD_LS",
+                            "description": "resistor model of the connection between descending aorta and the liver and spleen",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "AD",
+                            "comp_to": "LS",
+                            "r_for": 25135,
+                            "r_back": 25135
+                        },
+                        "AD_KID": {
+                            "name": "AD_KID",
+                            "description": "resistor model of the connection between descending aorta and the kidneys",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "AD",
+                            "comp_to": "KID",
+                            "r_for": 23677,
+                            "r_back": 23677
+                        },
+                        "AD_INT": {
+                            "name": "AD_INT",
+                            "description": "resistor model of the connection between descending aorta and the intestines",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "AD",
+                            "comp_to": "INT",
+                            "r_for": 13880,
+                            "r_back": 13880
+                        }
+                    }
+                },
+                "RLB": {
+                    "name": "RLB",
+                    "description": "capacitance model of the blood compartment of the lower body",
+                    "model_type": "CapillaryBed",
+                    "is_enabled": true,
+                    "vol": 0.0022221379384226463,
+                    "u_vol": 0.0010943110791858449,
+                    "el_base": 25024.77968970381,
+                    "el_k": 0,
+                    "components": {
+                        "RLB_VLB": {
+                            "name": "RLB_VLB",
+                            "description": "resistor model of the connection between lower body and the venous compartment of the lower body",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": true,
+                            "comp_from": "RLB",
+                            "comp_to": "VLB",
+                            "r_for": 13240,
+                            "r_back": 13240
+                        }
+                    }
+                },
+                "LS": {
+                    "name": "LS",
+                    "description": "capacitance model of the blood compartment of the liver and spleen",
+                    "model_type": "CapillaryBed",
+                    "is_enabled": true,
+                    "vol": 0.002213731699070824,
+                    "u_vol": 0.0010943110791858449,
+                    "el_base": 25024.77968970381,
+                    "el_k": 0,
+                    "components": {
+                        "LS_VLB": {
+                            "name": "LS_VLB",
+                            "description": "resistor model of the connection between the liver and spleen and the venous compartment of the lower body",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": true,
+                            "comp_from": "LS",
+                            "comp_to": "VLB",
+                            "r_for": 31413,
+                            "r_back": 31413
+                        }
+                    }
+                },
+                "KID": {
+                    "name": "KID",
+                    "description": "capacitance model of the blood compartment of the kidneys",
+                    "model_type": "CapillaryBed",
+                    "is_enabled": true,
+                    "vol": 0.0022137661552646677,
+                    "u_vol": 0.0010943110791858449,
+                    "el_base": 25024.77968970381,
+                    "el_k": 0,
+                    "components": {
+                        "KID_VLB": {
+                            "name": "KID_VLB",
+                            "description": "resistor model of the connection between the kidneys and the venous compartment of the lower body",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": true,
+                            "comp_from": "KID",
+                            "comp_to": "VLB",
+                            "r_for": 29598,
+                            "r_back": 29598
+                        }
+                    }
+                },
+                "INT": {
+                    "name": "INT",
+                    "description": "capacitance model of the blood compartment of the intestines",
+                    "model_type": "CapillaryBed",
+                    "is_enabled": true,
+                    "vol": 0.0022163662237057536,
+                    "u_vol": 0.0010943110791858449,
+                    "el_base": 25024.77968970381,
+                    "el_k": 0,
+                    "components": {
+                        "INT_VLB": {
+                            "name": "INT_VLB",
+                            "description": "resistor model of the connection between the intestines and the venous compartment of the lower body",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": true,
+                            "comp_from": "INT",
+                            "comp_to": "VLB",
+                            "r_for": 17350,
+                            "r_back": 17350
+                        }
+                    }
+                },
+                "RUB": {
+                    "name": "RUB",
+                    "description": "capacitance model of the blood compartment of the upper body",
+                    "model_type": "CapillaryBed",
+                    "is_enabled": true,
+                    "vol": 0.0016677405369509085,
+                    "u_vol": 0.001149026633145137,
+                    "el_base": 25024.77968970381,
+                    "el_k": 0,
+                    "components": {
+                        "RUB_VUB": {
+                            "name": "RUB_VUB",
+                            "description": "resistor model of the connection between upper body and the venous compartment of the upper body",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": true,
+                            "comp_from": "RUB",
+                            "comp_to": "VUB",
+                            "r_for": 10053,
+                            "r_back": 10053
+                        }
+                    }
+                },
+                "BR": {
+                    "name": "BR",
+                    "description": "capacitance model of the blood compartment of the brain",
+                    "model_type": "CapillaryBed",
+                    "is_enabled": true,
+                    "vol": 0.0023441127626145832,
+                    "u_vol": 0.001149026633145137,
+                    "el_base": 25024.77968970381,
+                    "el_k": 0,
+                    "components": {
+                        "BR_VUB": {
+                            "name": "BR_VUB",
+                            "description": "resistor model of the connection between the brain and the venous compartment of the upper body",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": true,
+                            "comp_from": "BR",
+                            "comp_to": "VUB",
+                            "r_for": 8936,
+                            "r_back": 8936
+                        }
+                    }
+                },
+                "IVCI": {
+                    "name": "IVCI",
+                    "description": "capacitance model of the intrathoracic part of the inferior vena cava",
+                    "model_type": "Vein",
+                    "is_enabled": true,
+                    "vol": 0.025769092793056256,
+                    "u_vol": 0.0162,
+                    "el_base": 776.9196050775741,
+                    "el_k": 0,
+                    "components": {
+                        "IVCI_RA": {
+                            "name": "IVCI_RA",
+                            "description": "resistor model of the connection between the inferior vena cava and the right atrium",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "IVCI",
+                            "comp_to": "RA",
+                            "r_for": 139,
+                            "r_back": 698
+                        }
+                    }
+                },
+                "VLB": {
+                    "name": "VLB",
+                    "description": "capacitance model of the extrathoracic venous blood compartment of the lower body",
+                    "model_type": "Venule",
+                    "is_enabled": true,
+                    "vol": 0.109,
+                    "u_vol": 0.083,
+                    "el_base": 145,
+                    "el_k": 0,
+                    "components": {
+                        "VLB_IVCI": {
+                            "name": "VLB_IVCI",
+                            "description": "resistor model of the connection between the venous compartment of the lower body and the inferior vena cava",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "VLB",
+                            "comp_to": "IVCI",
+                            "r_for": 50,
+                            "r_back": 50
+                        }
+                    }
+                },
+                "SVC": {
+                    "name": "SVC",
+                    "description": "capacitance model of the superior vena cava",
+                    "model_type": "Vein",
+                    "is_enabled": true,
+                    "vol": 0.018772322344298622,
+                    "u_vol": 0.0108,
+                    "el_base": 1000,
+                    "el_k": 0,
+                    "components": {
+                        "SVC_RA": {
+                            "name": "SVC_RA",
+                            "description": "resistor model of the connection between the superior vena cava and the right atrium",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "SVC",
+                            "comp_to": "RA",
+                            "r_for": 167,
+                            "r_back": 837
+                        }
+                    }
+                },
+                "VUB": {
+                    "name": "VUB",
+                    "description": "capacitance model of the extrathoracic venous blood compartment of the upper body",
+                    "model_type": "Venule",
+                    "is_enabled": true,
+                    "vol": 0.050,
+                    "u_vol": 0.0432,
+                    "el_base": 229,
+                    "el_k": 0,
+                    "components": {
+                        "VUB_SVC": {
+                            "name": "VUB_SVC",
+                            "description": "resistor model of the connection between the venous compartment of the upper body and the superior vena cava",
+                            "model_type": "BloodResistor",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "VUB",
+                            "comp_to": "SVC",
+                            "r_for": 50,
+                            "r_back": 50
+                        }
+                    }
+                }
+            }
+        },
+        "Respiration": {
+            "name": "Respiration",
+            "model_type": "Respiration",
+            "description": "high level respiration model",
+            "is_enabled": true,
+            "upper_airways": ["MOUTH_DS"],
+            "lower_airways_left": ["DS_ALL"],
+            "lower_airways_right": ["DS_ALR"],
+            "dead_space": ["DS"],
+            "thorax": ["THORAX"],
+            "pleural_space_left": [],
+            "pleural_space_right": [],
+            "lungs": ["ALL", "ALR"],
+            "left_lung": ["ALL"],
+            "right_lung": ["ALR"],
+            "gas_exchanger_left_lung": ["GASEX_LL"],
+            "gas_exchanger_right_lung": ["GASEX_RL"],
+            "intrapulmonary_shunt": ["IPS"],
+            "components": {
+                "MOUTH": {
+                    "name": "MOUTH",
+                    "model_type": "ConductingAirway",
+                    "description": "capacitance model of the air at the mouth",
+                    "is_enabled": true,
+                    "fixed_composition": true,
+                    "vol":   1000000000,
+                    "u_vol": 1000000000,
+                    "el_base": 10,
+                    "el_k": 0,
+                    "components": {
+                        "MOUTH_DS": {
+                            "name": "MOUTH_DS",
+                            "model_type": "GasResistor",
+                            "description": "gas resistor model of the connection between the mouth and dead space (airways)",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "MOUTH",
+                            "comp_to": "DS",
+                            "r_for": 18.61777150916784,
+                            "r_back": 18.61777150916784,
+                            "r_k": 0
+                        }
+                    }
+                },
+                "DS": {
+                    "name": "DS",
+                    "model_type": "ConductingAirway",
+                    "description": "capacitance model of the dead space",
+                    "is_enabled": true,
+                    "fixed_composition": false,
+                    "vol": 0.00516,
+                    "u_vol": 0.0051,
+                    "el_base": 5585,
+                    "el_k": 0,
+                    "components": {
+                        "DS_ALL": {
+                            "name": "DS_ALL",
+                            "model_type": "GasResistor",
+                            "description": "gas resistor model of the connection between the dead space and the alveolar left lung",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "DS",
+                            "comp_to": "ALL",
+                            "r_for": 42,
+                            "r_back": 42,
+                            "r_k": 0
+                        },
+                        "DS_ALR": {
+                            "name": "DS_ALR",
+                            "model_type": "GasResistor",
+                            "description": "gas resistor model of the connection between the dead space and the alveolar left lung",
+                            "is_enabled": true,
+                            "no_flow": false,
+                            "no_back_flow": false,
+                            "comp_from": "DS",
+                            "comp_to": "ALR",
+                            "r_for": 42,
+                            "r_back": 42,
+                            "r_k": 0
+                        }
+                    }
+                },
+                "ALL": {
+                    "name": "ALL",
+                    "model_type": "AlveolarSpace",
+                    "description": "gas capacitance model of the alveolar space of the left lung",
+                    "is_enabled": true,
+                    "fixed_composition": false,
+                    "vol": 0.07,
+                    "u_vol": 0.04,
+                    "el_base": 233,
+                    "el_k": 0,
+                    "components": {}
+                },
+                "ALR": {
+                    "name": "ALR",
+                    "model_type": "AlveolarSpace",
+                    "description": "gas capacitance model of the alveolar space of the right lung",
+                    "is_enabled": true,
+                    "fixed_composition": false,
+                    "vol": 0.07,
+                    "u_vol": 0.04,
+                    "el_base": 233,
+                    "el_k": 0,
+                    "components": {}
+                },
+                "THORAX": {
+                    "name": "THORAX",
+                    "model_type": "Thorax",
+                    "description": "container model the thoracic rib cage",
+                    "is_enabled": true,
+                    "contained_components": ["ALL", "ALR", "IVCI", "SVC", "PERICARDIUM", "AA", "AAR", "PA", "PV", "LL", "RL", "PAAL", "PAAR"],
+                    "vol": 0.214,
+                    "u_vol": 0.267,
+                    "el_base": 70,
+                    "el_k": 0.0,
+                    "vol_extra": 0.0
+                },
+                "GASEX_LL": {
+                    "name": "GASEX_LL",
+                    "model_type": "GasExchanger",
+                    "description": "gas exchanger model of the blood-gas connection of the left lung",
+                    "is_enabled": true,
+                    "comp_blood": "LL",
+                    "comp_gas": "ALL",
+                    "dif_o2": 0.01,
+                    "dif_co2": 0.01
+                },
+                "GASEX_RL": {
+                    "name": "GASEX_RL",
+                    "model_type": "GasExchanger",
+                    "description": "gas exchanger model of the blood-gas connection of the right lung",
+                    "is_enabled": true,
+                    "comp_blood": "RL",
+                    "comp_gas": "ALR",
+                    "dif_o2": 0.01,
+                    "dif_co2": 0.01
+                }
+            }
+        },
+        "Shunts": {
+            "name": "Shunts",
+            "model_type": "Shunts",
+            "description": "shunts methods",
+            "is_enabled": true,
+            "da": "DA",
+            "da_in": "DA_IN",
+            "da_out": "DA_OUT",
+            "fo": "FO",
+            "vsd": "VSD",
+            "da_enabled": true,
+            "fo_enabled": true,
+            "vsd_enabled": false,
+            "da_el": 50000.0,
+            "da_diameter": 0.0,
+            "da_length": 10.0,
+            "da_backflow_factor": 1.0,
+            "da_r_k": 1.0,
+            "fo_diameter": 0.0,
+            "fo_length": 2.0,
+            "fo_backflow_factor": 10.0,
+            "fo_r_k": 1.0,
+            "vsd_diameter": 0.0,
+            "vsd_length": 2.0,
+            "vsd_backflow_factor": 1.0,
+            "vsd_r_k": 1.0,
+            "components": {
+                "DA": {
+                    "name": "DA",
+                    "description": "capacitance model of the blood compartment in the ductus arteriosus",
+                    "model_type": "BloodCapacitance",
+                    "is_enabled": true,
+                    "vol": 0.0002,
+                    "u_vol": 0.0002,
+                    "el_base": 500000,
+                    "el_k": 1000,
+                    "components": {}
+                },
+                "DA_OUT": {
+                    "name": "DA_OUT",
+                    "description": "resistor model of the connection between the ductus arteriosus and the pulmnonary artery",
+                    "model_type": "BloodResistor",
+                    "is_enabled": true,
+                    "no_flow": false,
+                    "no_back_flow": false,
+                    "comp_from": "DA",
+                    "comp_to": "PA",
+                    "r_for": 100000000,
+                    "r_back": 100000000,
+                    "r_k": 1000.0
+                },
+                "DA_IN": {
+                    "name": "DA_IN",
+                    "description": "resistor model of the connection between the aortic arch and the ductus arteriosus",
+                    "model_type": "BloodResistor",
+                    "is_enabled": false,
+                    "no_flow": true,
+                    "no_back_flow": false,
+                    "comp_from": "AAR",
+                    "comp_to": "DA",
+                    "r_for": 50,
+                    "r_back": 50,
+                    "r_k": 1000.0
+                },
+                "FO": {
+                    "name": "FO",
+                    "description": "resistor model of the foramen ovale",
+                    "model_type": "BloodResistor",
+                    "is_enabled": true,
+                    "no_flow": true,
+                    "no_back_flow": false,
+                    "comp_from": "RA",
+                    "comp_to": "LA",
+                    "r_for": 100000000,
+                    "r_back": 100000000
+                },
+                "VSD": {
+                    "name": "VSD",
+                    "description": "resistor model of a ventricular septal defect",
+                    "model_type": "BloodResistor",
+                    "is_enabled": true,
+                    "no_flow": true,
+                    "no_back_flow": false,
+                    "comp_from": "RV",
+                    "comp_to": "LV",
+                    "r_for": 100000000,
+                    "r_back": 100000000
+                },
+                "IPS": {
+                    "name": "IPS",
+                    "description": "resistor model of the intra-pulmonary shunt",
+                    "model_type": "BloodResistor",
+                    "is_enabled": true,
+                    "no_flow": true,
+                    "no_back_flow": false,
+                    "comp_from": "PA",
+                    "comp_to": "PV",
+                    "r_for": 30719,
+                    "r_back": 30719,
+                    "r_k": 1000
+                }
+            }
+        },
+        "Blood": {
+            "name": "Blood",
+            "model_type": "Blood",
+            "description": "blood composition model",
+            "is_enabled": true,
+            "blood_containing_modeltypes":  [
+                "BloodCapacitance",
+                "HeartChamber",
+                "Artery",
+                "Arteriole",
+                "CapillaryBed",
+                "CoronaryVessel",
+                "Vein",
+                "Venule",
+                "BloodTimeVaryingElastance",
+                "BloodPump"
+            ],
+            "viscosity": 6.0,
+            "temp": 37.0,
+            "tco2": 23.3,
+            "to2": 6.5,
+            "solutes": {
+                "na": 138,
+                "k": 3.5,
+                "ca": 1,
+                "cl": 108,
+                "lact": 1,
+                "mg": 0.75,
+                "albumin": 25,
+                "phosphates": 1.64,
+                "uma": 3.8,
+                "hemoglobin": 8
+            }
+        },
+        "Gas": {
+            "name": "Gas",
+            "model_type": "Gas",
+            "description": "gas composition model",
+            "is_enabled": true,
+            "gas_containing_modeltypes": [
+                "GasCapacitance", 
+                "Bronchus", 
+                "AlveolarSpace", 
+                "Bronchiole", 
+                "ConductingAirway"
+            ],
+            "pres_atm": 760,
+            "fio2": 0.21,
+            "humidity": 0.5,
+            "temp": 20,
+            "humidity_settings": {
+                "MOUTH": 0.5,
+                "DS": 1,
+                "ALL": 1,
+                "ALR": 1
+            },
+            "temp_settings": {
+                "MOUTH": 20,
+                "DS": 32,
+                "ALL": 37,
+                "ALR": 37
+            }
+        },
+        "Resuscitation": {
+            "name": "Resuscitation",
+            "model_type": "Resuscitation",
+            "description": "Resuscitation model",
+            "is_enabled": true,
+            "ventilator_model": ["Ventilator"],
+            "breathing_model": ["Breathing"],
+            "chest_comp_freq": 100.0,
+            "chest_comp_max_pres": 60.0,
+            "chest_comp_targets": {
+                "ALL": 0.2,
+                "ALR": 0.2,
+                "LA": 0.5,
+                "LV": 1,
+                "RA": 0.8,
+                "RV": 1,
+                "AA": 0.7,
+                "AAR": 0.7,
+                "SVC": 0.5,
+                "IVCI": 0.5,
+                "COR": 1
+            },
+            "chest_comp_no": 15,
+            "chest_comp_cont": false,
+            "vent_freq": 30.0,
+            "vent_no": 2,
+            "vent_pres_pip": 16.0,
+            "vent_pres_peep": 5.0,
+            "vent_insp_time": 1.0,
+            "vent_fio2": 0.21
+        },
+        "Monitor": {
+            "name": "Monitor",
+            "model_type": "Monitor",
+            "description": "patient monitor model (Philips intellivue)",
+            "is_enabled": true,
+            "heart": ["Heart"],
+            "circulation": ["Circulation"],
+            "coronaries": ["Coronaries"],
+            "shunts": ["Shunts"],
+            "ascending_aorta": ["AA"],
+            "descending_aorta": ["DA"],
+            "pulmonary_artery": ["PA"],
+            "respiration": ["Respiration"],
+            "ventilator": ["Ventilator"],
+            "rr_avg_time": 20.0,
+            "sat_avg_time": 5.0,
+            "sat_sampling_interval": 1.0
+        }
+    }
+}
