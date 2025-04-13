@@ -4,11 +4,11 @@
 // https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers#web_workers_api
 
 // Communication with the script which spawned the web worker takes place through a communication channel
-// Messages are received in the onmessage event and are sent by the sendMessage function
+// Messages are received in the onmessage event and are sent by the _sendMessage function
 
-// Explain message object :
+// Explain request object :
 /* {
-  type:       <string> stating the type of message (set/get/cmd)
+  type:       <string> stating the type of message (REST (PUT/POST/GET/DELETE/PATCH))
   message:    <string> stating the component of the model for which the message is intended (p.e. 'datalogger'/'interventions')
   payload:    <object> containing data to pass to the action
 }
@@ -44,100 +44,107 @@ let rtSlowInterval = 1.0;
 let rtSlowCounter = 0.0;
 let rtClock = null;
 
-// set up a listener for messages from the main thread
+// set up the endpoints for reuqests from the main thread
 self.onmessage = (e) => {
   switch (e.data.type) {
-    case "command":
+    case "GET": // retrieve a resource
       switch (e.data.message) {
-        case "inject_definition":
+        case "model_data":
+          get_model_data();
+          break;
+        case "model_data_slow":
+          get_model_data_slow();
+          break;
+        case "model_types":
+          get_model_types();
+          break;
+        case "model_properties":
+          get_model_props(e.data.payload);
+          break;
+        case "model_interface":
+            get_model_interface(e.data.message);
+            break;
+        case "property":
+          get_property(e.data.payload);
+          break;
+        case "bloodgas":
+          get_bloodgas();
+          break;
+        case "model_state":
+          get_model_state();
+          break;
+      }
+      break;
+    case "PUT": // update a resource
+      switch (e.data.message) {
+        case "sample_interval":
+          model["DataCollector"].set_sample_interval(e.data.payload);
+          break;
+        case "sample_interval_slow":
+          model["DataCollector"].set_sample_interval_slow(e.data.payload);
+          break;
+        case "property":
+          set_property(JSON.parse(e.data.payload));
+          break;
+      }
+      break;
+    case "POST": // create a new resource
+      switch (e.data.message) {
+        case "build":
           console.log("ModelEngine: received new model definition.")
           model_initialized = build(JSON.parse(e.data.payload[0]));
           break;
-        case "restart_definition":
+        case "restart":
           console.log("ModelEngine: restarted model definition.")
           model_initialized = build(JSON.parse(e.data.payload[0]));
           break;
-        default:
-          console.log(`ModelEngine: unknown command ${e.data.message}`)
-      }  
-    break;
-
-    case "start":
-      start();
+        case "start":
+          console.log("ModelEngine: realtime model started.")
+          start();
+          break;
+        case "stop":
+          console.log("ModelEngine: realtime model stopped.")
+          stop()
+          break;
+        case "calc":
+          console.log(`ModelEngine: calculating ${e.data.payload} seconds.`)
+          calculate(e.data.payload);
+          break;
+        case "call_function":
+          console.log("ModelEngine: calling model a specific function", e.data.payload )
+          call_function(JSON.parse(e.data.payload));
+          break;
+        case "add_model":
+          add_model_to_engine(e.data.message, e.data.payload);
+          break;
+        case "save_state":
+          save_state();
+          break;
+        case "watch_props":
+          watch_props(e.data.payload);
+          break;
+        case "watch_props_slow":
+          watch_props_slow(e.data.payload);
+          break;
+      }
       break;
-    case "stop":
-      stop();
-      break;
-    case "save_state":
-      save_state(e.data.message);
-      break;
-    case "get_state":
-      get_state();
-      break;
-    case "get_data":
-      get_model_data();
-      break;
-    case "get_data_slow":
-      get_model_data_slow();
-      break;
-    case "calc":
-      calculate(e.data.message);
-      break;
-    case "watch_props":
-      watch_props(e.data.payload);
-      break;
-    case "watch_props_slow":
-      watch_props_slow(e.data.payload);
-      break;
-    case "clear_watchlist":
-      clear_watchlist();
-      break;
-    case "clear_watchlist_slow":
-      clear_watchlist_slow();
-      break;
-    case "get_model_props":
-      get_props(e.data.payload);
-      break;
-    case "set_properties":
-      set_properties(JSON.parse(e.data.payload));
-      break;
-    case "set_property":
-      set_property(JSON.parse(e.data.payload));
-      break;
-    case "call_function":
-      call_function(JSON.parse(e.data.payload));
-      break;
-    case "get_property":
-      get_property(e.data.payload);
-      break;
-    case "get_bloodgas":
-      get_bloodgas(e.data.payload);
-      break;
-    case "set_sample_interval":
-      model["DataCollector"].set_sample_interval(e.data.payload);
-      break;
-    case "set_sample_interval_slow":
-      model["DataCollector"].set_sample_interval_slow(e.data.payload);
-      break;
-    case "add_model":
-      add_model_to_engine(e.data.message, e.data.payload);
-      break;
-    case "get_model_interface":
-      get_model_interface(e.data.message);
-      break;
-    case "get_model_types":
-      get_model_types();
+    case "DELETE": // remove a resource
+      switch (e.data.message) {
+        case "watchlist":
+          clear_watchlist();
+          break;
+        case "watchlist_slow":
+          clear_watchlist_slow();
+          break;
+      }
       break;
     default:
-      sendMessage({
-        type: "info",
-        message: "Huh? I don't get this message?",
-        payload: [],
-      });
+      console.log(`ModelEngine: invalid API request ${e.data.type}`)
       break;
   }
 };
 
+// define the model functions
 const build = function (model_definition) {
   console.log("ModelEngine: building model from model definition.")
   // set the error counter
@@ -200,9 +207,9 @@ const build = function (model_definition) {
     } else {
       errors += 1;
       console.log("not found: ", sub_model_def.model_type);
-      sendMessage({
-        type: "error",
-        message: sub_model_def.model_type + " model not found",
+      _sendMessage({
+        type: "status",
+        message: "ERROR: " + sub_model_def.model_type + " model not found",
         payload: [],
       });
     }
@@ -223,14 +230,14 @@ const build = function (model_definition) {
       } catch (e) {
         console.log(e);
         errors += 1;
-        sendMessage({
-          type: "error",
+        _sendMessage({
+          type: "status",
           message:
-            "Yikes, " +
+            "ERROR: " +
             model_comp.name +
             "(" +
             model_comp.model_type +
-            ") smelled really bad!",
+            ") configuration error.",
           payload: [],
         });
       }
@@ -245,20 +252,70 @@ const build = function (model_definition) {
 
   if (errors > 0) {
     console.log("ModelEngine: model build failed.")
-    sendMessage({
-      type: "error",
-      message: `model_failed"`,
+    _sendMessage({
+      type: "status",
+      message: `ERROR: model build failed"`,
       payload: [],
     });
     return false;
   } else {
     console.log("ModelEngine: model build succesful.")
-    sendMessage({
+    _sendMessage({
+      type: "model_ready",
+      message: "",
+      payload: [],
+    });
+    _sendMessage({
       type: "status",
-      message: "model_ready",
+      message: "model build successful",
       payload: [],
     });
     return true;
+  }
+};
+
+const start = function () {
+  // start the model in realtime
+  if (model_initialized) {
+    // call the modelStep every rt_interval seconds
+    clearInterval(rtClock);
+    rtClock = setInterval(_model_step_rt, rtInterval * 1000.0);
+    // send status update
+    _sendMessage({
+      type: "rt_start",
+      message: ``,
+      payload: [],
+    });
+    _sendMessage({
+      type: "status",
+      message: `realtime model started`,
+      payload: [],
+    });
+  } else {
+    _sendMessage({
+      type: "status",
+      message: `ERROR: model not initialized.`,
+      payload: [],
+    });
+  }
+};
+
+const stop = function () {
+  // stop the realtime model
+  if (model_initialized) {
+    clearInterval(rtClock);
+    rtClock = null;
+    // signal that realtime model stopped
+    _sendMessage({
+      type: "rt_stop",
+      message: ``,
+      payload: [],
+    });
+    _sendMessage({
+      type: "status",
+      message: `realtime model stopped`,
+      payload: [],
+    });
   }
 };
 
@@ -266,19 +323,19 @@ const calculate = function (time_to_calculate) {
   // calculate a number of seconds of the model
   if (model_initialized) {
     let noOfSteps = time_to_calculate / model.modeling_stepsize;
-    sendMessage({
+    _sendMessage({
       type: "status",
       message: `calculating ${time_to_calculate} sec. in ${noOfSteps} steps.`,
       payload: [],
     });
     const start = performance.now();
     for (let i = 0; i < noOfSteps; i++) {
-      model_step();
+      _model_step();
     }
     const end = performance.now();
     const step_time = (end - start) / noOfSteps;
 
-    sendMessage({
+    _sendMessage({
       type: "status",
       message: `calculation ready in ${(end - start).toFixed(
         1
@@ -288,11 +345,11 @@ const calculate = function (time_to_calculate) {
     // get model data
     get_model_data();
     get_model_data_slow();
-    get_state();
+    get_model_state();
   } else {
-    sendMessage({
-      type: "error",
-      message: `model not initialized.`,
+    _sendMessage({
+      type: "status",
+      message: `ERROR: model not initialized.`,
       payload: [],
     });
   }
@@ -302,18 +359,12 @@ const calculate = function (time_to_calculate) {
   model.DataCollector.clean_up_slow();
 };
 
-const set_properties = function (properties) {
-  for (prop in properties) {
-    set_property(prop);
-  }
-};
+
+
+
 
 const set_property = function (new_prop_value) {
   model["TaskScheduler"].add_task(new_prop_value);
-};
-
-const call_function = function (new_function_call) {
-  model["TaskScheduler"].add_function_call(new_function_call);
 };
 
 const get_property = function (prop) {
@@ -327,11 +378,15 @@ const get_property = function (prop) {
       v = model.models[p[0]][p[1]][p[2]];
       break;
   }
-  sendMessage({
+  _sendMessage({
     type: "prop_value",
     message: "",
     payload: JSON.stringify({ prop: prop, value: v }),
   });
+};
+
+const call_function = function (new_function_call) {
+  model["TaskScheduler"].add_function_call(new_function_call);
 };
 
 const get_bloodgas = function (comp) {
@@ -345,7 +400,7 @@ const get_bloodgas = function (comp) {
       be: this.model.models[c].be,
       so2: this.model.models[c].so2,
     };
-    sendMessage({
+    _sendMessage({
       type: "bloodgas",
       message: c,
       payload: JSON.stringify(result),
@@ -373,7 +428,7 @@ const watch_props_slow = function (args) {
   });
 };
 
-const get_props = function (model_name) {
+const get_model_props = function (model_name) {
   // return an array with all the props of the submodel
   let model_props = {};
   for (let prop in model.models[model_name]) {
@@ -381,7 +436,7 @@ const get_props = function (model_name) {
       model_props[prop] = model.models[model_name][prop];
     }
   }
-  sendMessage({
+  _sendMessage({
     type: "model_props",
     message: model_name,
     payload: JSON.stringify(model_props),
@@ -394,7 +449,7 @@ const get_model_types = function () {
     model_types.push(model.model_type);
   });
 
-  sendMessage({
+  _sendMessage({
     type: "model_types",
     message: "available model types",
     payload: JSON.stringify(model_types),
@@ -406,13 +461,13 @@ const get_model_interface = function (model_type) {
     (available_model) => available_model.model_type === model_type
   );
   if (index > -1) {
-    sendMessage({
+    _sendMessage({
       type: "model_interface",
       message: model_type,
       payload: JSON.stringify(available_models[index].model_interface),
     });
   } else {
-    sendMessage({
+    _sendMessage({
       type: "error",
       message: model_type + " model not found",
       payload: [],
@@ -420,77 +475,7 @@ const get_model_interface = function (model_type) {
   }
 };
 
-const model_step = function () {
-  // iterate over all models
-  Object.values(model.models).forEach((model_component) => {
-    model_component.step_model();
-  });
-
-  // call the datacollector
-  model["DataCollector"].collect_data(model.model_time_total);
-
-  // do the tasks
-  model["TaskScheduler"].run_tasks();
-
-
-  // increase the model clock
-  model.model_time_total += model.modeling_stepsize;
-};
-
-const model_step_rt = function () {
-  // so the rt_interval determines how often the model is calculated
-  const noOfSteps = rtInterval / model.modeling_stepsize;
-  for (let i = 0; i < noOfSteps; i++) {
-    model_step();
-  }
-
-  // get model data
-  get_model_data_rt();
-
-  // get slow model data
-  if (rtSlowCounter > rtSlowInterval) {
-    rtSlowCounter = 0;
-    get_model_data_rt_slow();
-  }
-  rtSlowCounter += rtInterval;
-};
-
-const start = function () {
-  // start the model in realtime
-  if (model_initialized) {
-    // call the modelStep every rt_interval seconds
-    clearInterval(rtClock);
-    rtClock = setInterval(model_step_rt, rtInterval * 1000.0);
-    // send status update
-    sendMessage({
-      type: "status",
-      message: `realtime model started.`,
-      payload: [],
-    });
-  } else {
-    sendMessage({
-      type: "error",
-      message: `model not initialized.`,
-      payload: [],
-    });
-  }
-};
-
-const stop = function () {
-  // stop the realtime model
-  if (model_initialized) {
-    clearInterval(rtClock);
-    rtClock = null;
-    // signal that realtime model stopped
-    sendMessage({
-      type: "status",
-      message: `realtime model stopped.`,
-      payload: [],
-    });
-  }
-};
-
-const get_state = function () {
+const get_model_state = function () {
   // get the current whole model state
   postMessage({
     type: "state",
@@ -523,7 +508,43 @@ const get_model_data_slow = function () {
   });
 };
 
-const get_model_data_rt = function () {
+const _model_step = function () {
+  // iterate over all models
+  Object.values(model.models).forEach((model_component) => {
+    model_component.step_model();
+  });
+
+  // call the datacollector
+  model["DataCollector"].collect_data(model.model_time_total);
+
+  // do the tasks
+  model["TaskScheduler"].run_tasks();
+
+
+  // increase the model clock
+  model.model_time_total += model.modeling_stepsize;
+};
+
+// define the local model functions
+const _model_step_rt = function () {
+  // so the rt_interval determines how often the model is calculated
+  const noOfSteps = rtInterval / model.modeling_stepsize;
+  for (let i = 0; i < noOfSteps; i++) {
+    _model_step();
+  }
+
+  // get model data
+  _get_model_data_rt();
+
+  // get slow model data
+  if (rtSlowCounter > rtSlowInterval) {
+    rtSlowCounter = 0;
+    _get_model_data_rt_slow();
+  }
+  rtSlowCounter += rtInterval;
+};
+
+const _get_model_data_rt = function () {
   // get the realtime model data from the datacollector
   model_data = model.DataCollector.get_model_data();
 
@@ -535,7 +556,7 @@ const get_model_data_rt = function () {
   });
 };
 
-const get_model_data_rt_slow = function () {
+const _get_model_data_rt_slow = function () {
   // get the realtime slow model data from the datacollector
   model_data = model.DataCollector.get_model_data_slow();
 
@@ -547,7 +568,7 @@ const get_model_data_rt_slow = function () {
   });
 };
 
-const save_state = function (target) {
+const save_state = function () {
   // define a state object
   let new_json = {
     name: model["name"],
@@ -583,11 +604,11 @@ const save_state = function (target) {
   // send data to the ui
   postMessage({
     type: "saved_state",
-    message: target,
+    message: "",
     payload: [new_json],
   });
 };
 
-const sendMessage = function (message) {
+const _sendMessage = function (message) {
   postMessage(message);
 };

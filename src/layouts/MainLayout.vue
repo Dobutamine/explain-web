@@ -50,50 +50,28 @@ export default defineComponent({
     };
   },
   methods: {
-    updateStatusMessage(message) {
-      this.statusMessage = "STATUS: " + message
+    updateStatusMessage(e) {
+      this.statusMessage = "STATUS: " + explain.status_message
     },
     modelReady() {
-      this.updateStatusMessage("ModelEngine succesfully loaded model definition")
       this.$bus.emit("model_ready")
     },
-    errorUpdate() {
-      this.updateStatusMessage("ModelEngine failed to load model definition")
-      this.$bus.emit("error");
+    modelError() {
+      this.$bus.emit("model_failed")
     },
-
-
-
-    statusUpdate() {
-      this.$bus.emit("status");
-      this.statusMessage = explain.status_message;
+    rtStart() {
+      this.$bus.emit("rt_start")
     },
-    stateUpdate() {
-      this.$bus.emit("state");
-    },
-    dataSlowUpdate() {
-      this.$bus.emit("rts");
-    },
-    dataFastUpdate() {
-      this.$bus.emit("rtf");
-    },
-    dataUpdate() {
-      this.$bus.emit("data");
-    },
-
+    rtStop() {
+      this.$bus.emit("rt_stop")
+    }
   },
   beforeUnmount() {
-    document.removeEventListener("model_ready", this.model_ready);
-    document.removeEventListener("error", this.errorUpdate);
-
-
-    document.removeEventListener("state", this.stateUpdate);
-    document.removeEventListener("status", this.statusUpdate);
-
- 
-    document.removeEventListener("rts", this.dataSlowUpdate);
-    document.removeEventListener("rtf", this.dataFastUpdate);
-    document.removeEventListener("data", this.dataUpdate);
+    document.removeEventListener("status", this.updateStatusMessage);
+    document.removeEventListener("model_ready", this.modelReady);
+    document.removeEventListener("error", this.modelError);
+    document.removeEventListener("rt_start", this.rtStart);
+    document.removeEventListener("rt_stop", this.rtStop);
 
   },
   mounted() {
@@ -103,52 +81,34 @@ export default defineComponent({
     this.user.loggedIn = true;
     this.user.name = "local user";
 
-    // add event handlers to react on the model class
+    // add event handlers on the model class
+    try {
+      document.removeEventListener("status", this.updateStatusMessage);
+    } catch {}
+    document.addEventListener("status", this.updateStatusMessage);
+
     try {
       document.removeEventListener("model_ready", this.modelReady);
     } catch {}
     document.addEventListener("model_ready", this.modelReady);
 
     try {
-      document.removeEventListener("error", this.errorUpdate);
+      document.removeEventListener("error", this.modelError);
     } catch {}
-    document.addEventListener("error", this.errorUpdate);
+    document.addEventListener("error", this.modelError);
+
+    try {
+      document.removeEventListener("rt_start", this.rtStart);
+    } catch {}
+    document.addEventListener("rt_start", this.rtStart);
+
+    try {
+      document.removeEventListener("rt_stop", this.rtStop);
+    } catch {}
+    document.addEventListener("rt_stop", this.rtStop);
 
     // load the defaul model definition from disk
-    explain.loadModelDefinitionFromDisk("term_neonate");
-
-
-
-
-
-
-
-
-    try {
-      document.removeEventListener("status", this.statusUpdate);
-    } catch {}
-    document.addEventListener("status", this.statusUpdate);
-
-    try {
-      document.removeEventListener("state", this.stateUpdate);
-    } catch {}
-    document.addEventListener("state", this.stateUpdate);
-
-    try {
-      document.removeEventListener("rts", this.dataSlowUpdate);
-    } catch {}
-    document.addEventListener("rts", this.dataSlowUpdate);
-
-    try {
-      document.removeEventListener("rtf", this.dataFastUpdate);
-    } catch {}
-    document.addEventListener("rtf", this.dataFastUpdate);
-
-    try {
-      document.removeEventListener("data", this.dataUpdate);
-    } catch {}
-    document.addEventListener("data", this.dataUpdate);
-
+    explain.loadModelDefinition("term_neonate");
 
   },
 });
