@@ -55,6 +55,7 @@ export default defineComponent({
     }
   },
   beforeUnmount() {
+    // remove the event handlers
     document.removeEventListener("status", this.updateStatusMessage);
     document.removeEventListener("model_ready", () => this.$bus.emit("model_ready"));
     document.removeEventListener("error", () => this.$bus.emit("model_failed"));
@@ -65,7 +66,6 @@ export default defineComponent({
     document.removeEventListener("state", () => this.$bus.emit("state"));
     document.removeEventListener("data", () => this.$bus.emit("data"));
     document.removeEventListener("data_slow", () => this.$bus.emit("data_slow"));
-
   },
   mounted() {
     this.$q.dark.set(true);
@@ -74,7 +74,7 @@ export default defineComponent({
     this.user.loggedIn = true;
     this.user.name = "local user";
 
-    // add event handlers on the model class
+    // add the event handlers on the model class
     try {
       document.removeEventListener("status", this.updateStatusMessage);
     } catch {}

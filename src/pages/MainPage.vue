@@ -999,7 +999,9 @@ export default defineComponent({
     },
   },
   beforeUnmount() {
+    // remove the event handlers
     this.$bus.off("reset", this.updateWatchlist);
+    this.$bus.off("model_ready", this.updateWatchlist);
   },
   mounted() {
     // set the dark theme
@@ -1008,6 +1010,9 @@ export default defineComponent({
     // get the screen height
     let h = this.$q.screen.height - this.screen_offset;
     this.screen_height = "height: " + h + "px; background: black";
+
+    // update the watchlist when the model is ready
+    this.$bus.on("model_ready", this.updateWatchlist);
 
     // update the watchlist when the model resets
     this.$bus.on("reset", this.updateWatchlist);

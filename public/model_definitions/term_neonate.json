@@ -5,6 +5,7 @@
     "height": 0.50,
     "modeling_stepsize": 0.0005,
     "model_time_total": 0.0,
+    "diagram_name": "term_neonate",
     "models": {
         "Heart": {
             "name": "Heart",

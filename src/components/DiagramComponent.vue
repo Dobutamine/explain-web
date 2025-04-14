@@ -69,6 +69,7 @@ export default {
       global_speed: 1,
       global_scale: 1,
       diagram: {},
+      diagram_filename: "",
       diagram_components: {},
       gridVertical: null,
       gridHorizontal: null,
@@ -779,7 +780,11 @@ export default {
       }
     },
     modelReady() {
-      this.loadDiagramFromDisk("term_neonate");
+      // get the diagram name associated with this model definition
+      this.diagram_filename = explain.modelDefinition.diagram_name
+
+      // load the diagranm definition
+      this.loadDiagramFromDisk(this.diagram_filename);
     },
     loadDiagramFromDisk(diagram_name) {
       const path = "/diagrams/" + diagram_name + ".json";
@@ -811,15 +816,26 @@ export default {
   },
   beforeUnmount() {},
   mounted() {
+    // when the model is ready load the associated diagram
+    this.$bus.on("model_ready", () => this.modelReady())
+
+    // add the event listeners for the realtime model
+    this.$bus.on("rt_start", () => (this.rt_running = true));
+    this.$bus.on("rt_stop", () => (this.rt_running = false));
+
     // add the event listener for the state change
     this.$bus.on("state", this.processStateChanged);
 
-    // add the event listener for the diagram update
-    this.$bus.on("rt_start", () => (this.rt_running = true));
-    this.$bus.on("rt_stop", () => (this.rt_running = false));
+    // event listerener for a complete reset
     this.$bus.on("reset", () => this.buildDiagram());
+
+    // event listener for a rebuild diagram event
     this.$bus.on("rebuild_diagram", () => this.buildDiagram());
+
+    // event listener for when the watchlist has to be rebuild
     this.$bus.on("update_watchlist", () => this.update_watchlist());
+
+    // event listener for a specific case where the drainage or return site from the ecls model are changed
     this.$bus.on("update_drainage_site", (new_site) => {
       try {
         this.state.diagram_definition.components["ECLS_DR"].dbcFrom = new_site;
@@ -831,9 +847,7 @@ export default {
         this.state.diagram_definition.components["ECLS_RE"].dbcTo = new_site;
         this.update_component("ECLS_RE");
       } catch {}
-    });
-
-    this.$bus.on("model_ready", () => this.modelReady())
+    });    
   },
 };
 </script>
