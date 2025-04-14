@@ -8,7 +8,6 @@
         <q-toolbar-title class="text-overline">
           Explanatory models in neonatology (EXPLAIN)
         </q-toolbar-title>
-
       </q-toolbar>
     </q-header>
 
@@ -126,7 +125,7 @@ export default defineComponent({
     document.addEventListener("data_slow", () => this.$bus.emit("data_slow"));
 
     // load the defaul model definition from disk
-    explain.loadModelDefinition("term_neonate");
+    explain.load("term_neonate");
 
   },
 });

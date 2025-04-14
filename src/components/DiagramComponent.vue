@@ -814,7 +814,29 @@ export default {
         });
     },
   },
-  beforeUnmount() {},
+  beforeUnmount() {
+    // remove the event handlers
+    this.$bus.off("model_ready", () => this.modelReady())
+    this.$bus.off("rt_start", () => (this.rt_running = true));
+    this.$bus.off("rt_stop", () => (this.rt_running = false));
+    this.$bus.off("state", this.processStateChanged);
+    this.$bus.off("reset", () => this.buildDiagram());
+    this.$bus.off("rebuild_diagram", () => this.buildDiagram());
+    this.$bus.off("update_watchlist", () => this.update_watchlist());
+    this.$bus.off("update_drainage_site", (new_site) => {
+      try {
+        this.state.diagram_definition.components["ECLS_DR"].dbcFrom = new_site;
+        this.update_component("ECLS_DR");
+      } catch {}
+    });
+    this.$bus.off("update_return_site", (new_site) => {
+      try {
+        this.state.diagram_definition.components["ECLS_RE"].dbcTo = new_site;
+        this.update_component("ECLS_RE");
+      } catch {}
+    });
+
+  },
   mounted() {
     // when the model is ready load the associated diagram
     this.$bus.on("model_ready", () => this.modelReady())
@@ -823,7 +845,7 @@ export default {
     this.$bus.on("rt_start", () => (this.rt_running = true));
     this.$bus.on("rt_stop", () => (this.rt_running = false));
 
-    // add the event listener for the state change
+    // add the event listener for a model state update
     this.$bus.on("state", this.processStateChanged);
 
     // event listerener for a complete reset

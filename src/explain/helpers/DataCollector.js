@@ -3,25 +3,6 @@ export default class Datacollector {
     // store a reference to the model instance
     this.model = model;
 
-    // vitals
-    this.hr = 0.0
-    this.resp_rate = 0.0
-    this.sat_pre = 0.0
-    this.sat_post = 0.0
-
-    this.abp_max = 0.0
-    this.abp_min = 0.0
-    this.abp_mean = 0.0
-
-    this.abp_pre_max = 0.0
-    this.abp_pre_min = 0.0
-    this.abp_pre_mean = 0.0
-
-    this.lvo = 0.0
-    this.rvo = 0.0
-    this.svc_flow = 0.0
-    this.ivc_flow = 0.0
-
     // define the watch list
     this.watch_list = [];
 
@@ -137,7 +118,7 @@ export default class Datacollector {
       // if the property is not yet present then process it
       if (!duplicate) {
         // process the property as it has shape MODEL.prop1.prop2
-        let processed_prop = this.find_model_prop(prop);
+        let processed_prop = this._find_model_prop(prop);
 
         // check whether the property is found and if so, add it to the watchlist
         if (processed_prop !== null) {
@@ -172,7 +153,7 @@ export default class Datacollector {
       // if the property is not yet present then process it
       if (!duplicate) {
         // process the property as it has shape MODEL.prop1.prop2
-        let processed_prop = this.find_model_prop(prop);
+        let processed_prop = this._find_model_prop(prop);
 
         // check whether the property is found and if so, add it to the watchlist
         if (processed_prop !== null) {
@@ -273,9 +254,7 @@ export default class Datacollector {
     this._interval_counter_slow += this.modeling_stepsize;
   }
 
-
-
-  find_model_prop(prop) {
+  _find_model_prop(prop) {
     // split the model from the prop
     const t = prop.split(".");
 

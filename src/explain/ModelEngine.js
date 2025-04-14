@@ -4,7 +4,7 @@
 // https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers#web_workers_api
 
 // Communication with the script which spawned the web worker takes place through a communication channel
-// Messages are received in the onmessage event and are sent by the _sendMessage function
+// Messages are received in the onmessage event and are sent by the _send function
 
 // Explain request object :
 /* {
@@ -49,29 +49,17 @@ self.onmessage = (e) => {
   switch (e.data.type) {
     case "GET": // retrieve a resource
       switch (e.data.message) {
-        case "model_data":
+        case "state":
+          get_model_state();
+          break;
+        case "data":
           get_model_data();
           break;
-        case "model_data_slow":
+        case "data_slow":
           get_model_data_slow();
           break;
-        case "model_types":
-          get_model_types();
-          break;
-        case "model_properties":
-          get_model_props(e.data.payload);
-          break;
-        case "model_interface":
-            get_model_interface(e.data.message);
-            break;
-        case "property":
+        case "property_value":
           get_property(e.data.payload);
-          break;
-        case "bloodgas":
-          get_bloodgas();
-          break;
-        case "model_state":
-          get_model_state();
           break;
       }
       break;
@@ -83,7 +71,7 @@ self.onmessage = (e) => {
         case "sample_interval_slow":
           model["DataCollector"].set_sample_interval_slow(e.data.payload);
           break;
-        case "property":
+        case "property_value":
           set_property(JSON.parse(e.data.payload));
           break;
       }
@@ -92,11 +80,7 @@ self.onmessage = (e) => {
       switch (e.data.message) {
         case "build":
           console.log("ModelEngine: received new model definition.")
-          model_initialized = build(JSON.parse(e.data.payload[0]));
-          break;
-        case "restart":
-          console.log("ModelEngine: restarted model definition.")
-          model_initialized = build(JSON.parse(e.data.payload[0]));
+          model_initialized = build(JSON.parse(e.data.payload));
           break;
         case "start":
           console.log("ModelEngine: realtime model started.")
@@ -110,20 +94,20 @@ self.onmessage = (e) => {
           console.log(`ModelEngine: calculating ${e.data.payload} seconds.`)
           calculate(e.data.payload);
           break;
-        case "call_function":
+        case "call":
           console.log("ModelEngine: calling model a specific function", e.data.payload )
           call_function(JSON.parse(e.data.payload));
           break;
-        case "add_model":
+        case "add":
           add_model_to_engine(e.data.message, e.data.payload);
           break;
-        case "save_state":
+        case "save":
           save_state();
           break;
-        case "watch_props":
+        case "watch":
           watch_props(e.data.payload);
           break;
-        case "watch_props_slow":
+        case "watch_slow":
           console.log("ModelEngine: updating watchlist slow.")
           watch_props_slow(e.data.payload);
           break;
@@ -131,6 +115,8 @@ self.onmessage = (e) => {
       break;
     case "DELETE": // remove a resource
       switch (e.data.message) {
+        case "remove":
+          break;
         case "watchlist":
           clear_watchlist();
           break;
@@ -208,7 +194,7 @@ const build = function (model_definition) {
     } else {
       errors += 1;
       console.log("not found: ", sub_model_def.model_type);
-      _sendMessage({
+      _send({
         type: "status",
         message: "ERROR: " + sub_model_def.model_type + " model not found",
         payload: [],
@@ -231,7 +217,7 @@ const build = function (model_definition) {
       } catch (e) {
         console.log(e);
         errors += 1;
-        _sendMessage({
+        _send({
           type: "status",
           message:
             "ERROR: " +
@@ -253,7 +239,7 @@ const build = function (model_definition) {
 
   if (errors > 0) {
     console.log("ModelEngine: model build failed.")
-    _sendMessage({
+    _send({
       type: "status",
       message: `ERROR: model build failed"`,
       payload: [],
@@ -261,12 +247,12 @@ const build = function (model_definition) {
     return false;
   } else {
     console.log("ModelEngine: model build succesful.")
-    _sendMessage({
+    _send({
       type: "model_ready",
       message: "",
       payload: [],
     });
-    _sendMessage({
+    _send({
       type: "status",
       message: "model build successful",
       payload: [],
@@ -282,18 +268,18 @@ const start = function () {
     clearInterval(rtClock);
     rtClock = setInterval(_model_step_rt, rtInterval * 1000.0);
     // send status update
-    _sendMessage({
+    _send({
       type: "rt_start",
       message: ``,
       payload: [],
     });
-    _sendMessage({
+    _send({
       type: "status",
       message: `realtime model started`,
       payload: [],
     });
   } else {
-    _sendMessage({
+    _send({
       type: "status",
       message: `ERROR: model not initialized.`,
       payload: [],
@@ -307,12 +293,12 @@ const stop = function () {
     clearInterval(rtClock);
     rtClock = null;
     // signal that realtime model stopped
-    _sendMessage({
+    _send({
       type: "rt_stop",
       message: ``,
       payload: [],
     });
-    _sendMessage({
+    _send({
       type: "status",
       message: `realtime model stopped`,
       payload: [],
@@ -324,7 +310,7 @@ const calculate = function (time_to_calculate) {
   // calculate a number of seconds of the model
   if (model_initialized) {
     let noOfSteps = time_to_calculate / model.modeling_stepsize;
-    _sendMessage({
+    _send({
       type: "status",
       message: `calculating ${time_to_calculate} sec. in ${noOfSteps} steps.`,
       payload: [],
@@ -336,7 +322,7 @@ const calculate = function (time_to_calculate) {
     const end = performance.now();
     const step_time = (end - start) / noOfSteps;
 
-    _sendMessage({
+    _send({
       type: "status",
       message: `calculation ready in ${(end - start).toFixed(
         1
@@ -348,7 +334,7 @@ const calculate = function (time_to_calculate) {
     get_model_data_slow();
     get_model_state();
   } else {
-    _sendMessage({
+    _send({
       type: "status",
       message: `ERROR: model not initialized.`,
       payload: [],
@@ -359,10 +345,6 @@ const calculate = function (time_to_calculate) {
   model.DataCollector.clean_up();
   model.DataCollector.clean_up_slow();
 };
-
-
-
-
 
 const set_property = function (new_prop_value) {
   model["TaskScheduler"].add_task(new_prop_value);
@@ -379,7 +361,7 @@ const get_property = function (prop) {
       v = model.models[p[0]][p[1]][p[2]];
       break;
   }
-  _sendMessage({
+  _send({
     type: "prop_value",
     message: "",
     payload: JSON.stringify({ prop: prop, value: v }),
@@ -388,25 +370,6 @@ const get_property = function (prop) {
 
 const call_function = function (new_function_call) {
   model["TaskScheduler"].add_function_call(new_function_call);
-};
-
-const get_bloodgas = function (comp) {
-  for (c in comp) {
-    calc_blood_composition(this.model.models[c]);
-    let result = {
-      pH: this.model.models[c].ph,
-      pco2: this.model.models[c].pco2,
-      po2: this.model.models[c].po2,
-      hco3: this.model.models[c].hco3,
-      be: this.model.models[c].be,
-      so2: this.model.models[c].so2,
-    };
-    _sendMessage({
-      type: "bloodgas",
-      message: c,
-      payload: JSON.stringify(result),
-    });
-  }
 };
 
 const clear_watchlist = function () {
@@ -429,59 +392,12 @@ const watch_props_slow = function (args) {
   });
 };
 
-const get_model_props = function (model_name) {
-  // return an array with all the props of the submodel
-  let model_props = {};
-  for (let prop in model.models[model_name]) {
-    if (prop[[0]] !== "_") {
-      model_props[prop] = model.models[model_name][prop];
-    }
-  }
-  _sendMessage({
-    type: "model_props",
-    message: model_name,
-    payload: JSON.stringify(model_props),
-  });
-};
-
-const get_model_types = function () {
-  let model_types = [];
-  available_models.forEach((model) => {
-    model_types.push(model.model_type);
-  });
-
-  _sendMessage({
-    type: "model_types",
-    message: "available model types",
-    payload: JSON.stringify(model_types),
-  });
-};
-
-const get_model_interface = function (model_type) {
-  let index = available_models.findIndex(
-    (available_model) => available_model.model_type === model_type
-  );
-  if (index > -1) {
-    _sendMessage({
-      type: "model_interface",
-      message: model_type,
-      payload: JSON.stringify(available_models[index].model_interface),
-    });
-  } else {
-    _sendMessage({
-      type: "error",
-      message: model_type + " model not found",
-      payload: [],
-    });
-  }
-};
-
 const get_model_state = function () {
   // get the current whole model state
   postMessage({
     type: "state",
     message: "",
-    payload: [model],
+    payload: model,
   });
 };
 
@@ -493,7 +409,7 @@ const get_model_data = function () {
   postMessage({
     type: "data",
     message: "",
-    payload: [model_data],
+    payload: model_data,
   });
 };
 
@@ -505,7 +421,7 @@ const get_model_data_slow = function () {
   postMessage({
     type: "data_slow",
     message: "",
-    payload: [model_data_slow],
+    payload: model_data_slow,
   });
 };
 
@@ -553,7 +469,7 @@ const _get_model_data_rt = function () {
   postMessage({
     type: "rtf",
     message: "",
-    payload: [model_data],
+    payload: model_data,
   });
 };
 
@@ -565,51 +481,10 @@ const _get_model_data_rt_slow = function () {
   postMessage({
     type: "rts",
     message: "",
-    payload: [model_data],
+    payload: model_data,
   });
 };
 
-const save_state = function () {
-  // define a state object
-  let new_json = {
-    name: model["name"],
-    description: model["description"],
-    weight: model["weight"],
-    height: model["height"],
-    modeling_stepsize: model["modeling_stepsize"],
-    model_time_total: model["model_time_total"],
-    models: {}
-  };
-
-  // process the model definition file to find the necessary properties
-  for (let [mn, m] of Object.entries(model.models)) {
-    new_json["models"][mn] = {};
-    for (let [pn, pv] of Object.entries(m)) {
-      // do not save any properties with _ as prefix
-      if (
-        pn[0] !== "_" &&
-        pn !== "model_interface" &&
-        pv !== null &&
-        !pn !== "dependencies" &&
-        !pn !== "scalable"
-      ) {
-        if (typeof pv == "object" && pv.hasOwnProperty("name")) {
-          // save an dictionary
-          new_json["models"][mn][pn] = pv.name;
-        } else {
-          new_json["models"][mn][pn] = pv;
-        }
-      }
-    }
-  }
-  // send data to the ui
-  postMessage({
-    type: "saved_state",
-    message: "",
-    payload: [new_json],
-  });
-};
-
-const _sendMessage = function (message) {
+const _send = function (message) {
   postMessage(message);
 };

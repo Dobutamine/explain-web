@@ -37,26 +37,15 @@ export default class Model {
   _data_event = new CustomEvent("data");
   _data_slow_event = new CustomEvent("data_slow");
 
-
-  _info_event = new CustomEvent("info");
-
-
-
-  _script_event = new CustomEvent("script");
-  _props_event = new CustomEvent("props");
-  _state_saved = new CustomEvent("state_saved");
-  _model_interface_event = new CustomEvent("model_interface");
-  _model_types_event = new CustomEvent("model_types");
-
   constructor() {
     // spin up a new model engine worker thread
     this.modelEngine = new Worker(new URL("./ModelEngine.js", import.meta.url), { type: "module" });
 
     // set up a listener for messages from the model engine
-    this.receiveMessageFromModelEngine();
+    this.receive();
   }
 
-  loadModelDefinition(definition_name) {
+  load(definition_name) {
     console.log(`Model: Loading modeling definition: '${definition_name}'.`)
     const path = "/model_definitions/" + definition_name + ".json";
     const absoluteUrl = new URL(path, import.meta.url);
@@ -79,8 +68,7 @@ export default class Model {
       });
   }
 
-
-  sendMessageToModelEngine(message) {
+  send(message) {
     if (this.modelEngine) {
       if (this.debug) {
         console.log(message);
@@ -89,16 +77,19 @@ export default class Model {
     }
   }
 
-  receiveMessageFromModelEngine() {
+  receive() {
     // set up a listener for messages from the model engine
     this.modelEngine.onmessage = (e) => {
       switch (e.data.type) {
+        case "state":
+          this.modelState = e.data.payload;
+          document.dispatchEvent(this._state_event);
+          break;
         case "status":
           this.status_message = e.data.message
           document.dispatchEvent(this._status_event)
           break;
         case "model_ready":
-          console.log("Model: ModelEngine reports model build success. Dispatching model_ready event.")
           document.dispatchEvent(this._model_ready_event);
           break;
         case "rt_start":
@@ -107,71 +98,22 @@ export default class Model {
         case "rt_stop":
           document.dispatchEvent(this._rt_stop_event);
           break;
-        case "state":
-          this.modelState = e.data.payload[0];
-          document.dispatchEvent(this._state_event);
-          break;
         case "data":
-          this.modelData = e.data.payload[0];
+          this.modelData = e.data.payload;
           document.dispatchEvent(this._data_event);
           break;
         case "data_slow":
-          this.modelDataSlow = e.data.payload[0];
+          this.modelDataSlow = e.data.payload;
           document.dispatchEvent(this._data_slow_event);
           break;
         case "rtf":
-          this.modelData = e.data.payload[0];
+          this.modelData = e.data.payload;
           document.dispatchEvent(this._rtf_event);
           break;
         case "rts":
-          this.modelDataSlow = e.data.payload[0];
+          this.modelDataSlow = e.data.payload;
           document.dispatchEvent(this._rts_event);
           break;
-
-
-
-
-        case "model_props":
-          document.dispatchEvent(this._props_event);
-          break;
-        case "prop_value":
-          break;
-        case "info":
-          document.dispatchEvent(this._info_event);
-          break;
-        case "error":
-          switch (e.data.message) {
-            case "model_failed":
-              console.log("Model: ModelEngine reports a model build failure. Dispatching model_error event.")
-              // dispatch an error event
-              document.dispatchEvent(this._error_event);
-              break;
-          }
-          break;
-        case "script":
-          document.dispatchEvent(this._script_event);
-          break;
-
-        case "model_types":
-          this._model_types_event["model_types"] = JSON.parse(e.data.payload);
-          document.dispatchEvent(this._model_types_event);
-          break;
-        case "model_interface":
-          this._model_interface_event["model_type"] = e.data.message;
-          this._model_interface_event["model_props"] = JSON.parse(
-            e.data.payload
-          );
-          document.dispatchEvent(this._model_interface_event);
-          break;
-
-        case "saved_state":
-          this.download_model_state(e.data.message, e.data.payload[0]);
-          break;
-
-        case "saved_state_python":
-          this.download_model_state_python(e.data.message, e.data.payload[0]);
-          break;
-
         default:
           console.log("Unknown message type received from model engine");
           console.log(e.data);
@@ -184,23 +126,23 @@ export default class Model {
   build(explain_definition) {
     console.log("Model: Injecting the model definition into the ModelEngine.")
     this.modelDefinition = { ...explain_definition };
-    this.sendMessageToModelEngine({
+    this.send({
       type: "POST",
       message: "build",
-      payload: [JSON.stringify(explain_definition)],
+      payload: JSON.stringify(explain_definition),
     });
   }
 
   restart() {
-    this.sendMessageToModelEngine({
+    this.send({
       type: "POST",
-      message: "restart",
-      payload: [JSON.stringify(this.modelDefinition)],
+      message: "build",
+      payload: JSON.stringify(this.modelDefinition),
     });
   }
 
   calculate(time_to_calculate) {
-    this.sendMessageToModelEngine({
+    this.send({
       type: "POST",
       message: "calc",
       payload: parseInt(time_to_calculate),
@@ -208,7 +150,7 @@ export default class Model {
   }
 
   start() {
-    this.sendMessageToModelEngine({
+    this.send({
       type: "POST",
       message: "start",
       payload: [],
@@ -216,7 +158,7 @@ export default class Model {
   }
 
   stop() {
-    this.sendMessageToModelEngine({
+    this.send({
       type: "POST",
       message: "stop",
       payload: [],
@@ -224,7 +166,7 @@ export default class Model {
   }
 
   clearWatchList() {
-    this.sendMessageToModelEngine({
+    this.send({
       type: "DELETE",
       message: "watchlist",
       payload: [],
@@ -232,7 +174,7 @@ export default class Model {
   }
 
   clearWatchListSlow() {
-    this.sendMessageToModelEngine({
+    this.send({
       type: "DELETE",
       message: "watchlist_slow",
       payload: [],
@@ -244,9 +186,9 @@ export default class Model {
     if (typeof args === "string") {
       args = [args];
     }
-    this.sendMessageToModelEngine({
+    this.send({
       type: "POST",
-      message: "watch_props",
+      message: "watch",
       payload: args,
     });
   }
@@ -256,47 +198,47 @@ export default class Model {
     if (typeof args === "string") {
       args = [args];
     }
-    this.sendMessageToModelEngine({
+    this.send({
       type: "POST",
-      message: "watch_props_slow",
+      message: "watch_slow",
       payload: args,
     });
   }
 
   getModelData() {
-    this.sendMessageToModelEngine({
+    this.send({
       type: "GET",
-      message: "model_data",
+      message: "data",
       payload: [],
     });
   }
 
   getModelDataSlow() {
-    this.sendMessageToModelEngine({
+    this.send({
       type: "GET",
-      message: "model_data_slow",
+      message: "data_slow",
       payload: [],
     });
   }
 
   getModelState() {
-    this.sendMessageToModelEngine({
+    this.send({
       type: "GET",
-      message: "model_state",
+      message: "state",
       payload: [],
     });
   }
 
   saveModelState() {
-    this.sendMessageToModelEngine({
+    this.send({
       type: "POST",
-      message: "save_state",
+      message: "save",
       payload: [],
     });
   }
 
   setSampleInterval(new_interval) {
-    this.sendMessageToModelEngine({
+    this.send({
       type: "PUT",
       message: "sample_interval",
       payload: new_interval,
@@ -304,7 +246,7 @@ export default class Model {
   }
 
   setSampleIntervalSlow(new_interval) {
-    this.sendMessageToModelEngine({
+    this.send({
       type: "PUT",
       message: "sample_interval_slow",
       payload: new_interval,
@@ -312,19 +254,14 @@ export default class Model {
   }
 
   getModelProps(model_name) {
-    // get the properties of a specific model
-    this.sendMessageToModelEngine({
-      type: "GET",
-      message: "model_properties",
-      payload: model_name,
-    });
+
   }
 
   getPropValue(property) {
     // get the value of a specific property with string format model.prop1.prop2
-    this.sendMessageToModelEngine({
+    this.send({
       type: "GET",
-      message: "property",
+      message: "property_value",
       payload: property,
     });
   }
@@ -342,9 +279,9 @@ export default class Model {
       prop2 = result[2];
     }
     // set the property of a model with format {prop: model.prop1.prop2, v: value, at: time, it: time, type: task_type}
-    this.sendMessageToModelEngine({
+    this.send({
       type: "PUT",
-      message: "property",
+      message: "property_value",
       payload: JSON.stringify({
         model: model,
         prop1: prop1,
@@ -358,9 +295,9 @@ export default class Model {
   }
 
   callModelFunction(model_function, args, at = 0) {
-    this.sendMessageToModelEngine({
+    this.send({
       type: "POST",
-      message: "call_function",
+      message: "call",
       payload: JSON.stringify({
         func: model_function,
         args: args,
