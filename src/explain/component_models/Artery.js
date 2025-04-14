@@ -48,7 +48,8 @@ The distribution and density of these receptors vary across different vascular b
 export class Artery extends BloodCapacitance {
   // static properties
   static model_type = "Artery";
-  static model_interface = [
+  
+  model_interface = [
     {
       caption: "current volume (mL)",
       target: "vol",

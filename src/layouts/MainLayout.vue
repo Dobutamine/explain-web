@@ -50,7 +50,7 @@ export default defineComponent({
   },
   methods: {
     updateStatusMessage(e) {
-      this.statusMessage = "STATUS: " + explain.status_message
+      this.statusMessage = "STATUS: " + explain.statusMessage
     }
   },
   beforeUnmount() {

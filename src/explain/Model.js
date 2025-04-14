@@ -15,7 +15,7 @@ export default class Model {
   // declare object holding the generated messages
   info_message = "";
   error_message = "";
-  status_message = "";
+  statusMessage = "";
   script_message = "";
 
   // declare a message log
@@ -86,7 +86,7 @@ export default class Model {
           document.dispatchEvent(this._state_event);
           break;
         case "status":
-          this.status_message = e.data.message
+          this.statusMessage = e.data.message
           document.dispatchEvent(this._status_event)
           break;
         case "model_ready":

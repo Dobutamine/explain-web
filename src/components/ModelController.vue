@@ -138,7 +138,7 @@ export default {
     },
     statusUpdate() {
       this.$bus.emit("status");
-      this.statusMessage = explain.status_message;
+      this.statusMessage = explain.statusMessage;
       this.calculationReady();
     },
     reload() {},
