@@ -61,6 +61,12 @@ self.onmessage = (e) => {
         case "property_value":
           get_property(e.data.payload);
           break;
+        case "model_props":
+          get_model_props(e.data.payload);
+          break;
+        case "model_interface":
+          get_model_interface(e.data.payload);
+          break;
       }
       break;
     case "PUT": // update a resource
@@ -364,9 +370,27 @@ const get_property = function (prop) {
   _send({
     type: "prop_value",
     message: "",
-    payload: JSON.stringify({ prop: prop, value: v }),
+    payload: { prop: prop, value: v },
   });
 };
+
+const get_model_props = function (model_name) {
+  _send({
+    type: "model_props",
+    message: "",
+    payload: {},
+  });
+
+}
+
+const get_model_interface = function (model_name) {
+  _send({
+    type: "model_interface",
+    message: "",
+    payload: model.models[model_name].model_interface,
+  });
+
+}
 
 const call_function = function (new_function_call) {
   model["TaskScheduler"].add_function_call(new_function_call);

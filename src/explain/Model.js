@@ -22,9 +22,6 @@ export default class Model {
   message_log = [];
   no_logs = 25;
 
-  // message debug fag
-  debug = false;
-
   // declare the events
   _model_ready_event = new CustomEvent("model_ready")
   _error_event = new CustomEvent("error");
@@ -70,9 +67,6 @@ export default class Model {
 
   send(message) {
     if (this.modelEngine) {
-      if (this.debug) {
-        console.log(message);
-      }
       this.modelEngine.postMessage(message);
     }
   }
@@ -113,6 +107,18 @@ export default class Model {
         case "rts":
           this.modelDataSlow = e.data.payload;
           document.dispatchEvent(this._rts_event);
+          break;
+        case "prop_value":
+          const _prop_value_event = new CustomEvent("prop_value", { detail: e.data.payload, bubbles: true, cancelable: true, composed: false });
+          document.dispatchEvent(_prop_value_event)
+          break;
+        case "model_props":
+          const _model_props_event = new CustomEvent("model_props", { detail: e.data.payload, bubbles: true, cancelable: true, composed: false });
+          document.dispatchEvent(_model_props_event)
+          break;
+        case "model_interface":
+          const _model_interface_event = new CustomEvent("model_interface", { detail: e.data.payload, bubbles: true, cancelable: true, composed: false });
+          document.dispatchEvent(_model_interface_event)
           break;
         default:
           console.log("Unknown message type received from model engine");
@@ -254,7 +260,21 @@ export default class Model {
   }
 
   getModelProps(model_name) {
+    // get the properties of a specific model
+    this.send({
+      type: "GET",
+      message: "model_props",
+      payload: model_name,
+    });
+  }
 
+  getModelInterface(model_name) {
+    // get the interface of a specific model
+    this.send({
+      type: "GET",
+      message: "model_interface",
+      payload: model_name,
+    });
   }
 
   getPropValue(property) {

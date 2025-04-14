@@ -123,6 +123,7 @@ export default {
         this.state.saved = false;
         explain.calculate(parseInt(this.selectedDuration));
       }
+      explain.getModelInterface("AA")
     },
     calculationReady(e) {
       if (this.statusMessage.includes("calculation ready")) {
@@ -137,7 +138,6 @@ export default {
       }
     },
     statusUpdate() {
-      this.$bus.emit("status");
       this.statusMessage = explain.statusMessage;
       this.calculationReady();
     },
@@ -163,16 +163,14 @@ export default {
         explain.getModelState();
         this.$bus.emit("rt_stop");
       }
-    },
+    }
   },
   beforeUnmount() {
-    document.removeEventListener("status", this.statusUpdate);
+    this.$bus.off("status", this.statusUpdate )
   },
   mounted() {
-    try {
-      document.removeEventListener("status", this.statusUpdate);
-    } catch {}
-    document.addEventListener("status", this.statusUpdate);
+    this.$bus.on("status", this.statusUpdate )
+    this.$bus.on("model_interface", (e) => console.log(e))
   },
 };
 </script>

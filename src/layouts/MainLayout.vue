@@ -51,6 +51,7 @@ export default defineComponent({
   methods: {
     updateStatusMessage(e) {
       this.statusMessage = "STATUS: " + explain.statusMessage
+      this.$bus.emit('status', explain.statusMessage)
     }
   },
   beforeUnmount() {
@@ -65,6 +66,9 @@ export default defineComponent({
     document.removeEventListener("state", () => this.$bus.emit("state"));
     document.removeEventListener("data", () => this.$bus.emit("data"));
     document.removeEventListener("data_slow", () => this.$bus.emit("data_slow"));
+    document.removeEventListener("prop_value", (e) => this.$bus.emit("prop_value", e.detail));
+    document.removeEventListener("model_props", (e) => this.$bus.emit("model_props", e.detail));
+    document.removeEventListener("model_interface", (e) => this.$bus.emit("model_interface", e.detail));
   },
   mounted() {
     this.$q.dark.set(true);
@@ -123,6 +127,22 @@ export default defineComponent({
       document.removeEventListener("data_slow", () => this.$bus.emit("data_slow"));
     } catch {}
     document.addEventListener("data_slow", () => this.$bus.emit("data_slow"));
+
+    try {
+      document.removeEventListener("prop_value", (e) => this.$bus.emit("prop_value", e.detail));
+    } catch {}
+    document.addEventListener("prop_value", (e) => this.$bus.emit("prop_value", e.detail));
+
+    try {
+      document.removeEventListener("model_props", (e) => this.$bus.emit("model_props", e.detail));
+    } catch {}
+    document.addEventListener("model_props", (e) => this.$bus.emit("model_props", e.detail));
+
+    try {
+      document.removeEventListener("model_interface", (e) => this.$bus.emit("model_interface", e.detail));
+    } catch {}
+    document.addEventListener("model_interface", (e) => this.$bus.emit("model_interface", e.detail));
+
 
     // load the defaul model definition from disk
     explain.load("term_neonate");
