@@ -166,10 +166,18 @@ export default {
         });
       }
     },
+    destroyPixiApp(app) {
+      // Stop any animations or tickers
+      app.ticker.stop();
+
+      // Clear the stage
+      app.stage.removeChildren();
+      
+    },
     async initDiagram() {
       // first clear all children from the stage
       if (pixiApp) {
-        pixiApp = null;
+        this.destroyPixiApp(pixiApp)
       }
       // get the reference to the canvas
       canvas = document.getElementById("stage");
@@ -738,11 +746,12 @@ export default {
       pixiApp.stage.children.forEach((child) => {
         child.eventMode = "none";
       });
-
+      
       // first remove the old ticker
       if (this.ticker) {
         pixiApp.ticker.remove(this.tickerFunction);
       }
+      
       // add the new ticker function and start it
       this.ticker = pixiApp.ticker.add(this.tickerFunction);
 

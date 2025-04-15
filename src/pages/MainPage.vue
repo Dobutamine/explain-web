@@ -898,6 +898,8 @@ export default defineComponent({
       reader.readAsText(file); // Reads as text for JSON or .txt files
     },
     handleModelDefinitionFileAdded(file) {
+      // stop the realtime model
+      this.$bus.emit("ext_stop")
       // Access the first file in the selected files
       this.selectedModelFile = file.name;
       if (file) {
@@ -912,8 +914,7 @@ export default defineComponent({
         this.fileContent = e.target.result; // Stores the content of the file
         this.state.model_definition = JSON.parse(this.fileContent);
         let t = JSON.parse(this.fileContent);
-        explain.injectModelDefinitionInModelEngine(t);
-        this.$bus.emit("rebuild_model");
+        explain.build(t);
       };
 
       // Start reading the file as text or data URL based on your needs

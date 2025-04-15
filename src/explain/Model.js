@@ -58,7 +58,6 @@ export default class Model {
         return response.json();
       })
       .then((jsonData) => {
-        this.modelDefinition = jsonData
         this.build(jsonData);
       })
       .catch((error) => {

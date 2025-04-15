@@ -163,13 +163,27 @@ export default {
         explain.getModelState();
         this.$bus.emit("rt_stop");
       }
+    },
+    stop() {
+      this.rtState = false;
+        explain.stop();
+        this.playArmed = false;
+        this.butColor = "white";
+        this.butIcon = "fa-solid fa-play";
+        this.butCaption = "PLAY";
+        // get the model state
+        explain.getModelState();
+        this.$bus.emit("rt_stop");
     }
   },
   beforeUnmount() {
     this.$bus.off("status", this.statusUpdate )
+    this.$bus.off("ext_stop", this.stop )
   },
   mounted() {
     this.$bus.on("status", this.statusUpdate )
+    this.$bus.on("ext_stop", this.stop )
+
   },
 };
 </script>
