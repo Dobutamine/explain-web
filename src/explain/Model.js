@@ -33,6 +33,7 @@ export default class Model {
   _state_event = new CustomEvent("state");
   _data_event = new CustomEvent("data");
   _data_slow_event = new CustomEvent("data_slow");
+  _state_saved_event = new CustomEvent("state_saved")
 
   constructor() {
     // spin up a new model engine worker thread
@@ -227,22 +228,6 @@ export default class Model {
     });
   }
 
-  getModelState() {
-    this.send({
-      type: "GET",
-      message: "state",
-      payload: [],
-    });
-  }
-
-  saveModelState() {
-    this.send({
-      type: "POST",
-      message: "save",
-      payload: [],
-    });
-  }
-
   setSampleInterval(new_interval) {
     this.send({
       type: "PUT",
@@ -259,12 +244,37 @@ export default class Model {
     });
   }
 
+  getModelState() {
+    this.send({
+      type: "GET",
+      message: "state",
+      payload: [],
+    });
+  }
+
+  saveModelState() {
+    this.send({
+      type: "POST",
+      message: "save",
+      payload: [],
+    });
+  }
+
   getModelProps(model_name) {
     // get the properties of a specific model
     this.send({
       type: "GET",
       message: "model_props",
       payload: model_name,
+    });
+  }
+
+  getModelTypes() {
+    // get all the model types
+    this.send({
+      type: "GET",
+      message: "model_types",
+      payload: {},
     });
   }
 
@@ -328,16 +338,30 @@ export default class Model {
     });
   }
 
-  download_model_state(target, state) {
-    this.modelDefinition = { ...state };
-    if (target === "local") {
-      let current_date = new Date();
-      let filename =
-        state["name"] + "_" + current_date.toLocaleTimeString() + ".json";
-      this.saveObjectAsJson(state, filename);
-    } else {
-      document.dispatchEvent(this._state_saved);
-    }
+  download_model_state_json() {
+    let current_date = new Date();
+    let modelStateCopy = this._processModelStateForDownloading();
+    let filename =
+      modelStateCopy["name"] +
+      "_" +
+      current_date.toLocaleTimeString() +
+      ".json";
+    let jsonString = JSON.stringify(modelStateCopy, null, 2); // Convert object to JSON string
+    this._download_object(jsonString, filename);
+  }
+
+  download_model_state_python() {
+    console.log('Python saved')
+    let current_date = new Date();
+    let modelStateCopy = this._processModelStateForDownloading();
+    let filename =
+      modelStateCopy["name"] + "_" + current_date.toLocaleTimeString() + ".py";
+    let pythonString = JSON.stringify(modelStateCopy, null, 2); // Convert object to JSON string
+    // convert the true and false texts
+    pythonString = pythonString.replace(/\btrue\b/g, "True");
+    pythonString = pythonString.replace(/\bfalse\b/g, "False");
+
+    this._download_object(pythonString, filename);
   }
 
   _processModelStateForDownloading() {
@@ -351,39 +375,28 @@ export default class Model {
         if (key.startsWith("_")) {
           delete m[key];
         }
+        if (key === 'components') {
+          if (Object.keys(m[key]).length > 0) {
+            // build name array of keys
+            let key_names = [] 
+            Object.keys(m[key]).forEach(k => {
+              key_names.push(k)
+            })
+            // replace
+            key_names.forEach( key_name => {
+              m['components'][key_name] = modelStateCopy.models[key_name]
+              delete modelStateCopy.models[key_name]
+            })
+          }
+
+        }
         delete m["model_interface"];
       }
     });
-
     return modelStateCopy;
   }
 
-  download_model_state_json() {
-    let current_date = new Date();
-    let modelStateCopy = this._processModelStateForDownloading();
-    let filename =
-      modelStateCopy["name"] +
-      "_" +
-      current_date.toLocaleTimeString() +
-      ".json";
-    let jsonString = JSON.stringify(modelStateCopy, null, 2); // Convert object to JSON string
-    this.download_object(jsonString, filename);
-  }
-
-  download_model_state_python() {
-    let current_date = new Date();
-    let modelStateCopy = this._processModelStateForDownloading();
-    let filename =
-      modelStateCopy["name"] + "_" + current_date.toLocaleTimeString() + ".py";
-    let pythonString = JSON.stringify(modelStateCopy, null, 2); // Convert object to JSON string
-    // convert the true and false texts
-    pythonString = pythonString.replace(/\btrue\b/g, "True");
-    pythonString = pythonString.replace(/\bfalse\b/g, "False");
-
-    this.download_object(pythonString, filename);
-  }
-
-  download_object(object_string, filename) {
+  _download_object(object_string, filename) {
     const blob = new Blob([object_string], { type: "application/json" }); // Create a blob with JSON content
     const url = URL.createObjectURL(blob); // Create a URL for the blob
 
@@ -398,18 +411,4 @@ export default class Model {
     URL.revokeObjectURL(url); // Clean up the URL object
   }
 
-  saveObjectAsJson(jsonString, filename) {
-    const blob = new Blob([jsonString], { type: "application/json" }); // Create a blob with JSON content
-    const url = URL.createObjectURL(blob); // Create a URL for the blob
-
-    // Create a temporary anchor element and trigger download
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a); // Append the anchor to the document
-    a.click(); // Trigger the download
-
-    document.body.removeChild(a); // Remove the anchor from the document
-    URL.revokeObjectURL(url); // Clean up the URL object
-  }
 }

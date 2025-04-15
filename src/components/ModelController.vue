@@ -170,7 +170,6 @@ export default {
   },
   mounted() {
     this.$bus.on("status", this.statusUpdate )
-    this.$bus.on("model_interface", (e) => console.log(e))
   },
 };
 </script>

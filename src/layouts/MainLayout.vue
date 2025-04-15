@@ -143,7 +143,6 @@ export default defineComponent({
     } catch {}
     document.addEventListener("model_interface", (e) => this.$bus.emit("model_interface", e.detail));
 
-
     // load the defaul model definition from disk
     explain.load("term_neonate");
 
