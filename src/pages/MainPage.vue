@@ -909,6 +909,10 @@ export default defineComponent({
     readModelDefinitionFile(file) {
       const reader = new FileReader();
 
+      // switch the diagram view
+      this.tab_center = "diagram"
+      this.tabCenterChanged("diagram")
+
       // Define what happens when the file is successfully read
       reader.onload = (e) => {
         this.fileContent = e.target.result; // Stores the content of the file

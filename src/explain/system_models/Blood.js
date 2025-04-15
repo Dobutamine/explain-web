@@ -117,11 +117,13 @@ export class Blood extends BaseModelClass {
     // set the solutes and temperature of the blood containing components
     Object.values(this._model_engine.models).forEach((model) => {
       if (this._blood_containing_modeltypes.includes(model.model_type)) {
-        model.to2 = this.to2;
-        model.tco2 = this.tco2;
-        model.solutes = { ...this.solutes };
-        model.temp = this.temp;
-        model.viscosity = this.viscosity;
+        if (model.to2 == 0.0 && model.tco2 == 0.0) {
+          model.to2 = this.to2;
+          model.tco2 = this.tco2;
+          model.solutes = { ...this.solutes };
+          model.temp = this.temp;
+          model.viscosity = this.viscosity;
+        }
       }
     });
 
