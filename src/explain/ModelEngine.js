@@ -193,6 +193,7 @@ const build = function (model_definition) {
       );
       // add the new component to the model object
       model.models[sub_model_def.name] = new_sub_model;
+      
       // copy the model interface object
       model.models[sub_model_def.name].model_interface = [
         ...available_models[index].model_interface,

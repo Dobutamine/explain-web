@@ -26,9 +26,9 @@ Other Vascular Receptors:
 The distribution and density of these receptors vary across different vascular beds, allowing for specialized control of blood flow to different organs based on their specific needs.
 */
 
-export class BloodResistor extends Resistor {
+export class BloodVesselResistor extends Resistor {
   // static properties
-  static model_type = "BloodResistor";
+  static model_type = "BloodVesselResistor";
   static model_interface = []
 
   constructor(model_ref, name = "") {

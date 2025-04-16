@@ -152,31 +152,4 @@ The distribution and density of these receptors vary across different vascular b
 export class BloodVessel extends BloodCapacitance {
   // static properties
   static model_type = "BloodVessel";
-
-  constructor(model_ref, name = "") {
-    super(model_ref, name);
-
-    // initialize independent properties
-    this.alpha_sensitivity = 0.0; // lumped alpha1 and alpha2 adrenergic receptor sensitivity (0-1)
-    this.alpha_activity_factor = 1.0; // lumped alpha1 and alpha2 adrenergic receptor activity
-    this.beta_sensitivity = 0.0; // beta adrenergic receptor sensitivity (0-1)
-    this.beta_activity_factor = 1.0; // beta adrenergic receptor activity
-
-  }
-
-  calc_elastances() {
-    this._el = this.el_base +
-    (this.el_base_factor - 1) * this.el_base +
-    (this.el_base_circ_factor - 1) * this.el_base +
-    (this.el_base_ans_factor - 1) * this.el_base * this.ans_activity_factor +
-    (this.el_base_drug_factor - 1) * this.el_base + 
-    (this.alpha_activity_factor - 1) * this.el_base * this.alpha_sensitivity + 
-    (this.beta_activity_factor - 1) * this.el_base * this.beta_sensitivity
-
-    this._el_k = this.el_k +
-    (this.el_k_factor - 1) * this.el_k +
-    (this.el_k_circ_factor - 1) * this.el_k +
-    (this.el_k_ans_factor - 1) * this.el_k * this.ans_activity_factor +
-    (this.el_k_drug_factor - 1) * this.el_k;
-  }
 }

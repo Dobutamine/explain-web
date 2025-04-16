@@ -1,7 +1,6 @@
-import { BaseModelClass } from "./BaseModelClass";
-import { GasResistor } from "../component_models/GasResistor"
+import { Capacitance } from "./Capacitance";
 
-export class GasCapacitance extends BaseModelClass {
+export class GasCapacitance extends Capacitance {
   // static properties
   static model_type = "GasCapacitance";
   model_interface = [
@@ -43,42 +42,31 @@ export class GasCapacitance extends BaseModelClass {
     super(model_ref, name);
 
     // initialize independent properties
-    this.u_vol = 0.0; // unstressed volume UV of the capacitance in (L)
-    this.el_base = 0.0; // baseline elastance E of the capacitance in (mmHg/L)
-    this.el_k = 0.0; // non-linear elastance factor K2 of the capacitance (unitless)
-    this.pres_ext = 0.0; // external pressure p2(t) (mmHg)
     this.pres_atm = 760; // atmospheric pressure (mmHg)
     this.pres_cc = 0.0; // external pressure from chest compressions (mmHg)
     this.pres_mus = 0.0; // external pressure from outside muscles (mmHg)
     this.pres_rel = 0.0; // relative pressure
     this.fixed_composition = false; // flag for fixed gas composition
-    this.outputs = {}
 
     // general factors
     this.ans_activity_factor = 1.0;
 
     // unstressed volume factors
-    this.u_vol_factor = 1.0;
     this.u_vol_resp_factor = 1.0;
     this.u_vol_ans_factor = 1.0;
     this.u_vol_drug_factor = 1.0;
 
     // elastance factors
-    this.el_base_factor = 1.0;
     this.el_base_resp_factor = 1.0;
     this.el_base_ans_factor = 1.0;
     this.el_base_drug_factor = 1.0;
 
     // non-linear elastance factors
-    this.el_k_factor = 1.0;
     this.el_k_resp_factor = 1.0;
     this.el_k_ans_factor = 1.0;
     this.el_k_drug_factor = 1.0;
 
     // dependent properties
-    this.vol = 0.0; // volume v(t) (L)
-    this.pres = 0.0; // pressure p1(t) (mmHg)
-    this.pres_in = 0.0; // recoil pressure of the elastance (mmHg)
     this.ctotal = 0.0; // total gas molecule concentration (mmol/l)
     this.co2 = 0.0; // oxygen concentration (mmol/l)
     this.cco2 = 0.0; // carbon dioxide concentration (mmol/l)
@@ -101,9 +89,6 @@ export class GasCapacitance extends BaseModelClass {
 
     // local properties
     this._gas_constant = 62.36367; // ideal gas law constant (L·mmHg/(mol·K))
-    this._el = 0.0
-    this._u_vol = 0.0
-    this._el_k = 0.0 
   }
 
   calc_model() {

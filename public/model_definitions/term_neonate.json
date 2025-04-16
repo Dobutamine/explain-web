@@ -753,7 +753,7 @@
                         "LL_PV": {
                             "name": "LL_PV",
                             "description": "resistor model of the connection between the blood compartment of the left lung and the pulmonary veins",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": true,
@@ -777,7 +777,7 @@
                         "RL_PV": {
                             "name": "RL_PV",
                             "description": "resistor model of the connection between the blood compartment of the right lung and the pulmonary veins",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": true,
@@ -801,7 +801,7 @@
                         "PV_LA": {
                             "name": "PV_LA",
                             "description": "resistor model of the connection between the pulmonary veins and the left atrium",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -825,7 +825,7 @@
                         "PA_PAAL": {
                             "name": "PA_PAAL",
                             "description": "resistor model of the connection between the pulmonary artery and the blood compartment of the left lung",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -837,7 +837,7 @@
                         "PA_PAAR": {
                             "name": "PA_PAAR",
                             "description": "resistor model of the connection between the pulmonary artery and the blood compartment of the right lung",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -861,7 +861,7 @@
                         "PAAL_LL": {
                             "name": "PAAL_LL",
                             "description": "resistor model of the connection between the pulmonary artery and the blood compartment of the left lung",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -885,7 +885,7 @@
                         "PAAR_RL": {
                             "name": "PAAR_RL",
                             "description": "resistor model of the connection between the pulmonary artery and the blood compartment of the right lung",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -909,7 +909,7 @@
                         "AA_AAR": {
                             "name": "AA_AAR",
                             "description": "resistor model of the connection between ascending aorta and aortic arch",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -921,7 +921,7 @@
                         "AA_RUB": {
                             "name": "AA_RUB",
                             "description": "resistor model of the connection between ascending aorta and the upper body",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -933,7 +933,7 @@
                         "AA_BR": {
                             "name": "AA_BR",
                             "description": "resistor model of the connection between ascending aorta and the brain",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -957,7 +957,7 @@
                         "AAR_AD": {
                             "name": "AAR_AD",
                             "description": "resistor model of the connection between the aortic arch and the descending aorta",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -981,7 +981,7 @@
                         "AD_RLB": {
                             "name": "AD_RLB",
                             "description": "resistor model of the connection between descending aorta and the lower body",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -993,7 +993,7 @@
                         "AD_LS": {
                             "name": "AD_LS",
                             "description": "resistor model of the connection between descending aorta and the liver and spleen",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -1005,7 +1005,7 @@
                         "AD_KID": {
                             "name": "AD_KID",
                             "description": "resistor model of the connection between descending aorta and the kidneys",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -1017,7 +1017,7 @@
                         "AD_INT": {
                             "name": "AD_INT",
                             "description": "resistor model of the connection between descending aorta and the intestines",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -1041,7 +1041,7 @@
                         "RLB_VLB": {
                             "name": "RLB_VLB",
                             "description": "resistor model of the connection between lower body and the venous compartment of the lower body",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": true,
@@ -1065,7 +1065,7 @@
                         "LS_VLB": {
                             "name": "LS_VLB",
                             "description": "resistor model of the connection between the liver and spleen and the venous compartment of the lower body",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": true,
@@ -1089,7 +1089,7 @@
                         "KID_VLB": {
                             "name": "KID_VLB",
                             "description": "resistor model of the connection between the kidneys and the venous compartment of the lower body",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": true,
@@ -1113,7 +1113,7 @@
                         "INT_VLB": {
                             "name": "INT_VLB",
                             "description": "resistor model of the connection between the intestines and the venous compartment of the lower body",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": true,
@@ -1137,7 +1137,7 @@
                         "RUB_VUB": {
                             "name": "RUB_VUB",
                             "description": "resistor model of the connection between upper body and the venous compartment of the upper body",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": true,
@@ -1161,7 +1161,7 @@
                         "BR_VUB": {
                             "name": "BR_VUB",
                             "description": "resistor model of the connection between the brain and the venous compartment of the upper body",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": true,
@@ -1185,7 +1185,7 @@
                         "IVCI_RA": {
                             "name": "IVCI_RA",
                             "description": "resistor model of the connection between the inferior vena cava and the right atrium",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -1209,7 +1209,7 @@
                         "VLB_IVCI": {
                             "name": "VLB_IVCI",
                             "description": "resistor model of the connection between the venous compartment of the lower body and the inferior vena cava",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -1233,7 +1233,7 @@
                         "SVC_RA": {
                             "name": "SVC_RA",
                             "description": "resistor model of the connection between the superior vena cava and the right atrium",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -1257,7 +1257,7 @@
                         "VUB_SVC": {
                             "name": "VUB_SVC",
                             "description": "resistor model of the connection between the venous compartment of the upper body and the superior vena cava",
-                            "model_type": "BloodResistor",
+                            "model_type": "BloodVesselResistor",
                             "is_enabled": true,
                             "no_flow": false,
                             "no_back_flow": false,
@@ -1453,7 +1453,7 @@
                 "DA_OUT": {
                     "name": "DA_OUT",
                     "description": "resistor model of the connection between the ductus arteriosus and the pulmnonary artery",
-                    "model_type": "BloodResistor",
+                    "model_type": "BloodVesselResistor",
                     "is_enabled": true,
                     "no_flow": false,
                     "no_back_flow": false,
@@ -1466,7 +1466,7 @@
                 "DA_IN": {
                     "name": "DA_IN",
                     "description": "resistor model of the connection between the aortic arch and the ductus arteriosus",
-                    "model_type": "BloodResistor",
+                    "model_type": "BloodVesselResistor",
                     "is_enabled": false,
                     "no_flow": true,
                     "no_back_flow": false,
