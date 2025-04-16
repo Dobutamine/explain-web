@@ -17,6 +17,7 @@ export { Arteriole } from "./component_models/Arteriole";
 export { Artery } from "./component_models/Artery";
 export { BloodPump } from "./component_models/BloodPump";
 export { BloodResistor } from "./component_models/BloodResistor";
+export { BloodVessel } from "./component_models/BloodVessel";
 export { Bronchiole } from "./component_models/Bronchiole";
 export { Bronchus } from "./component_models/Bronchus";
 export { CapillaryBed } from "./component_models/CapillaryBed";

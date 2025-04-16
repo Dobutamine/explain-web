@@ -154,7 +154,4 @@ export class Circulation extends BaseModelClass {
       }
     }
   }
-
-
-
 }
