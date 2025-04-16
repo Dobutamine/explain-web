@@ -5,7 +5,7 @@ import { HeartValve } from "../component_models/HeartValve"
 export class BloodTimeVaryingElastance extends BaseModelClass {
   // static properties
   static model_type = "BloodTimeVaryingElastance";
-  static model_interface = [];
+  model_interface = [];
 
   constructor(model_ref, name = "") {
     super(model_ref, name);

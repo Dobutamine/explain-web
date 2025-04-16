@@ -4,7 +4,7 @@ import { calc_blood_composition } from "../helpers/BloodComposition"
 export class BloodDiffusor extends BaseModelClass {
   // static properties
   static model_type = "BloodDiffusor";
-  static model_interface = [
+  model_interface = [
     {
       caption: "oxygen diffusion constant",
       target: "dif_o2",

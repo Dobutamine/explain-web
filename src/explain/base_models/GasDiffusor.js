@@ -4,7 +4,7 @@ import { calc_gas_composition } from "../helpers/GasComposition"
 export class GasDiffusor extends BaseModelClass {
   // static properties
   static model_type = "GasDiffusor";
-  static model_interface = [];
+  model_interface = [];
 
   constructor(model_ref, name = "") {
     super(model_ref, name);

@@ -4,7 +4,7 @@ import { GasResistor } from "../component_models/GasResistor"
 export class GasCapacitance extends BaseModelClass {
   // static properties
   static model_type = "GasCapacitance";
-  static model_interface = [
+  model_interface = [
     {
       caption: "current volume (mL)",
       target: "vol",

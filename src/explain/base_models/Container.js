@@ -3,7 +3,7 @@ import { BaseModelClass } from "../base_models/BaseModelClass";
 export class Container extends BaseModelClass {
   // static properties
   static model_type = "Container";
-  static model_interface = [];
+  model_interface = [];
 
   constructor(model_ref, name = "") {
     super(model_ref, name);

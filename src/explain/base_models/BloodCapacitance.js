@@ -4,7 +4,7 @@ import { BloodResistor } from "../component_models/BloodResistor"
 export class BloodCapacitance extends BaseModelClass {
   // static properties
   static model_type = "BloodCapacitance";
-  static model_interface = [];
+  model_interface = [];
 
   constructor(model_ref, name = "") {
     super(model_ref, name);

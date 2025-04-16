@@ -1619,7 +1619,7 @@
             "coronaries": ["Coronaries"],
             "shunts": ["Shunts"],
             "ascending_aorta": ["AA"],
-            "descending_aorta": ["DA"],
+            "descending_aorta": ["AD"],
             "pulmonary_artery": ["PA"],
             "respiration": ["Respiration"],
             "ventilator": ["Ventilator"],
