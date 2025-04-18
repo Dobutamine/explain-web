@@ -108,7 +108,7 @@ export class Gas extends BaseModelClass {
     this.temp_settings = {}; // dictionary holding the initial temperature settings of gas containing models
 
     // local properties
-    this._gas_containing_modeltypes = ["GasCapacitance", "Bronchus", "AlveolarSpace", "Bronchiole", "ConductingAirway"];
+    this._gas_containing_modeltypes = ["GasCapacitance", "Airway", "Bronchus", "AlveolarSpace", "Bronchiole"];
   }
 
   init_model(args = {}) {
