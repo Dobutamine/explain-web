@@ -3,7 +3,7 @@ import { BloodTimeVaryingElastance } from "../base_models/BloodTimeVaryingElasta
 export class CoronaryVessel extends BloodTimeVaryingElastance {
   // static properties
   static model_type = "CoronaryVessel";
-  static model_interface = [
+  model_interface = [
     {
       caption: "current volume (mL)",
       target: "vol",

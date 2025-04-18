@@ -3,7 +3,7 @@ import { BloodCapacitance } from "../base_models/BloodCapacitance";
 export class BloodPump extends BloodCapacitance {
   // static properties
   static model_type = "BloodPump";
-  static model_interface = [
+  model_interface = [
     {
       caption: "current volume (mL)",
       target: "vol",

@@ -10,6 +10,8 @@ export { GasExchanger } from "./base_models/GasExchanger";
 export { Resistor } from "./base_models/Resistor";
 
 // import the component modelsç
+export { AirwayResistor } from "./component_models/AirwayResistor";
+export { Airway } from "./component_models/Airway";
 export { AnsAfferent } from "./component_models/AnsAfferent";
 export { AnsEfferent } from "./component_models/AnsEfferent";
 export { AlveolarSpace } from "./component_models/AlveolarSpace";
@@ -21,7 +23,6 @@ export { BloodVessel } from "./component_models/BloodVessel";
 export { Bronchiole } from "./component_models/Bronchiole";
 export { Bronchus } from "./component_models/Bronchus";
 export { CapillaryBed } from "./component_models/CapillaryBed";
-export { ConductingAirway } from "./component_models/ConductingAirway";
 export { CoronaryVessel } from "./component_models/CoronaryVessel";
 export { HeartChamber } from "./component_models/HeartChamber";
 export { HeartValve } from "./component_models/HeartValve";

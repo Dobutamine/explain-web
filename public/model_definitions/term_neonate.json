@@ -1291,7 +1291,7 @@
             "components": {
                 "MOUTH": {
                     "name": "MOUTH",
-                    "model_type": "ConductingAirway",
+                    "model_type": "Airway",
                     "description": "capacitance model of the air at the mouth",
                     "is_enabled": true,
                     "fixed_composition": true,
@@ -1302,7 +1302,7 @@
                     "components": {
                         "MOUTH_DS": {
                             "name": "MOUTH_DS",
-                            "model_type": "Resistor",
+                            "model_type": "AirwayResistor",
                             "description": "gas resistor model of the connection between the mouth and dead space (airways)",
                             "is_enabled": true,
                             "no_flow": false,
@@ -1317,7 +1317,7 @@
                 },
                 "DS": {
                     "name": "DS",
-                    "model_type": "ConductingAirway",
+                    "model_type": "Airway",
                     "description": "capacitance model of the dead space",
                     "is_enabled": true,
                     "fixed_composition": false,
@@ -1328,7 +1328,7 @@
                     "components": {
                         "DS_ALL": {
                             "name": "DS_ALL",
-                            "model_type": "Resistor",
+                            "model_type": "AirwayResistor",
                             "description": "gas resistor model of the connection between the dead space and the alveolar left lung",
                             "is_enabled": true,
                             "no_flow": false,
@@ -1341,7 +1341,7 @@
                         },
                         "DS_ALR": {
                             "name": "DS_ALR",
-                            "model_type": "Resistor",
+                            "model_type": "AirwayResistor",
                             "description": "gas resistor model of the connection between the dead space and the alveolar left lung",
                             "is_enabled": true,
                             "no_flow": false,

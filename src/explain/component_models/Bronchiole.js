@@ -1,6 +1,6 @@
-import { GasCapacitance } from "../base_models/GasCapacitance";
+import { Airway } from "../component_models/Airway";
 
-export class Bronchiole extends GasCapacitance {
+export class Bronchiole extends Airway {
   // static properties
   static model_type = "Bronchiole";
 
