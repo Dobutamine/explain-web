@@ -108,4 +108,12 @@ making them essential for both moment-to-moment cardiovascular homeostasis and a
 export class Arteriole extends BloodVessel {
   // static properties
   static model_type = "Arteriole";
+
+  constructor(model_ref, name = "") {
+    super(model_ref, name);
+
+    // initialize addtional independent properties
+    this.alpha = 1.0                        // determines relation between resistance change and elastance change
+    this.ans_sensitivity = 1.0;             // sensitivity for autonomic control (vasoconstriction/vasodilatation)
+  }
 }

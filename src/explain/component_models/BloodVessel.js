@@ -158,14 +158,11 @@ export class BloodVessel extends BloodCapacitance {
 
     // initialize addtional independent properties
     this.alpha = 1.0                        // determines relation between resistance change and elastance change
+    this.ans_sensitivity = 0.0;             // sensitivity for autonomic control (vasoconstriction/vasodilatation)
 
-    // autonomic nervous systen control 
-    this.ans_sensitivity = 1.0;             // sensitivity for autonomic control (vasoconstriction/vasodilatation)
-    this.r_ans_factor = 1.0;                // ans factor on resistance and elastance
-    this.r_circ_factor = 1.0;             
-    this.r_drug_factor = 1.0;
-    this.r_mob_factor = 1.0;
-
+    // resistance factors
+    this.r_ans_factor = 1.0;                // resistance change due to the autonomic nervous system
+    this.r_circ_factor = 1.0;               // resistance change due by the circulatory model
   }
 
   calc_model() {
@@ -181,24 +178,21 @@ export class BloodVessel extends BloodCapacitance {
       this._model_engine.models[res].ans_sensitivity = this.ans_sensitivity
       this._model_engine.models[res].r_ans_factor = this.r_ans_factor
       this._model_engine.models[res].r_circ_factor = this.r_circ_factor
-      this._model_engine.models[res].r_drug_factor = this.r_drug_factor
-      this._model_engine.models[res].r_mob_factor = this.r_mob_factor
-      
     })
-
   }
 
   calc_elastances() {
     // change in elastance due to ans influence (vasoconstriction/vasodilatation)
     let _ans_factor = Math.pow(this.r_ans_factor, 0.25 * this.alpha)
+    let _r_circ_factor = Math.pow(this.r_circ_factor, 0.25 * this.alpha)
+
 
     this._el = this.el_base + 
         (this.el_base_factor - 1) * this.el_base +
-        (_ans_factor - 1) * this.el_base * this.ans_sensitivity
+        (_ans_factor - 1) * this.el_base * this.ans_sensitivity +
+        (_r_circ_factor - 1) * this.el_base * this.ans_sensitivity
 
-    this._el_k = this.el_k + (this.el_k_factor - 1) * this.el_k
+    this._el_k = this.el_k + 
+        (this.el_k_factor - 1) * this.el_k
   }
-
-
-
 }
