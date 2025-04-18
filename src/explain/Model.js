@@ -120,6 +120,10 @@ export default class Model {
           const _model_interface_event = new CustomEvent("model_interface", { detail: e.data.payload, bubbles: true, cancelable: true, composed: false });
           document.dispatchEvent(_model_interface_event)
           break;
+        case "model_types":
+          const _model_types_event = new CustomEvent("model_types", { detail: e.data.payload, bubbles: true, cancelable: true, composed: false });
+          document.dispatchEvent(_model_types_event)
+          break;
         default:
           console.log("Unknown message type received from model engine");
           console.log(e.data);

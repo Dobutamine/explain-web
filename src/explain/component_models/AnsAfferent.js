@@ -3,7 +3,7 @@ import { BaseModelClass } from "../base_models/BaseModelClass";
 export class AnsAfferent extends BaseModelClass {
   // static properties
   static model_type = "AnsAfferent";
-  static model_interface = [
+  model_interface = [
     {
       caption: "minimum of the input (firing rate is 0.0)",
       target: "min_value",

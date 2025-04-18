@@ -64,6 +64,9 @@ self.onmessage = (e) => {
         case "model_props":
           get_model_props(e.data.payload);
           break;
+        case "model_types":
+            get_model_types(e.data.payload);
+            break;
         case "model_interface":
           get_model_interface(e.data.payload);
           break;
@@ -376,10 +379,21 @@ const get_property = function (prop) {
 };
 
 const get_model_props = function (model_name) {
+  let modelStateCopy = { ...models };
+  delete modelStateCopy["DataCollector"];
+  delete modelStateCopy["TaskScheduler"];
+  Object.values(modelStateCopy).forEach((m) => {
+    for (const key in m) {
+      if (key.startsWith("_")) {
+        delete m[key];
+      }
+      delete m["model_interface"];
+    }
+  });
   _send({
     type: "model_props",
     message: "",
-    payload: {},
+    payload: modelStateCopy,
   });
 
 }
@@ -389,6 +403,21 @@ const get_model_interface = function (model_name) {
     type: "model_interface",
     message: "",
     payload: model.models[model_name].model_interface,
+  });
+
+}
+
+const get_model_types = function () {
+  let types = []
+  Object.values(models).forEach(mt => {
+    types.push(mt.model_type)
+  })
+  let types_filtered = [...new Set(types)];
+
+  _send({
+    type: "model_types",
+    message: "",
+    payload: types_filtered,
   });
 
 }
