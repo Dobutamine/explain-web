@@ -18,22 +18,18 @@ export class HeartChamber extends BloodTimeVaryingElastance {
     // unstressed volume factors
     this.u_vol_circ_factor = 1.0;
     this.u_vol_ans_factor = 1.0;
-    this.u_vol_drug_factor = 1.0;
 
     // elastance factors
     this.el_min_circ_factor = 1.0;
     this.el_min_ans_factor = 1.0;
-    this.el_min_drug_factor = 1.0;
     this.el_min_mob_factor = 1.0;
     this.el_max_circ_factor = 1.0;
     this.el_max_ans_factor = 1.0;
-    this.el_max_drug_factor = 1.0;
     this.el_max_mob_factor = 1.0;
 
     // non-linear elastance factors
     this.el_k_circ_factor = 1.0;
     this.el_k_ans_factor = 1.0;
-    this.el_k_drug_factor = 1.0;
   }
 
   // override the elastance calculation
@@ -44,23 +40,20 @@ export class HeartChamber extends BloodTimeVaryingElastance {
           (this.el_min_factor - 1) * this.el_min +
           (this.el_min_circ_factor - 1) * this.el_min +
           (this.el_min_ans_factor - 1) * this.el_min * this.ans_activity_factor +
-          (this.el_min_mob_factor - 1) * this.el_min +
-          (this.el_min_drug_factor - 1) * this.el_min;
+          (this.el_min_mob_factor - 1) * this.el_min
     
           this._el_max =
           this.el_max +
           (this.el_max_factor - 1) * this.el_max +
           (this.el_max_circ_factor - 1) * this.el_max +
           (this.el_max_ans_factor - 1) * this.el_max * this.ans_activity_factor +
-          (this.el_max_mob_factor - 1) * this.el_max +
-          (this.el_max_drug_factor - 1) * this.el_max;
+          (this.el_max_mob_factor - 1) * this.el_max
     
           this._el_k =
           this.el_k +
           (this.el_k_factor - 1) * this.el_k +
           (this.el_k_circ_factor - 1) * this.el_k +
-          (this.el_k_ans_factor - 1) * this.el_k * this.ans_activity_factor +
-          (this.el_k_drug_factor - 1) * this.el_k;
+          (this.el_k_ans_factor - 1) * this.el_k * this.ans_activity_factor
   }
 
   // override the unstressed volume calculation
@@ -69,8 +62,7 @@ export class HeartChamber extends BloodTimeVaryingElastance {
       this.u_vol +
       (this.u_vol_factor - 1) * this.u_vol +
       (this.u_vol_circ_factor - 1) * this.u_vol +
-      (this.u_vol_ans_factor - 1) * this.u_vol * this.ans_activity_factor +
-      (this.u_vol_drug_factor - 1) * this.u_vol;
+      (this.u_vol_ans_factor - 1) * this.u_vol * this.ans_activity_factor
   }
 
   // override the pressure calculation
