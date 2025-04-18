@@ -1291,7 +1291,7 @@
             "components": {
                 "MOUTH": {
                     "name": "MOUTH",
-                    "model_type": "Airway",
+                    "model_type": "GasCapacitance",
                     "description": "capacitance model of the air at the mouth",
                     "is_enabled": true,
                     "fixed_composition": true,
