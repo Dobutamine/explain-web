@@ -25,13 +25,24 @@ export class GasExchanger extends BaseModelClass {
       caption: "gas component",
       target: "comp_gas",
       type: "list",
-      options: ["GasCapacitance"]
+      options: ["GasCapacitance", "AlveolarSpace"]
     },
     {
       caption: "blood component",
       target: "comp_blood",
       type: "list",
-      options: ["BloodCapacitance", "BloodTimeVaryingElastance"]
+      options: [
+        "BloodCapacitance", 
+        "BloodTimeVaryingElastance", 
+        "BloodPump", "BloodVessel", 
+        "Artery", 
+        "Arteriole", 
+        "CapillaryBed", 
+        "CoronaryVessel", 
+        "HeartChamber", 
+        "Vein", 
+        "Venule"
+      ]
     }
   ];
 

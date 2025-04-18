@@ -3,6 +3,8 @@ import * as Models from "../ModelIndex.js"
 export class BaseModelClass {
   // This base model class is the blueprint for all the model objects (classes).
   // It incorporates the properties and methods which all model objects implement 
+  model_interface = []
+  
   constructor(model_ref, name = "") {
     // initialize independent properties which all models implement
     this.name = name; // name of the model object

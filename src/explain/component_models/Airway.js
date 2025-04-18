@@ -4,6 +4,7 @@ export class Airway extends GasCapacitance {
   // static properties
   static model_type = "Airway";
 
+
   constructor(model_ref, name = "") {
     super(model_ref, name);
   }

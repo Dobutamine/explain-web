@@ -43,7 +43,18 @@ export class Resistor extends BaseModelClass {
       delta: 1,
       factor: 1.0,
       rounding: 0
-    }
+    },
+    {
+      caption: "forward resistance factor",
+      target: "r_for_factor",
+      type: "factor"
+    },
+    {
+      caption: "backward resistance factor",
+      target: "r_back_factor",
+      type: "factor"
+    },
+    
   ]
 
   constructor(model_ref, name = "") {

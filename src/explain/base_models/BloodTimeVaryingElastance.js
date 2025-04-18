@@ -3,7 +3,81 @@ import { TimeVaryingElastance } from "./TimeVaryingElastance";
 export class BloodTimeVaryingElastance extends TimeVaryingElastance {
   // static properties
   static model_type = "BloodTimeVaryingElastance";
-  model_interface = [];
+  model_interface = [
+    {
+      caption: "model is enabled",
+      target: "is_enabled",
+      type: "boolean"
+    },
+    {
+      caption: "unstressed volume (mL)",
+      target: "u_vol",
+      type: "number",
+      factor: 1000.0,
+      delta: 0.1,
+      rounding: 1,
+    },
+    {
+      caption: "elastance minimum (mmHg/mL)",
+      target: "el_min",
+      type: "number",
+      factor: 0.001,
+      delta: 0.1,
+      rounding: 1,
+    },
+    {
+      caption: "elastance maximum (mmHg/mL)",
+      target: "el_max",
+      type: "number",
+      factor: 0.001,
+      delta: 0.1,
+      rounding: 1,
+    },
+    {
+      caption: "elastance non linear k",
+      target: "el_k",
+      type: "number",
+      factor: 1,
+      delta: 1,
+      rounding: 0,
+    },
+    {
+      caption: "temperature (C)",
+      target: "temp",
+      type: "number",
+      factor: 1,
+      delta: 0.1,
+      rounding: 0.1,
+    },
+    {
+      caption: "viscosity (cP)",
+      target: "viscosity",
+      type: "number",
+      factor: 1,
+      delta: 0.1,
+      rounding: 0.1,
+    },
+    {
+      caption: "unstressed volume factor",
+      target: "u_vol_factor",
+      type: "factor"
+    },
+    {
+      caption: "elastance minimum baseline factor",
+      target: "el_min_factor",
+      type: "factor"
+    },
+    {
+      caption: "elastance maximum baseline factor",
+      target: "el_max_factor",
+      type: "factor"
+    },
+    {
+      caption: "elastance non linear  factor",
+      target: "el_k_factor",
+      type: "factor"
+    },
+  ];
 
   constructor(model_ref, name = "") {
     super(model_ref, name);

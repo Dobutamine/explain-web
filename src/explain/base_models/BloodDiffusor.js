@@ -25,13 +25,35 @@ export class BloodDiffusor extends BaseModelClass {
       caption: "blood component 1",
       target: "comp_blood1",
       type: "list",
-      options: ["BloodCapacitance", "BloodTimeVaryingElastance"]
+      options: [
+        "BloodCapacitance", 
+        "BloodTimeVaryingElastance", 
+        "BloodPump", "BloodVessel", 
+        "Artery", 
+        "Arteriole", 
+        "CapillaryBed", 
+        "CoronaryVessel", 
+        "HeartChamber", 
+        "Vein", 
+        "Venule"
+      ]
     },
     {
       caption: "blood component 2",
       target: "comp_blood2",
       type: "list",
-      options: ["BloodCapacitance", "BloodTimeVaryingElastance"]
+      options: [
+        "BloodCapacitance", 
+        "BloodTimeVaryingElastance", 
+        "BloodPump", "BloodVessel", 
+        "Artery", 
+        "Arteriole", 
+        "CapillaryBed", 
+        "CoronaryVessel", 
+        "HeartChamber", 
+        "Vein", 
+        "Venule"
+      ]
     }
 
   ];

@@ -4,7 +4,53 @@ import { calc_gas_composition } from "../helpers/GasComposition"
 export class GasDiffusor extends BaseModelClass {
   // static properties
   static model_type = "GasDiffusor";
-  model_interface = [];
+  model_interface = [
+    {
+      caption: "oxygen diffusion constant",
+      target: "dif_o2",
+      type: "number",
+      factor: 1.0,
+      delta: 0.01,
+      rounding: 3,
+    },
+    {
+      caption: "carbon dioxide diffusion constant",
+      target: "dif_co2",
+      type: "number",
+      factor: 1.0,
+      delta: 0.01,
+      rounding: 3,
+    },
+    {
+      caption: "nitric oxide diffusion constant",
+      target: "dif_n2",
+      type: "number",
+      factor: 1.0,
+      delta: 0.01,
+      rounding: 3,
+    },
+    {
+      caption: "other gasses diffusion constant",
+      target: "dif_other",
+      type: "number",
+      factor: 1.0,
+      delta: 0.01,
+      rounding: 3,
+    },
+    {
+      caption: "gas component 1",
+      target: "comp_gas1",
+      type: "list",
+      options: ["GasCapacitance", "AlveolarSpace"]
+    },
+    {
+      caption: "gas component 2",
+      target: "comp_gas2",
+      type: "list",
+      options: ["GasCapacitance", "AlveolarSpace"]
+    }
+
+  ];
 
   constructor(model_ref, name = "") {
     super(model_ref, name);

@@ -5,14 +5,6 @@ export class BloodPump extends BloodCapacitance {
   static model_type = "BloodPump";
   model_interface = [
     {
-      caption: "current volume (mL)",
-      target: "vol",
-      type: "number",
-      delta: 0.1,
-      factor: 1000.0,
-      rounding: 3
-    },
-    {
       caption: "unstressed volume (mL)",
       target: "u_vol",
       type: "number",
@@ -21,7 +13,7 @@ export class BloodPump extends BloodCapacitance {
       rounding: 3
     },
     {
-      caption: "elastance (mmHg/mL)",
+      caption: "elastance pump (mmHg/mL)",
       target: "el_base",
       delta: 0.1,
       factor: 0.001,
@@ -29,7 +21,15 @@ export class BloodPump extends BloodCapacitance {
       type: "number"
     },
     {
-      caption: "non linear elastace factor",
+      caption: "pump rpm",
+      target: "pump_rpm",
+      delta: 10,
+      factor: 1,
+      rounding: 1,
+      type: "number"
+    },
+    {
+      caption: "non linear elastance factor",
       target: "el_k",
       delta: 0.1,
       factor: 0.001,
@@ -40,13 +40,13 @@ export class BloodPump extends BloodCapacitance {
       caption: "inlet blood resistor",
       target: "inlet",
       type: "list",
-      options: ["BloodResistor", "BloodValve"]
+      options: ["BloodResistor", "BloodVesselResistor", "HeartValve"]
     },
     {
       caption: "outlet blood resistor",
       target: "outlet",
       type: "list",
-      options: ["BloodResistor", "BloodValve"]
+      options: ["BloodResistor", "BloodVesselResistor", "HeartValve"]
     },
   ];
 
