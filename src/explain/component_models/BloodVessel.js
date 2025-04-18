@@ -152,4 +152,53 @@ The distribution and density of these receptors vary across different vascular b
 export class BloodVessel extends BloodCapacitance {
   // static properties
   static model_type = "BloodVessel";
+
+  constructor(model_ref, name = "") {
+    super(model_ref, name);
+
+    // initialize addtional independent properties
+    this.alpha = 1.0                        // determines relation between resistance change and elastance change
+
+    // autonomic nervous systen control 
+    this.ans_sensitivity = 1.0;             // sensitivity for autonomic control (vasoconstriction/vasodilatation)
+    this.r_ans_factor = 1.0;                // ans factor on resistance and elastance
+    this.r_circ_factor = 1.0;             
+    this.r_drug_factor = 1.0;
+    this.r_mob_factor = 1.0;
+
+  }
+
+  calc_model() {
+    this.calc_resistances();
+    this.calc_elastances();
+    this.calc_volumes();
+    this.calc_pressure();
+  }
+
+  calc_resistances() {
+    // update the resistances of the associated bloodvesselresistances
+    Object.keys(this.components).forEach(res => {
+      this._model_engine.models[res].ans_sensitivity = this.ans_sensitivity
+      this._model_engine.models[res].r_ans_factor = this.r_ans_factor
+      this._model_engine.models[res].r_circ_factor = this.r_circ_factor
+      this._model_engine.models[res].r_drug_factor = this.r_drug_factor
+      this._model_engine.models[res].r_mob_factor = this.r_mob_factor
+      
+    })
+
+  }
+
+  calc_elastances() {
+    // change in elastance due to ans influence (vasoconstriction/vasodilatation)
+    let _ans_factor = Math.pow(this.r_ans_factor, 0.25 * this.alpha)
+
+    this._el = this.el_base + 
+        (this.el_base_factor - 1) * this.el_base +
+        (_ans_factor - 1) * this.el_base * this.ans_sensitivity
+
+    this._el_k = this.el_k + (this.el_k_factor - 1) * this.el_k
+  }
+
+
+
 }

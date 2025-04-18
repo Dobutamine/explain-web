@@ -1,7 +1,4 @@
 import { BaseModelClass } from "../base_models/BaseModelClass";
-import { BloodCapacitance } from "../base_models/BloodCapacitance.js";
-import { BloodResistor } from "../component_models/BloodResistor.js";
-import { CoronaryVessel } from "../component_models/CoronaryVessel.js";
 
 export class Coronaries extends BaseModelClass {
   // static properties

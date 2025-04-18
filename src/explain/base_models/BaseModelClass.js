@@ -23,12 +23,12 @@ export class BaseModelClass {
       this[arg["key"]] = arg["value"];
     });
 
-    // build all model components
+    // build all the sub models of this model
     Object.keys(this.components).forEach(component_name => {
       this._model_engine.models[component_name] = new Models[this.components[component_name].model_type](this._model_engine, component_name)
     })
   
-    // initialize all model components with the arguments
+    // initialize all model sub models with the arguments
     Object.keys(this.components).forEach(component_name => {
       let args = [];
       for (const [key, value] of Object.entries(this.components[component_name])) {

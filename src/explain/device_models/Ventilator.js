@@ -1,7 +1,7 @@
 import { BaseModelClass } from "../base_models/BaseModelClass";
 import { calc_gas_composition } from "../helpers/GasComposition";
 import { GasCapacitance } from "../base_models/GasCapacitance";
-import { GasResistor } from "../component_models/GasResistor";
+import { Resistor } from "../base_models/Resistor";
 
 export class Ventilator extends BaseModelClass {
   // static properties
@@ -271,8 +271,8 @@ export class Ventilator extends BaseModelClass {
     Object.keys(this.components).forEach(component_name => {
       let component = {}
       switch (this.components[component_name].model_type) {
-        case "GasResistor":
-          component = new GasResistor(this._model_engine, component_name)
+        case "Resistor":
+          component = new Resistor(this._model_engine, component_name)
           break;
         case "GasCapacitance":
           component = new GasCapacitance(this._model_engine, component_name)

@@ -2,9 +2,9 @@
 
 import { BaseModelClass } from "../base_models/BaseModelClass.js";
 import { BloodCapacitance } from "../base_models/BloodCapacitance.js";
-import { BloodResistor } from "../component_models/BloodResistor.js";
 import { BloodDiffusor } from "../base_models/BloodDiffusor.js"
 import { calc_blood_composition } from "../helpers/BloodComposition"
+import { Resistor } from "../base_models/Resistor";
 
 export class Placenta extends BaseModelClass {
   // static properties
@@ -333,8 +333,8 @@ export class Placenta extends BaseModelClass {
         case "BloodCapacitance":
           component = new BloodCapacitance(this._model_engine, component_name)
           break;
-        case "BloodResistor":
-          component = new BloodResistor(this._model_engine, component_name)
+        case "Resistor":
+          component = new Resistor(this._model_engine, component_name)
           break;
         case "BloodDiffusor":
           component = new BloodDiffusor(this._model_engine, component_name)
