@@ -10,18 +10,14 @@ export { GasExchanger } from "./base_models/GasExchanger";
 export { Resistor } from "./base_models/Resistor";
 
 // import the component modelsç
-export { AirwayResistor } from "./component_models/AirwayResistor";
 export { Airway } from "./component_models/Airway";
+export { AirwayResistor } from "./component_models/AirwayResistor";
 export { AnsAfferent } from "./component_models/AnsAfferent";
 export { AnsEfferent } from "./component_models/AnsEfferent";
 export { AlveolarSpace } from "./component_models/AlveolarSpace";
-export { Arteriole } from "./component_models/Arteriole";
-export { Artery } from "./component_models/Artery";
 export { BloodPump } from "./component_models/BloodPump";
 export { BloodVesselResistor } from "./component_models/BloodVesselResistor";
 export { BloodVessel } from "./component_models/BloodVessel";
-export { Bronchiole } from "./component_models/Bronchiole";
-export { Bronchus } from "./component_models/Bronchus";
 export { CapillaryBed } from "./component_models/CapillaryBed";
 export { CoronaryVessel } from "./component_models/CoronaryVessel";
 export { HeartChamber } from "./component_models/HeartChamber";
@@ -29,8 +25,6 @@ export { HeartValve } from "./component_models/HeartValve";
 export { Pericardium } from "./component_models/Pericardium"
 export { PleuralSpace} from "./component_models/PleuralSpace"
 export { Thorax } from "./component_models/Thorax";
-export { Vein } from "./component_models/Vein";  
-export { Venule } from "./component_models/Venule";
 
 // import the system models
 export { Ans } from "./system_models/Ans";

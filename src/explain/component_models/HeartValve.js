@@ -61,14 +61,11 @@ export class HeartValve extends Resistor {
       options: [
         "BloodCapacitance", 
         "BloodTimeVaryingElastance", 
-        "BloodPump", "BloodVessel", 
-        "Artery", 
-        "Arteriole", 
+        "BloodPump", 
+        "BloodVessel", 
         "CapillaryBed", 
         "CoronaryVessel", 
-        "HeartChamber", 
-        "Vein", 
-        "Venule"
+        "HeartChamber"
       ]
     },
     {
@@ -78,14 +75,11 @@ export class HeartValve extends Resistor {
       options: [
         "BloodCapacitance", 
         "BloodTimeVaryingElastance", 
-        "BloodPump", "BloodVessel", 
-        "Artery", 
-        "Arteriole", 
+        "BloodPump", 
+        "BloodVessel",
         "CapillaryBed", 
         "CoronaryVessel", 
-        "HeartChamber", 
-        "Vein", 
-        "Venule"
+        "HeartChamber"
       ]
     },
     

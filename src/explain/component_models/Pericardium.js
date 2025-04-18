@@ -40,14 +40,11 @@ export class Pericardium extends Container {
       options: [
         "BloodCapacitance", 
         "BloodTimeVaryingElastance", 
-        "BloodPump", "BloodVessel", 
-        "Artery", 
-        "Arteriole", 
+        "BloodPump", 
+        "BloodVessel", 
         "CapillaryBed", 
         "CoronaryVessel", 
-        "HeartChamber", 
-        "Vein", 
-        "Venule"
+        "HeartChamber"
       ]
     },
     {

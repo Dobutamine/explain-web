@@ -91,14 +91,11 @@ export class Blood extends BaseModelClass {
     // initialize local properties (preceded with _)
     this._blood_containing_modeltypes = [
       "BloodCapacitance",
+      "BloodTimeVaryingElastance",
+      "BloodVessel",
       "HeartChamber",
-      "Artery",
-      "Arteriole",
       "CapillaryBed",
       "CoronaryVessel",
-      "Vein",
-      "Venule",
-      "BloodTimeVaryingElastance",
       "BloodPump",
     ];
     this._update_interval = 1.0; // interval at which the calculations are done

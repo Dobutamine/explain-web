@@ -62,59 +62,7 @@
                   opacity: 1.0,
                 }"
               >
-                <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
-                  <div
-                    style="
-                      display: flex;
-                      justify-content: center;
-                      align-items: center;
-                    "
-                  >
-                    <q-file
-                      class="q-ma-sm"
-                      dark
-                      dense
-                      flat
-                      stack-label
-                      label="Select a model definition file"
-                      filled
-                      :display-value="selectedModelFile"
-                      style="
-                        width: 100%;
-                        justify-content: center;
-                        font-size: 12px;
-                      "
-                      @update:model-value="handleModelDefinitionFileAdded"
-                    >
-                      <template v-slot:append>
-                        <q-icon name="fa-solid fa-floppy-disk" />
-                      </template>
-                    </q-file>
-                  </div>
-                  <div
-                    style="
-                      display: flex;
-                      justify-content: center;
-                      align-items: center;
-                    "
-                  >
-
-                  <q-btn
-                  class="q-ma-sm"
-                  color="negative"
-                  size="sm"
-                  dense
-                  @click="downloadPython"
-                  ><q-tooltip> download model as python file </q-tooltip> SAVE MODEL (PYTHON)</q-btn>
-                  <q-btn
-                  class="q-ma-sm"
-                  color="negative"
-                  size="sm"
-                  dense
-                  @click="downloadJson"
-                  ><q-tooltip> download model as json file </q-tooltip> SAVE MODEL (JSON)</q-btn>
-                  </div>
-                </q-card>
+        
                 <div v-for="index in no_of_modeleditor" :key="index">
                   <ModelEditor></ModelEditor>
                 </div>
@@ -217,6 +165,61 @@
                   opacity: 1.0,
                 }"
               >
+              
+              <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                    "
+                  >
+                    <q-file
+                      class="q-ma-sm"
+                      dark
+                      dense
+                      flat
+                      stack-label
+                      label="Select a model definition file"
+                      filled
+                      :display-value="selectedModelFile"
+                      style="
+                        width: 100%;
+                        justify-content: center;
+                        font-size: 12px;
+                      "
+                      @update:model-value="handleModelDefinitionFileAdded"
+                    >
+                      <template v-slot:append>
+                        <q-icon name="fa-solid fa-floppy-disk" />
+                      </template>
+                    </q-file>
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                    "
+                  >
+
+                  <q-btn
+                  class="q-ma-sm"
+                  color="negative"
+                  size="sm"
+                  dense
+                  @click="downloadPython"
+                  ><q-tooltip> download model as python file </q-tooltip> SAVE MODEL (PYTHON)</q-btn>
+                  <q-btn
+                  class="q-ma-sm"
+                  color="negative"
+                  size="sm"
+                  dense
+                  @click="downloadJson"
+                  ><q-tooltip> download model as json file </q-tooltip> SAVE MODEL (JSON)</q-btn>
+                  </div>
+                </q-card>
+                
               <q-card class="q-pb-xs q-pt-xs q-ma-sm" bordered>
                 <div
                     style="
@@ -566,7 +569,7 @@ export default defineComponent({
   },
   data() {
     return {
-      tab_left: "hemodynamics_editor",
+      tab_left: "model_editor",
       tab_center: "diagram",
       tab_right: "numerics",
       no_of_modeleditor: 1,

@@ -32,19 +32,14 @@ export class Thorax extends Container {
       options: [
         "GasCapacitance",
         "Airway",
-        "Bronchiole",
-        "Bronchus",
         "AlveolarSpace",
         "BloodCapacitance", 
         "BloodTimeVaryingElastance", 
-        "BloodPump", "BloodVessel", 
-        "Artery", 
-        "Arteriole", 
+        "BloodPump", 
+        "BloodVessel", 
         "CapillaryBed", 
         "CoronaryVessel", 
-        "HeartChamber", 
-        "Vein", 
-        "Venule"
+        "HeartChamber"
       ]
     },
     {

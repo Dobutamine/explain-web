@@ -298,22 +298,10 @@
                     "el_k": 0,
                     "components": {}
                 },
-                "COR_RA": {
-                    "name": "COR_RA",
-                    "description": "resistor model of the connection between the coronaries and the right atrium",
-                    "model_type": "Resistor",
-                    "is_enabled": true,
-                    "no_flow": false,
-                    "no_back_flow": false,
-                    "comp_from": "COR",
-                    "comp_to": "RA",
-                    "r_for": 15000,
-                    "r_back": 15000
-                },
                 "AA_COR": {
                     "name": "AA_COR",
                     "description": "resistor model of the connection between ascending aorta and the coronaries",
-                    "model_type": "Resistor",
+                    "model_type": "BloodVesselResistor",
                     "is_enabled": true,
                     "no_flow": false,
                     "no_back_flow": false,
@@ -321,6 +309,18 @@
                     "comp_to": "COR",
                     "r_for": 60000,
                     "r_back": 60000
+                },
+                "COR_RA": {
+                    "name": "COR_RA",
+                    "description": "resistor model of the connection between the coronaries and the right atrium",
+                    "model_type": "BloodVesselResistor",
+                    "is_enabled": true,
+                    "no_flow": false,
+                    "no_back_flow": false,
+                    "comp_from": "COR",
+                    "comp_to": "RA",
+                    "r_for": 15000,
+                    "r_back": 15000
                 }
             }
         },
@@ -791,7 +791,7 @@
                 "PV": {
                     "name": "PV",
                     "description": "capacitance model of the pulmonary veins",
-                    "model_type": "Vein",
+                    "model_type": "BloodVessel",
                     "is_enabled": true,
                     "vol": 0.007770162715477027,
                     "u_vol": 0.00563081048728314,
@@ -815,7 +815,7 @@
                 "PA": {
                     "name": "PA",
                     "description": "capacitance model of the pulmonary artery",
-                    "model_type": "Artery",
+                    "model_type": "BloodVessel",
                     "is_enabled": true,
                     "vol": 0.01,
                     "u_vol": 0.0022,
@@ -851,7 +851,7 @@
                 "PAAL": {
                     "name": "PAAL",
                     "description": "capacitance model of the pulmonary arterioles of the left lung",
-                    "model_type": "Arteriole",
+                    "model_type": "BloodVessel",
                     "is_enabled": true,
                     "vol": 0.0005,
                     "u_vol": 0.0005,
@@ -875,7 +875,7 @@
                 "PAAR": {
                     "name": "PAAR",
                     "description": "capacitance model of the pulmonary arterioles of the right lung",
-                    "model_type": "Arteriole",
+                    "model_type": "BloodVessel",
                     "is_enabled": true,
                     "vol": 0.0005,
                     "u_vol": 0.0005,
@@ -899,7 +899,7 @@
                 "AA": {
                     "name": "AA",
                     "description": "capacitance model of the ascending aorta",
-                    "model_type": "Artery",
+                    "model_type": "BloodVessel",
                     "is_enabled": true,
                     "vol": 0.0059281971406137815,
                     "u_vol": 0.0033,
@@ -947,7 +947,7 @@
                 "AAR": {
                     "name": "AAR",
                     "description": "capacitance model of the aortic arch",
-                    "model_type": "Artery",
+                    "model_type": "BloodVessel",
                     "is_enabled": true,
                     "vol": 0.006128775769877488,
                     "u_vol": 0.003501795453394704,
@@ -971,7 +971,7 @@
                 "AD": {
                     "name": "AD",
                     "description": "capacitance model of the descending aorta",
-                    "model_type": "Artery",
+                    "model_type": "BloodVessel",
                     "is_enabled": true,
                     "vol": 0.022045886828499398,
                     "u_vol": 0.019697599425345207,
@@ -1175,7 +1175,7 @@
                 "IVCI": {
                     "name": "IVCI",
                     "description": "capacitance model of the intrathoracic part of the inferior vena cava",
-                    "model_type": "Vein",
+                    "model_type": "BloodVessel",
                     "is_enabled": true,
                     "vol": 0.025769092793056256,
                     "u_vol": 0.0162,
@@ -1199,7 +1199,7 @@
                 "VLB": {
                     "name": "VLB",
                     "description": "capacitance model of the extrathoracic venous blood compartment of the lower body",
-                    "model_type": "Venule",
+                    "model_type": "BloodVessel",
                     "is_enabled": true,
                     "vol": 0.109,
                     "u_vol": 0.083,
@@ -1223,7 +1223,7 @@
                 "SVC": {
                     "name": "SVC",
                     "description": "capacitance model of the superior vena cava",
-                    "model_type": "Vein",
+                    "model_type": "BloodVessel",
                     "is_enabled": true,
                     "vol": 0.018772322344298622,
                     "u_vol": 0.0108,
@@ -1247,7 +1247,7 @@
                 "VUB": {
                     "name": "VUB",
                     "description": "capacitance model of the extrathoracic venous blood compartment of the upper body",
-                    "model_type": "Venule",
+                    "model_type": "BloodVessel",
                     "is_enabled": true,
                     "vol": 0.050,
                     "u_vol": 0.0432,
@@ -1523,12 +1523,12 @@
             "blood_containing_modeltypes":  [
                 "BloodCapacitance",
                 "HeartChamber",
-                "Artery",
-                "Arteriole",
+                "BloodVessel",
+                "BloodVessel",
                 "CapillaryBed",
                 "CoronaryVessel",
-                "Vein",
-                "Venule",
+                "BloodVessel",
+                "BloodVessel",
                 "BloodTimeVaryingElastance",
                 "BloodPump"
             ],
@@ -1556,10 +1556,8 @@
             "is_enabled": true,
             "gas_containing_modeltypes": [
                 "GasCapacitance", 
-                "Bronchus", 
-                "AlveolarSpace", 
-                "Bronchiole", 
-                "ConductingAirway"
+                "Airway",
+                "AlveolarSpace"
             ],
             "pres_atm": 760,
             "fio2": 0.21,

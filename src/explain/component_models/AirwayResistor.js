@@ -61,9 +61,7 @@ export class AirwayResistor extends Resistor {
       options: [
         "GasCapacitance",
         "Airway",
-        "AlveolarSpace",
-        "Bronchus",
-        "Bronchiole"
+        "AlveolarSpace"
       ]
     },
     {
@@ -73,12 +71,9 @@ export class AirwayResistor extends Resistor {
       options: [
         "GasCapacitance",
         "Airway",
-        "AlveolarSpace",
-        "Bronchus",
-        "Bronchiole"
+        "AlveolarSpace"
       ]
     },
     
   ]
-
 }

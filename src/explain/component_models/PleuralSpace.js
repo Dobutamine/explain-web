@@ -40,8 +40,6 @@ export class PleuralSpace extends Container {
       options: [
         "GasCapacitance",
         "Airway",
-        "Bronchiole",
-        "Bronchus",
         "AlveolarSpace"
       ]
     },
