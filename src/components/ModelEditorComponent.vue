@@ -21,7 +21,7 @@
               class="q-pa-xs col"
               v-model="selectedModelName"
               square
-              label="edit existing model"
+              label="edit model properties"
               hide-hint
               :options="modelNames"
               dense
@@ -42,15 +42,17 @@
             >
           </div>
 
-          <div v-if="redraw > 0.0 && selectedModelName" class="q-ma-sm q-mb-md">
+          <div v-if="redraw > 0.0 && selectedModelName" class="q-ma-sm q-mt-md q-mb-md">
             <div
               class="q-ml-md q-mr-md text-left text-white"
               :style="{ 'font-size': '12px' }"
             >
               {{ selectedModelDescription }}
             </div>
+            <q-separator class="q-mt-sm"></q-separator>
+
             <div v-for="(field, index) in selectedModelProps" :key="index">
-              <div v-if="field.type == 'number'">
+              <div v-if="field.type == 'number' && !field.hidden">
                 <div
                   class="q-ml-md q-mr-md q-mt-md text-left text-secondary"
                   :style="{ 'font-size': '12px' }"
@@ -73,12 +75,13 @@
                       class="q-mb-sm"
                       squared
                     >
+  
                     </q-input>
                   </div>
                 </div>
               </div>
 
-              <div v-if="field.type == 'boolean'">
+              <div v-if="field.type == 'boolean' && !field.hidden">
                 <div
                   class="q-ml-md q-mr-md q-mt-md text-left text-secondary row"
                   :style="{ 'font-size': '12px' }"
@@ -106,7 +109,7 @@
                 </div>
               </div>
 
-              <div v-if="field.type == 'string'">
+              <div v-if="field.type == 'string' && !field.hidden">
                 <div
                   class="q-ml-md q-mr-md q-mt-md text-left text-secondary"
                   :style="{ 'font-size': '12px' }"
@@ -130,7 +133,7 @@
                 </div>
               </div>
 
-              <div v-if="field.type == 'list'">
+              <div v-if="field.type == 'list' && !field.hidden">
                 <div
                   class="q-ml-md q-mr-md q-mt-md text-left text-secondary"
                   :style="{ 'font-size': '12px' }"
@@ -155,7 +158,7 @@
                 </div>
               </div>
 
-              <div v-if="field.type == 'multiple-list'">
+              <div v-if="field.type == 'multiple-list' && !field.hidden">
                 <div
                   class="q-ml-md q-mr-md q-mt-md text-left text-secondary"
                   :style="{ 'font-size': '12px' }"
@@ -181,7 +184,7 @@
                 </div>
               </div>
 
-              <div v-if="field.type == 'function'">
+              <div v-if="field.type == 'function' && !field.hidden">
                 <div
                   class="q-ml-md q-mr-md q-mt-md text-left text-secondary"
                   :style="{ 'font-size': '12px' }"
@@ -284,8 +287,19 @@
                 </div>
               </div>
             </div>
+            <q-separator class="q-mt-md"></q-separator>
           </div>
-
+          <div v-if="selectedModelName && state_changed" class="row q-ma-sm">
+            <q-btn
+              class="col q-ml-xl q-mr-xl"
+              color="negative"
+              size="sm"
+              dense
+              @click="updateValue"
+              style="font-size: 8px"
+              ><q-tooltip>apply property changes (CTRL-E)</q-tooltip> APPLY CHANGES</q-btn
+            >
+          </div>
           <div v-if="selectedModelName && state_changed" class="row q-ma-md">
             <q-select
               label-color="white"
@@ -299,16 +313,6 @@
               dark
               stack-label
             />
-            <q-btn
-              class="col-4 q-ma-sm"
-              color="negative"
-              size="xs"
-              dense
-              icon="fa-solid fa-play"
-              @click="updateValue"
-              style="font-size: 8px"
-              ><q-tooltip>apply property changes</q-tooltip></q-btn
-            >
           </div>
         </div>
       </q-card>
@@ -769,6 +773,7 @@ export default {
     document.removeEventListener("model_types", (data) => {
       this.processAvailableModelTypes(data.model_types);
     });
+    this.$bus.off("change_props", this.updateValue )
   },
   mounted() {
     try {
@@ -794,6 +799,9 @@ export default {
 
     // update if state changes
     this.$bus.on("state", this.processAvailableModels);
+
+    // check whether a change props event is fires
+    this.$bus.on("change_props", this.updateValue )
   },
 };
 </script>

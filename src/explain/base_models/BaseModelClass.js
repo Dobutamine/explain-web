@@ -1,10 +1,54 @@
 import * as Models from "../ModelIndex.js"
 
+// This base model class is the blueprint for all the model objects (classes).
+// It incorporates the properties and methods which all model objects implement 
 export class BaseModelClass {
-  // This base model class is the blueprint for all the model objects (classes).
-  // It incorporates the properties and methods which all model objects implement 
-  model_interface = []
-  
+
+  /*
+  The model interface list determines how the properties of the model are shaped. The GUI takes this lists to build the property editor
+      {
+            type: "number",
+            caption: <string> caption,
+            target: <number> target property
+            factor: <number> value factor,
+            delta: <number> delta,
+            rounding: <number> number of decimals,
+      ul: <number> upper limit
+      ll: <number> lower limit
+    }
+
+    {
+            type: “boolean”,
+            caption: <string> caption,
+            target: <number> target property
+    }
+
+    {
+            type: “string”,
+            caption: <string> caption,
+            target: <number> target property
+    }
+    {
+            type: “list”,
+            caption: <string> caption,
+            target: <number> target property,
+      choices: <list> model types
+    }
+    {
+            type: “multiple-list”,
+            caption: <string> caption,
+            target: <number> target property,
+      choices: <list> model types
+    }
+    {
+            type: “function”,
+            caption: <string> caption,
+            target: <number> target property,
+      args: <list> a list of arguments as above
+    }
+  */
+  model_interface = []        // model interface list as described above
+
   constructor(model_ref, name = "") {
     // initialize independent properties which all models implement
     this.name = name; // name of the model object

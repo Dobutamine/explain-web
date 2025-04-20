@@ -1,5 +1,6 @@
 <template>
   <q-page>
+    
     <div class="q-pa-sm" style="background-color: black; min-height: 100vh">
       <div class="row">
         <div class="col-3">
@@ -873,6 +874,12 @@ export default defineComponent({
     };
   },
   methods: {
+    handleKeyDown(event) {
+      if (event.ctrlKey && event.key === 'e') {
+        event.preventDefault()
+        this.$bus.emit('change_props')
+      }
+    },
     downloadDiagram() {
       this.state.saveDiagramToDisk();
     },
@@ -1010,6 +1017,7 @@ export default defineComponent({
     // remove the event handlers
     this.$bus.off("reset", this.updateWatchlist);
     this.$bus.off("model_ready", this.updateWatchlist);
+    document.removeEventListener('keydown', handleKeyDown)
   },
   mounted() {
     // set the dark theme
@@ -1020,10 +1028,15 @@ export default defineComponent({
     this.screen_height = "height: " + h + "px; background: black";
 
     // update the watchlist when the model is ready
-    this.$bus.on("model_ready", this.updateWatchlist);
+    this.$bus.on("model_ready", () => { 
+      this.updateWatchlist()
+      explain.getModelState()
+    });
 
     // update the watchlist when the model resets
     this.$bus.on("reset", this.updateWatchlist);
+
+    document.addEventListener('keydown', this.handleKeyDown)
   },
 });
 </script>

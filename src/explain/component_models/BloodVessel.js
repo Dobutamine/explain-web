@@ -15,7 +15,7 @@ export class BloodVessel extends BloodCapacitance {
       type: "number",
       factor: 1000.0,
       delta: 0.1,
-      rounding: 1,
+      rounding: 1
     },
     {
       caption: "elastance baseline (mmHg/mL)",
