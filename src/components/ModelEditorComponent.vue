@@ -53,16 +53,13 @@
 
             <div v-for="(field, index) in selectedModelProps" :key="index">
               <div v-if="field.type == 'number' && !field.hidden">
-                <div
-                  class="q-ml-md q-mr-md q-mt-md text-left text-secondary"
-                  :style="{ 'font-size': '12px' }"
-                >
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '12px' }">
                   <div class="text-white" :style="{ 'font-size': '10px' }">
-                    <q-input
+                    <q-input v-if="editorMode == 'abs'"
                       v-model="field.value"
-                      :label="field.caption"
-                      :max="field.ul"
-                      :min="field.ll"
+                      :label="field.caption + ' (' + field.unit + ')'"
+                      :max="field.range[1]"
+                      :min="field.range[0]"
                       :step="field.delta"
                       color="blue"
                       hide-hint
@@ -74,9 +71,8 @@
                       style="font-size: 12px"
                       class="q-mb-sm"
                       squared
-                    >
-  
-                    </q-input>
+                    ></q-input>
+                    <ExplainSlider v-if="editorMode == 'slider'" :initialValue="field.value" :title="field.caption" sliderType="absolute" :range="field.range" :step="field.delta" unit="x" @value-updated="(arg) => onFactorUpdated(field, arg)"></ExplainSlider>
                   </div>
                 </div>
               </div>
@@ -200,8 +196,8 @@
                       v-model.number="arg.value"
                       :label="arg.caption"
                       type="number"
-                      :max="arg.ul"
-                      :min="arg.ll"
+                      :max="arg.range[0]"
+                      :min="arg.range[1]"
                       :step="arg.delta"
                       color="blue"
                       hide-hint
@@ -215,10 +211,7 @@
                     >
                     </q-input>
                   </div>
-                  <div
-                    v-if="arg.type == 'boolean' && !arg.hidden"
-                    class="q-ml-sm col-1"
-                  >
+                  <div v-if="arg.type == 'boolean' && !arg.hidden" class="q-ml-sm col-1">
                     <q-toggle
                       v-model="arg.value"
                       :label="arg.caption"
@@ -284,11 +277,29 @@
                     >
                     </q-select>
                   </div>
+                  <div v-if="arg.type == 'factor'">
+                    <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '12px' }">
+                      <div class="text-white" :style="{ 'font-size': '10px' }">
+                        <ExplainSlider :title="arg.caption" sliderType="factor" :range="arg.range" :step="arg.delta" unit="x" @value-updated="(v) => onFactorUpdated(arg, v)"></ExplainSlider>
+                      </div>
+                    </div>
+                  </div>  
+                </div>
+              </div>
+
+              <div v-if="field.type == 'factor'">
+                <div class="q-ml-md q-mr-md q-mt-md text-left text-secondary" :style="{ 'font-size': '12px' }">
+                  <div class="text-white" :style="{ 'font-size': '10px' }">
+                    <ExplainSlider :title="field.caption" sliderType="factor" :range="field.range" :step="field.delta" unit="x" @value-updated="(arg) => onFactorUpdated(field, arg)"></ExplainSlider>
+                  </div>
                 </div>
               </div>
             </div>
+
             <q-separator class="q-mt-md"></q-separator>
           </div>
+
+
           <div v-if="selectedModelName && state_changed" class="row q-ma-sm">
             <q-btn
               class="col q-ml-xl q-mr-xl"
@@ -314,6 +325,7 @@
               stack-label
             />
           </div>
+
         </div>
       </q-card>
     </div>
@@ -322,6 +334,8 @@
 
 <script>
 import { explain } from "../boot/explain";
+import ExplainSlider from "./ExplainSlider.vue";
+
 
 export default {
   setup() {
@@ -333,11 +347,15 @@ export default {
       selectedNewModelProps,
     };
   },
+  components: {
+      ExplainSlider
+  },
   data() {
     return {
-      title: "MODEL EDITOR",
+      title: "MODEL PROPERTIES EDITOR",
       collapsed: false,
       isEnabled: true,
+      editorMode: "abs",
       redraw: 1,
       availableModelTypes: [],
       selectedModelType: "",
@@ -376,6 +394,9 @@ export default {
     };
   },
   methods: {
+    onFactorUpdated(field, arg) {
+      console.log(field, arg)
+    },
     handleFileAdded(files) {
       // Access the first file in the selected files
       const file = files[0];
@@ -453,56 +474,6 @@ export default {
       // get the model interface of the selected model
       explain.getModelInterface(this.selectedModelType);
     },
-    processModelInterface(model_type, model_props) {
-      // we have to convert the model properties to a format which the editor can understand, this is an array of objects and store in selectedNewModelProps
-      // clear the current selectedNewModelProps holding the new model properties
-      this.selectedNewModelProps = [];
-      // add a new name and description field
-      this.selectedNewModelProps.push({
-        caption: "description",
-        target: "description",
-        type: "string",
-        value: "",
-      });
-      // process the model interface
-      model_props.forEach((prop) => {
-        if (prop.type == "number") {
-          prop["value"] = prop["default"] * prop["factor"];
-        } else {
-          prop["value"] = prop["default"];
-        }
-        // if the property is a list then add the options to the choices
-        if (prop.type == "list") {
-          prop["choices"] = [];
-          if (prop["option_default"]) {
-            prop["choices"] = prop["options_default"];
-          }
-          if (prop.options) {
-            Object.values(explain.modelState.models).forEach((model) => {
-              if (prop.options.includes(model.model_type)) {
-                prop["choices"].push(model.name);
-              }
-            });
-          }
-        }
-        if (prop.type == "multiple-list") {
-          prop["choices"] = [];
-          if (prop["option_default"]) {
-            prop["choices"] = prop["options_default"];
-          }
-          if (prop.options) {
-            Object.values(explain.modelState.models).forEach((model) => {
-              if (prop.options.includes(model.model_type)) {
-                prop["choices"].push(model.name);
-              }
-            });
-          }
-        }
-
-        this.selectedNewModelProps.push(prop);
-      });
-      this.redraw += 1;
-    },
     collapsEditor() {
       if (this.isEnabled) {
         this.isEnabled = false;
@@ -515,6 +486,16 @@ export default {
     changeNewPropState(param, arg) {
       this.state_changed = true;
       param.state_changed = true;
+      this.redraw += 1;
+    },
+    increaseValue(param, arg) {
+      this.state_changed = true;
+      param.value += param.delta;
+      this.redraw += 1;
+    },
+    decreaseValue(param, arg) {
+      this.state_changed = true;
+      param.value -= param.delta;
       this.redraw += 1;
     },
     changePropState(param, arg) {
@@ -597,13 +578,6 @@ export default {
       this.selectedModelDescription =
         explain.modelState.models[this.selectedModelName].description;
 
-      // // add the is enabled prop to every model
-      // this.selectedModelProps.unshift({
-      //   caption: "is enabled",
-      //   target: "is_enabled",
-      //   type: "boolean",
-      // });
-      
       // add a flag to the property which can be set when the property needs to be updated
       this.selectedModelProps.forEach((param) => {
         param["state_changed"] = false;
@@ -613,7 +587,6 @@ export default {
         if (f.length == 1) {
           param["value"] =
             explain.modelState.models[this.selectedModelName][f[0]];
-          // if type is complex-list then value contains the list with objects
         }
 
         if (f.length == 2) {
@@ -636,11 +609,11 @@ export default {
         if (!param.delta) {
           param["delta"] = 1.0;
         }
-        if (!param.ul) {
-          param["ul"] = 1000000000000;
+        if (!param.range) {
+          param["range"] = [-10000000,10000000];
         }
-        if (!param.ll) {
-          param["ll"] = -1000000000000;
+        if (!param.unit) {
+          param["unit"] = ""
         }
 
         // set the numeric value
@@ -767,24 +740,12 @@ export default {
   },
   beforeUnmount() {
     this.state_changed = false;
-    document.removeEventListener("model_interface", (data) => {
-      this.processModelInterface(data.model_type, data.model_props);
-    });
     document.removeEventListener("model_types", (data) => {
       this.processAvailableModelTypes(data.model_types);
     });
     this.$bus.off("change_props", this.updateValue )
   },
   mounted() {
-    try {
-      document.removeEventListener("model_interface", (data) => {
-        this.processModelInterface(data.model_type, data.model_props);
-      });
-    } catch {}
-    document.addEventListener("model_interface", (data) => {
-      this.processModelInterface(data.model_type, data.model_props);
-    });
-
     try {
       document.removeEventListener("model_types", (data) => {
         this.processAvailableModelTypes(data.model_types);

@@ -1,17 +1,38 @@
 <template>
-    <div class="row q-mt-xs justify-center items-center">
-        <q-badge class="row bg-transparent text-white" style="font-size: 12px;">
+    <div class="q-mt-xs justify-center items-center">
+        <q-badge class="bg-transparent text-white" style="font-size: 12px;">
               {{ title }} : {{ value.toFixed(2) }} {{ unit }}
         </q-badge>
-        <q-slider
-          class="row q-ml-md q-mr-md q-mt-xs"
-          v-model="sliderValue"
-          :min="range[0]"
-          :max="range[1]"
-          :step="step"
-          selection-color="transparent"
-          @update:model-value="sliderChanged"
-        />
+        <div class="row justify-center"> 
+          <q-btn
+            @click="decreaseValue"
+            class="q-ma-sm col"
+            color="grey-10"
+            dense
+            size="xs"
+            icon="fa-solid fa-chevron-left"
+          ></q-btn>
+          <q-slider
+            class="q-ma-sm q-mr-sm col-8"
+            v-model="sliderValue"
+            :min="range[0]"
+            :max="range[1]"
+            :step="step"
+            dense
+            thumb-color="teal"
+            color="transparent"
+            selection-color="transparent"
+            @update:model-value="sliderChanged"
+          />
+          <q-btn
+            @click="increaseValue"
+            class="q-ma-sm col"
+            dense
+            size="xs"
+            color="grey-10"
+            icon="fa-solid fa-chevron-right"
+          ></q-btn>
+        </div>
     </div>
   </template>
   <script>
@@ -52,6 +73,14 @@
       };
     },
     methods: {
+      increaseValue(){
+        this.sliderValue += this.step
+        this.sliderChanged()
+      },
+      decreaseValue(){
+        this.sliderValue -= this.step
+        this.sliderChanged()
+      },
       sliderChanged() {
         switch (this.sliderType) {
           case "factor":

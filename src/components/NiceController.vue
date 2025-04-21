@@ -213,7 +213,7 @@
                       ></q-btn>
                     </q-badge>
                   </div>
-                  <div class="row justify-center">
+                  <div class="row justify-center"> 
                     <q-btn
                       @click="decreaseValue(controller)"
                       class="q-ma-sm col"

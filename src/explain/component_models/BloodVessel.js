@@ -10,9 +10,11 @@ export class BloodVessel extends BloodCapacitance {
       type: "boolean"
     },
     {
-      caption: "unstressed volume (mL)",
+      caption: "unstressed volume",
       target: "u_vol",
+      unit: "mL",
       type: "number",
+      range:[0, 100],
       factor: 1000.0,
       delta: 0.1,
       rounding: 1
@@ -68,27 +70,42 @@ export class BloodVessel extends BloodCapacitance {
     {
       caption: "ans resistance factor",
       target: "r_ans_factor",
-      type: "factor"
+      type: "factor",
+      range: [-1, 1],
+      delta: 0.01,
+      hidden: true
     },
     {
       caption: "circulation resistance factor",
       target: "r_circ_factor",
-      type: "factor"
+      type: "factor",
+      range: [-1, 1],
+      delta: 0.01,
+      hidden: true
     },
     {
       caption: "unstressed volume factor",
       target: "u_vol_factor",
-      type: "factor"
+      type: "factor",
+      range: [-1, 1],
+      delta: 0.01,
+      hidden: true
     },
     {
       caption: "elastance baseline factor",
       target: "el_base_factor",
-      type: "factor"
+      type: "factor",
+      range: [-1, 1],
+      delta: 0.01,
+      hidden: true
     },
     {
       caption: "elastance non linear  factor",
       target: "el_k_factor",
-      type: "factor"
+      type: "factor",
+      range: [-1, 1],
+      delta: 0.01,
+      hidden: true
     },
   ];
 
